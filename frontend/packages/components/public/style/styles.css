@@ -1,0 +1,29 @@
+@import "tailwindcss";
+@source "../../../";
+
+
+@theme {
+    --color-primary: #49493E;
+    --color-secondary: #D4AF37;
+    --color-secondary-dark: #BF9E31;
+    --color-accent-light: #F7F7F3;
+    --color-accent-dark: #F4F3ED;
+    --color-dark: #2C2C2C;
+    --color-darker: #282828;
+}
+
+@layer utilities {
+  @keyframes animation-scroll {
+    0%, 100% {
+      transform: translateY(-15%);
+    }
+    50% {
+      transform: translateY(40%);
+    }
+  }
+
+  .animate-scroll {
+    animation: animation-scroll 3s infinite;
+    animation-timing-function: cubic-bezier(.7,.58,0,.99);
+  }
+}
