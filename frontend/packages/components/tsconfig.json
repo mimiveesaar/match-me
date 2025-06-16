@@ -1,0 +1,39 @@
+{
+  "include": ["src/**/*", "style"],
+  "exclude": ["dist", "build", "node_modules"],
+  "compilerOptions": {
+    "rootDir": "src",
+    "baseUrl": ".",
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "declaration": true,
+    "declarationMap": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "emitDeclarationOnly": true,
+
+    "outDir": "dist/types",
+    "paths": {
+      "@atoms/*": ["./src/atoms/*"],
+      "@molecules/*": ["./src/molecules/*"],
+      "@organisms/*": ["./src/organisms/*"],
+      "@templates/*": ["./src/templates/*"],
+      "@layouts/*": ["./src/layouts/*"],
+      "@utilities/*": ["../payload-config/src/utilities/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@type/*": ["src/types/*"],
+      "@settings": ["settings.ts"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@/*": ["./src/*"],
+    }
+  }
+}
