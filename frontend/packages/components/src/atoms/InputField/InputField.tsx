@@ -1,6 +1,5 @@
 "use client";
-import { ReactNode } from "react";
-
+import React from "react";
 interface InputFieldProps {
   placeholder: string;
   value?: string;
