@@ -1,6 +1,7 @@
 ---
 services:
   devcontainer:
+    container_name: Match-me
     build:
       context: .
       dockerfile: Dockerfile
