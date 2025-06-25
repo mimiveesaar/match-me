@@ -1,4 +1,4 @@
-import type { StorybookConfig } from '@storybook/react-vite';
+import type { StorybookConfig } from '@storybook/nextjs-vite';
 import { createRequire } from 'module';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { mergeConfig } from 'vite';
@@ -19,7 +19,7 @@ const config: StorybookConfig = {
   ],
   "addons": [],
    "framework": {
-    "name": getAbsolutePath('@storybook/react-vite'),
+    "name": getAbsolutePath('@storybook/nextjs-vite'),
     "options": {}
   },
   "staticDirs": [
@@ -27,7 +27,7 @@ const config: StorybookConfig = {
   ],
   viteFinal: async (config, { configType }) => {
     return mergeConfig(config, {
-      plugins: [tsconfigPaths({projects : ["./tsconfig.json", "../../../packages/components/tsconfig.json"]})],
+      plugins: [tsconfigPaths({projects : ["./tsconfig.json"]})],
     });
   }
 };
