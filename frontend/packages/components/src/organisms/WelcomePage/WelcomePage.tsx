@@ -7,7 +7,7 @@ import { SignUpOrLogInButton } from "../../atoms/SignUpOrLogInButton/SignUpOrLog
 export const WelcomePage: React.FC = () => {
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <CircleWrapper size="w-[600px] h-[600px]" backgroundColor="bg-olive" className="p-8 text-center">
+      <CircleWrapper className="bg-olive p-8 text-center w-[600px] h-[600px]">
         <div className="w-full px-6 py-8 items-center">
           <div className="w-full flex flex-col items-center">
             <h1 className="text-4xl font-serif ">
