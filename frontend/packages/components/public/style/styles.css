@@ -10,6 +10,13 @@
     --color-accent-dark: #F4F3ED;
     --color-dark: #2C2C2C;
     --color-darker: #282828;
+    --color-olive: '#DBDB72';
+    --color-amberglow: '#FDC167';
+    --color-peony: '#F6D8EC';
+    --color-minty: '#D2F0EA';
+    --color-moss: '#BCC5AA';
+    --color-coral: '#EF764E';
+    --color-limeburst: '#30F84E';
 }
 
 @layer utilities {
