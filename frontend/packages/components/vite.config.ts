@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
+// import tailwindcss from '@tailwindcss/vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { builtinModules } from 'module'
 import pkg from './package.json'
@@ -10,7 +10,7 @@ import preserveDirectives from 'rollup-preserve-directives';
 
 
 export default defineConfig({
-  plugins: [react(), tailwindcss(), tsconfigPaths(), dts({tsconfigPath : './tsconfig.json'}), visualizer()],
+  plugins: [react(), tsconfigPaths(), dts({tsconfigPath : './tsconfig.json'}), visualizer()],
   build : {
     ssr: true,
     outDir: 'dist',
@@ -25,7 +25,7 @@ export default defineConfig({
       // Externalize deps that shouldn't be bundled
       external: [
           ...builtinModules,
-        ...Object.keys(pkg.peerDependencies || {}),
+        ...Object.keys(pkg.dependencies || {}),
       ],
       output: {
          exports: 'auto',
