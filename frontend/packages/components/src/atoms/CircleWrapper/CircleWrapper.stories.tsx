@@ -5,9 +5,7 @@ const meta: Meta<typeof CircleWrapper> = {
   title: "Atoms/CircleWrapper",
   component: CircleWrapper,
   argTypes: {
-    size: { control: "text" },
     className: { control: "text" },
-    backgroundColor: { control: "text" },
     children: { control: "text" },
   },
 };
@@ -32,8 +30,6 @@ export const LargeRed: Story = {
 
 export const WithCustomContent: Story = {
   args: {
-    size: "w-40 h-40",
-    backgroundColor: "bg-green-200",
     children: <button className="bg-green-200 w-40 h-40 px-4 py-2 bg-green-600 text-white rounded">Click Me</button>,
   },
 };
