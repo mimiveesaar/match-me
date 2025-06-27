@@ -1,3 +1,4 @@
+import React from "react";
 import { MultiLineInputField } from "../../atoms/MultiLineInputField/MultiLineInputField";
 import { CharacterCounter } from "../../atoms/CharacterCounter/CharacterCounter";
 
