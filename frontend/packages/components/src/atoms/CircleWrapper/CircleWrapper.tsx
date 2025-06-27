@@ -5,9 +5,7 @@ import { ReactNode } from "react";
 
 interface CircleWrapperProps {
   children: ReactNode;
-
   className?: string;
-
 }
 
 export const CircleWrapper = ({

@@ -27,7 +27,7 @@ export const AccountFormSignUp3 = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <CircleWrapper size="w-[600px] h-[600px]" className="p-8 text-center">
+      <CircleWrapper className="w-[600px] h-[600px] p-8 text-center">
         <div className="w-full px-6 py-8 text-center">
           <h2 className="text-lg font-semibold mb-6">Add Profile Picture</h2>
 
