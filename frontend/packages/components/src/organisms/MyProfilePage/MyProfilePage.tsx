@@ -2,9 +2,8 @@
 
 import React, { useState } from "react";
 import { ProfileCard } from "@organisms/ProfoleCard/ProfileCard";
-import { LabeledMultiLineInput } from "@molecules/LabeledMultiLineInput/LabeledMultiLineInput";
 import { InterestsSection } from "@organisms/InterestsSection/InterestsSection";
-import { CheckIcon } from "@atoms/CheckIcon/CheckIcon";
+import { MultiLineInputField } from "@atoms/MultiLineInputField/MultiLineInputField";
 
 export const MyProfilePage = () => {
   const [bio, setBio] = useState(
@@ -40,11 +39,11 @@ export const MyProfilePage = () => {
 
         <div className="bg-olive rounded p-6 shadow-md min-h-[12rem] flex flex-col justify-start">
           <span className="mb-2 text-xs italic">/bio</span>
-          <LabeledMultiLineInput
+          <MultiLineInputField
             placeholder="Bio (optional)"
             value={bio}
-            onChange={(e) => setBio(e.target.value)}
-          />
+            onChange={(e) => setBio(e.target.value)} 
+            id={""}/>
         </div>
 
         <InterestsSection

@@ -12,4 +12,9 @@ export default meta;
 
 type Story = StoryObj<typeof InterestsSection>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  render: (args) => {
+    const [selected, setSelected] = React.useState<string[]>([]);
+    return <InterestsSection {...args} selected={selected} setSelected={setSelected} />;
+  }
+};

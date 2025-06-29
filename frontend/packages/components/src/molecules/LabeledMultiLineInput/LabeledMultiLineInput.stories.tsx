@@ -15,5 +15,6 @@ export const Default: Story = {
     placeholder: "Bio (optional)",
     value: "",
     maxLength: 250,
+  
   },
 };

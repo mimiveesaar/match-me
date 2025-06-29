@@ -22,6 +22,26 @@ const ALL_INTERESTS = [
   "Collecting Rocks"
 ];
 
+const COLORS = [
+  "#F87171", // red-400
+  "#FBBF24", // yellow-400
+  "#34D399", // green-400
+  "#60A5FA", // blue-400
+  "#A78BFA", // purple-400
+  "#F472B6", // pink-400
+  "#FDBA74", // orange-400
+  "#4ADE80", // emerald-400
+];
+
+const getColor = (str: string) => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % COLORS.length;
+  return COLORS[index];
+};
+
 export const InterestsSection = ({
   selected,
   setSelected,
@@ -45,15 +65,23 @@ export const InterestsSection = ({
         <div className="w-full border border-gray-300 rounded p-4">
 
           <p className="font-semibold text-gray-700 mb-2">Pick up to 8</p>
+
+
           <ul className="space-y-2">
             {selected.map((item) => (
               <li key={item} className="text-sm flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-olive-600 inline-block" />
+                <span
+                  className="w-3 h-3 rounded-full inline-block"
+                  style={{ backgroundColor: getColor(item) }}
+                />
                 {item}
               </li>
             ))}
             <CharacterCounter current={selected.length} max={8} />
           </ul>
+
+
+
         </div>
       </div>
 
