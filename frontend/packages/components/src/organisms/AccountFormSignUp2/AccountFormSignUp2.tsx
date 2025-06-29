@@ -39,6 +39,7 @@ export const AccountFormSignUp2 = () => {
               onChange={(e) => setInterests(e.target.value)}
             />
             <LabeledMultiLineInput
+              id=""
               placeholder="Bio (optional)"
               value={bio}
               onChange={(e) => setBio(e.target.value)}
