@@ -30,6 +30,7 @@ export const ProfileCard = ({
         alt="alien"
         className="rounded mb-4 w-full object-cover h-40"
       />
+      
       <LabeledInputField label="/name" value={profile.name} onChange={handleChange("name")} placeholder="" />
       <LabeledInputField label="/age" value={profile.age} onChange={handleChange("age")} placeholder="" />
       <LabeledInputField label="/bodyform" value={profile.bodyform} onChange={handleChange("bodyform")} placeholder="" />

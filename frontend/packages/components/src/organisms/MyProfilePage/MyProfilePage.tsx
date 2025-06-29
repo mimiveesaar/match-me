@@ -7,7 +7,10 @@ import { InterestsSection } from "@organisms/InterestsSection/InterestsSection";
 import { CheckIcon } from "@atoms/CheckIcon/CheckIcon";
 
 export const MyProfilePage = () => {
-  const [bio, setBio] = useState("");
+  const [bio, setBio] = useState(
+    "Born among the glowing moons of Nebulon-5, I roam the stars in search of cosmic connection and shared stardust stories."
+  );
+
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [profile, setProfile] = useState({
     name: "Xylar of Nebulon-5",

@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+
 interface InputFieldProps {
   label?: string;
   id?: string;
@@ -8,8 +9,9 @@ interface InputFieldProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const InputField = ({ placeholder, value, onChange }: InputFieldProps) => (
+export const InputField = ({ id, placeholder, value, onChange }: InputFieldProps) => (
   <input
+    id={id}
     type="text"
     placeholder={placeholder}
     value={value}
@@ -18,8 +20,5 @@ export const InputField = ({ placeholder, value, onChange }: InputFieldProps) =>
 
   />
 );
-
-
-
 
 
