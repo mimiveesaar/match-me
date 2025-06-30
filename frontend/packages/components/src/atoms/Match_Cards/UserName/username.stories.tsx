@@ -1,10 +1,23 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import { Username } from './username';
 
-export default {
-  title: 'Atoms/Match_Cards/UserName',
+const meta: Meta<typeof Username> = {
+  title: "Atoms/Match Cards/Usernme",
   component: Username,
+  argTypes: {
+    username: { control: "text" },
+  },
 };
+export default meta;
 
-export const Default = () => (
-  <Username username="Shelly" />
-);
+type Story = StoryObj<typeof Username>;
+
+
+export const Default: Story = {
+  args: {
+    username: "Shelly",
+  },
+  parameters: {
+    layout: "centered", 
+  },
+};

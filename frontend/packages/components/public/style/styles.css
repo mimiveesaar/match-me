@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=Noto+Serif:wght@400;700&display=swap');
+
 @import "tailwindcss";
 @source "../../../";
 
@@ -17,6 +19,15 @@
   --color-moss: #BCC5AA;
   --color-coral: #EF764E;
   --color-limeburst: #30F84E;
+  --color-ivory: #FFFCF7;
+}
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.serif-text {
+  font-family: 'Noto Serif', serif;
 }
 
 @layer utilities {
