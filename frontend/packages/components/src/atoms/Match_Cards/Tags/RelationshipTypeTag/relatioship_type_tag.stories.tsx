@@ -1,10 +1,22 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import { RelationshipTypeTag } from "./relationship_type_tag";
 
-export default {
-  title: "Atoms/Match_Cards/Tags/RelationshipTypeTag",
+const meta: Meta<typeof RelationshipTypeTag> = {
+  title: "Atoms/Match Cards/Relationship Type Tag",
   component: RelationshipTypeTag,
+  argTypes: {
+    relationshipType: { control: "text" },
+  },
 };
+export default meta;
 
-export const Default = () => (
-  <RelationshipTypeTag relationshipType = "Astral companion" />
-);
+type Story = StoryObj<typeof RelationshipTypeTag>;
+
+export const Default: Story = {
+  args: {
+    relationshipType: "Astral Companion",
+  },
+  parameters: {
+    layout: "centered", 
+  },
+};

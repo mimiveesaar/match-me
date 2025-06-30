@@ -1,10 +1,23 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import { Age } from './age';
 
-export default {
-  title: 'Atoms/Age',
+const meta: Meta<typeof Age> = {
+  title: "Atoms/Match Cards/Age",
   component: Age,
+  argTypes: {
+    age: { control: "text" },
+  },
 };
+export default meta;
 
-export const Default = () => (
-  <Age age="167" />
-);
+type Story = StoryObj<typeof Age>;
+
+
+export const Default: Story = {
+  args: {
+    age: "64",
+  },
+  parameters: {
+    layout: "centered", 
+  },
+};

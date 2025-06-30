@@ -20,6 +20,7 @@
   --color-coral: #EF764E;
   --color-limeburst: #30F84E;
   --color-ivory: #FFFCF7;
+  --color-ivory-90: rgba(255, 252, 247, 0.9);
 }
 
 body {
@@ -34,10 +35,11 @@ body {
 
   .w-265 { width: 265px; }
 
+  .h-17 { height: 17px; }
   .h-196 { height: 196px; }
   .h-360 { height: 360px; }
   
-
+  .rounded-custom-4 { border-radius: 4px; }
   .rounded-custom-16 { border-radius: 16px; }
 
   .drop-shadow-custom {

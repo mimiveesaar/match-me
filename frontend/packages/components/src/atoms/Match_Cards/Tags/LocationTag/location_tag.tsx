@@ -1,11 +1,16 @@
-type LocationTagProps = {
+"use client";
+
+import React, { ReactNode } from "react";
+
+interface LocationTagProps {
   location: string;
   className?: string;
 };
 
-export function LocationTag({ location, className = "" }: LocationTagProps) {
+export const LocationTag = ({ location, className = "" }: LocationTagProps) => {
+  
   return (
-    <span className={`h-17 inline-flex items-center gap-2 bg-ivory text-black text-xs font-medium font-noto_serif px-2 rounded-custom_4 ${className}`}>
+    <span className={`h-17 inline-flex items-center gap-2 bg-ivory-90 text-black text-xs font-medium font-serif-text px-2 rounded-custom-4 ${className}`}>
       📍 {location}
     </span>
   );
