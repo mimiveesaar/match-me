@@ -1,16 +1,16 @@
-
 "use client";
+
 import React from "react";
 
-
-type InterestTagProps = {
+interface InterestTagProps {
   label: string;
   tag?: string;
+  shadow?: boolean;
 };
 
-export const InterestTag = ({ label, tag }: InterestTagProps) => (
+export const InterestTag = ({ label, tag, shadow = false }: InterestTagProps) => (
   <span
-    className="text-xs px-2 py-1 m-1 bg-gray-100 border border-gray-300 rounded shadow-sm"
+    className={`text-xs px-2 py-1 m-1 bg-ivory rounded-custom-4 ${shadow ? "drop-shadow-custom-2" : ""}`}
     data-tag={tag}
   >
     {label}
