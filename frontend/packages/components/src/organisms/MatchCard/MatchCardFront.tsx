@@ -12,7 +12,7 @@ import { Username } from "../../atoms/Match_Cards/UserName/username";
 import { ButtonTriangle } from "../../molecules/MatchCardButtons/match_card_buttons";
 
 
-interface MatchCardProps {
+interface MatchCardFrontProps {
   profilePicSrc?: string;
   alt?: string;
   cardColor?: "amberglow" | "olive" | "peony" | "minty" | "moss" | "coral";
@@ -20,13 +20,13 @@ interface MatchCardProps {
   relationshipType: string;
 };
 
-export const MatchCard = ({
+export const MatchCardFront = ({
   profilePicSrc = "default-profile.png",
   alt,
   cardColor = "olive",
   location = "Mars",
   relationshipType = "Astral companion",
-}: MatchCardProps) =>{
+}: MatchCardFrontProps) =>{
   return (
     <div className="hover:scale-105 transition-transform duration-50">
       <MatchCardBackground color={cardColor}>

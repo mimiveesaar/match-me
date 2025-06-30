@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { MatchCard } from "./MatchCard";
+import { MatchCardFront } from "./MatchCardFront";
 
-const meta: Meta<typeof MatchCard> = {
-  title: "Organisms/Match Card/Profile",
-  component: MatchCard,
+const meta: Meta<typeof MatchCardFront> = {
+  title: "Organisms/Match Card/Match Card Front",
+  component: MatchCardFront,
   argTypes: {
     profilePicSrc: { control: "text" },
     alt: { control: "text" },
@@ -16,7 +16,7 @@ const meta: Meta<typeof MatchCard> = {
 };
 export default meta;
 
-type Story = StoryObj<typeof MatchCard>;
+type Story = StoryObj<typeof MatchCardFront>;
 
 export const Default: Story = {
   args: {
