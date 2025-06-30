@@ -1,10 +1,14 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import { SectionLine } from './section_line';
 
-export default {
-  title: 'Atoms/Match_Cards/Bio/SectionLine',
+const meta: Meta<typeof SectionLine> = {
+  title: "Atoms/Match Cards/SectionLine",
   component: SectionLine,
 };
+export default meta;
 
-export const Default = () => (
-  <SectionLine />
-);
+type Story = StoryObj<typeof SectionLine>;
+
+export const Default: Story = {
+  render: () => <SectionLine />,
+};

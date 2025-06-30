@@ -1,10 +1,14 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import { LightningButton } from './lightning_button';
 
-export default {
-  title: 'Atoms/Match Cards/Buttons/LightningButton',
+const meta: Meta<typeof LightningButton> = {
+  title: "Atoms/Match Cards/Lightning Button",
   component: LightningButton,
 };
+export default meta;
 
-export const Default = () => (
-  <LightningButton />
-);
+type Story = StoryObj<typeof LightningButton>;
+
+export const Default: Story = {
+  render: () => <LightningButton />,
+};

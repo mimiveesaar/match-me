@@ -1,6 +1,9 @@
+"use client";
+
+import React, { ReactNode } from "react";
 import { Moon, Circle } from 'lucide-react';
 
-export function MoonButton() {
+export const MoonButton = () => {
   return (
     <button
       type="button"

@@ -2,14 +2,14 @@ import { Meta, StoryObj } from "@storybook/react";
 import { ButtonTriangle } from "./match_card_buttons";
 
 const meta: Meta<typeof ButtonTriangle> = {
-  title: "Molecules/ButtonTriangle",
+  title: "Molecules/Matchh Cards/ButtonTriangle",
   component: ButtonTriangle,
   parameters: {
-    layout: "centered", // center the component in the Storybook preview
+    layout: "centered",
   },
 };
-
 export default meta;
+
 type Story = StoryObj<typeof ButtonTriangle>;
 
 export const Default: Story = {

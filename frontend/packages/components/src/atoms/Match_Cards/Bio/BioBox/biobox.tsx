@@ -1,8 +1,13 @@
-type BioTextboxProps = {
+"use client";
+
+import React from "react";
+
+interface BioTextboxProps {
   bio: string;
 };
 
-export function BioTextbox({ bio }: BioTextboxProps) {
+export const BioTextbox = ({ bio }: BioTextboxProps) => {
+  
   return (
     <div className="
         w-[233px] h-[61px] bg-ivory bg-opacity-90

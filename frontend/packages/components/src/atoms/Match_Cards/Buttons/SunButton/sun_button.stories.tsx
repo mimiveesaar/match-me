@@ -1,10 +1,14 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import { SunButton } from './sun_button';
 
-export default {
-  title: 'Atoms/Match Cards/Buttons/SunButton',
+const meta: Meta<typeof SunButton> = {
+  title: "Atoms/Match Cards/Sun Button",
   component: SunButton,
 };
+export default meta;
 
-export const Default = () => (
-  <SunButton />
-);
+type Story = StoryObj<typeof SunButton>;
+
+export const Default: Story = {
+  render: () => <SunButton />,
+};

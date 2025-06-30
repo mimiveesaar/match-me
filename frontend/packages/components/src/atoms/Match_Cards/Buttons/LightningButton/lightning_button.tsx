@@ -1,6 +1,9 @@
+"use client";
+
+import React, { ReactNode } from "react";
 import { Zap, Circle } from 'lucide-react';
 
-export function LightningButton() {
+export const LightningButton = () => {
   return (
     <button
       type='button'

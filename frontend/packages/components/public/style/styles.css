@@ -31,8 +31,31 @@ body {
   font-family: 'Noto Serif', serif;
 }
 
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    margin: 4px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background:  rgba(0, 0, 0, 0.4);
+}
+
 @layer utilities {
 
+  .w-100 { width: 100px; }
   .w-265 { width: 265px; }
 
   .h-17 { height: 17px; }

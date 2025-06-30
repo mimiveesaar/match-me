@@ -1,6 +1,9 @@
+"use client";
+
+import React, { ReactNode } from "react";
 import { Sun, Circle } from 'lucide-react';
 
-export function SunButton() {
+export const SunButton = () => {
   return (
     <button
       type="button"
@@ -16,7 +19,7 @@ export function SunButton() {
       <Sun 
         color="#FFFCF7" 
         strokeWidth={2} 
-        className="w-5 h-5 z-10 group-hover:stroke-[#8cfdff]"
+        className="w-5 h-5 z-10 group-hover:stroke-[#FFFF0B]"
       />
     </button>
   );
