@@ -10,7 +10,7 @@ interface InterestTagProps {
 
 export const InterestTag = ({ label, tag, shadow = false }: InterestTagProps) => (
   <span
-    className={`text-xs px-2 py-1 m-1 bg-ivory rounded-custom-4 ${shadow ? "drop-shadow-custom-2" : ""}`}
+    className="text-xs px-2 py-1 m-1 bg-ivory rounded-custom-4 drop-shadow-custom-2"
     data-tag={tag}
   >
     {label}
