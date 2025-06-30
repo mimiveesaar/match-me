@@ -1,0 +1,6 @@
+authdb:
+  flyway:
+    locations: classpath:/authorization/database/flyway
+    url: jdbc:postgresql://localhost:5432/auth
+    user: admin
+    password: admin
