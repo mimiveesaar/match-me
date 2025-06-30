@@ -1,14 +1,26 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import { MatchCardProfilePic } from "./match_card_profile_pic";
 
-export default {
+const meta: Meta<typeof MatchCardProfilePic> = {
   title: "Atoms/Match Cards/Profile Picture",
   component: MatchCardProfilePic,
+  argTypes: {
+    src: { control: "text" },
+    alt: { control: "text" },
+    className: { control: "text" },
+  },
 };
+export default meta;
 
-export const WithImage = () => (
-  <MatchCardProfilePic src="default-profile.png" />
-);
+type Story = StoryObj<typeof MatchCardProfilePic>;
 
-export const WithoutImage = () => (
-  <MatchCardProfilePic/>
-);
+export const WithImage: Story = {
+  args: {
+    src: "default-profile.png",
+    alt: "User profile picture",
+    className: "",
+  },
+  parameters: {
+    layout: "centered", //Center in the storybook view
+  },
+};

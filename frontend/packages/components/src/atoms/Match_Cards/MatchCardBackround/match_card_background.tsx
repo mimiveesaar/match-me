@@ -1,32 +1,19 @@
-type CardProps = {
-  color?: "amberglow" | "olive" | "peony" | "minty" | "moss" | "coral";
-  children: React.ReactNode;
-};
+"use client";
 
-function Card({ color = "minty", children }: CardProps) {
-  const bgClassMap = {
-    amberglow: "bg-amberglow",
-    olive: "bg-olive",
-    peony: "bg-peony",
-    minty: "bg-minty",
-    moss: "bg-moss",
-    coral: "bg-coral",
-  };
+import React, { ReactNode } from "react";
 
-  const bgClass = bgClassMap[color] || bgClassMap.olive;
+interface CardProps {
+  children: ReactNode;
+  className?: string;
+}
 
+export const MatchCardBackground = ({
+  children,
+  className = "",
+}: CardProps) => {
   return (
-    <div
-      className={`w-265 h-360 rounded-custom_16 drop-shadow-[-4px_4px_4px_rgba(0,0,0,0.25)] ${bgClass}`}
-    >
+    <div className={`w-265 h-360 rounded-custom-16 drop-shadow-custom ${className}`}>
       {children}
     </div>
   );
-}
-
-export function MatchCardBackground({
-  color,
-  children,
-}: CardProps) {
-  return <Card color={color}>{children}</Card>;
-}
+};
