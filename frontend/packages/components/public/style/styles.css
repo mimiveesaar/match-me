@@ -43,14 +43,12 @@ body {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 5px;
-    margin: 4px;
+    background: transparent;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background:  rgba(0, 0, 0, 0.4);
+    background: transparent;
 }
 
 @layer utilities {
