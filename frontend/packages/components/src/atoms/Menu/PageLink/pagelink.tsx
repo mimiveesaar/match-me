@@ -10,7 +10,7 @@ interface PageLinkProps {
 }
 
 export const PageLink = ({ label, href, onClick, className = "" }: PageLinkProps) => {
-  const baseStyle = "px-3 py-2 text-xl font-medium cursor-pointer font-serif";
+  const baseStyle = "px-3 py-2 text-xl font-medium cursor-pointer font-serif hover:scale-110 transition-transform";
 
   if (href) {
     return (
