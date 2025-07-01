@@ -3,10 +3,11 @@
 import React from "react";
 
 interface BioTextboxProps {
-  bio: string;
+  bio?: string;
+  className?: string;
 };
 
-export const BioTextbox = ({ bio }: BioTextboxProps) => {
+export const BioTextbox = ({ bio, className = ""  }: BioTextboxProps) => {
   
   return (
     <div className="

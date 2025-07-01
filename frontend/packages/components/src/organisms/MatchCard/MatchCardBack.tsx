@@ -11,7 +11,6 @@ import { LocationTag } from "../../atoms/Match_Cards/Tags/LocationTag/location_t
 import { RelationshipTypeTag } from "../../atoms/Match_Cards/Tags/RelationshipTypeTag/relationship_type_tag";
 import { Username } from "../../atoms/Match_Cards/UserName/username";
 import { BodyformTag } from "@atoms/Match_Cards/Tags/BodyformTag/bodyform_tag";
-import { InterestTag } from "@molecules/InterestTag/InterestTag";
 import { CardInterestTag } from "@atoms/Match_Cards/Tags/InterestTag/card_interest_tag";
 
 interface MatchCardBackProps {
@@ -27,6 +26,7 @@ export const MatchCardBack = ({
     location = "Mars",
     relationshipType = "Astral companion",
     bodyform = "Polymorphontes",
+    bio = "Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry.",
 }: MatchCardBackProps) => {
     return (
 
@@ -60,8 +60,7 @@ export const MatchCardBack = ({
                 </div>
 
                 <div className="py-4">
-                    <BioTextbox bio={`Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry.`}>
-                    </BioTextbox>
+                    <BioTextbox bio={bio}/>
                 </div>
 
                 <div className="text-ivory text-xs font-normal font-ibm_plex_sans">

@@ -7,7 +7,7 @@ export const SunButton = () => {
   return (
     <button
       type="button"
-      className="group relative inline-flex items-center justify-center w-9 h-9 hover:scale-110 transition-transform cursor-pointer bg-transparent border-none p-0 appearance-none focus:outline-none"
+      className="no-flip group relative inline-flex items-center justify-center w-9 h-9 hover:scale-110 transition-transform cursor-pointer bg-transparent border-none p-0 appearance-none focus:outline-none"
       onClick={() => alert(`This user just got your full solar blessing ☀️!`)}
     >
       <Circle 

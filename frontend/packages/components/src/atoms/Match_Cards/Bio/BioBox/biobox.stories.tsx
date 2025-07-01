@@ -5,6 +5,9 @@ const meta: Meta<typeof BioTextbox> = {
   title: 'Atoms/Match Cards/Bio/BioTextbox',
   component: BioTextbox,
   tags: ['autodocs'],
+  argTypes: {
+    bio: { control: "text" },
+  },
 };
 
 export default meta;

@@ -18,6 +18,7 @@ interface MatchCardFrontProps {
   cardColor?: "amberglow" | "olive" | "peony" | "minty" | "moss" | "coral";
   location: string;
   relationshipType: string;
+  bio?: string;
 };
 
 export const MatchCardFront = ({
@@ -26,6 +27,7 @@ export const MatchCardFront = ({
   cardColor = "olive",
   location = "Mars",
   relationshipType = "Astral companion",
+  bio = "Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry.",
 }: MatchCardFrontProps) => {
   return (
 
@@ -62,7 +64,7 @@ export const MatchCardFront = ({
         </div>
 
         <div className="pt-3">
-          <BioTextbox bio={`Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry.`}>
+          <BioTextbox bio={bio}>
           </BioTextbox>
         </div>
 

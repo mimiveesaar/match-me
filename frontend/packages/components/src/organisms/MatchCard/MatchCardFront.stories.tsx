@@ -25,6 +25,7 @@ export const Default: Story = {
     alt: "Example User",
     location: "Venus",
     relationshipType: "Astral companion",
+    bio: "Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry.",
   },
     parameters: {
     layout: "centered", 

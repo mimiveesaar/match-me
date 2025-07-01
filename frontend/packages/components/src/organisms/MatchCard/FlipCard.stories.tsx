@@ -16,10 +16,10 @@ export const Default: Story = {
     render: () =>
         <FlipCard
             front={
-                <MatchCardFront />
+                <MatchCardFront location={"Mars"} relationshipType={"Martian lover"} bio={"Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry."}/>
             }
             back={
-                <MatchCardBack />
+                <MatchCardBack location={"Mars"} relationshipType={"Martian lover"} bodyform={"Gelatinous"} bio={"Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry."} />
             } 
         />,
 };
