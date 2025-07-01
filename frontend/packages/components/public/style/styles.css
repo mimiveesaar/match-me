@@ -54,11 +54,13 @@ body {
 @layer utilities {
 
   .w-100 { width: 100px; }
+  .w-249 { width: 249px; }
   .w-265 { width: 265px; }
 
   .h-17 { height: 17px; }
   .h-196 { height: 196px; }
   .h-360 { height: 360px; }
+  .h-800 { height: 800px; }
   
   .rounded-custom-4 { border-radius: 4px; }
   .rounded-custom-16 { border-radius: 16px; }

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, ReactNode } from "react";
-import "./flip_card.css"; 
+import "./flip_card.css";
 
 interface FlipCardProps {
   front: ReactNode;
@@ -12,10 +12,9 @@ export const FlipCard = ({ front, back }: FlipCardProps) => {
   const [flipped, setFlipped] = useState(false);
 
   const handleFlip = (e: React.MouseEvent) => {
-  // Prevent flip if a child element has the 'no-flip' class
-  if ((e.target as HTMLElement).closest(".no-flip")) return;
-  setFlipped(prev => !prev);
-};
+    if ((e.target as HTMLElement).closest(".no-flip")) return;
+    setFlipped(prev => !prev);
+  };
 
   return (
     <div className="flip-card relative w-[265px] h-[360px] perspective hover:scale-105 transition-transform duration-200" onClick={handleFlip}>

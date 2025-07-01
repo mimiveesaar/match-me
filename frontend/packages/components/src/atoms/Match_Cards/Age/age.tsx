@@ -1,16 +1,13 @@
 "use client";
 
-import React, { ReactNode } from "react";
+import React from "react";
 
 interface AgeProps {
   age: string;
-};
+}
 
-export const Age = ({ age }: AgeProps) => {
-  
-  return (
+export const Age = ({ age }: AgeProps) => (
     <span className="text-ivory text-2xl font-medium font-ibm_plex_sans">
       {age}
     </span>
-  );
-}
+)
