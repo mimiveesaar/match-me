@@ -1,6 +1,6 @@
 authdb:
   flyway:
     locations: classpath:/profile/database/flyway
-    url: jdbc:postgresql://localhost:5432/auth
+    url: jdbc:postgresql://localhost:5432/match_me_db
     user: admin
     password: admin
