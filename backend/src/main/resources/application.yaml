@@ -1,5 +1,13 @@
 spring:
   application:
     name: match-me
+  datasource:
+    url: jdbc:postgresql://postgres:5432/match_me_db
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
   flyway:
-    enabled: false
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
