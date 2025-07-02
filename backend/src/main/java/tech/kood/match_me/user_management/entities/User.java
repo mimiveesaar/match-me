@@ -1,4 +1,4 @@
-package tech.kood.match_me.authorization.entities;
+package tech.kood.match_me.user_management.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

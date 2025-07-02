@@ -1,5 +1,5 @@
-package tech.kood.match_me.authorization.features;
+package tech.kood.match_me.user_management.features;
 
 public class ResetPasswordHandler {
-    
+	
 }
