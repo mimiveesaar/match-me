@@ -36,7 +36,7 @@ public class UserManagementConfig {
         return new NamedParameterJdbcTemplate(dataSource);
     }
 
-     @Bean(initMethod = "migrate")
+    @Bean
     public Flyway userManagementFlyway(@Qualifier("userManagementDataSource") DataSource dataSource) {
         return Flyway.configure()
                 .dataSource(dataSource)

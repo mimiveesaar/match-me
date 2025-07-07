@@ -1,6 +1,6 @@
 CREATE SCHEMA IF NOT EXISTS user_management;
 
-CREATE TABLE IF NOT EXISTS user_management.user (
+CREATE TABLE IF NOT EXISTS user_management.users (
     id UUID PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,

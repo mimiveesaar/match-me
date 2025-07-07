@@ -1,11 +1,13 @@
 package tech.kood.match_me.user_management.feature;
 
-import org.junit.Test;
+import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -37,14 +39,17 @@ public class RegisterUserTests {
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
-        // registry.add("spring.datasource.user-management.jdbc-url", postgres::getJdbcUrl);
-        // registry.add("spring.datasource.user-management.username", postgres::getUsername);
-        // registry.add("spring.datasource.user-management.password", postgres::getPassword);
-        // registry.add("spring.datasource.user-management.driver-class-name", postgres::getDriverClassName);
+        registry.add("spring.datasource.user-management.jdbc-url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.user-management.username", postgres::getUsername);
+        registry.add("spring.datasource.user-management.password", postgres::getPassword);
+        registry.add("spring.datasource.user-management.driver-class-name", postgres::getDriverClassName);
     }
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    @Qualifier("userManagementFlyway") Flyway userManagementFlyway;
 
     @Autowired
     RegisterUserHandler registerUserHandler;
@@ -52,6 +57,7 @@ public class RegisterUserTests {
 
     @BeforeEach
     void setUp() {
+        var result = userManagementFlyway.migrate();
         userRepository.deleteAll();
     }
 
