@@ -1,62 +1,85 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import "./slide_selector.css";
 
-interface SlideSelectorProps {
-  header: string;
-  minimum: number;
-  maximum: number;
-  className?: string;
+interface RangeSliderProps {
+  min?: number;
+  max?: number;
+  step?: number;
+  gap?: number;
 }
 
-export const SlideSelector = ({
-  header,
-  minimum,
-  maximum,
-  className = "",
-}: SlideSelectorProps) => {
-  const [minValue, setMinValue] = useState(minimum);
-  const [maxValue, setMaxValue] = useState(maximum);
-
-  const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Math.min(Number(e.target.value), maxValue - 1);
-    setMinValue(value);
-  };
-
-  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Math.max(Number(e.target.value), minValue + 1);
-    setMaxValue(value);
-  };
+export const RangeSlider: React.FC<RangeSliderProps> = ({
+  min = 0,
+  max = 1000,
+  step = 1,
+  gap = 50,
+}) => {
+  const [minVal, setMinVal] = useState(min);
+  const [maxVal, setMaxVal] = useState(max);
 
   return (
-    <div className={`w-full max-w-xs mx-auto ${className}`}>
-      <div className="text-center text-xs mb-1">{header}</div>
+    <div className="range-wrapper">
 
-      <div className="relative h-6">
-        {/* Min slider */}
+      <header>
+        <h2 className="font-serif text-base">age</h2>
+      </header>
+
+      <div className="range-input mb-3">
+
         <input
           type="range"
-          min={minimum}
-          max={maximum}
-          value={minValue}
-          onChange={handleMinChange}
-          className="absolute w-full appearance-none cursor-pointer bg-transparent pointer-events-auto z-20 accent-black"
+          min={min}
+          max={max}
+          step={step}
+          value={minVal}
+          onChange={(e) =>
+            setMinVal(Math.min(Number(e.target.value), maxVal - gap))
+          }
         />
 
-        {/* Max slider */}
         <input
           type="range"
-          min={minimum}
-          max={maximum}
-          value={maxValue}
-          onChange={handleMaxChange}
-          className="absolute w-full appearance-none cursor-pointer bg-transparent pointer-events-auto z-10 accent-black"
+          min={min}
+          max={max}
+          step={step}
+          value={maxVal}
+          onChange={(e) =>
+            setMaxVal(Math.max(Number(e.target.value), minVal + gap))
+          }
         />
+
+        <div className="slider " />
       </div>
 
-      <div className="flex justify-between text-xs mt-1">
-        <span>{minValue}</span>
-        <span>{maxValue}</span>
+      <div className="age-distance-input font-serif">
+        <div className="field">
+          <input
+            type="number"
+            value={minVal}
+            min={min}
+            max={maxVal - gap}
+            className="text-left ml-0.5"
+            readOnly
+            onChange={(e) =>
+              setMinVal(Math.min(Number(e.target.value), maxVal - gap))
+            }
+          />
+        </div>
+        <div className="field">
+          <input
+            type="number"
+            value={maxVal}
+            min={minVal + gap}
+            max={max}
+            className="text-right"
+            readOnly
+            onChange={(e) =>
+              setMaxVal(Math.max(Number(e.target.value), minVal + gap))
+            }
+          />
+        </div>
       </div>
     </div>
   );

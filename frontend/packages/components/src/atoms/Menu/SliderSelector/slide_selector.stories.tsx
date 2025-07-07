@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { SlideSelector } from './slide_selector';
+import { RangeSlider } from './slide_selector';
 
-const meta: Meta<typeof SlideSelector> = {
+const meta: Meta<typeof RangeSlider> = {
   title: 'Atoms/Menu/Slider Selector',
-  component: SlideSelector,
+  component: RangeSlider,
 };
 export default meta;
 
-type Story = StoryObj<typeof SlideSelector>;
+type Story = StoryObj<typeof RangeSlider>;
 
 export const Default: Story = {
-  render: () => <SlideSelector header={''} minimum={0} maximum={10} />,
+  render: () => <RangeSlider />,
 };  

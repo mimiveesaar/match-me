@@ -1,0 +1,86 @@
+.range-wrapper {
+  width: 100%;
+  max-width: 230px;
+  margin: 2rem auto;
+  font-family: sans-serif;
+}
+
+.range-wrapper header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.age-distance-input {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.age-distance-input .field {
+  display: flex;
+  flex-direction: column;
+  width: 48%;
+}
+
+.age-distance-input input {
+  margin-top: 0.25rem;
+  padding: 0.5rem;
+  border: 1px solid black;
+  border-radius: 4px;
+}
+
+.slider {
+  position: relative;
+  height: 1px;
+  background: black;
+  border-radius: 5px;
+
+}
+
+.range-input {
+  position: relative;
+  margin-top: 1rem;
+  background: black;
+}
+
+.range-input input[type="range"] {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: transparent;
+  pointer-events: none;
+  -webkit-appearance: none; 
+}
+
+.range-input input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  pointer-events: auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: black;
+  cursor: pointer;
+}
+
+.range-input input[type="range"]::-moz-range-thumb {
+  pointer-events: auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: black;
+  border: none;
+  cursor: pointer;
+}
+
+.age-distance-input input[type="number"] {
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 0;
+}
+
+.age-distance-input input[type="number"]::-webkit-inner-spin-button,
+.age-distance-input input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
