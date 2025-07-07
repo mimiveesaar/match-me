@@ -6,10 +6,11 @@ import java.time.Instant;
 import java.util.UUID;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import tech.kood.match_me.user_management.entities.UserEntity;
 
-
+@Component
 public class UserRowMapper implements RowMapper<UserEntity> {
 
     @Override

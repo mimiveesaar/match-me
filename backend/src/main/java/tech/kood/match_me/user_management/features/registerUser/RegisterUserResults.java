@@ -1,12 +1,12 @@
-package tech.kood.match_me.user_management.features.registerUser.results;
+package tech.kood.match_me.user_management.features.registerUser;
 
 import tech.kood.match_me.user_management.common.UserManagementResult;
 
-public sealed interface RegisterUserResult extends UserManagementResult
-    permits RegisterUserResult.Success, RegisterUserResult.UsernameExists,
-        RegisterUserResult.EmailExists, RegisterUserResult.InvalidEmail {
+public sealed interface RegisterUserResults extends UserManagementResult
+    permits RegisterUserResults.Success, RegisterUserResults.UsernameExists,
+        RegisterUserResults.EmailExists, RegisterUserResults.InvalidEmail {
 
-    record Success(String userId, String tracingId) implements RegisterUserResult {
+    record Success(String userId, String tracingId) implements RegisterUserResults {
             @Override
             public String tracingId() {
                 return tracingId;
@@ -14,21 +14,21 @@ public sealed interface RegisterUserResult extends UserManagementResult
     }
 
     record UsernameExists(String username, String tracingId)
-        implements RegisterUserResult {
+        implements RegisterUserResults {
             @Override
             public String tracingId() {
                 return tracingId;
             }
         }
 
-    record EmailExists(String email, String tracingId) implements RegisterUserResult {
+    record EmailExists(String email, String tracingId) implements RegisterUserResults {
             @Override
             public String tracingId() {
                 return tracingId;
             }
     }
 
-    record InvalidEmail(String email, String tracingId) implements RegisterUserResult {
+    record InvalidEmail(String email, String tracingId) implements RegisterUserResults {
             @Override
             public String tracingId() {
                 return tracingId;
