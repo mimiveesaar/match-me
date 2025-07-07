@@ -1,7 +1,5 @@
 package tech.kood.match_me.user_management.features.registerUser.results;
 
-// Sealed interface for oneof result
-
 import tech.kood.match_me.user_management.common.UserManagementResult;
 
 public sealed interface RegisterUserResult extends UserManagementResult
