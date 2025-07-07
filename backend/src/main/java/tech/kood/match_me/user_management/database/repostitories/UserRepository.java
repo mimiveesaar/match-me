@@ -34,6 +34,11 @@ public class UserRepository {
         return count != null && count > 0;
     }
 
+    public void deleteAll () {
+        String sql = "DELETE FROM users";
+        jdbcTemplate.update(sql, Map.of());
+    }
+
     public UserEntity findUserByUsername(String username) {
         String sql = "SELECT * FROM users WHERE username = :username";
         return jdbcTemplate.queryForObject(sql, Map.of("username", username), this.userRowMapper);

@@ -1,7 +1,7 @@
 spring:
   datasource:
     user-management:
-      url: jdbc:postgres://localhost:5432/user_management
+      jdbc-url: jdbc:postgresql://localhost:5432/user_management
       username: user_management
       password: user_management
       driver-class-name: org.postgresql.Driver

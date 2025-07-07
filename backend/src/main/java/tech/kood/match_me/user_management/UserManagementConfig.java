@@ -2,6 +2,7 @@ package tech.kood.match_me.user_management;
 
 import javax.sql.DataSource;
 
+import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -20,15 +21,27 @@ public class UserManagementConfig {
     }
 
     @Bean
+    @Qualifier("userManagementJdbcTemplate")
     public JdbcTemplate userManagementJdbcTemplate(
         @Qualifier("userManagementDataSource") DataSource dataSource
     ) {
         return new JdbcTemplate(dataSource);
     }
 
+    @Bean
+    @Qualifier("userManagementNamedParameterJdbcTemplate")
     public NamedParameterJdbcTemplate userManagementNamedParameterJdbcTemplate(
         @Qualifier("userManagementDataSource") DataSource dataSource
     ) {
         return new NamedParameterJdbcTemplate(dataSource);
+    }
+
+     @Bean(initMethod = "migrate")
+    public Flyway userManagementFlyway(@Qualifier("userManagementDataSource") DataSource dataSource) {
+        return Flyway.configure()
+                .dataSource(dataSource)
+                .locations("classpath:/user_management/database/flyway")
+                .baselineOnMigrate(true)
+                .load();
     }
 }
