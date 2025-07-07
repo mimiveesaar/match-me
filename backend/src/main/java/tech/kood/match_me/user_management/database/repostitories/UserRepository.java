@@ -13,7 +13,7 @@ import tech.kood.match_me.user_management.entities.UserEntity;
 public class UserRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private UserRowMapper userRowMapper;
+    private final UserRowMapper userRowMapper;
     public UserRepository(
             @Qualifier("userManagementNamedParameterJdbcTemplate") NamedParameterJdbcTemplate jdbcTemplate,
             UserRowMapper userRowMapper
