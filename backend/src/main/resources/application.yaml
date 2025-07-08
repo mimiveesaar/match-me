@@ -8,5 +8,7 @@ spring:
       ddl-auto: update
     show-sql: true
   flyway:
-    enabled: true
-    locations: classpath:profile/database/flyway
+    locations: classpath:/profile/database/flyway
+    url: jdbc:postgresql://postgres_container:5432/match_me_db
+    user: admin
+    password: admin
