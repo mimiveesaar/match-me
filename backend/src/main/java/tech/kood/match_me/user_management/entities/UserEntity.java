@@ -3,6 +3,8 @@ package tech.kood.match_me.user_management.entities;
 import java.time.Instant;
 import java.util.UUID;
 
+import lombok.Builder;
+
 /**
  * Represents a user entity in the system.
  *
@@ -14,6 +16,7 @@ import java.util.UUID;
  * @param created_at    Timestamp when the user was created.
  * @param updated_at    Timestamp when the user was last updated.
  */
+@Builder
 public record UserEntity(
     UUID id,
     String email,

@@ -2,6 +2,9 @@ package tech.kood.match_me.user_management.features.registerUser;
 
 import java.util.Optional;
 
+import lombok.Builder;
+
+@Builder
 public record RegisterUserRequest(
     String username,
     String password,

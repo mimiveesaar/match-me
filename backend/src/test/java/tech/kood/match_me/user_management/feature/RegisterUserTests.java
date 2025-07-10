@@ -37,5 +37,41 @@ public class RegisterUserTests extends UserManagementTestBase {
         assert result instanceof RegisterUserResults.Success;
     }
 
-    
+    @Test
+    void shouldReturnInvalidEmailForInvalidEmailRequest() {
+        var result = registerUserHandler.handle(RegisterUserRequestMocker.createInvalidEmailRequest());
+        assert result instanceof RegisterUserResults.InvalidEmail;
+    }
+
+    @Test
+    void shouldThrowForBlankUsername() {
+        try {
+            registerUserHandler.handle(RegisterUserRequestMocker.createInvalidUsernameRequest());
+            assert false : "Expected IllegalArgumentException";
+        } catch (IllegalArgumentException e) {
+            assert e.getMessage().contains("Username");
+        }
+    }
+
+    @Test
+    void shouldThrowForBlankPassword() {
+        try {
+            registerUserHandler.handle(RegisterUserRequestMocker.createInvalidPasswordRequest());
+            assert false : "Expected IllegalArgumentException";
+        } catch (IllegalArgumentException e) {
+            assert e.getMessage().contains("Password");
+        }
+    }
+
+    @Test
+    void shouldThrowForNullFields() {
+        try {
+            registerUserHandler.handle(RegisterUserRequestMocker.createNullRequest());
+            assert false : "Expected IllegalArgumentException";
+        } catch (IllegalArgumentException e) {
+            // Should mention one of the required fields
+            assert e.getMessage().matches(".*(Username|Password|Email).*");
+        }
+    }
+
 }

@@ -9,17 +9,20 @@ public class UserEntityMocker {
     public static Faker faker = new Faker();
 
     public static UserEntity createValidUserEntity() {
+        return createValidUserEntityBuilder().build();
+    }
+
+    public static UserEntity.UserEntityBuilder createValidUserEntityBuilder() {
         var user = UserMocker.createValidUser();
         var password_hash = PasswordUtils.encode(user.password());
 
-        return new UserEntity(
-            user.id(),
-            user.email(),
-            user.username(),
-            password_hash.password_hash(),
-            password_hash.password_salt(),
-            Instant.now(),
-            Instant.now()
-        );
+        return UserEntity.builder()
+            .id(user.id())
+            .email(user.email())
+            .username(user.username())
+            .password_hash(password_hash.password_hash())
+            .password_salt(password_hash.password_salt())
+            .created_at(Instant.now())
+            .updated_at(Instant.now());
     }
 }
