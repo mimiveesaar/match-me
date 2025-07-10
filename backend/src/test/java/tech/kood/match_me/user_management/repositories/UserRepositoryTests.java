@@ -1,21 +1,18 @@
-package tech.kood.match_me.user_management.feature;
+package tech.kood.match_me.user_management.repositories;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.database.repostitories.UserRepository;
 import tech.kood.match_me.user_management.features.registerUser.RegisterUserHandler;
-import tech.kood.match_me.user_management.features.registerUser.RegisterUserResults;
-import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
+import tech.kood.match_me.user_management.mocks.UserEntityMocker;
 
-@SpringBootTest
-public class RegisterUserTests extends UserManagementTestBase {
-
+public class UserRepositoryTests extends UserManagementTestBase {
+    
     @Autowired
     UserRepository userRepository;
 
@@ -33,7 +30,7 @@ public class RegisterUserTests extends UserManagementTestBase {
 
     @Test
     void shouldCreateValidUser() {
-        var result = registerUserHandler.handle(RegisterUserRequestMocker.createValidRequest());
-        assert result instanceof RegisterUserResults.Success;
+        var userEntity = UserEntityMocker.createValidUserEntity();
+        userRepository.saveUser(userEntity);
     }
 }

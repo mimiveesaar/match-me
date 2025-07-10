@@ -1,5 +1,6 @@
 package tech.kood.match_me.user_management.database.repostitories;
 
+import java.sql.Timestamp;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -72,8 +73,8 @@ public class UserRepository {
             "username", user.username(),
             "password_hash", user.password_hash(),
             "password_salt", user.password_salt(),
-            "created_at", user.created_at(),
-            "updated_at", user.updated_at()
+            "created_at", Timestamp.from(user.created_at()),
+            "updated_at", Timestamp.from (user.updated_at())
         ));
     }
 }

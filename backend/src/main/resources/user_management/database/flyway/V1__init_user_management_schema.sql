@@ -7,5 +7,5 @@ CREATE TABLE IF NOT EXISTS user_management.users (
     password_hash VARCHAR(60) NOT NULL,
     password_salt VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL,
-    modified_at TIMESTAMP NOT NULL
+    updated_at TIMESTAMP NOT NULL
 );
