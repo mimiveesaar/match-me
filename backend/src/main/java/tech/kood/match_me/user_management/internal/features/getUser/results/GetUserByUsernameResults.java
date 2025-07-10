@@ -3,12 +3,13 @@ package tech.kood.match_me.user_management.internal.features.getUser.results;
 import java.util.Optional;
 
 import tech.kood.match_me.user_management.internal.common.UserManagementResult;
+import tech.kood.match_me.user_management.models.User;
 
 public sealed interface GetUserByUsernameResults extends UserManagementResult permits
     GetUserByUsernameResults.Success, GetUserByUsernameResults.UserNotFound, GetUserByUsernameResults.SystemError,
     GetUserByUsernameResults.InvalidUsername {
     
-    record Success(String userId, Optional<String> tracingId) implements GetUserByUsernameResults {
+    record Success(User user, Optional<String> tracingId) implements GetUserByUsernameResults {
         @Override
         public Optional<String> tracingId() {
             return tracingId;

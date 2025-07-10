@@ -3,12 +3,13 @@ package tech.kood.match_me.user_management.internal.features.getUser.results;
 import java.util.Optional;
 
 import tech.kood.match_me.user_management.internal.common.UserManagementResult;
+import tech.kood.match_me.user_management.models.User;
 
 
 public sealed interface GetUserByEmailResults extends UserManagementResult permits
     GetUserByEmailResults.Success, GetUserByEmailResults.UserNotFound, GetUserByEmailResults.SystemError,
     GetUserByEmailResults.InvalidEmail {
-    record Success(String userId, Optional<String> tracingId) implements GetUserByEmailResults {
+    record Success(User user, Optional<String> tracingId) implements GetUserByEmailResults {
         @Override
         public Optional<String> tracingId() {
             return tracingId;

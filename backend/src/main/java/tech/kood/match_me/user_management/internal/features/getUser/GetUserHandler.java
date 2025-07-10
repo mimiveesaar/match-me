@@ -9,6 +9,7 @@ import tech.kood.match_me.user_management.internal.features.getUser.requests.Get
 import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByEmailResults;
 import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByIdResults;
 import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByUsernameResults;
+import tech.kood.match_me.user_management.models.User;
 
 
 
@@ -28,9 +29,12 @@ public class GetUserHandler {
         }
 
         try {
-            var user = userRepository.findUserByUsername(username);
-            if (user.isPresent()) {
-                return new GetUserByUsernameResults.Success(user.get().id().toString(), request.tracingId());
+            var userQueryResult = userRepository.findUserByUsername(username);
+            if (userQueryResult.isPresent()) {
+                var userEntity = userQueryResult.get();
+                var publicUser = new User(userEntity.id(), userEntity.username(), userEntity.email());
+
+                return new GetUserByUsernameResults.Success(publicUser, request.tracingId());
             } else {
                 return new GetUserByUsernameResults.UserNotFound(username, request.tracingId());
             }
@@ -47,9 +51,12 @@ public class GetUserHandler {
         }
 
         try {
-            var user = userRepository.findUserByEmail(email);
-            if (user.isPresent()) {
-                return new GetUserByEmailResults.Success(user.get().id().toString(), request.tracingId());
+            var userQueryResult = userRepository.findUserByEmail(email);
+            if (userQueryResult.isPresent()) {
+                var userEntity = userQueryResult.get();
+                var user = new User(userEntity.id(), userEntity.username(), userEntity.email());
+
+                return new GetUserByEmailResults.Success(user, request.tracingId());
             } else {
                 return new GetUserByEmailResults.UserNotFound(email, request.tracingId());
             }
@@ -66,9 +73,12 @@ public class GetUserHandler {
         }
 
         try {
-            var user = userRepository.findUserById(id);
-            if (user.isPresent()) {
-                return new GetUserByIdResults.Success(user.get().id().toString(), request.tracingId());
+            var userQueryResult = userRepository.findUserById(id);
+            if (userQueryResult.isPresent()) {
+                var userEntity = userQueryResult.get();
+                var user = new User(userEntity.id(), userEntity.username(), userEntity.email());
+
+                return new GetUserByIdResults.Success(user, request.tracingId());
             } else {
                 return new GetUserByIdResults.UserNotFound(id, request.tracingId());
             }
