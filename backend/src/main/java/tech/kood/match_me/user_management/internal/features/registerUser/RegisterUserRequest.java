@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.features.registerUser;
+package tech.kood.match_me.user_management.internal.features.registerUser;
 
 import java.util.Optional;
 

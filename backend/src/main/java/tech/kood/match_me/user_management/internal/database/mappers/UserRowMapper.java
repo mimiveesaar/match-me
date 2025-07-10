@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.database.mappers;
+package tech.kood.match_me.user_management.internal.database.mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,7 +8,8 @@ import java.util.UUID;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import tech.kood.match_me.user_management.entities.UserEntity;
+import tech.kood.match_me.user_management.internal.entities.UserEntity;
+
 
 @Component
 public class UserRowMapper implements RowMapper<UserEntity> {

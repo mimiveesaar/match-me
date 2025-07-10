@@ -1,15 +1,15 @@
-package tech.kood.match_me.user_management.features.registerUser;
+package tech.kood.match_me.user_management.internal.features.registerUser;
 
 import java.time.Instant;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import tech.kood.match_me.user_management.database.repostitories.UserRepository;
-import tech.kood.match_me.user_management.entities.UserEntity;
-import tech.kood.match_me.user_management.models.HashedPassword;
-import tech.kood.match_me.user_management.utils.EmailValidator;
-import tech.kood.match_me.user_management.utils.PasswordUtils;
+import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
+import tech.kood.match_me.user_management.internal.entities.UserEntity;
+import tech.kood.match_me.user_management.internal.models.HashedPassword;
+import tech.kood.match_me.user_management.internal.utils.EmailValidator;
+import tech.kood.match_me.user_management.internal.utils.PasswordUtils;
 
 @Service
 public class RegisterUserHandler {
@@ -33,19 +33,19 @@ public class RegisterUserHandler {
         }
 
         if (EmailValidator.isValidEmail(request.email()) == false) {
-            return new RegisterUserResults.InvalidEmail(request.email(), request.tracingId().orElse("unknown"));
+            return new RegisterUserResults.InvalidEmail(request.email(), request.tracingId());
         }
 
         if (userRepository.usernameExists(request.username())) {
-            return new RegisterUserResults.UsernameExists(request.username(), request.tracingId().orElse("unknown"));
+            return new RegisterUserResults.UsernameExists(request.username(), request.tracingId());
         }
 
         if (userRepository.emailExists(request.email())) {
-            return new RegisterUserResults.EmailExists(request.email(), request.tracingId().orElse("unknown"));
+            return new RegisterUserResults.EmailExists(request.email(), request.tracingId());
         }
 
         if (request.password().length() < 8) {
-            return new RegisterUserResults.InvalidPasswordLength(request.password(), request.tracingId().orElse("unknown"));
+            return new RegisterUserResults.InvalidPasswordLength(request.password(), request.tracingId());
         }
 
         // Generate hash from the clear-text password.
@@ -67,12 +67,12 @@ public class RegisterUserHandler {
             userRepository.saveUser(userEntity);
         } catch (Exception e) {
             // Handle any exceptions that occur during saving.
-            return new RegisterUserResults.SystemError("Failed to register user: " + e.getMessage(), request.tracingId().orElse("unknown"));
+            return new RegisterUserResults.SystemError("Failed to register user: " + e.getMessage(), request.tracingId());
         }
 
         return new RegisterUserResults.Success(
             userEntity.id().toString(),
-            request.tracingId().orElse("unknown")
+            request.tracingId()
         );
     }
 }

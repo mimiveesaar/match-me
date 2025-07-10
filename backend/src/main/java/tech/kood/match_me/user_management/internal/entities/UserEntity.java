@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.entities;
+package tech.kood.match_me.user_management.internal.entities;
 
 import java.time.Instant;
 import java.util.UUID;

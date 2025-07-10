@@ -1,15 +1,17 @@
-package tech.kood.match_me.user_management.database.repostitories;
+package tech.kood.match_me.user_management.internal.database.repostitories;
 
 import java.sql.Timestamp;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import tech.kood.match_me.user_management.database.mappers.UserRowMapper;
-import tech.kood.match_me.user_management.entities.UserEntity;
+import tech.kood.match_me.user_management.internal.database.mappers.UserRowMapper;
+import tech.kood.match_me.user_management.internal.entities.UserEntity;
+
 
 @Repository
 public class UserRepository {
@@ -41,19 +43,22 @@ public class UserRepository {
         jdbcTemplate.update(sql, Map.of());
     }
 
-    public UserEntity findUserByUsername(String username) {
+    public Optional<UserEntity> findUserByUsername(String username) {
         String sql = "SELECT * FROM user_management.users WHERE username = :username";
-        return jdbcTemplate.queryForObject(sql, Map.of("username", username), this.userRowMapper);
+        var result = jdbcTemplate.queryForObject(sql, Map.of("username", username), this.userRowMapper);
+        return Optional.ofNullable(result);
     }
 
-    public UserEntity findUserByEmail(String email) {
+    public Optional<UserEntity> findUserByEmail(String email) {
         String sql = "SELECT * FROM user_management.users WHERE email = :email";
-        return jdbcTemplate.queryForObject(sql, Map.of("email", email), this.userRowMapper);
+        var result = jdbcTemplate.queryForObject(sql, Map.of("email", email), this.userRowMapper);
+        return Optional.ofNullable(result);
     }
 
-    public UserEntity findUserById(UUID id) {
+    public Optional<UserEntity> findUserById(UUID id) {
         String sql = "SELECT * FROM user_management.users WHERE id = :id";
-        return jdbcTemplate.queryForObject(sql, Map.of("id", id), this.userRowMapper);
+        var result = jdbcTemplate.queryForObject(sql, Map.of("id", id), this.userRowMapper);
+        return Optional.ofNullable(result);
     }
 
     public void saveUser(UserEntity user) {

@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
-import tech.kood.match_me.user_management.database.repostitories.UserRepository;
-import tech.kood.match_me.user_management.features.registerUser.RegisterUserHandler;
+import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
+import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
 import tech.kood.match_me.user_management.mocks.UserEntityMocker;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,8 +41,8 @@ public class UserRepositoryTests extends UserManagementTestBase {
         var userEntity = UserEntityMocker.createValidUserEntity();
         userRepository.saveUser(userEntity);
         var found = userRepository.findUserByUsername(userEntity.username());
-        assertNotNull(found);
-        assertEquals(userEntity.username(), found.username());
+        assertFalse(found.isEmpty(), "User should be found by username");
+        assertEquals(userEntity.username(), found.get().username());
     }
 
     @Test
@@ -50,8 +50,8 @@ public class UserRepositoryTests extends UserManagementTestBase {
         var userEntity = UserEntityMocker.createValidUserEntity();
         userRepository.saveUser(userEntity);
         var found = userRepository.findUserByEmail(userEntity.email());
-        assertNotNull(found);
-        assertEquals(userEntity.email(), found.email());
+        assertFalse(found.isEmpty(), "User should be found by email");
+        assertEquals(userEntity.email(), found.get().email());
     }
 
     @Test
@@ -59,8 +59,8 @@ public class UserRepositoryTests extends UserManagementTestBase {
         var userEntity = UserEntityMocker.createValidUserEntity();
         userRepository.saveUser(userEntity);
         var found = userRepository.findUserById(userEntity.id());
-        assertNotNull(found);
-        assertEquals(userEntity.id(), found.id());
+        assertFalse(found.isEmpty(), "User should be found by ID");
+        assertEquals(userEntity.id(), found.get().id());
     }
 
     @Test

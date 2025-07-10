@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.models;
+package tech.kood.match_me.user_management.internal.models;
 
 import java.util.UUID;
 
