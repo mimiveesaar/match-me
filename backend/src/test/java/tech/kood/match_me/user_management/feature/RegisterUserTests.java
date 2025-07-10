@@ -36,4 +36,6 @@ public class RegisterUserTests extends UserManagementTestBase {
         var result = registerUserHandler.handle(RegisterUserRequestMocker.createValidRequest());
         assert result instanceof RegisterUserResults.Success;
     }
+
+    
 }

@@ -2,6 +2,7 @@ package tech.kood.match_me.user_management.database.repostitories;
 
 import java.sql.Timestamp;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -50,7 +51,7 @@ public class UserRepository {
         return jdbcTemplate.queryForObject(sql, Map.of("email", email), this.userRowMapper);
     }
 
-    public UserEntity findUserById(String id) {
+    public UserEntity findUserById(UUID id) {
         String sql = "SELECT * FROM user_management.users WHERE id = :id";
         return jdbcTemplate.queryForObject(sql, Map.of("id", id), this.userRowMapper);
     }

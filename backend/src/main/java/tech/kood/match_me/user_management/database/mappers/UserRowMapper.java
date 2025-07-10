@@ -23,6 +23,6 @@ public class UserRowMapper implements RowMapper<UserEntity> {
         Instant created_at = rs.getTimestamp("created_at").toInstant();
         Instant updated_at = rs.getTimestamp("updated_at").toInstant();
 
-        return new UserEntity(id, email, password_hash, password_salt, username, created_at, updated_at);
+        return new UserEntity(id, email, username, password_hash, password_salt, created_at, updated_at);
     }
 }

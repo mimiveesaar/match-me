@@ -14,10 +14,10 @@ public class UserEntityMocker {
 
         return new UserEntity(
             user.id(),
+            user.email(),
             user.username(),
             password_hash.password_hash(),
             password_hash.password_salt(),
-            user.email(),
             Instant.now(),
             Instant.now()
         );
