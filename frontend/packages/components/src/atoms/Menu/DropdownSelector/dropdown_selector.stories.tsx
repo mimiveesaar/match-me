@@ -1,5 +1,6 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { DropdownSelector } from './dropdown_selector';
+import { DropdownSelector, DropdownSelectorProps } from './dropdown_selector';
 
 const meta: Meta<typeof DropdownSelector> = {
   title: 'Atoms/Menu/Dropdown Selector',
@@ -7,7 +8,7 @@ const meta: Meta<typeof DropdownSelector> = {
   argTypes: {
     header: {control: 'text' },
     options: { control: 'array' },
-    selectedOption: { control: 'text' },
+    selectedOptions: { control: 'array' },
     onSelect: { action: 'selected' },
   },
 };
@@ -17,11 +18,39 @@ type Story = StoryObj<typeof DropdownSelector>;
 
 export const Default: Story = {
   args: {
-    header: ['looking for'],
+    header: 'Choose option',
     options: ['Option 1', 'Option 2', 'Option 3'],
-    selectedOption: 'Option 2',
+    selectedOptions: [],
+  },
+};
+
+export const Interactive: Story = {
+  render: (args: DropdownSelectorProps) => {
+    const [selected, setSelected] = React.useState<string[]>(args.selectedOptions || []);
+
+    const handleSelect = (option: string) => {
+      setSelected((prev) =>
+        prev.includes(option)
+          ? prev.filter((item) => item !== option)
+          : [...prev, option]
+      );
+    };
+
+    return (
+      <DropdownSelector
+        {...args}
+        selectedOptions={selected}
+        onSelect={handleSelect}
+      />
+    );
+  },
+  args: {
+    header: 'looking for',
+    options: ['Friendship', 'Dating', 'Networking', 'Planetary playmate', 'Intergalactic romance'],
+    selectedOptions: [],
   },
   parameters: {
     layout: 'centered',
   },
 };
+
