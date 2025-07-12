@@ -1,16 +1,16 @@
-package tech.kood.match_me.user_management.models;
+package tech.kood.match_me.user_management.DTOs;
 
 import java.util.UUID;
 
 import lombok.Builder;
 
 @Builder
-public record User(
+public record UserDTO(
     UUID id,
     String username,
     String email
 ) {
-    public User {
+    public UserDTO {
         if (id == null) {
             throw new IllegalArgumentException("ID cannot be null or blank");
         }

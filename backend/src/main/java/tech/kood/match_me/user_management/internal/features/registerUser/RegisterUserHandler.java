@@ -2,9 +2,12 @@ package tech.kood.match_me.user_management.internal.features.registerUser;
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+import tech.kood.match_me.user_management.internal.common.Command;
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
 import tech.kood.match_me.user_management.internal.entities.UserEntity;
 import tech.kood.match_me.user_management.internal.models.HashedPassword;
@@ -20,7 +23,12 @@ public class RegisterUserHandler {
         this.userRepository = userRepository;
     }
 
-    public RegisterUserResults handle(RegisterUserRequest request) {
+    @EventListener
+    public void handle(Command<RegisterUserRequest, RegisterUserResults> command) {
+
+        RegisterUserRequest request = command.getRequest();
+        CompletableFuture<RegisterUserResults> result = command.getResultFuture();
+
         // Validate the request
         if (request.username() == null || request.username().isBlank()) {
             throw new IllegalArgumentException("Username cannot be null or blank");
@@ -33,19 +41,19 @@ public class RegisterUserHandler {
         }
 
         if (EmailValidator.isValidEmail(request.email()) == false) {
-            return new RegisterUserResults.InvalidEmail(request.email(), request.tracingId());
+            result.complete(new RegisterUserResults.InvalidEmail(request.email(), request.tracingId()));
         }
 
         if (userRepository.usernameExists(request.username())) {
-            return new RegisterUserResults.UsernameExists(request.username(), request.tracingId());
+            result.complete(new RegisterUserResults.UsernameExists(request.username(), request.tracingId()));
         }
 
         if (userRepository.emailExists(request.email())) {
-            return new RegisterUserResults.EmailExists(request.email(), request.tracingId());
+            result.complete(new RegisterUserResults.EmailExists(request.email(), request.tracingId()));
         }
 
         if (request.password().length() < 8) {
-            return new RegisterUserResults.InvalidPasswordLength(request.password(), request.tracingId());
+            result.complete(new RegisterUserResults.InvalidPasswordLength(request.password(), request.tracingId()));
         }
 
         // Generate hash from the clear-text password.
@@ -67,12 +75,7 @@ public class RegisterUserHandler {
             userRepository.saveUser(userEntity);
         } catch (Exception e) {
             // Handle any exceptions that occur during saving.
-            return new RegisterUserResults.SystemError("Failed to register user: " + e.getMessage(), request.tracingId());
+            result.complete(new RegisterUserResults.SystemError("Failed to register user: " + e.getMessage(), request.tracingId()));
         }
-
-        return new RegisterUserResults.Success(
-            userEntity.id().toString(),
-            request.tracingId()
-        );
     }
 }
