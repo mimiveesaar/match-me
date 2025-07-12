@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.internal.models;
+package tech.kood.match_me.user_management.models;
 
 public record HashedPassword(String password_hash, String password_salt) {
     

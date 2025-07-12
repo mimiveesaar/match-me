@@ -10,9 +10,10 @@ import org.springframework.stereotype.Service;
 import tech.kood.match_me.user_management.internal.common.Command;
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
 import tech.kood.match_me.user_management.internal.entities.UserEntity;
-import tech.kood.match_me.user_management.internal.models.HashedPassword;
 import tech.kood.match_me.user_management.internal.utils.EmailValidator;
 import tech.kood.match_me.user_management.internal.utils.PasswordUtils;
+import tech.kood.match_me.user_management.models.HashedPassword;
+import tech.kood.match_me.user_management.models.User;
 
 @Service
 public class RegisterUserHandler {
@@ -73,6 +74,12 @@ public class RegisterUserHandler {
         try {
             // Save the user entity to the database.
             userRepository.saveUser(userEntity);
+            var user = new User(
+                userEntity.id(),
+                userEntity.username(),
+                userEntity.email(),
+            );
+            result.complete(new RegisterUserResults.Success(userEntity, request.tracingId()));
         } catch (Exception e) {
             // Handle any exceptions that occur during saving.
             result.complete(new RegisterUserResults.SystemError("Failed to register user: " + e.getMessage(), request.tracingId()));

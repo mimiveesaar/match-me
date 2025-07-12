@@ -3,13 +3,14 @@ package tech.kood.match_me.user_management.internal.features.registerUser;
 import java.util.Optional;
 
 import tech.kood.match_me.user_management.internal.common.UserManagementResult;
+import tech.kood.match_me.user_management.models.User;
 
 public sealed interface RegisterUserResults extends UserManagementResult
     permits RegisterUserResults.Success, RegisterUserResults.UsernameExists,
         RegisterUserResults.EmailExists, RegisterUserResults.InvalidEmail, 
         RegisterUserResults.InvalidPasswordLength, RegisterUserResults.SystemError {
 
-    record Success(String userId, Optional<String> tracingId) implements RegisterUserResults {
+    record Success(User user, Optional<String> tracingId) implements RegisterUserResults {
             @Override
             public Optional<String> tracingId() {
                 return tracingId;
