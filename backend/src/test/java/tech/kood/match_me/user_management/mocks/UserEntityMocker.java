@@ -21,9 +21,9 @@ public class UserEntityMocker {
             .id(user.id())
             .email(user.email())
             .username(user.username())
-            .password_hash(password_hash.password_hash())
-            .password_salt(password_hash.password_salt())
-            .created_at(Instant.now())
-            .updated_at(Instant.now());
+            .passwordHash(password_hash.passwordHash())
+            .passwordSalt(password_hash.passwordSalt())
+            .createdAt(Instant.now())
+            .updatedAt(Instant.now());
     }
 }

@@ -7,7 +7,7 @@ public sealed interface RegisterUserResultsDTO
         RegisterUserResultsDTO.EmailExists, RegisterUserResultsDTO.InvalidEmail, 
         RegisterUserResultsDTO.InvalidPasswordLength, RegisterUserResultsDTO.SystemError {
 
-    record Success(String userId, Optional<String> tracingId) implements RegisterUserResultsDTO {
+    record Success(UserDTO user, Optional<String> tracingId) implements RegisterUserResultsDTO {
             @Override
             public Optional<String> tracingId() {
                 return tracingId;

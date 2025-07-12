@@ -1,5 +1,8 @@
 package tech.kood.match_me.user_management.models;
 
+import java.time.Instant;
+import java.util.UUID;
+
 /**
  * Represents a user in the system.
  *
@@ -7,21 +10,20 @@ package tech.kood.match_me.user_management.models;
  * @param username   The user's username. Cannot be null or blank.
  * @param email      The user's email address. Cannot be null or blank.
  * @param password   The user's hashed password. Cannot be null.
- * @param createdAt  Timestamp (in milliseconds since epoch) when the user was created. Must be positive.
- * @param updatedAt  Timestamp (in milliseconds since epoch) when the user was last updated. Must be positive.
- *
+ * @param createdAt  Timestamp when the user was created. Automatically set to the current time.
+ * @param updatedAt  Timestamp when the user was last updated. Automatically set to the current
  * @throws IllegalArgumentException if any parameter is invalid (null, blank, or non-positive where not allowed).
  */
 public record User(
-    String id,
+    UUID id,
     String username,
     String email,
     HashedPassword password,
-    long createdAt,
-    long updatedAt
+    Instant createdAt,
+    Instant updatedAt
 ) {
     public User {
-        if (id == null || id.isBlank()) {
+        if (id == null) {
             throw new IllegalArgumentException("User ID cannot be null or blank");
         }
         if (username == null || username.isBlank()) {
@@ -33,11 +35,11 @@ public record User(
         if (password == null) {
             throw new IllegalArgumentException("Password cannot be null");
         }
-        if (createdAt <= 0) {
-            throw new IllegalArgumentException("Created at timestamp must be positive");
+        if (createdAt == null) {
+            throw new IllegalArgumentException("CreatedAt cannot be null");
         }
-        if (updatedAt <= 0) {
-            throw new IllegalArgumentException("Updated at timestamp must be positive");
+        if (updatedAt == null) {
+            throw new IllegalArgumentException("UpdatedAt cannot be null");
         }
     }
 }

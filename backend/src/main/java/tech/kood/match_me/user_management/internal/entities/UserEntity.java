@@ -11,18 +11,18 @@ import lombok.Builder;
  * @param id            Unique identifier for the user.
  * @param email         Email address of the user.
  * @param username      Username chosen by the user.
- * @param password_hash Hashed password of the user.
- * @param password_salt Salt used for hashing the user's password.
- * @param created_at    Timestamp when the user was created.
- * @param updated_at    Timestamp when the user was last updated.
+ * @param passwordHash Hashed password of the user.
+ * @param passwordSalt Salt used for hashing the user's password.
+ * @param createdAt    Timestamp when the user was created.
+ * @param updatedAt    Timestamp when the user was last updated.
  */
 @Builder
 public record UserEntity(
     UUID id,
     String email,
     String username,
-    String password_hash,
-    String password_salt,
-    Instant created_at,
-    Instant updated_at
+    String passwordHash,
+    String passwordSalt,
+    Instant createdAt,
+    Instant updatedAt
 ) {}

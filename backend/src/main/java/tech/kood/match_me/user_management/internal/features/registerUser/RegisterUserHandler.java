@@ -78,8 +78,12 @@ public class RegisterUserHandler {
                 userEntity.id(),
                 userEntity.username(),
                 userEntity.email(),
+                new HashedPassword(userEntity.passwordHash(), userEntity.passwordSalt()),
+                userEntity.createdAt(),
+                userEntity.updatedAt()
             );
-            result.complete(new RegisterUserResults.Success(userEntity, request.tracingId()));
+
+            result.complete(new RegisterUserResults.Success(user, request.tracingId()));
         } catch (Exception e) {
             // Handle any exceptions that occur during saving.
             result.complete(new RegisterUserResults.SystemError("Failed to register user: " + e.getMessage(), request.tracingId()));

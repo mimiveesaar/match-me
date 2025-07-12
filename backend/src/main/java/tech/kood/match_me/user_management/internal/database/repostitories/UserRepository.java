@@ -77,10 +77,10 @@ public class UserRepository {
             "id", user.id(),
             "email", user.email(),
             "username", user.username(),
-            "password_hash", user.password_hash(),
-            "password_salt", user.password_salt(),
-            "created_at", Timestamp.from(user.created_at()),
-            "updated_at", Timestamp.from (user.updated_at())
+            "password_hash", user.passwordHash(),
+            "password_salt", user.passwordSalt(),
+            "created_at", Timestamp.from(user.createdAt()),
+            "updated_at", Timestamp.from (user.updatedAt())
         ));
     }
 }
