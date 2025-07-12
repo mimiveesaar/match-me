@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
+import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserCommand;
 import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
 import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
@@ -33,20 +34,30 @@ public class RegisterUserTests extends UserManagementTestBase {
 
     @Test
     void shouldCreateValidUser() {
-        var result = registerUserHandler.handle(RegisterUserRequestMocker.createValidRequest());
+        var request = RegisterUserRequestMocker.createValidRequest();
+        var command = new RegisterUserCommand(request);
+        registerUserHandler.handle(command);
+        var result = command.getResultFuture().join();
+
         assert result instanceof RegisterUserResults.Success;
     }
 
     @Test
     void shouldReturnInvalidEmailForInvalidEmailRequest() {
-        var result = registerUserHandler.handle(RegisterUserRequestMocker.createInvalidEmailRequest());
+        var request = RegisterUserRequestMocker.createInvalidEmailRequest();
+        var command = new RegisterUserCommand(request);
+        registerUserHandler.handle(command);
+        var result = command.getResultFuture().join();
+
         assert result instanceof RegisterUserResults.InvalidEmail;
     }
 
     @Test
     void shouldThrowForBlankUsername() {
         try {
-            registerUserHandler.handle(RegisterUserRequestMocker.createInvalidUsernameRequest());
+            var request = RegisterUserRequestMocker.createInvalidUsernameRequest();
+            var command = new RegisterUserCommand(request);
+            registerUserHandler.handle(command);
             assert false : "Expected IllegalArgumentException";
         } catch (IllegalArgumentException e) {
             assert e.getMessage().contains("Username");
@@ -56,7 +67,9 @@ public class RegisterUserTests extends UserManagementTestBase {
     @Test
     void shouldThrowForBlankPassword() {
         try {
-            registerUserHandler.handle(RegisterUserRequestMocker.createInvalidPasswordRequest());
+            var request = RegisterUserRequestMocker.createInvalidPasswordRequest();
+            var command = new RegisterUserCommand(request);
+            registerUserHandler.handle(command);
             assert false : "Expected IllegalArgumentException";
         } catch (IllegalArgumentException e) {
             assert e.getMessage().contains("Password");
@@ -66,7 +79,9 @@ public class RegisterUserTests extends UserManagementTestBase {
     @Test
     void shouldThrowForNullFields() {
         try {
-            registerUserHandler.handle(RegisterUserRequestMocker.createNullRequest());
+            var request = RegisterUserRequestMocker.createNullRequest();
+            var command = new RegisterUserCommand(request);
+            registerUserHandler.handle(command);
             assert false : "Expected IllegalArgumentException";
         } catch (IllegalArgumentException e) {
             // Should mention one of the required fields

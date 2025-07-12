@@ -4,7 +4,6 @@ import java.time.Instant;
 import com.github.javafaker.Faker;
 
 import tech.kood.match_me.user_management.internal.entities.UserEntity;
-import tech.kood.match_me.user_management.internal.utils.PasswordUtils;
 
 public class UserEntityMocker {
     public static Faker faker = new Faker();
@@ -15,14 +14,13 @@ public class UserEntityMocker {
 
     public static UserEntity.UserEntityBuilder createValidUserEntityBuilder() {
         var user = UserMocker.createValidUser();
-        var password_hash = PasswordUtils.encode(user.password());
 
         return UserEntity.builder()
             .id(user.id())
             .email(user.email())
             .username(user.username())
-            .passwordHash(password_hash.passwordHash())
-            .passwordSalt(password_hash.passwordSalt())
+            .passwordHash(user.password().passwordHash())
+            .passwordSalt(user.password().passwordSalt())
             .createdAt(Instant.now())
             .updatedAt(Instant.now());
     }

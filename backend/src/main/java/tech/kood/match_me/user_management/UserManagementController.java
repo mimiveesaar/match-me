@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import tech.kood.match_me.user_management.DTOs.RegisterUserRequestDTO;
 import tech.kood.match_me.user_management.DTOs.RegisterUserResultsDTO;
-import tech.kood.match_me.user_management.DTOs.UserDTO;
 import tech.kood.match_me.user_management.internal.common.Command;
 import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserRequest;
 import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserResults;
+import tech.kood.match_me.user_management.internal.mappers.UserMapper;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -51,12 +52,7 @@ public class UserManagementController {
             var result = command.getResultFuture().get();
 
             if (result instanceof RegisterUserResults.Success success) {
-                UserDTO userDTO = new UserDTO(
-                        success.user().id(),
-                        success.user().username(),
-                        success.user().email()
-                );
-                return new RegisterUserResultsDTO.Success(userDTO, success.tracingId());
+                return new RegisterUserResultsDTO.Success(UserMapper.toUserDTO(success.user()), success.tracingId());
             } else if (result instanceof RegisterUserResults.UsernameExists usernameExists) {
                 return new RegisterUserResultsDTO.UsernameExists(usernameExists.username(), usernameExists.tracingId());
             } else if (result instanceof RegisterUserResults.EmailExists emailExists) {
@@ -74,7 +70,6 @@ public class UserManagementController {
             e.printStackTrace();
             return new RegisterUserResultsDTO.SystemError("Failed to register user: " + e.getMessage(), internalRequest.tracingId());
         }
-
     }
 
 }
