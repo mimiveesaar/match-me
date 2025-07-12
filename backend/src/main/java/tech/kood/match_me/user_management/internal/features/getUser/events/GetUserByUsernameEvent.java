@@ -1,0 +1,24 @@
+package tech.kood.match_me.user_management.internal.features.getUser.events;
+
+import java.util.Optional;
+
+import tech.kood.match_me.user_management.models.User;
+
+/**
+ * Event representing the retrieval of a user by their id.
+ * @param user      The {@link User} retrieved by username.
+ * @param tracingId An optional external tracing identifier for request correlation.
+ */
+public record GetUserByUsernameEvent(
+    User user,
+    Optional<String> tracingId
+) {
+    public GetUserByUsernameEvent {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        if (tracingId == null) {
+            throw new IllegalArgumentException("Tracing ID cannot be null");
+        }
+    }
+}

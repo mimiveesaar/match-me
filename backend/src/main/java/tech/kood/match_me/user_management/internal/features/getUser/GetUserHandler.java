@@ -2,93 +2,109 @@ package tech.kood.match_me.user_management.internal.features.getUser;
 
 import java.util.UUID;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 
-import tech.kood.match_me.user_management.DTOs.UserDTO;
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
+import tech.kood.match_me.user_management.internal.features.getUser.commands.GetUserByEmailCommand;
+import tech.kood.match_me.user_management.internal.features.getUser.commands.GetUserByIdCommand;
+import tech.kood.match_me.user_management.internal.features.getUser.commands.GetUserByUsernameCommand;
+import tech.kood.match_me.user_management.internal.features.getUser.events.GetUserByEmailEvent;
+import tech.kood.match_me.user_management.internal.features.getUser.events.GetUserByIdEvent;
+import tech.kood.match_me.user_management.internal.features.getUser.events.GetUserByUsernameEvent;
 import tech.kood.match_me.user_management.internal.features.getUser.requests.GetUserByEmailRequest;
 import tech.kood.match_me.user_management.internal.features.getUser.requests.GetUserByIdRequest;
 import tech.kood.match_me.user_management.internal.features.getUser.requests.GetUserByUsernameRequest;
 import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByEmailResults;
 import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByIdResults;
 import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByUsernameResults;
+import tech.kood.match_me.user_management.internal.mappers.UserMapper;
 
 
 
 public class GetUserHandler {
     
     private final UserRepository userRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public GetUserHandler(UserRepository userRepository) {
+    public GetUserHandler(UserRepository userRepository, ApplicationEventPublisher applicationEventPublisher) {
         this.userRepository = userRepository;
+        this.eventPublisher = applicationEventPublisher;
     }
 
     @EventListener
-    public GetUserByUsernameResults handle(GetUserByUsernameRequest request) {
+    public void handle(GetUserByUsernameCommand command) {
+        GetUserByUsernameRequest request = command.getRequest();
         String username = request.username();
-
-        if (username == null || username.isBlank()) {
-            return new GetUserByUsernameResults.InvalidUsername(username, request.tracingId());
-        }
 
         try {
             var userQueryResult = userRepository.findUserByUsername(username);
             if (userQueryResult.isPresent()) {
                 var userEntity = userQueryResult.get();
-                var publicUser = new UserDTO(userEntity.id(), userEntity.username(), userEntity.email());
+                var userDTO = UserMapper.toUserDTO(userEntity);
+                var user = UserMapper.toUser(userEntity);
 
-                return new GetUserByUsernameResults.Success(publicUser, request.tracingId());
+                command.getResultFuture().complete(new GetUserByUsernameResults.Success(userDTO, request.tracingId()));
+                eventPublisher.publishEvent(
+                    new GetUserByUsernameEvent(user, request.tracingId())
+                );
+
             } else {
-                return new GetUserByUsernameResults.UserNotFound(username, request.tracingId());
+                command.getResultFuture().complete(new GetUserByUsernameResults.UserNotFound(username, request.tracingId()));
             }
         } catch (Exception e) {
-            return new GetUserByUsernameResults.SystemError("Failed to retrieve user by username: " + e.getMessage(), request.tracingId());
+            command.getResultFuture().complete(
+                new GetUserByUsernameResults.SystemError("Failed to retrieve user by username: " + e.getMessage(), request.tracingId())
+            );
         }
     }
 
     @EventListener
-    public GetUserByEmailResults handle(GetUserByEmailRequest request) {
+    public void handle(GetUserByEmailCommand command) {
+        GetUserByEmailRequest request = command.getRequest();
         String email = request.email();
 
-        if (email == null || email.isBlank()) {
-            return new GetUserByEmailResults.InvalidEmail(email, request.requestId(), request.tracingId());
-        }
 
         try {
             var userQueryResult = userRepository.findUserByEmail(email);
             if (userQueryResult.isPresent()) {
                 var userEntity = userQueryResult.get();
-                var user = new UserDTO(userEntity.id(), userEntity.username(), userEntity.email());
+                var userDTO = UserMapper.toUserDTO(userEntity);
 
-                return new GetUserByEmailResults.Success(user, request.requestId(), request.tracingId());
+                command.getResultFuture().complete(new GetUserByEmailResults.Success(userDTO, request.requestId(), request.tracingId()));
+                eventPublisher.publishEvent(
+                    new GetUserByEmailEvent(UserMapper.toUser(userEntity), request.tracingId())
+                );
             } else {
-                return new GetUserByEmailResults.UserNotFound(email, request.requestId(), request.tracingId());
+                command.getResultFuture().complete(new GetUserByEmailResults.UserNotFound(email, request.requestId(), request.tracingId()));
             }
         } catch (Exception e) {
-            return new GetUserByEmailResults.SystemError("Failed to retrieve user by email: " + e.getMessage(), request.requestId(), request.tracingId());
+            command.getResultFuture().complete(
+                new GetUserByEmailResults.SystemError("Failed to retrieve user by email: " + e.getMessage(), request.requestId(), request.tracingId())
+            );
         }
     }
 
     @EventListener
-    public GetUserByIdResults handle(GetUserByIdRequest request) {
+    public void handle(GetUserByIdCommand command) {
+        GetUserByIdRequest request = command.getRequest();
         UUID id = request.userId();
-
-        if (id == null) {
-            return new GetUserByIdResults.InvalidUserId(request.requestId(), request.tracingId());
-        }
 
         try {
             var userQueryResult = userRepository.findUserById(id);
             if (userQueryResult.isPresent()) {
                 var userEntity = userQueryResult.get();
-                var user = new UserDTO(userEntity.id(), userEntity.username(), userEntity.email());
+                var userDTO = UserMapper.toUserDTO(userEntity);
 
-                return new GetUserByIdResults.Success(user, request.requestId(), request.tracingId());
+                command.getResultFuture().complete(new GetUserByIdResults.Success(userDTO, request.requestId(), request.tracingId()));
+                eventPublisher.publishEvent(
+                    new GetUserByIdEvent(UserMapper.toUser(userEntity), request.tracingId())
+                );
             } else {
-                return new GetUserByIdResults.UserNotFound(id, request.requestId(), request.tracingId());
+                command.getResultFuture().complete(new GetUserByIdResults.UserNotFound(id, request.requestId(), request.tracingId()));
             }
         } catch (Exception e) {
-            return new GetUserByIdResults.SystemError("Failed to retrieve user by ID: " + e.getMessage(), request.requestId(), request.tracingId());
+            command.getResultFuture().complete(new GetUserByIdResults.SystemError("Failed to retrieve user by ID: " + e.getMessage(), request.requestId(), request.tracingId()));
         }
     }
 }

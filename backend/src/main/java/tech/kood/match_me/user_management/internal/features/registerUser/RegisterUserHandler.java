@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +22,15 @@ public class RegisterUserHandler {
 
     private final UserRepository userRepository;
 
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
+
     public RegisterUserHandler(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @EventListener
-    public void handle(Command<RegisterUserRequest, RegisterUserResults> command) {
+    public void handle(RegisterUserCommand command) {
 
         RegisterUserRequest request = command.getRequest();
         CompletableFuture<RegisterUserResults> result = command.getResultFuture();
@@ -65,8 +70,8 @@ public class RegisterUserHandler {
             UUID.randomUUID(),
             request.username(),
             request.email(),
-            hashedPassword.password_hash(),
-            hashedPassword.password_salt(),
+            hashedPassword.passwordHash(),
+            hashedPassword.passwordSalt(),
             Instant.now(),
             Instant.now()
         );
@@ -84,6 +89,9 @@ public class RegisterUserHandler {
             );
 
             result.complete(new RegisterUserResults.Success(user, request.tracingId()));
+            var registeredEvent = new UserRegisteredEvent(user, request.tracingId());
+            applicationEventPublisher.publishEvent(registeredEvent);
+
         } catch (Exception e) {
             // Handle any exceptions that occur during saving.
             result.complete(new RegisterUserResults.SystemError("Failed to register user: " + e.getMessage(), request.tracingId()));
