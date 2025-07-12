@@ -30,17 +30,17 @@
 }
 
 .slider {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   height: 1px;
+  width: 100%;
   background: black;
-  border-radius: 5px;
-
+  z-index: 0;
 }
 
 .range-input {
   position: relative;
-  margin-top: 1rem;
-  background: black;
 }
 
 .range-input input[type="range"] {
@@ -60,6 +60,7 @@
   border-radius: 50%;
   background: black;
   cursor: pointer;
+  margin-bottom: 1px;
 }
 
 .range-input input[type="range"]::-moz-range-thumb {

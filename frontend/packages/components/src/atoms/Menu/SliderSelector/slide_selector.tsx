@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import "./slide_selector.css";
 
 interface RangeSliderProps {
+  header?: string;
   min?: number;
   max?: number;
   step?: number;
@@ -11,6 +12,7 @@ interface RangeSliderProps {
 }
 
 export const RangeSlider: React.FC<RangeSliderProps> = ({
+  header,
   min = 0,
   max = 1000,
   step = 1,
@@ -23,7 +25,7 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
     <div className="range-wrapper">
 
       <header>
-        <h2 className="font-serif text-base">age</h2>
+        <h2 className="font-serif text-sm">{header}</h2>
       </header>
 
       <div className="range-input mb-3">

@@ -40,7 +40,7 @@ export const DropdownSelector: React.FC<DropdownSelectorProps> = ({
                 {header}
             </div>
             <button
-                className="w-[147px] h-[25px] text-left flex items-center bg-ivory p-2 rounded-lg drop-shadow-custom-2"
+                className="w-[147px] h-[25px] text-left flex items-center bg-ivory p-2 rounded-lg drop-shadow-custom-2 mb-5"
                 onClick={toggleDropdown}
             >
                 <span className="overflow-hidden whitespace-nowrap text-ellipsis block w-full">
@@ -48,7 +48,7 @@ export const DropdownSelector: React.FC<DropdownSelectorProps> = ({
                 </span>
             </button>
             {isOpen && (
-                <ul className="absolute bg-ivory drop-shadow-custom-2 mt-1 w-full rounded-lg">
+                <ul className="absolute z-10 bg-ivory drop-shadow-custom-2 mt-1 w-full rounded-lg">
                     {options.map((option) => {
                         const isSelected = selectedOptions.includes(option);
                         return (
