@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
 import tech.kood.match_me.user_management.internal.features.getUser.commands.GetUserByEmailCommand;
@@ -21,7 +23,7 @@ import tech.kood.match_me.user_management.internal.features.getUser.results.GetU
 import tech.kood.match_me.user_management.internal.mappers.UserMapper;
 
 
-
+@Service
 public class GetUserHandler {
     
     private final UserRepository userRepository;
@@ -52,7 +54,9 @@ public class GetUserHandler {
             } else {
                 command.getResultFuture().complete(new GetUserByUsernameResults.UserNotFound(username, request.tracingId()));
             }
-        } catch (Exception e) {
+        }
+        
+        catch (Exception e) {
             command.getResultFuture().complete(
                 new GetUserByUsernameResults.SystemError("Failed to retrieve user by username: " + e.getMessage(), request.tracingId())
             );

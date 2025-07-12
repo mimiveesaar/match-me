@@ -54,6 +54,19 @@ public class UserRepositoryTests extends UserManagementTestBase {
         assertEquals(userEntity.email(), found.get().email());
     }
 
+
+    @Test
+    void shouldNotFindUserByEmail() {
+        var found = userRepository.findUserByEmail("test@mail.com");
+        assertTrue(found.isEmpty(), "User should be found by email");
+    }
+
+    @Test
+    void emailShouldNotExist() {
+        var exists = userRepository.emailExists("test@mail.com");
+        assertFalse(exists, "Email should not exist");
+    }
+
     @Test
     void shouldFindUserById() {
         var userEntity = UserEntityMocker.createValidUserEntity();

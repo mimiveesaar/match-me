@@ -68,8 +68,8 @@ public class RegisterUserHandler {
         // Create a new UserEntity.
         var userEntity = new UserEntity(
             UUID.randomUUID(),
-            request.username(),
             request.email(),
+            request.username(),
             hashedPassword.passwordHash(),
             hashedPassword.passwordSalt(),
             Instant.now(),

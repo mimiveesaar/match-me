@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -45,20 +46,38 @@ public class UserRepository {
 
     public Optional<UserEntity> findUserByUsername(String username) {
         String sql = "SELECT * FROM user_management.users WHERE username = :username";
-        var result = jdbcTemplate.queryForObject(sql, Map.of("username", username), this.userRowMapper);
-        return Optional.ofNullable(result);
+
+        try {
+            var result = jdbcTemplate.queryForObject(sql, Map.of("username", username), this.userRowMapper);
+            return Optional.ofNullable(result);
+        } catch (EmptyResultDataAccessException e) {
+            // Handle the case where no user is found
+            return Optional.empty();
+        }
     }
 
     public Optional<UserEntity> findUserByEmail(String email) {
         String sql = "SELECT * FROM user_management.users WHERE email = :email";
-        var result = jdbcTemplate.queryForObject(sql, Map.of("email", email), this.userRowMapper);
-        return Optional.ofNullable(result);
+
+        try {
+            var result = jdbcTemplate.queryForObject(sql, Map.of("email", email), this.userRowMapper);
+            return Optional.ofNullable(result);
+        } catch (EmptyResultDataAccessException e) {
+            // Handle the case where no user is found
+            return Optional.empty();
+        }
     }
 
     public Optional<UserEntity> findUserById(UUID id) {
         String sql = "SELECT * FROM user_management.users WHERE id = :id";
-        var result = jdbcTemplate.queryForObject(sql, Map.of("id", id), this.userRowMapper);
-        return Optional.ofNullable(result);
+
+        try {
+            var result = jdbcTemplate.queryForObject(sql, Map.of("id", id), this.userRowMapper);
+            return Optional.ofNullable(result);
+        } catch (EmptyResultDataAccessException e) {
+            // Handle the case where no user is found
+            return Optional.empty();
+        }
     }
 
     public void saveUser(UserEntity user) {
