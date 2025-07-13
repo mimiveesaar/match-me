@@ -35,12 +35,12 @@ export const DropdownSelector: React.FC<DropdownSelectorProps> = ({
                 : `${selectedOptions.length} selected`;
 
     return (
-        <div className="relative font-serif text-base">
+        <div className="relative font-serif text-base mb-6">
             <div className="w-full text-center text-sm mb-1">
                 {header}
             </div>
             <button
-                className="w-[147px] h-[25px] text-left flex items-center bg-ivory p-2 rounded-lg drop-shadow-custom-2 mb-5"
+                className="w-[147px] h-[25px] text-left flex items-center bg-ivory p-2 rounded-lg drop-shadow-custom-2"
                 onClick={toggleDropdown}
             >
                 <span className="overflow-hidden whitespace-nowrap text-ellipsis block w-full">

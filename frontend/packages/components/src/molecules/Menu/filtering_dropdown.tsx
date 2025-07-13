@@ -8,29 +8,40 @@ import React, { useState } from "react";
 export const FilteringDropdown = () => {
     return (
         <div className="relative">
-            <RangeSlider 
-                header="age"
-            />
-            <RangeSlider 
-                header="distance"
-            />
 
-            <DropdownSelector
-                header="looking for"
-                options={["A", "B", "C"]}
-                selectedOptions={[]}
-                onSelect={() => { }}
+            <RangeSlider
+                header="age"
+                min={18}
+                max={1000}
+                step={1}
+                gap={5}
+
             />
-            <DropdownSelector
-                header="bodyform"
-                options={["A", "B", "C"]}
-                selectedOptions={[]}
-                onSelect={() => { }} />
-            <DropdownSelector
-                header="interests"
-                options={["A", "B", "C"]}
-                selectedOptions={[]}
-                onSelect={() => { }} />
+            <RangeSlider
+                header="distance"
+                min={0}
+                max={9300}
+                step={10}
+                gap={20}
+            />
+            <div className="pt-4">
+                <DropdownSelector
+                    header="looking for"
+                    options={["A", "B", "C"]}
+                    selectedOptions={[]}
+                    onSelect={() => { }}
+                />
+                <DropdownSelector
+                    header="bodyform"
+                    options={["A", "B", "C"]}
+                    selectedOptions={[]}
+                    onSelect={() => { }} />
+                <DropdownSelector
+                    header="interests"
+                    options={["A", "B", "C"]}
+                    selectedOptions={[]}
+                    onSelect={() => { }} />
+            </div>
         </div>
     );
 }

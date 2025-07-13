@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import "./slide_selector.css";
 
 interface RangeSliderProps {
@@ -86,4 +86,5 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
     </div>
   );
 };
+
 
