@@ -17,15 +17,15 @@ export const Menu = () => {
 
   return (
     <MenuBase className="flex flex-col h-full p-4">
-  
+
       <div className="w-full flex justify-center mb-10">
         <MenuHeader header="Menu" />
       </div>
 
       <div className="flex flex-col gap-3 items-start  w-full">
-        <button onClick={handleMatchesClick}>
-          <PageLink label="Matches" />
-        </button>
+
+        <PageLink label="Matches" onClick={handleMatchesClick} />
+
         {showDropdown && (
           <div className="w-full">
             <FilteringDropdown />
