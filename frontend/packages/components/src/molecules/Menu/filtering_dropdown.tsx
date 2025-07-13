@@ -2,7 +2,7 @@
 
 import { DropdownSelector } from "@atoms/Menu/DropdownSelector/dropdown_selector";
 import { RangeSlider } from "@atoms/Menu/SliderSelector/slide_selector";
-import React, { useState } from "react";
+import React from "react";
 
 
 export const FilteringDropdown = () => {
@@ -24,23 +24,26 @@ export const FilteringDropdown = () => {
                 step={10}
                 gap={20}
             />
-            <div className="pt-4">
-                <DropdownSelector
-                    header="looking for"
-                    options={["A", "B", "C"]}
-                    selectedOptions={[]}
-                    onSelect={() => { }}
-                />
-                <DropdownSelector
-                    header="bodyform"
-                    options={["A", "B", "C"]}
-                    selectedOptions={[]}
-                    onSelect={() => { }} />
-                <DropdownSelector
-                    header="interests"
-                    options={["A", "B", "C"]}
-                    selectedOptions={[]}
-                    onSelect={() => { }} />
+
+            <div className="pb-2">
+                <div className="flex flex-col items-center">
+                    <DropdownSelector
+                        header="looking for"
+                        options={["Intergalatctic Romance", "Frindship", "Travel Buddy"]}
+                        selectedOptions={[]}
+                        onSelect={() => { }}
+                    />
+                    <DropdownSelector
+                        header="bodyform"
+                        options={["Gelatinous", "Tetrahedrous", "Dexaspherical", "Phospopede"]}
+                        selectedOptions={[]}
+                        onSelect={() => { }} />
+                    <DropdownSelector
+                        header="interests"
+                        options={["Painting", "Binary poetry", "Helium inhalation"]}
+                        selectedOptions={[]}
+                        onSelect={() => { }} />
+                </div>
             </div>
         </div>
     );

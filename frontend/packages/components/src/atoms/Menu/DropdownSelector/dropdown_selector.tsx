@@ -48,7 +48,7 @@ export const DropdownSelector: React.FC<DropdownSelectorProps> = ({
                 </span>
             </button>
             {isOpen && (
-                <ul className="absolute z-10 bg-ivory drop-shadow-custom-2 mt-1 w-full rounded-lg">
+                <ul className="absolute z-10 bg-ivory drop-shadow-custom-2 mt-1 w-full rounded-lg max-h-32 overflow-y-auto">
                     {options.map((option) => {
                         const isSelected = selectedOptions.includes(option);
                         return (
@@ -67,15 +67,3 @@ export const DropdownSelector: React.FC<DropdownSelectorProps> = ({
         </div>
     );
 };
-
-// Example usage
-// const options = ['Option 1', 'Option 2', 'Option 3'];
-// const [selectedOption, setSelectedOption] = useState(options[0]);
-// 
-// <DropdownSelector
-//   options={options}
-//   selectedOption={selectedOption}
-//   onSelect={setSelectedOption}
-// />
-// 
-// This will render a dropdown selector with the provided options and handle selection changes.
