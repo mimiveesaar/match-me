@@ -7,7 +7,7 @@ import { NextPageIconButton } from "../../atoms/NextPageIconButton/NextPageIconB
 import { CircleWrapper } from "../../atoms/CircleWrapper/CircleWrapper";
 import { useState } from "react";
 
-export const AccountFormSignUp1 = () => {
+export const UserSignUpForm = () => {
   const [username, setUsername] = useState("");
   const [age, setAge] = useState("");
   const [bodyform, setBodyform] = useState("");
