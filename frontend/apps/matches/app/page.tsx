@@ -5,20 +5,39 @@ import { MatchCardBack } from "/workspace/frontend/packages/components/src/organ
 
 export default function Matches() {
   return (
-    <div>
+    <div className="flex">
       <Menu></Menu>
 
-      <div className="text-pink-700 border border-green-500 p-4 w-40 h-20">Test</div>
+      <div className="grid grid-cols-3 grid-rows-2 gap-4 pt-28">
+        <FlipCard
+          front={
+            <MatchCardFront location={"Mars"} relationshipType={"Martian lover"}></MatchCardFront>
 
-      <FlipCard
-        front={
-          <MatchCardFront location={"Mars"} relationshipType={"Martian lover"}></MatchCardFront>
+          } back={
+            <MatchCardBack location={"Mars"} relationshipType={"Martian lover"} bodyform={"Gelatinous"} bio={"Hiya! mignoig, fkjj  jrnwronfiownf enfjJFBrofbjfnjrwwnfj . mf grigbWGBN  FmrlkrngRGJ NSSMW. FHEUWFnfjefowiFNJF. KFNKNFKW , KSNNnfnbgruigbv fjvskjvosaldnnfsj, fsknflkwhhffslkd.g."}></MatchCardBack>
+          }>
+        </FlipCard>
 
-        } back={
-          <MatchCardBack location={"Mars"} relationshipType={"Martian lover"} bodyform={"Gelatinous"} bio={"Hiya!"}></MatchCardBack>
-        }>
-      </FlipCard>
-      
+        <FlipCard
+          front={
+            <MatchCardFront location={"Mars"} relationshipType={"Martian lover"}></MatchCardFront>
+
+          } back={
+            <MatchCardBack location={"Mars"} relationshipType={"Martian lover"} bodyform={"Gelatinous"} bio={"Hiya! mignoig, fkjj  jrnwronfiownf enfjJFBrofbjfnjrwwnfj . mf grigbWGBN  FmrlkrngRGJ NSSMW. FHEUWFnfjefowiFNJF. KFNKNFKW , KSNNnfnbgruigbv fjvskjvosaldnnfsj, fsknflkwhhffslkd.g."}></MatchCardBack>
+          }>
+        </FlipCard>
+
+        <FlipCard
+          front={
+            <MatchCardFront location={"Mars"} relationshipType={"Martian lover"}></MatchCardFront>
+
+          } back={
+            <MatchCardBack location={"Mars"} relationshipType={"Martian lover"} bodyform={"Gelatinous"} bio={"Hiya! mignoig, fkjj  jrnwronfiownf enfjJFBrofbjfnjrwwnfj . mf grigbWGBN  FmrlkrngRGJ NSSMW. FHEUWFnfjefowiFNJF. KFNKNFKW , KSNNnfnbgruigbv fjvskjvosaldnnfsj, fsknflkwhhffslkd.g."}></MatchCardBack>
+          }>
+        </FlipCard>
+      </div>
+
+
     </div>
 
 
