@@ -26,7 +26,7 @@ const bgClassMap = {
   const bgClass = bgClassMap[color] ?? bgClassMap.minty;
 
   return (
-    <div className={`w-265 h-360 rounded-custom-16 drop-shadow-custom ${bgClass}`}>
+    <div className={`w-full h-360 rounded-custom-16 drop-shadow-custom ${bgClass}`}>
       {children}
     </div>
   );

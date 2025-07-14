@@ -16,13 +16,13 @@ export const Menu = () => {
   };
 
   return (
-    <MenuBase className="flex flex-col h-full p-4">
+    <MenuBase className="flex flex-col h-full p-7 py-3">
 
-      <div className="w-full flex justify-center mb-10">
+      <div className="w-full flex justify-center mb-5">
         <MenuHeader header="Menu" />
       </div>
 
-      <div className="flex flex-col gap-3 items-start  w-full">
+      <div className="flex flex-col gap-1 items-start  w-full">
 
         <PageLink label="Matches" onClick={handleMatchesClick} />
 
