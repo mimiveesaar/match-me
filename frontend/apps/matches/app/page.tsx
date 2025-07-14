@@ -6,7 +6,7 @@ import { AlienMeetLogo } from "/workspace/frontend/packages/components/src/atoms
 
 export default function Matches() {
   return (
-    <div className="flex flex-col items-center pt-6 px-4">
+    <div className="flex flex-col items-center pt-4 px-4">
       
       {/* Top: Logo centered */}
       <div>
