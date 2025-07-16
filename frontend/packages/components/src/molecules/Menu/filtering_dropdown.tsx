@@ -2,10 +2,27 @@
 
 import { DropdownSelector } from "@atoms/Menu/DropdownSelector/dropdown_selector";
 import { RangeSlider } from "@atoms/Menu/SliderSelector/slide_selector";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 
 export const FilteringDropdown = () => {
+
+    const [lookingFor, setLookingFor] = useState<string[]>([]);
+    const [bodyform, setBodyform] = useState<string[]>([]);
+    const [interests, setInterests] = useState<string[]>([]);
+
+    // for testing
+    useEffect(() => {
+    const filters = {
+      lookingFor,
+      bodyform,
+      interests,
+    };
+    console.log("Filters updated:", filters);
+    // Trigger fetch or filter update here
+  }, [lookingFor, bodyform, interests]);
+
+
     return (
         <div className="relative">
 
@@ -30,19 +47,25 @@ export const FilteringDropdown = () => {
                     <DropdownSelector
                         header="looking for"
                         options={["Intergalatctic Romance", "Frindship", "Travel Buddy"]}
-                        selectedOptions={[]}
-                        onSelect={() => { }}
+                        selectedOptions={lookingFor}
+                        onSelect={setLookingFor}
+                        mode='single'
                     />
                     <DropdownSelector
                         header="bodyform"
                         options={["Gelatinous", "Tetrahedrous", "Dexaspherical", "Phospopede"]}
-                        selectedOptions={[]}
-                        onSelect={() => { }} />
+                        selectedOptions={bodyform}
+                        onSelect={setBodyform}
+                        mode='single'
+                    />
+
                     <DropdownSelector
                         header="interests"
                         options={["Painting", "Binary poetry", "Helium inhalation"]}
-                        selectedOptions={[]}
-                        onSelect={() => { }} />
+                        selectedOptions={interests}
+                        onSelect={setInterests}
+                        mode='multiple'
+                    />
                 </div>
             </div>
         </div>

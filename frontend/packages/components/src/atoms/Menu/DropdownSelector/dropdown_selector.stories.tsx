@@ -21,6 +21,7 @@ export const Default: Story = {
     header: 'Choose option',
     options: ['Option 1', 'Option 2', 'Option 3'],
     selectedOptions: [],
+    mode:'single'
   },
 };
 

@@ -1,44 +1,51 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
 export interface DropdownSelectorProps {
     header?: string;
     options?: string[];
-    selectedOptions?: string[];
-    onSelect?: (selected: string[]) => void;
+    selectedOptions: string[];
+    onSelect: (newSelection: string[]) => void;
+    mode?: "single" | "multiple";
 }
 
 export const DropdownSelector: React.FC<DropdownSelectorProps> = ({
     header,
-    options,
+    options = [],
     selectedOptions,
     onSelect,
+    mode = "multiple",
 }) => {
+    const [isOpen, setIsOpen] = React.useState(false);
 
-    const [isOpen, setIsOpen] = useState(false);
-
-    const toggleDropdown = () => {
-        setIsOpen(!isOpen);
-    };
+    const toggleDropdown = () => setIsOpen((prev) => !prev);
 
     const handleOptionClick = (option: string) => {
-        onSelect(option);
-        // setIsOpen(false);
+        let newSelection: string[];
+
+        if (mode === "single") {
+            newSelection = [option];
+            setIsOpen(false);
+        } else {
+            newSelection = selectedOptions.includes(option)
+                ? selectedOptions.filter((item) => item !== option)
+                : [...selectedOptions, option];
+        }
+
+        onSelect(newSelection);
     };
 
     const buttonLabel =
         selectedOptions.length === 0
-            ? '↴'
+            ? "↴"
             : selectedOptions.length === 1
                 ? selectedOptions[0]
                 : `${selectedOptions.length} selected`;
 
     return (
         <div className="relative font-serif text-base mb-6">
-            <div className="w-full text-center text-sm mb-1">
-                {header}
-            </div>
+            {header && <div className="w-full text-center text-sm mb-1">{header}</div>}
             <button
                 className="w-[147px] h-[25px] text-left flex items-center bg-ivory p-2 rounded-lg drop-shadow-custom-2"
                 onClick={toggleDropdown}
@@ -47,6 +54,7 @@ export const DropdownSelector: React.FC<DropdownSelectorProps> = ({
                     {buttonLabel}
                 </span>
             </button>
+
             {isOpen && (
                 <ul className="absolute z-10 bg-ivory drop-shadow-custom-2 mt-1 w-full rounded-lg max-h-32 overflow-y-auto">
                     {options.map((option) => {
