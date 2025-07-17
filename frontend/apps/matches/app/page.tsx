@@ -66,6 +66,7 @@ export default function Matches() {
                   <MatchCardFront
                     location={user.location}
                     relationshipType={user.relationshipType}
+                    bio={user.bio ?? "..."}
                   />
                 }
                 back={

@@ -42,7 +42,7 @@ export const FilteringDropdown: React.FC<FilteringDropdownProps> = ({ filters, s
 
           <DropdownSelector
             header="bodyform"
-            options={["Gelatinous", "Tetrahedrous", "Dexaspherical", "Phospopede"]}
+            options={["Gelatinous", "Vaporous", "Dexaspherical", "Phospopede"]}
             selectedOptions={filters.bodyform}
             onSelect={(val) => setFilters(f => ({ ...f, bodyform: val }))}
             mode='single'
