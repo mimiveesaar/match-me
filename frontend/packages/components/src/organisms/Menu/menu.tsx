@@ -7,8 +7,8 @@ import { PageLink } from "@atoms/Menu/PageLink/pagelink";
 import { SignOutButton } from "@atoms/Menu/SignOut/signout";
 import { FilteringDropdown } from "@molecules/Menu/filtering_dropdown";
 
-
-export const Menu = () => {
+// 👇 Accept filters + setFilters as props
+export const Menu = ({ filters, setFilters }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const handleMatchesClick = () => {
@@ -17,18 +17,17 @@ export const Menu = () => {
 
   return (
     <MenuBase className="flex flex-col h-full p-7 py-3">
-
       <div className="w-full flex justify-center mb-5">
         <MenuHeader header="Menu" />
       </div>
 
-      <div className="flex flex-col gap-1 items-start  w-full">
-
+      <div className="flex flex-col gap-1 items-start w-full">
         <PageLink label="Matches" onClick={handleMatchesClick} />
 
         {showDropdown && (
           <div className="w-full">
-            <FilteringDropdown />
+            {/* 👇 Pass filters + setFilters down */}
+            <FilteringDropdown filters={filters} setFilters={setFilters} />
           </div>
         )}
 

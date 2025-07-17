@@ -19,6 +19,7 @@ interface MatchCardBackProps {
     relationshipType: string;
     bodyform: string;
     bio: string;
+    onHide: () => void;
 };
 
 export const MatchCardBack = ({
@@ -27,6 +28,7 @@ export const MatchCardBack = ({
     relationshipType = "Astral companion",
     bodyform = "Polymorphontes",
     bio = "Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry.",
+
 }: MatchCardBackProps) => {
     return (
 

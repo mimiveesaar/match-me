@@ -2,72 +2,62 @@
 
 import { DropdownSelector } from "@atoms/Menu/DropdownSelector/dropdown_selector";
 import { RangeSlider } from "@atoms/Menu/SliderSelector/slide_selector";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
-
-export const FilteringDropdown = () => {
-
-    const [lookingFor, setLookingFor] = useState<string[]>([]);
-    const [bodyform, setBodyform] = useState<string[]>([]);
-    const [interests, setInterests] = useState<string[]>([]);
-
-    // for testing
-    useEffect(() => {
-    const filters = {
-      lookingFor,
-      bodyform,
-      interests,
-    };
-    console.log("Filters updated:", filters);
-    // Trigger fetch or filter update here
-  }, [lookingFor, bodyform, interests]);
-
-
-    return (
-        <div className="relative">
-
-            <RangeSlider
-                header="age"
-                min={18}
-                max={1000}
-                step={1}
-                gap={5}
-
-            />
-            <RangeSlider
-                header="distance"
-                min={0}
-                max={9300}
-                step={10}
-                gap={20}
-            />
-
-            <div className="pb-2">
-                <div className="flex flex-col items-center">
-                    <DropdownSelector
-                        header="looking for"
-                        options={["Intergalatctic Romance", "Frindship", "Travel Buddy"]}
-                        selectedOptions={lookingFor}
-                        onSelect={setLookingFor}
-                        mode='single'
-                    />
-                    <DropdownSelector
-                        header="bodyform"
-                        options={["Gelatinous", "Tetrahedrous", "Dexaspherical", "Phospopede"]}
-                        selectedOptions={bodyform}
-                        onSelect={setBodyform}
-                        mode='single'
-                    />
-
-                    <DropdownSelector
-                        header="interests"
-                        options={["Painting", "Binary poetry", "Helium inhalation"]}
-                        selectedOptions={interests}
-                        onSelect={setInterests}
-                        mode='multiple'
-                    />
-                </div>
-            </div>
-        </div>
-    );
+interface FilteringDropdownProps {
+  filters: {
+    lookingFor: string[];
+    bodyform: string[];
+    interests: string[];
+  };
+  setFilters: React.Dispatch<React.SetStateAction<{
+    lookingFor: string[];
+    bodyform: string[];
+    interests: string[];
+  }>>;
 }
+
+export const FilteringDropdown: React.FC<FilteringDropdownProps> = ({ filters, setFilters }) => {
+
+  useEffect(() => {
+    console.log("Filters updated:", filters);
+    // Post request here if needed
+  }, [filters]);
+
+  return (
+    <div className="relative">
+      <RangeSlider header="age" min={18} max={1000} step={1} gap={5} />
+      <RangeSlider header="distance" min={0} max={9300} step={10} gap={20} />
+
+      <div className="pb-2">
+        <div className="flex flex-col items-center">
+
+          <DropdownSelector
+            header="looking for"
+            options={["Intergalactic Romance", "Frindship", "Travel Buddy"]}
+            selectedOptions={filters.lookingFor}
+            onSelect={(val) => setFilters(f => ({ ...f, lookingFor: val }))}
+            mode='single'
+          />
+
+          <DropdownSelector
+            header="bodyform"
+            options={["Gelatinous", "Tetrahedrous", "Dexaspherical", "Phospopede"]}
+            selectedOptions={filters.bodyform}
+            onSelect={(val) => setFilters(f => ({ ...f, bodyform: val }))}
+            mode='single'
+          />
+
+          <DropdownSelector
+            header="interests"
+            options={["Painting", "Binary poetry", "Helium inhalation"]}
+            selectedOptions={filters.interests}
+            onSelect={(val) => setFilters(f => ({ ...f, interests: val }))}
+            mode='multiple'
+          />
+
+        </div>
+      </div>
+    </div>
+  );
+};
