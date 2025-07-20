@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,32 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 @Configuration
 public class UserManagementConfig {
     
+
+    @Value("${user-management.username.min-length:3}")
+    private int usernameMinLength;
+    @Value("${user-management.username.max-length:20}")
+    private int usernameMaxLength;
+    @Value("${user-management.password.min-length:8}")
+    private int passwordMinLength;
+    @Value("${user-management.password.max-length:64}")
+    private int passwordMaxLength;
+
+    public int getUsernameMinLength() {
+        return usernameMinLength;
+    }
+
+    public int getUsernameMaxLength() {
+        return usernameMaxLength;
+    }
+
+    public int getPasswordMinLength() {
+        return passwordMinLength;
+    }
+
+    public int getPasswordMaxLength() {
+        return passwordMaxLength;
+    }
+
     @Bean
     @ConfigurationProperties("spring.datasource.user-management")
     public DataSource userManagementDataSource() {

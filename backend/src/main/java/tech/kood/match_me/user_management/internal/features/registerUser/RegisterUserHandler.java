@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import tech.kood.match_me.user_management.UserManagementConfig;
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
 import tech.kood.match_me.user_management.internal.entities.UserEntity;
 import tech.kood.match_me.user_management.internal.utils.EmailValidator;
@@ -18,10 +19,16 @@ public class RegisterUserHandler {
 
     private final UserRepository userRepository;
     private final ApplicationEventPublisher events;
+    private final UserManagementConfig userManagementConfig;
 
-    public RegisterUserHandler(UserRepository userRepository, ApplicationEventPublisher events) {
+    public RegisterUserHandler(
+        UserRepository userRepository,
+        ApplicationEventPublisher events,
+        UserManagementConfig userManagementConfig) {
+
         this.userRepository = userRepository;
         this.events = events;
+        this.userManagementConfig = userManagementConfig;
     }
 
     public RegisterUserResults handle(RegisterUserRequest request) {
@@ -31,16 +38,40 @@ public class RegisterUserHandler {
         if (request.username() == null || request.username().isBlank()) {
             throw new IllegalArgumentException("Username cannot be null or blank");
         }
-        if (request.password() == null || request.password().isBlank()) {
-            throw new IllegalArgumentException("Password cannot be null or blank");
-        }
-        if (request.email() == null || request.email().isBlank()) {
-            throw new IllegalArgumentException("Email cannot be null or blank");
-        }
 
-        if (EmailValidator.isValidEmail(request.email()) == false) {
+        if (request.email() == null || request.email().isBlank() || EmailValidator.isValidEmail(request.email()) == false) {
 
             var result = new RegisterUserResults.InvalidEmail(request.email(), request.tracingId());
+            events.publishEvent(
+                new RegisterUserEvent(request, result)
+            );
+            return result;
+        }
+
+        if (request.username() == null || request.username().isBlank() || request.username().length() < userManagementConfig.getUsernameMinLength()) {
+            var result = new RegisterUserResults.InvalidUsername(request.username(), RegisterUserResults.InvalidUsernameType.TOO_SHORT, request.tracingId());
+            events.publishEvent(
+                new RegisterUserEvent(request, result)
+            );
+            return result;
+        } 
+        else if (request.username().length() > userManagementConfig.getUsernameMaxLength()) {
+            var result = new RegisterUserResults.InvalidUsername(request.username(), RegisterUserResults.InvalidUsernameType.TOO_LONG, request.tracingId());
+            events.publishEvent(
+                new RegisterUserEvent(request, result)
+            );
+            return result;
+        } 
+        else if (!request.username().matches("^[a-zA-Z0-9_]+$")) {
+            var result = new RegisterUserResults.InvalidUsername(request.username(), RegisterUserResults.InvalidUsernameType.INVALID_CHARACTERS, request.tracingId());
+            events.publishEvent(
+                new RegisterUserEvent(request, result)
+            );
+            return result;
+        }
+
+        if (request.password() == null || request.password().isBlank() || request.password().length() < userManagementConfig.getPasswordMinLength()) {
+            var result = new RegisterUserResults.InvalidPassword(request.password(), RegisterUserResults.InvalidPasswordType.TOO_SHORT, request.tracingId());
             events.publishEvent(
                 new RegisterUserEvent(request, result)
             );
@@ -57,14 +88,6 @@ public class RegisterUserHandler {
 
         if (userRepository.emailExists(request.email())) {
             var result = new RegisterUserResults.EmailExists(request.email(), request.tracingId());
-            events.publishEvent(
-                new RegisterUserEvent(request, result)
-            );
-            return result;
-        }
-
-        if (request.password().length() < 8) {
-            var result = new RegisterUserResults.InvalidPasswordLength(request.password(), request.tracingId());
             events.publishEvent(
                 new RegisterUserEvent(request, result)
             );

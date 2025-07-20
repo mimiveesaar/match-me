@@ -9,9 +9,16 @@ import tech.kood.match_me.user_management.internal.features.registerUser.Registe
 public final class RegisterUserResultsMapper {
  
     private final UserMapper userMapper;
+    private final InvalidPasswordTypeMapper invalidPasswordTypeMapper;
+    private final InvalidUsernameTypeMapper invalidUsernameTypeMapper;
 
-    public RegisterUserResultsMapper(UserMapper userMapper) {
+    public RegisterUserResultsMapper(
+        UserMapper userMapper,
+        InvalidPasswordTypeMapper invalidPasswordTypeMapper,
+        InvalidUsernameTypeMapper invalidUsernameTypeMapper) {
         this.userMapper = userMapper;
+        this.invalidPasswordTypeMapper = invalidPasswordTypeMapper;
+        this.invalidUsernameTypeMapper = invalidUsernameTypeMapper;
     }
 
     public RegisterUserResultsDTO toDTO(RegisterUserResults result) {
@@ -36,9 +43,15 @@ public final class RegisterUserResultsMapper {
                 invalidEmail.email(),
                 invalidEmail.tracingId()
             );
-            case RegisterUserResults.InvalidPasswordLength invalidPasswordLength -> new RegisterUserResultsDTO.InvalidPasswordLength(
+            case RegisterUserResults.InvalidPassword invalidPasswordLength -> new RegisterUserResultsDTO.InvalidPassword(
                 invalidPasswordLength.password(),
+                invalidPasswordTypeMapper.toInvalidPasswordType(invalidPasswordLength.type()),
                 invalidPasswordLength.tracingId()
+            );
+            case RegisterUserResults.InvalidUsername invalidUsername -> new RegisterUserResultsDTO.InvalidUsername(
+                invalidUsername.username(),
+                invalidUsernameTypeMapper.toInvalidUsernameType(invalidUsername.type()),
+                invalidUsername.tracingId()
             );
             case RegisterUserResults.SystemError systemError -> new RegisterUserResultsDTO.SystemError(
                 systemError.message(),

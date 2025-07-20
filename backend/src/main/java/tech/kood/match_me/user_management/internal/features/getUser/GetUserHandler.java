@@ -2,6 +2,7 @@ package tech.kood.match_me.user_management.internal.features.getUser;
 
 import java.util.UUID;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
@@ -18,13 +19,18 @@ public class GetUserHandler {
     
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final ApplicationEventPublisher events;
 
-    public GetUserHandler(UserRepository userRepository, UserMapper userMapper) {
+    public GetUserHandler(
+        UserRepository userRepository,
+        UserMapper userMapper,
+        ApplicationEventPublisher events) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.events = events;
     }
 
-       public GetUserByUsernameResults handle(GetUserByUsernameRequest request ) {
+       public GetUserByUsernameResults handle(GetUserByUsernameRequest request) {
         String username = request.username();
 
         try {
@@ -33,15 +39,22 @@ public class GetUserHandler {
                 var userEntity = userQueryResult.get();
                 var userDTO = userMapper.toUserDTO(userEntity);
 
-                return new GetUserByUsernameResults.Success(userDTO, request.tracingId());
+                var result = new GetUserByUsernameResults.Success(userDTO, request.tracingId());
+
+                events.publishEvent(result);
+                return result;
             } else {
-                return new GetUserByUsernameResults.UserNotFound(username, request.tracingId());
+
+                var result = new GetUserByUsernameResults.UserNotFound(username, request.tracingId());
+                events.publishEvent(result);
+                return result;
             }
         } catch (Exception e) {
-            return new GetUserByUsernameResults.SystemError("Failed to retrieve user by username: " + e.getMessage(), request.tracingId());
+            var result = new GetUserByUsernameResults.SystemError("Failed to retrieve user by username: " + e.getMessage(), request.tracingId());
+            events.publishEvent(result);
+            return result;
         }
     }
-
 
     public GetUserByEmailResults handle(GetUserByEmailRequest request) {
         String email = request.email();
@@ -52,12 +65,18 @@ public class GetUserHandler {
                 var userEntity = userQueryResult.get();
                 var userDTO = userMapper.toUserDTO(userEntity);
 
-                return new GetUserByEmailResults.Success(userDTO, request.requestId(), request.tracingId());
+                var result = new GetUserByEmailResults.Success(userDTO, request.requestId(), request.tracingId());
+                events.publishEvent(result);
+                return result;
             } else {
-                return new GetUserByEmailResults.UserNotFound(email, request.requestId(), request.tracingId());
+                var result = new GetUserByEmailResults.UserNotFound(email, request.requestId(), request.tracingId());
+                events.publishEvent(result);
+                return result;
             }
         } catch (Exception e) {
-            return new GetUserByEmailResults.SystemError("Failed to retrieve user by email: " + e.getMessage(), request.requestId(), request.tracingId());
+            var result = new GetUserByEmailResults.SystemError("Failed to retrieve user by email: " + e.getMessage(), request.requestId(), request.tracingId());
+            events.publishEvent(result);
+            return result;
         }
     }
 
@@ -70,12 +89,18 @@ public class GetUserHandler {
                 var userEntity = userQueryResult.get();
                 var userDTO = userMapper.toUserDTO(userEntity);
 
-                return new GetUserByIdResults.Success(userDTO, request.requestId(), request.tracingId());
+                var result = new GetUserByIdResults.Success(userDTO, request.requestId(), request.tracingId());
+                events.publishEvent(result);
+                return result;
             } else {
-                return new GetUserByIdResults.UserNotFound(id, request.requestId(), request.tracingId());
+                var result = new GetUserByIdResults.UserNotFound(id, request.requestId(), request.tracingId());
+                events.publishEvent(result);
+                return result;
             }
         } catch (Exception e) {
-            return new GetUserByIdResults.SystemError("Failed to retrieve user by ID: " + e.getMessage(), request.requestId(), request.tracingId());
+            var result = new GetUserByIdResults.SystemError("Failed to retrieve user by ID: " + e.getMessage(), request.requestId(), request.tracingId());
+            events.publishEvent(result);
+            return result;
         }
     }
 }
