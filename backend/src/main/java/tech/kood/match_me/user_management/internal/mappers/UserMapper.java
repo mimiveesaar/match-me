@@ -1,13 +1,18 @@
 package tech.kood.match_me.user_management.internal.mappers;
 
-import tech.kood.match_me.user_management.DTOs.UserDTO;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
+
+import tech.kood.match_me.user_management.api.DTOs.UserDTO;
 import tech.kood.match_me.user_management.internal.entities.UserEntity;
 import tech.kood.match_me.user_management.models.HashedPassword;
 import tech.kood.match_me.user_management.models.User;
 
+@Component
+@Primary
 public final class UserMapper {
     
-    public static UserDTO toUserDTO(User user) {
+    public UserDTO toUserDTO(User user) {
         if (user == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
@@ -19,7 +24,7 @@ public final class UserMapper {
         );
     }
 
-    public static UserDTO toUserDTO(UserEntity userEntity) {
+    public UserDTO toUserDTO(UserEntity userEntity) {
         if (userEntity == null) {
             throw new IllegalArgumentException("UserEntity cannot be null");
         }
@@ -27,7 +32,7 @@ public final class UserMapper {
         return toUserDTO(toUser(userEntity));
     }
 
-    public static User toUser(UserEntity userEntity) {
+    public User toUser(UserEntity userEntity) {
         if (userEntity == null) {
             throw new IllegalArgumentException("UserEntity cannot be null");
         }

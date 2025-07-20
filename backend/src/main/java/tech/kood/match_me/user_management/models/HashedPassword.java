@@ -11,4 +11,10 @@ public record HashedPassword(String passwordHash, String passwordSalt) {
         }
     }
 
+    public HashedPassword passwordHash(String newPasswordHash) {
+        return new HashedPassword(newPasswordHash, this.passwordSalt);
+    }
+    public HashedPassword passwordSalt(String newPasswordSalt) {
+        return new HashedPassword(this.passwordHash, newPasswordSalt);
+    }
 }

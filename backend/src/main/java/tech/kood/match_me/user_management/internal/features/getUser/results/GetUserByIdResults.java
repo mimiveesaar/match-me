@@ -3,7 +3,7 @@ package tech.kood.match_me.user_management.internal.features.getUser.results;
 import java.util.Optional;
 import java.util.UUID;
 
-import tech.kood.match_me.user_management.DTOs.UserDTO;
+import tech.kood.match_me.user_management.api.DTOs.UserDTO;
 import tech.kood.match_me.user_management.internal.common.UserManagementResult;
 
 public sealed interface GetUserByIdResults extends UserManagementResult permits

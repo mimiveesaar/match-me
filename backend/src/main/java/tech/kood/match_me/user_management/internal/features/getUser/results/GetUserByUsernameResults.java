@@ -2,7 +2,7 @@ package tech.kood.match_me.user_management.internal.features.getUser.results;
 
 import java.util.Optional;
 
-import tech.kood.match_me.user_management.DTOs.UserDTO;
+import tech.kood.match_me.user_management.api.DTOs.UserDTO;
 import tech.kood.match_me.user_management.internal.common.UserManagementResult;
 
 public sealed interface GetUserByUsernameResults extends UserManagementResult permits

@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import lombok.Builder;
 
-@Builder
 public record GetUserByUsernameRequest(
     UUID requestId,
     String username,
@@ -21,5 +20,11 @@ public record GetUserByUsernameRequest(
         if (requestId == null) {
             throw new IllegalArgumentException("Request ID cannot be null");
         }
+    }
+    GetUserByUsernameRequest withUsername(String newUsername) {
+        return new GetUserByUsernameRequest(requestId, newUsername, tracingId);
+    }
+    GetUserByUsernameRequest withTracingId(String newTracingId) {
+        return new GetUserByUsernameRequest(requestId, username, Optional.ofNullable(newTracingId));
     }
 }
