@@ -38,6 +38,11 @@ public class RegisterUserRequestMocker {
         return createValidRequest().withEmail("invalid-email");
     }
 
+
+    public static RegisterUserRequest createShortUsernameRequest() {
+        return createValidRequest().withUsername("1");
+    }
+
     public static RegisterUserRequest createEmptyUsernameRequest() {
         return createValidRequest().withUsername("");
     }

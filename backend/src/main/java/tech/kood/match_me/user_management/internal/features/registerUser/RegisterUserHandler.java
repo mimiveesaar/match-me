@@ -21,6 +21,8 @@ public class RegisterUserHandler {
     private final ApplicationEventPublisher events;
     private final UserManagementConfig userManagementConfig;
 
+    private static final int BCRYPT_MAX_PASSWORD_LENGTH = 72;
+
     public RegisterUserHandler(
         UserRepository userRepository,
         ApplicationEventPublisher events,
@@ -36,7 +38,9 @@ public class RegisterUserHandler {
 
         // Validate the request
         if (request.username() == null || request.username().isBlank()) {
-            throw new IllegalArgumentException("Username cannot be null or blank");
+            var result = new RegisterUserResults.InvalidUsername(request.username(), RegisterUserResults.InvalidUsernameType.TOO_SHORT, request.tracingId());
+            events.publishEvent(new RegisterUserEvent(request, result));
+            return result;
         }
 
         if (request.email() == null || request.email().isBlank() || EmailValidator.isValidEmail(request.email()) == false) {
@@ -72,6 +76,14 @@ public class RegisterUserHandler {
 
         if (request.password() == null || request.password().isBlank() || request.password().length() < userManagementConfig.getPasswordMinLength()) {
             var result = new RegisterUserResults.InvalidPassword(request.password(), RegisterUserResults.InvalidPasswordType.TOO_SHORT, request.tracingId());
+            events.publishEvent(
+                new RegisterUserEvent(request, result)
+            );
+            return result;
+        }
+
+        if (request.password().length() > BCRYPT_MAX_PASSWORD_LENGTH || request.password().length() > userManagementConfig.getPasswordMaxLength()) {
+            var result = new RegisterUserResults.InvalidPassword(request.password(), RegisterUserResults.InvalidPasswordType.TOO_LONG, request.tracingId());
             events.publishEvent(
                 new RegisterUserEvent(request, result)
             );

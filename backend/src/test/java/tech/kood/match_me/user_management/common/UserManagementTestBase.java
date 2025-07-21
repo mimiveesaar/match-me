@@ -1,7 +1,6 @@
 package tech.kood.match_me.user_management.common;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -11,8 +10,9 @@ import org.testcontainers.containers.PostgreSQLContainer;
 public abstract class UserManagementTestBase {
     protected static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine");
 
-    @BeforeAll
-    static void beforeAll() {
+    // Start the PostgreSQL container before all tests.
+    // @BeforeAll is not ran before @DynamicPropertySource, when using TEST_CYCLE_PER_CLASS.
+    static {
         postgres.start();
     }
 
