@@ -6,6 +6,7 @@ import React, { useEffect } from "react";
 
 interface FilteringDropdownProps {
   filters: {
+    location: string[];
     lookingFor: string[];
     bodyform: string[];
     interests: string[];
@@ -13,10 +14,12 @@ interface FilteringDropdownProps {
     distanceRange: [number, number];
   };
   setFilters: React.Dispatch<React.SetStateAction<{
+    location: string[];
     lookingFor: string[];
     bodyform: string[];
     interests: string[];
     ageRange: [number, number];
+    distanceRange: [number, number];
   }>>;
 }
 
@@ -40,13 +43,7 @@ export const FilteringDropdown: React.FC<FilteringDropdownProps> = ({ filters, s
         onChange={(val) => setFilters(f => ({ ...f, ageRange: val }))}
       />
 
-      <RangeSlider
-        header="distance"
-        min={0} max={9300}
-        step={10} gap={20}
-        selectedRange={filters.distanceRange}
-        onChange={(val) => setFilters(f => ({ ...f, distanceRange: val }))}
-      />
+      
 
       <div className="pb-2">
         <div className="flex flex-col items-center">
@@ -75,7 +72,23 @@ export const FilteringDropdown: React.FC<FilteringDropdownProps> = ({ filters, s
             mode='multiple'
           />
 
+          <DropdownSelector
+            header="location"
+            options={["Mars", "Venus", "Juno"]}
+            selectedOptions={filters.lookingFor}
+            onSelect={(val) => setFilters(f => ({ ...f, location: val }))}
+            mode='single'
+          />
+
         </div>
+
+        <RangeSlider
+        header="range"
+        min={0} max={9300}
+        step={10} gap={20}
+        selectedRange={filters.distanceRange}
+        onChange={(val) => setFilters(f => ({ ...f, distanceRange: val }))}
+      />
       </div>
     </div>
   );

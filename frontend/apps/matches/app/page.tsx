@@ -28,7 +28,8 @@ export default function Matches() {
     bodyform: [],
     interests: [],
     lookingFor: [],
-  });
+    location: [],
+  }   as Filters);
 
   // Custom hook to fetch filtered users
   const { users: fetchedUsers, isLoading } = useUserSearch(filters);

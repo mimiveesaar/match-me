@@ -19,9 +19,20 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
   max = 1000,
   step = 1,
   gap = 50,
+  selectedRange,
+  onChange,
 }) => {
-  const [minVal, setMinVal] = useState(min);
-  const [maxVal, setMaxVal] = useState(max);
+  const [minVal, maxVal] = selectedRange;
+
+  const handleMinChange = (val: number) => {
+    const clamped = Math.min(val, maxVal - gap);
+    onChange([clamped, maxVal]);
+  };
+
+  const handleMaxChange = (val: number) => {
+    const clamped = Math.max(val, minVal + gap);
+    onChange([minVal, clamped]);
+  };
 
   return (
     <div className="range-wrapper">
@@ -38,9 +49,7 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
           max={max}
           step={step}
           value={minVal}
-          onChange={(e) =>
-            setMinVal(Math.min(Number(e.target.value), maxVal - gap))
-          }
+          onChange={(e) => handleMinChange(Number(e.target.value))}
         />
 
         <input
@@ -49,9 +58,7 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
           max={max}
           step={step}
           value={maxVal}
-          onChange={(e) =>
-            setMaxVal(Math.max(Number(e.target.value), minVal + gap))
-          }
+          onChange={(e) => handleMaxChange(Number(e.target.value))}
         />
 
         <div className="slider " />
@@ -62,26 +69,20 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
           <input
             type="number"
             value={minVal}
-            min={min}
-            max={maxVal - gap}
-            className="text-left ml-0.5"
+            // min={min}
+            // max={maxVal - gap}
             readOnly
-            onChange={(e) =>
-              setMinVal(Math.min(Number(e.target.value), maxVal - gap))
-            }
+            className="text-left ml-0.5"
           />
         </div>
         <div className="field">
           <input
             type="number"
             value={maxVal}
-            min={minVal + gap}
-            max={max}
-            className="text-right"
+            // min={minVal + gap}
+            // max={max}
             readOnly
-            onChange={(e) =>
-              setMaxVal(Math.max(Number(e.target.value), minVal + gap))
-            }
+            className="text-right"
           />
         </div>
       </div>

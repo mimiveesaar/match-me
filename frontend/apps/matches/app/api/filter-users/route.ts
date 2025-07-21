@@ -1,4 +1,4 @@
-import { NextResponse, userAgent } from "next/server";
+import { NextResponse } from "next/server";
 
 type Filters = {
   ageRange: [number, number];
@@ -6,6 +6,7 @@ type Filters = {
   bodyform: string[];
   interests: string[];
   lookingFor: string[];
+  location: string[]; 
 };
 
 const mockUsers = [
@@ -33,7 +34,7 @@ const mockUsers = [
     id: "3",
     username: "cosmic_poet",
     age: 45,
-    location: "Mars",
+    location: "Juno",
     lookingFor: "Intergalactic Romance",
     bodyform: "Vaporous",
     bio: "Alien poet seeking cosmic muse.",
@@ -43,7 +44,7 @@ const mockUsers = [
     id: "4",
     username: "astro_adventurer",
     age: 55,
-    location: "Mars",
+    location: "Venus",
     lookingFor: "Travel Buddy",
     bodyform: "Gelatinous",
     bio: "defy gravity with me!",
@@ -63,7 +64,7 @@ const mockUsers = [
     id: "6",
     username: "stellar_wanderer",
     age: 79,
-    location: "Mars",
+    location: "Juno",
     lookingFor: "Friendship",
     bodyform: "Dexaspherical",
     bio: "Programmer by day, interstellar traveler by night. Let's code the universe together.",
@@ -73,7 +74,7 @@ const mockUsers = [
     id: "7",
     username: "cosmic_vibes",
     age: 87,
-    location: "Mars",
+    location: "Venus",
     lookingFor: "Friendship",
     bodyform: "Phospopede",
     bio: "Serving cosmic vibes and good times. Let's explore the universe together.",
@@ -93,7 +94,7 @@ const mockUsers = [
     id: "9",
     username: "Stacy",
     age: 106,
-    location: "Mars",
+    location: "Juno",
     lookingFor: "Travel Buddy",
     bodyform: "Gelatinous",
     bio: "pkpkpkpkpkpkpkpkpkpkpkpkpkpkpkpkpkpkpkpkpkpkpkpkp",
@@ -103,7 +104,7 @@ const mockUsers = [
     id: "10",
     username: "Brady",
     age: 133,
-    location: "Mars",
+    location: "Venus",
     lookingFor: "Travel Buddy",
     bodyform: "Vaporous",
     bio: "foraging mushrooms and exploring the cosmos. Let's connect over our shared interests.",
@@ -124,6 +125,11 @@ export async function POST(request: Request) {
 
     // looking for filter (if any lookingFor options selected)
     if (filters.lookingFor.length > 0 && !filters.lookingFor.includes(user.lookingFor)) {
+      return false;
+    }
+
+    // location filter (if any location options selected)
+    if (filters.location.length > 0 && !filters.location.includes(user.location)) {
       return false;
     }
 
