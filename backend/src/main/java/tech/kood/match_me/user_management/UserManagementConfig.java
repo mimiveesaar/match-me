@@ -25,6 +25,9 @@ public class UserManagementConfig {
     @Value("${user-management.password.max-length:64}")
     private int passwordMaxLength;
 
+    @Value("${user-management.jwt.secret}")
+    private String userManagementJWTSecret;
+
     public int getUsernameMinLength() {
         return usernameMinLength;
     }
