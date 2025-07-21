@@ -7,17 +7,6 @@ public record GetUserByIdRequest(
     UUID requestId,
     UUID userId, 
     Optional<String> tracingId) {
-    public GetUserByIdRequest {
-        if (userId == null) {
-            throw new IllegalArgumentException("User ID cannot be null");
-        }
-        if (tracingId == null) {
-            throw new IllegalArgumentException("Tracing ID cannot be null");
-        }
-        if (requestId == null) {
-            throw new IllegalArgumentException("Request ID cannot be null");
-        }
-    }
 
     GetUserByIdRequest withUserId(UUID newUserId) {
         return new GetUserByIdRequest(requestId, newUserId, tracingId);

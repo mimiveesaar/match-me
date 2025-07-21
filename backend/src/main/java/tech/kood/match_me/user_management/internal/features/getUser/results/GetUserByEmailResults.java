@@ -3,8 +3,8 @@ package tech.kood.match_me.user_management.internal.features.getUser.results;
 import java.util.Optional;
 import java.util.UUID;
 
-import tech.kood.match_me.user_management.api.DTOs.UserDTO;
 import tech.kood.match_me.user_management.internal.common.UserManagementResult;
+import tech.kood.match_me.user_management.models.User;
 
 
 public sealed interface GetUserByEmailResults extends UserManagementResult permits
@@ -14,11 +14,11 @@ public sealed interface GetUserByEmailResults extends UserManagementResult permi
     /**
      * Represents a successful result of fetching a user by email.
      *
-     * @param user      The {@link UserDTO} object containing user details.
+     * @param user      The {@link User} object containing user details.
      * @param requestId The unique internal identifier for the request.
      * @param tracingId An optional tracing identifier for external request tracking.
      */
-    record Success(UserDTO user, UUID requestId, Optional<String> tracingId) implements GetUserByEmailResults {
+    record Success(User user, UUID requestId, Optional<String> tracingId) implements GetUserByEmailResults {
         @Override
         public Optional<String> tracingId() {
             return tracingId;
