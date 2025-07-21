@@ -15,18 +15,22 @@ import { ButtonTriangle } from "../../molecules/Match Cards/MatchCardButtons/mat
 interface MatchCardFrontProps {
   profilePicSrc?: string;
   alt?: string;
+  username?: string;
+  age?: number;
   cardColor?: "amberglow" | "olive" | "peony" | "minty" | "moss" | "coral";
   location: string;
-  relationshipType: string;
+  lookingFor: string;
   bio?: string;
 };
 
 export const MatchCardFront = ({
   profilePicSrc = "default-profile.png",
   alt,
+  username = "Shelly",
+  age = 64,
   cardColor = "olive",
   location = "Mars",
-  relationshipType = "Astral companion",
+  lookingFor = "Astral companion",
   bio = "Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry.",
 }: MatchCardFrontProps) => {
   return (
@@ -42,15 +46,15 @@ export const MatchCardFront = ({
           </div>
 
           <div className="w-full pl-3 absolute bottom-1 left-1 flex gap-1">
-            <Username username="Shelly" />
-            <Age age="64" />
+            <Username username={username} />
+            <Age age={age} />
           </div>
         </div>
 
         <div className="grid grid-cols-[auto_auto] items-start w-full pt-1 px-3">
           <div className="flex flex-col pt-1 gap-y-2 items-start text-ivory text-xs font-normal font-ibm_plex_sans">
             <LocationTag location={location} />
-            <RelationshipTypeTag relationshipType={relationshipType} />
+            <RelationshipTypeTag lookingFor={lookingFor} />
             /bio
           </div>
 

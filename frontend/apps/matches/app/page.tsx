@@ -7,20 +7,24 @@ import { MatchCardFront } from "/workspace/frontend/packages/components/src/orga
 import { MatchCardBack } from "/workspace/frontend/packages/components/src/organisms/MatchCard/MatchCardBack";
 import { AlienMeetLogo } from "/workspace/frontend/packages/components/src/atoms/Alien.meet logo/alien_meet";
 import { useUserSearch } from "/workspace/frontend/apps/matches/app/hooks/useUserSearch";
+import { Filters } from "/workspace/frontend/apps/matches/app/hooks/useUserSearch";
 
 interface MatchUser {
   id: string;
+  username?: string;
+  age?: number;
   location: string;
-  relationshipType: string;
+  lookingFor: string;
   bodyform: string;
   bio?: string;
+  interests?: string[];
 }
 
 export default function Matches() {
 
-  const [filters, setFilters] = useState({
-    ageRange: [18, 1000] as [number, number],
-    distanceRange: [0, 9300] as [number, number],
+  const [filters, setFilters] = useState<Filters>({
+    ageRange: [18, 150],
+    distanceRange: [0, 9300],
     bodyform: [],
     interests: [],
     lookingFor: [],
@@ -64,17 +68,22 @@ export default function Matches() {
                 key={user.id}
                 front={
                   <MatchCardFront
+                    username={user.username}
+                    age={user.age}
                     location={user.location}
-                    relationshipType={user.relationshipType}
+                    lookingFor={user.lookingFor}
                     bio={user.bio ?? "..."}
                   />
                 }
                 back={
                   <MatchCardBack
+                    username={user.username}
+                    age={user.age}
                     location={user.location}
-                    relationshipType={user.relationshipType}
+                    lookingFor={user.lookingFor}
                     bodyform={user.bodyform}
                     bio={user.bio ?? "..."}
+                    interests={user.interests ?? []}
                     onHide={() => handleHideUser(user.id)}
                   />
                 }

@@ -15,19 +15,25 @@ import { CardInterestTag } from "@atoms/Match_Cards/Tags/InterestTag/card_intere
 
 interface MatchCardBackProps {
     cardColor?: "amberglow" | "olive" | "peony" | "minty" | "moss" | "coral";
+    username?: string;
+    age?: number;
     location: string;
-    relationshipType: string;
+    lookingFor: string;
     bodyform: string;
     bio: string;
+    interests?: string[];
     onHide: () => void;
 };
 
 export const MatchCardBack = ({
     cardColor = "olive",
+    username = "Shelly",
+    age = 64,
     location = "Mars",
-    relationshipType = "Astral companion",
+    lookingFor = "Astral companion",
     bodyform = "Polymorphontes",
     bio = "Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry.",
+    interests = ["Quantum Origami", "Dancing", "Cooking"],
 
 }: MatchCardBackProps) => {
     return (
@@ -38,8 +44,8 @@ export const MatchCardBack = ({
                 <div className="relative w-full h-12">
 
                     <div className="w-full pl-3 py-1 absolute top-1 left-0 flex justify-start gap-1">
-                        <Username username="Shelly" />
-                        <Age age="64" />
+                        <Username username={username} />
+                        <Age age={age} />
                     </div>
 
                     <div className="w-full pr-3 pt-1 absolute top-1 right-0 flex justify-end gap-1">
@@ -50,7 +56,7 @@ export const MatchCardBack = ({
                 <div className="w-full h-20 pt-3 px-3">
                     <div className="flex flex-wrap gap-2 items-start text-ivory text-xs font-normal font-ibm_plex_sans">
                         <LocationTag location={location} />
-                        <RelationshipTypeTag relationshipType={relationshipType} />
+                        <RelationshipTypeTag lookingFor={lookingFor} />
                         <BodyformTag bodyform={bodyform} />
 
                     </div>
@@ -62,7 +68,7 @@ export const MatchCardBack = ({
                 </div>
 
                 <div className="py-4">
-                    <BioTextbox bio={bio}/>
+                    <BioTextbox bio={bio} />
                 </div>
 
                 <div className="text-ivory text-xs font-normal font-ibm_plex_sans">
@@ -71,14 +77,11 @@ export const MatchCardBack = ({
                 </div>
 
                 <div className="p-3 flex flex-wrap gap-1 items-center justify-center">
-                    <CardInterestTag label="Thrifting" />
-                    <CardInterestTag label="Martial arts" />
-                    <CardInterestTag label="Foraging mushrooms" />
-                    <CardInterestTag label="Gardening" />
-                    <CardInterestTag label="Quantum Origami" />
-                    <CardInterestTag label="Herbaceous" />
-                    <CardInterestTag label="Dancing" />
-                    <CardInterestTag label="Cooking" />
+                    {interests.map((interest, index) => (
+                        <React.Fragment key={index}>
+                            <CardInterestTag label={interest} />
+                        </React.Fragment>
+                    ))}
                 </div>
 
             </div>

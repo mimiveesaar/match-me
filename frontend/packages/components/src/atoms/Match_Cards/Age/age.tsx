@@ -3,7 +3,7 @@
 import React from "react";
 
 interface AgeProps {
-  age: string;
+  age: number;
 }
 
 export const Age = ({ age }: AgeProps) => (

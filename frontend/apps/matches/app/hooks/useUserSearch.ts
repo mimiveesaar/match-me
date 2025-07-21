@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-interface Filters {
+export interface Filters {
     ageRange: [number, number];
     distanceRange: [number, number];
     bodyform: string[];

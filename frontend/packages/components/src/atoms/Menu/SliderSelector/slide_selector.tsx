@@ -9,6 +9,8 @@ interface RangeSliderProps {
   max?: number;
   step?: number;
   gap?: number;
+  selectedRange: [number, number];
+  onChange: (range: [number, number]) => void;
 }
 
 export const RangeSlider: React.FC<RangeSliderProps> = ({

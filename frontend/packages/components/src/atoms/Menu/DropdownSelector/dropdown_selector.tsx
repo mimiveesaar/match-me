@@ -25,8 +25,12 @@ export const DropdownSelector: React.FC<DropdownSelectorProps> = ({
         let newSelection: string[];
 
         if (mode === "single") {
-            newSelection = [option];
-            setIsOpen(false);
+            if (selectedOptions.includes(option)) {
+                newSelection = []; // Deselect if already selected
+            } else {
+                newSelection = [option]; // Select new one
+                setIsOpen(false); // Optional: auto-close after selecting
+            }
         } else {
             newSelection = selectedOptions.includes(option)
                 ? selectedOptions.filter((item) => item !== option)
