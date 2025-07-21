@@ -44,6 +44,25 @@ public class RegisterUserTests extends UserManagementTestBase {
     }
 
     @Test
+    void shouldNotCreateUserWithExistingUsername() {
+        var request = RegisterUserRequestMocker.createValidRequest();
+        registerUserHandler.handle(request);
+        var result = registerUserHandler.handle(request);
+        var result2 = registerUserHandler.handle(request);
+        assert result2 instanceof RegisterUserResults.UsernameExists;
+    }
+
+    @Test
+    void shouldNotCreateUserWithExistingEmail() {
+        var request = RegisterUserRequestMocker.createValidRequest();
+        var request2 = RegisterUserRequestMocker.createValidRequest();
+        request2 = request2.withEmail(request.email());
+        registerUserHandler.handle(request);
+        var result = registerUserHandler.handle(request2);
+        assert result instanceof RegisterUserResults.EmailExists;
+    }
+
+    @Test
     void shouldNotCreateUserWithInvalidEmail() {
         var request = RegisterUserRequestMocker.createInvalidEmailRequest();
         var result = registerUserHandler.handle(request);
