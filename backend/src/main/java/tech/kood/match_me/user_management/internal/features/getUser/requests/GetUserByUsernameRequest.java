@@ -3,8 +3,6 @@ package tech.kood.match_me.user_management.internal.features.getUser.requests;
 import java.util.Optional;
 import java.util.UUID;
 
-import lombok.Builder;
-
 public record GetUserByUsernameRequest(
     UUID requestId,
     String username,

@@ -21,7 +21,7 @@ public final class PasswordUtils {
             return false;
         }
         // BCrypt stores the salt in the hash, but for explicit salt usage:
-        String hashToCompare = BCrypt.hashpw(plainPassword, hashedPassword.passwordSalt());
-        return hashToCompare.equals(hashedPassword.passwordSalt());
+        String hashToCompare = BCrypt.hashpw(plainPassword, hashedPassword.salt());
+        return hashToCompare.equals(hashedPassword.salt());
     }
 }

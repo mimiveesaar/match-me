@@ -11,37 +11,52 @@ import tech.kood.match_me.user_management.internal.features.registerUser.Registe
 public class RegisterUserRequestMocker {
 
     public static Faker faker = new Faker();
-    
-    public static RegisterUserRequest createValidRequest() {
-        return createValidRequestBuilder().build();
-    }
 
-    public static RegisterUserRequest createInvalidEmailRequest() {
-        return createValidRequestBuilder().email("invalid-email").build();
+    public static RegisterUserRequest createValidRequest() {
+        return new RegisterUserRequest(
+            UUID.randomUUID(),
+            faker.name().username(),
+            faker.internet().password(8, 16),
+            faker.internet().emailAddress(),
+            Optional.of(UUID.randomUUID().toString())
+        );
     }
 
     public static RegisterUserRequest createInvalidUsernameRequest() {
-        return createValidRequestBuilder().username("").build();
+        return createValidRequest().withUsername("invalid username!");
     }
 
     public static RegisterUserRequest createInvalidPasswordRequest() {
-        return createValidRequestBuilder().password("").build();
+        return createValidRequest().withPassword("short");
     }
 
     public static RegisterUserRequest createNullRequest() {
-        return RegisterUserRequest.builder()
-            .username(null)
-            .password(null)
-            .email(null)
-            .tracingId(Optional.empty())
-            .build();
+        return createValidRequest().withUsername(null).withPassword(null).withEmail(null);
     }
 
-    public static RegisterUserRequest.RegisterUserRequestBuilder createValidRequestBuilder() {
-        return RegisterUserRequest.builder()
-            .username(faker.name().username())
-            .password(faker.internet().password(8, 16))
-            .email(faker.internet().emailAddress())
-            .tracingId(Optional.of(UUID.randomUUID().toString()));
+    public static RegisterUserRequest createInvalidEmailRequest() {
+        return createValidRequest().withEmail("invalid-email");
+    }
+
+    public static RegisterUserRequest createEmptyUsernameRequest() {
+        return createValidRequest().withUsername("");
+    }
+
+    public static RegisterUserRequest createEmptyPasswordRequest() {
+        return createValidRequest().withPassword("");
+    }
+
+    public static RegisterUserRequest createEmptyEmailRequest() {
+        return createValidRequest().withEmail("");
+    }
+
+    public static RegisterUserRequest createLongUsernameRequest() {
+        String longUsername = "u".repeat(300);
+        return createValidRequest().withUsername(longUsername);
+    }
+
+    public static RegisterUserRequest createLongPasswordRequest() {
+        String longPassword = "p".repeat(300);
+        return createValidRequest().withPassword(longPassword);
     }
 }

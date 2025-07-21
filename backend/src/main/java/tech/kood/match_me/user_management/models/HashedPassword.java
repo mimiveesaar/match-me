@@ -1,20 +1,20 @@
 package tech.kood.match_me.user_management.models;
 
-public record HashedPassword(String passwordHash, String passwordSalt) {
+public record HashedPassword(String hash, String salt) {
     
     public HashedPassword {
-        if (passwordHash == null || passwordHash.isBlank()) {
+        if (hash == null || hash.isBlank()) {
             throw new IllegalArgumentException("Password hash cannot be null or blank");
         }
-        if (passwordSalt == null || passwordSalt.isBlank()) {
+        if (salt == null || salt.isBlank()) {
             throw new IllegalArgumentException("Password salt cannot be null or blank");
         }
     }
 
-    public HashedPassword passwordHash(String newPasswordHash) {
-        return new HashedPassword(newPasswordHash, this.passwordSalt);
+    public HashedPassword hash(String newHash) {
+        return new HashedPassword(newHash, this.salt);
     }
-    public HashedPassword passwordSalt(String newPasswordSalt) {
-        return new HashedPassword(this.passwordHash, newPasswordSalt);
+    public HashedPassword salt(String newSalt) {
+        return new HashedPassword(this.hash, newSalt);
     }
 }

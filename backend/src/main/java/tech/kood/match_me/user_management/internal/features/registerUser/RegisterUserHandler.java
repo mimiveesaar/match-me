@@ -62,7 +62,7 @@ public class RegisterUserHandler {
             );
             return result;
         } 
-        else if (!request.username().matches("^[a-zA-Z0-9_]+$")) {
+        else if (!request.username().matches("^[a-zA-Z0-9_.-]+$")) {
             var result = new RegisterUserResults.InvalidUsername(request.username(), RegisterUserResults.InvalidUsernameType.INVALID_CHARACTERS, request.tracingId());
             events.publishEvent(
                 new RegisterUserEvent(request, result)
@@ -102,8 +102,8 @@ public class RegisterUserHandler {
             UUID.randomUUID(),
             request.email(),
             request.username(),
-            hashedPassword.passwordHash(),
-            hashedPassword.passwordSalt(),
+            hashedPassword.hash(),
+            hashedPassword.salt(),
             Instant.now(),
             Instant.now()
         );
@@ -115,7 +115,7 @@ public class RegisterUserHandler {
                 userEntity.id(),
                 userEntity.username(),
                 userEntity.email(),
-                new HashedPassword(userEntity.passwordHash(), userEntity.passwordSalt()),
+                new HashedPassword(userEntity.hash(), userEntity.salt()),
                 userEntity.createdAt(),
                 userEntity.updatedAt()
             );

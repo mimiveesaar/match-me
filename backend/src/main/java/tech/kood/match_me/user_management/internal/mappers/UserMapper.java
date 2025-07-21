@@ -41,7 +41,7 @@ public final class UserMapper {
             userEntity.id(),
             userEntity.username(),
             userEntity.email(),
-            new HashedPassword(userEntity.passwordHash(), userEntity.passwordSalt()),
+            new HashedPassword(userEntity.hash(), userEntity.salt()),
             userEntity.createdAt(),
             userEntity.updatedAt()
         );
