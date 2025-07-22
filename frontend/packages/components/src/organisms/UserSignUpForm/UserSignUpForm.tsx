@@ -9,34 +9,20 @@ import { useState } from "react";
 
 export const UserSignUpForm = () => {
   const [username, setUsername] = useState("");
-  const [age, setAge] = useState("");
-  const [bodyform, setBodyform] = useState("");
   const [mail, setMail] = useState("");
-  const [password, setPassword] = useState(""); 
+  const [password, setPassword] = useState("");
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <CircleWrapper className="w-[600px] h-[600px] p-8 text-center  bg-minty">
+    <div className="flex min-h-screen items-center justify-center">
+      <CircleWrapper className="bg-minty h-[600px] w-[600px] p-8 text-center">
         <div className="w-full px-6 py-8 text-center">
-          <div className="w-full">
-            <h2 className="text-lg font-semibold mb-6">New Account</h2>
+          <div className="flex w-full flex-col items-center">
+            <h2 className="mb-6 text-lg font-semibold">New Account</h2>
             <LabeledInputField
               label="Username"
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-            />
-            <LabeledInputField
-              label="Age"
-              placeholder="Age"
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-            />
-            <LabeledInputField
-              label="Bodyform"
-              placeholder="Bodyform"
-              value={bodyform}
-              onChange={(e) => setBodyform(e.target.value)}
             />
             <LabeledInputField
               label="E-mail"
@@ -50,13 +36,13 @@ export const UserSignUpForm = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            
-            <NextPageIconButton onClick={() => console.log({ username, age, bodyform, mail })} />
+
+            <NextPageIconButton
+              onClick={() => console.log({ username, mail })}
+            />
           </div>
         </div>
-
       </CircleWrapper>
     </div>
-
   );
 };

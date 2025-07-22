@@ -12,11 +12,10 @@ export const CircleWrapper = ({
   children,
 
   className = "",
-
 }: CircleWrapperProps) => {
   return (
     <div
-      className={`rounded-full shadow-lg flex items-center justify-center ${className}`}
+      className={`flex items-center justify-center rounded-full shadow-lg ${className}`}
     >
       {children}
     </div>

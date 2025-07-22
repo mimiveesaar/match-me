@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { RelationshipTypeTag } from "./relationship_type_tag";
 
 const meta: Meta<typeof RelationshipTypeTag> = {

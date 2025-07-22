@@ -1,14 +1,16 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { KeyIcon } from "./KeyIcon";
+import { fn } from "storybook/test";
 
 const meta: Meta<typeof KeyIcon> = {
   title: "Atoms/KeyIcon",
   component: KeyIcon,
-
+  args: {
+    onClick: fn(),
+  },
 };
 export default meta;
-type Story = StoryObj<typeof KeyIcon>;
 
-export const Default: Story = {
-
+export const Default: StoryObj<typeof meta> = {
+  render: (args) => <KeyIcon {...args} />,
 };

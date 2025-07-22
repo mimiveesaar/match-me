@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { MenuBase } from './menu_base';
 
 const meta: Meta<typeof MenuBase> = {

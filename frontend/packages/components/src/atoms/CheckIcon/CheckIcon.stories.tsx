@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { CheckIcon } from "./CheckIcon";
 
 const meta: Meta<typeof CheckIcon> = {

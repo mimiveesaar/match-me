@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { MultiLineInputField } from "./MultiLineInputField";
 
 const meta: Meta<typeof MultiLineInputField> = {
