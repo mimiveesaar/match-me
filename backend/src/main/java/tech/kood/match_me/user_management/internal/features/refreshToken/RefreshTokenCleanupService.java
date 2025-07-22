@@ -27,10 +27,9 @@ public class RefreshTokenCleanupService {
     private ScheduledFuture<?> scheduledTask;
 
     public RefreshTokenCleanupService(
-            RefreshTokenRepository refreshTokenRepository, 
+            RefreshTokenRepository refreshTokenRepository,
             @Qualifier("userManagementConfig") UserManagementConfig userManagementConfig,
-            @Qualifier("userManagementTaskScheduler") TaskScheduler taskScheduler
-        ) {
+            @Qualifier("userManagementTaskScheduler") TaskScheduler taskScheduler) {
 
         this.refreshTokenRepository = refreshTokenRepository;
         this.userManagementConfig = userManagementConfig;
@@ -44,8 +43,10 @@ public class RefreshTokenCleanupService {
     }
 
     public void start() {
-        this.scheduledTask = taskScheduler.scheduleAtFixedRate(cleanupExpiredTokens(), Duration.ofSeconds(userManagementConfig.getRefreshTokenCleanupInterval()));
-        logger.info("Scheduled refresh token cleanup task with interval: {} seconds", userManagementConfig.getRefreshTokenCleanupInterval());
+        this.scheduledTask = taskScheduler.scheduleAtFixedRate(cleanupExpiredTokens(),
+                Duration.ofSeconds(userManagementConfig.getRefreshTokenCleanupInterval()));
+        logger.info("Scheduled refresh token cleanup task with interval: {} seconds",
+                userManagementConfig.getRefreshTokenCleanupInterval());
     }
 
     public void stop() {
