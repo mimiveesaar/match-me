@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ChevronRight } from "lucide-react";
 
@@ -7,10 +6,10 @@ interface NextPageIconButtonProps {
 }
 
 export const NextPageIconButton = ({ onClick }: NextPageIconButtonProps) => (
-  <button 
+  <button
     onClick={onClick}
-    className="p-3 rounded-full border border-gray-300 shadow-md hover:bg-olive hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-grey-500 cursor-pointer transition mt-4"
+    className="mt-4 cursor-pointer rounded-full p-3 shadow-md transition hover:shadow-lg hover:brightness-10"
   >
-    <ChevronRight className="w-6 h-6 text-gray-700 hover:text-gray-900" />
+    <ChevronRight className="h-6 w-6 text-gray-700" />
   </button>
 );
