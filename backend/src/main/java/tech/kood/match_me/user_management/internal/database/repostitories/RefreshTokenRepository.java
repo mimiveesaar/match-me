@@ -50,19 +50,35 @@ public class RefreshTokenRepository {
 
     public boolean validateToken(String token, UUID userId, Instant currentTime) {
         String sql = "SELECT COUNT(*) FROM user_management.refresh_tokens WHERE token = :token AND user_id = :user_id AND expires_at >= :current_time";
-        Integer count = jdbcTemplate.queryForObject(sql, Map.of("token", token, "user_id", userId, "current_time", currentTime), Integer.class);
+        Integer count = jdbcTemplate.queryForObject(sql, 
+            Map.of(
+                "token", token,
+                "user_id", userId,
+                "current_time", Timestamp.from(currentTime)
+            ), Integer.class);
         return count != null && count > 0;
     }
 
     public void deleteExpiredTokens(Instant currentTime) {
         String sql = "DELETE FROM user_management.refresh_tokens WHERE expires_at < :current_time";
-        jdbcTemplate.update(sql, Map.of("current_time", currentTime));
+        jdbcTemplate.update(sql, 
+            Map.of(
+                "current_time", Timestamp.from(currentTime)
+            )
+        );
     }
 
     public Optional<RefreshTokenEntity> findToken(String token, UUID userId, Instant currentTime) {
         String sql = "SELECT * FROM user_management.refresh_tokens WHERE token = :token AND user_id = :user_id AND expires_at >= :current_time";
         return Optional.ofNullable(
-            jdbcTemplate.queryForObject(sql, Map.of("token", token, "user_id", userId, "current_time", currentTime), this.refreshTokenRowMapper)
+            jdbcTemplate.queryForObject(sql, 
+                Map.of(
+                    "token", token,
+                    "user_id", userId,
+                    "current_time", Timestamp.from(currentTime)
+                ), 
+                this.refreshTokenRowMapper
+            )
         );
     }
 }

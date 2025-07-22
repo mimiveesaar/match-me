@@ -4,6 +4,7 @@ user-management:
     expiration: 3600
   refresh-token:
     expiration: 604800
+    clean-up-interval: 86400
 
 spring:
   datasource:

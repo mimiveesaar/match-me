@@ -1,7 +1,6 @@
 package tech.kood.match_me.user_management.repositories;
 
 import java.time.Instant;
-import java.util.UUID;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeAll;
@@ -56,4 +55,58 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
         refreshTokenRepository.save(entity);
     }
 
+    @Test
+    void testValidateToken() {
+
+        var mockUser = UserEntityMocker.createValidUserEntity();
+        userRepository.saveUser(mockUser);
+
+        var refreshToken = refreshTokenFactory.create(mockUser.id());
+        var entity = refreshTokenMapper.toEntity(refreshToken);
+        refreshTokenRepository.save(entity);
+
+        boolean isValid = refreshTokenRepository.validateToken(refreshToken.token(), mockUser.id(), Instant.now());
+        assert isValid : "The token should be valid";
+    }
+
+    @Test
+    void testFindToken() {
+        var mockUser = UserEntityMocker.createValidUserEntity();
+        userRepository.saveUser(mockUser);
+
+        var refreshToken = refreshTokenFactory.create(mockUser.id());
+        var entity = refreshTokenMapper.toEntity(refreshToken);
+        refreshTokenRepository.save(entity);
+
+        var foundToken = refreshTokenRepository.findToken(refreshToken.token(), mockUser.id(), Instant.now());
+        assert foundToken.isPresent() : "The token should be found";
+    }
+
+    @Test
+    void testExpiredTokenInvalid() {
+        var mockUser = UserEntityMocker.createValidUserEntity();
+        userRepository.saveUser(mockUser);
+
+        var refreshToken = refreshTokenFactory.create(mockUser.id(), Instant.now().minusSeconds(3600)); // Token expired 1 hour ago
+        var entity = refreshTokenMapper.toEntity(refreshToken);
+        refreshTokenRepository.save(entity);
+
+        boolean isValid = refreshTokenRepository.validateToken(refreshToken.token(), mockUser.id(), Instant.now());
+        assert !isValid : "The token should be invalid";
+    }
+
+    @Test
+    void testDeleteExpiredTokens() {
+        var mockUser = UserEntityMocker.createValidUserEntity();
+        userRepository.saveUser(mockUser);
+
+        var refreshToken = refreshTokenFactory.create(mockUser.id(), Instant.now().minusSeconds(3600)); // Token expired 1 hour ago
+        var entity = refreshTokenMapper.toEntity(refreshToken);
+        refreshTokenRepository.save(entity);
+
+        refreshTokenRepository.deleteExpiredTokens(Instant.now());
+
+        boolean isValid = refreshTokenRepository.validateToken(refreshToken.token(), mockUser.id(), Instant.now());
+        assert !isValid : "The token should be invalid";
+    }
 }

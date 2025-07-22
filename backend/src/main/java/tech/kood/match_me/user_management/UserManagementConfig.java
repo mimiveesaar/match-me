@@ -1,5 +1,8 @@
 package tech.kood.match_me.user_management;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
 import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
@@ -11,6 +14,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
 @Configuration
 public class UserManagementConfig {
@@ -33,6 +38,13 @@ public class UserManagementConfig {
 
     @Value("${user-management.refresh-token.expiration}")
     private int refreshTokenExpiration;
+
+    @Value("${user-management.refresh-token.cleanup-interval}")
+    private int refreshTokenCleanupInterval;
+
+    public int getRefreshTokenCleanupInterval() {
+        return refreshTokenCleanupInterval;
+    }
 
     public String getJwtSecret() {
         return jwtSecret;
@@ -74,6 +86,18 @@ public class UserManagementConfig {
         @Qualifier("userManagementDataSource") DataSource dataSource
     ) {
         return new JdbcTemplate(dataSource);
+    }
+
+    @Bean
+    @Qualifier("userManagementScheduledExecutorService")
+    public ScheduledExecutorService scheduledExecutorService() {
+        return Executors.newScheduledThreadPool(2); // Define 2 threads to run in parallel.
+    }
+
+    @Bean
+    @Qualifier("userManagementTaskScheduler")
+    public TaskScheduler taskScheduler(@Qualifier("userManagementScheduledExecutorService") ScheduledExecutorService scheduledExecutorService) {
+        return new ConcurrentTaskScheduler(scheduledExecutorService); 
     }
 
     @Bean
