@@ -20,7 +20,7 @@ export const LabeledInputField = ({
   <div className="mb-4">
     <label
       htmlFor={id}
-      className="block text-[10px] text-gray-500 italic mb-1 ml-1"
+      className="block text-left text-xs text-gray-500 italic mb-1 ml-1"
     >
       /{label.toLowerCase()}
     </label>

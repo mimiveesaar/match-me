@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { ProfilePicture } from "./ProfilePicture";
 
 const meta: Meta<typeof ProfilePicture> = {

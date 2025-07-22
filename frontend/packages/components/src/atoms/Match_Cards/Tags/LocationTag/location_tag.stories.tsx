@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { LocationTag } from "./location_tag";
 
 const meta: Meta<typeof LocationTag> = {

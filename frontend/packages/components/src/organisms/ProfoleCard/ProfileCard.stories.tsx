@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { ProfileCard } from "./ProfileCard";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 const meta: Meta<typeof ProfileCard> = {
   title: "Organisms/ProfileCard",

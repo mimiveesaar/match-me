@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/nextjs";
 import { ButtonTriangle } from "./match_card_buttons";
 
 const meta: Meta<typeof ButtonTriangle> = {

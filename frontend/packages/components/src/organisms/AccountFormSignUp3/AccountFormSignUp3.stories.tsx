@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { AccountFormSignUp3 } from "./AccountFormSignUp3";
 
 const meta: Meta<typeof AccountFormSignUp3> = {

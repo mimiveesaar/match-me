@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { FlipCard } from "./FlipCard";
 import { MatchCardFront } from "./MatchCardFront";
 import { MatchCardBack } from "./MatchCardBack";

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { MatchCardBackground } from "./match_card_background";
 
 const meta: Meta<typeof MatchCardBackground> = {
