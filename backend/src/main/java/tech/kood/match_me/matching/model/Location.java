@@ -1,4 +1,4 @@
-package tech.kood.match_me.matching;
+package tech.kood.match_me.matching.model;
 
 import jakarta.persistence.Embeddable;
 

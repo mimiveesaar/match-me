@@ -1,11 +1,12 @@
 spring:
   datasource:
-    user-management:
-      jdbc-url: jdbc:postgresql://localhost:5432/user_management
-      username: user_management
-      password: user_management
-      driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgres:5432/match_me_db
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
   application:
     name: match-me
+
   flyway:
     enabled: false
