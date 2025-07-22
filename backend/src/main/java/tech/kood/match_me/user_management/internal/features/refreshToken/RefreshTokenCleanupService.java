@@ -44,13 +44,15 @@ public class RefreshTokenCleanupService {
     }
 
     public void start() {
-        this.scheduledTask = taskScheduler.scheduleAtFixedRate(cleanupExpiredTokens(), Duration.ofSeconds(userManagementConfig.getRefreshTokenCleanupInterval() * 1000L));
+        this.scheduledTask = taskScheduler.scheduleAtFixedRate(cleanupExpiredTokens(), Duration.ofSeconds(userManagementConfig.getRefreshTokenCleanupInterval()));
+        logger.info("Scheduled refresh token cleanup task with interval: {} seconds", userManagementConfig.getRefreshTokenCleanupInterval());
     }
 
     public void stop() {
         if (scheduledTask != null && !scheduledTask.isCancelled()) {
             scheduledTask.cancel(false);
         }
+        logger.info("Stopped refresh token cleanup task");
     }
 
     private Runnable cleanupExpiredTokens() {

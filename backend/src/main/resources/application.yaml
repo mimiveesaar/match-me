@@ -4,7 +4,12 @@ user-management:
     expiration: 3600
   refresh-token:
     expiration: 604800
-    clean-up-interval: 86400
+    clean-up-interval: 20
+
+logging:
+  level:
+    root: INFO
+    tech.kood.match_me.user_management: DEBUG
 
 spring:
   datasource:
