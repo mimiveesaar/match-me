@@ -13,16 +13,15 @@ import org.springframework.stereotype.Repository;
 import tech.kood.match_me.user_management.internal.database.mappers.UserRowMapper;
 import tech.kood.match_me.user_management.internal.entities.UserEntity;
 
-
 @Repository
 public class UserRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final UserRowMapper userRowMapper;
+
     public UserRepository(
             @Qualifier("userManagementNamedParameterJdbcTemplate") NamedParameterJdbcTemplate jdbcTemplate,
-            UserRowMapper userRowMapper
-        ) {
+            UserRowMapper userRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.userRowMapper = userRowMapper;
     }
@@ -33,13 +32,19 @@ public class UserRepository {
         return count != null && count > 0;
     }
 
+    public Boolean userExists(UUID userId) {
+        String sql = "SELECT COUNT(*) FROM user_management.users WHERE id = :userId";
+        Integer count = jdbcTemplate.queryForObject(sql, Map.of("userId", userId), Integer.class);
+        return count != null && count > 0;
+    }
+
     public Boolean emailExists(String email) {
         String sql = "SELECT COUNT(*) FROM user_management.users WHERE email = :email";
         Integer count = jdbcTemplate.queryForObject(sql, Map.of("email", email), Integer.class);
         return count != null && count > 0;
     }
 
-    public void deleteAll () {
+    public void deleteAll() {
         String sql = "DELETE FROM user_management.users";
         jdbcTemplate.update(sql, Map.of());
     }
@@ -82,24 +87,23 @@ public class UserRepository {
 
     public void saveUser(UserEntity user) {
         String sql = """
-            INSERT INTO user_management.users (id, email, username, password_hash, password_salt, created_at, updated_at) 
-            VALUES (:id, :email, :username, :password_hash, :password_salt, :created_at, :updated_at)
-            ON CONFLICT (id) DO UPDATE
-            SET email = :email,
-                username = :username,
-                password_hash = :password_hash,
-                password_salt = :password_salt,
-                updated_at = :updated_at
-        """;
-                           
+                    INSERT INTO user_management.users (id, email, username, password_hash, password_salt, created_at, updated_at)
+                    VALUES (:id, :email, :username, :password_hash, :password_salt, :created_at, :updated_at)
+                    ON CONFLICT (id) DO UPDATE
+                    SET email = :email,
+                        username = :username,
+                        password_hash = :password_hash,
+                        password_salt = :password_salt,
+                        updated_at = :updated_at
+                """;
+
         jdbcTemplate.update(sql, Map.of(
-            "id", user.id(),
-            "email", user.email(),
-            "username", user.username(),
-            "password_hash", user.hash(),
-            "password_salt", user.salt(),
-            "created_at", Timestamp.from(user.createdAt()),
-            "updated_at", Timestamp.from(user.updatedAt())
-        ));
+                "id", user.id(),
+                "email", user.email(),
+                "username", user.username(),
+                "password_hash", user.hash(),
+                "password_salt", user.salt(),
+                "created_at", Timestamp.from(user.createdAt()),
+                "updated_at", Timestamp.from(user.updatedAt())));
     }
 }
