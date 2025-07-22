@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.DTOs;
+package tech.kood.match_me.user_management.api.DTOs;
 
 import io.micrometer.common.lang.Nullable;
 

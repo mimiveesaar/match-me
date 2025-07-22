@@ -1,10 +1,13 @@
 package tech.kood.match_me.user_management.repositories;
 
 import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
@@ -13,6 +16,9 @@ import tech.kood.match_me.user_management.mocks.UserEntityMocker;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS) 
+@Transactional
 public class UserRepositoryTests extends UserManagementTestBase {
     
     @Autowired
@@ -24,10 +30,9 @@ public class UserRepositoryTests extends UserManagementTestBase {
     @Autowired
     RegisterUserHandler registerUserHandler;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    void migrate() {
         var result = userManagementFlyway.migrate();
-        userRepository.deleteAll();
     }
 
     @Test

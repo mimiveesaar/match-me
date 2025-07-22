@@ -2,8 +2,8 @@ package tech.kood.match_me.user_management.internal.features.getUser.results;
 
 import java.util.Optional;
 
-import tech.kood.match_me.user_management.DTOs.UserDTO;
 import tech.kood.match_me.user_management.internal.common.UserManagementResult;
+import tech.kood.match_me.user_management.models.User;
 
 public sealed interface GetUserByUsernameResults extends UserManagementResult permits
     GetUserByUsernameResults.Success, GetUserByUsernameResults.UserNotFound, GetUserByUsernameResults.SystemError,
@@ -12,10 +12,10 @@ public sealed interface GetUserByUsernameResults extends UserManagementResult pe
     /**
      * Represents a successful result of fetching a user by username.
      *
-     * @param user      The {@link UserDTO} object containing user details.
+     * @param user      The {@link User} object containing user details.
      * @param tracingId An optional tracing identifier for external request tracking.
      */
-    record Success(UserDTO user, Optional<String> tracingId) implements GetUserByUsernameResults {
+    record Success(User user, Optional<String> tracingId) implements GetUserByUsernameResults {
         @Override
         public Optional<String> tracingId() {
             return tracingId;
