@@ -121,7 +121,7 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
         var entity = refreshTokenMapper.toEntity(refreshToken);
         refreshTokenRepository.save(entity);
 
-        refreshTokenRepository.deleteByToken(refreshToken.token());
+        refreshTokenRepository.deleteToken(refreshToken.token());
 
         boolean isValid = refreshTokenRepository.validateToken(refreshToken.token(), mockUser.id(), Instant.now());
         assert !isValid : "The token should be deleted and invalid";

@@ -18,30 +18,36 @@ import tech.kood.match_me.user_management.internal.database.repostitories.UserRe
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenHandler;
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenResults;
+import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenRequest;
+import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenResults;
 import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
 import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
 
 @SpringBootTest
-@Transactional
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CreateRefreshTokenTests extends UserManagementTestBase {
+@Transactional
+public class InvalidateRefreshTokenTests extends UserManagementTestBase {
 
     @Autowired
     UserRepository userRepository;
 
     @Autowired
-    RegisterUserHandler registerUserHandler;
+    RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
-    RefreshTokenRepository refreshTokenRepository;
+    @Qualifier("userManagementFlyway")
+    Flyway userManagementFlyway;
+
+    @Autowired
+    RegisterUserHandler registerUserHandler;
 
     @Autowired
     CreateRefreshTokenHandler createRefreshTokenHandler;
 
     @Autowired
-    @Qualifier("userManagementFlyway")
-    Flyway userManagementFlyway;
+    InvalidateRefreshTokenHandler invalidateRefreshTokenHandler;
 
     @BeforeAll
     void migrate() {
@@ -49,7 +55,7 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
     }
 
     @Test
-    void shouldCreateRefreshTokenForValidUser() {
+    void shouldInvalidateRefreshToken() {
         var registerRequest = RegisterUserRequestMocker.createValidRequest();
         var registerResult = registerUserHandler.handle(registerRequest);
         assert registerResult instanceof RegisterUserResults.Success;
@@ -62,17 +68,15 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
 
         var successResult = (CreateRefreshTokenResults.Success) createTokenResult;
 
-        var token = refreshTokenRepository.findToken(successResult.refreshToken().token());
-        assert token.isPresent() : "The refresh token should be created and found in the repository";
-        assert token.get().userId().equals(user.id()) : "The refresh token should belong to the correct user";
-    }
+        // Act: Invalidate the refresh token
+        var invalidateRequest = new InvalidateRefreshTokenRequest(UUID.randomUUID(),
+                successResult.refreshToken().token(), Optional.empty());
+        var invalidateResult = invalidateRefreshTokenHandler.handle(invalidateRequest);
 
-    @Test
-    void shouldHandleInvalidRequest() {
-        var invalidRequest = new CreateRefreshTokenRequest(UUID.randomUUID(), null, Optional.empty());
-        var result = createRefreshTokenHandler.handle(invalidRequest);
-        assert result instanceof CreateRefreshTokenResults.InvalidRequest
-                : "The handler should return an InvalidRequest result for null user";
-    }
+        // Assert: Check if the token was invalidated successfully
+        assert invalidateResult instanceof InvalidateRefreshTokenResults.Success;
 
+        var tokenCheck = refreshTokenRepository.findToken(successResult.refreshToken().token());
+        assert tokenCheck.isEmpty() : "The refresh token should be invalidated and not found in the repository";
+    }
 }

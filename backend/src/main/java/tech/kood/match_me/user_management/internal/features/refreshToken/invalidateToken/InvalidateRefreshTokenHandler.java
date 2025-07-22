@@ -22,7 +22,7 @@ public class InvalidateRefreshTokenHandler {
                         request.tracingId());
             }
 
-            var result = refreshTokenRepository.deleteByToken(request.token());
+            var result = refreshTokenRepository.deleteToken(request.token());
 
             if (!result) {
                 return new InvalidateRefreshTokenResults.TokenNotFound(request.token(), request.tracingId());

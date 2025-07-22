@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -32,7 +33,7 @@ public class RefreshTokenRepository {
                 jdbcTemplate.update(sql, Map.of());
         }
 
-        public boolean deleteByToken(String token) {
+        public boolean deleteToken(String token) {
                 String sql = "DELETE FROM user_management.refresh_tokens WHERE token = :token";
                 return jdbcTemplate.update(sql, Map.of("token", token)) > 0;
         }
@@ -73,10 +74,15 @@ public class RefreshTokenRepository {
 
         public Optional<RefreshTokenEntity> findToken(String token) {
                 String sql = "SELECT * FROM user_management.refresh_tokens WHERE token = :token";
-                return Optional.ofNullable(
-                                jdbcTemplate.queryForObject(sql,
-                                                Map.of(
-                                                                "token", token),
-                                                this.refreshTokenRowMapper));
+
+                try {
+                        return Optional.ofNullable(
+                                        jdbcTemplate.queryForObject(sql,
+                                                        Map.of("token", token),
+                                                        this.refreshTokenRowMapper));
+                } catch (EmptyResultDataAccessException e) {
+                        // Handle the case where the token is not found
+                        return Optional.empty();
+                }
         }
 }
