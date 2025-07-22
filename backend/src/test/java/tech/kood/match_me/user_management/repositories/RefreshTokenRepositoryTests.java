@@ -78,7 +78,7 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
         var entity = refreshTokenMapper.toEntity(refreshToken);
         refreshTokenRepository.save(entity);
 
-        var foundToken = refreshTokenRepository.findToken(refreshToken.token(), mockUser.id(), Instant.now());
+        var foundToken = refreshTokenRepository.findToken(refreshToken.token());
         assert foundToken.isPresent() : "The token should be found";
     }
 
