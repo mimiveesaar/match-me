@@ -8,7 +8,7 @@ import com.github.javafaker.Faker;
 import tech.kood.match_me.user_management.internal.entities.UserEntity;
 import tech.kood.match_me.user_management.internal.utils.PasswordUtils;
 
-public class UserEntityMocker {
+public final class UserEntityMocker {
     public static Faker faker = new Faker();
 
     public static UserEntity createValidUserEntity() {

@@ -99,7 +99,7 @@ public class UserRepository {
             "password_hash", user.hash(),
             "password_salt", user.salt(),
             "created_at", Timestamp.from(user.createdAt()),
-            "updated_at", Timestamp.from (user.updatedAt())
+            "updated_at", Timestamp.from(user.updatedAt())
         ));
     }
 }

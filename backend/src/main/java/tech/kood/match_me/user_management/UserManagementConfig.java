@@ -26,7 +26,25 @@ public class UserManagementConfig {
     private int passwordMaxLength;
 
     @Value("${user-management.jwt.secret}")
-    private String userManagementJWTSecret;
+    private String jwtSecret;
+
+    @Value("${user-management.jwt.expiration:3600}")
+    private int jwtExpiration;
+
+    @Value("${user-management.refresh-token.expiration}")
+    private int refreshTokenExpiration;
+
+    public String getJwtSecret() {
+        return jwtSecret;
+    }
+
+    public int getJwtExpiration() {
+        return jwtExpiration;
+    }
+
+    public int getRefreshTokenExpiration() {
+        return refreshTokenExpiration;
+    }
 
     public int getUsernameMinLength() {
         return usernameMinLength;
