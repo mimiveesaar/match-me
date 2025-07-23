@@ -8,7 +8,7 @@ import { useState } from "react";
 import { KeyIcon } from "@atoms/KeyIcon/KeyIcon";
 
 export const LogIn = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   return (
@@ -19,10 +19,10 @@ export const LogIn = () => {
             You have returned!
           </h2>
           <LabeledInputField
-            label="Username"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            label="Email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <LabeledInputField
             label="Password"
@@ -31,7 +31,7 @@ export const LogIn = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <div className="mt-1">
-            <KeyIcon onClick={() => console.log({ username })} />
+            <KeyIcon onClick={() => console.log({ email: email })} />
           </div>
         </div>
       </CircleWrapper>
