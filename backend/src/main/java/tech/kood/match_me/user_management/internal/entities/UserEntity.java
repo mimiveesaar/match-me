@@ -8,7 +8,7 @@ import java.util.UUID;
  *
  * @param id        Unique identifier for the user.
  * @param email     Email address of the user.
- * @param username  Username chosen by the user.
+ * @param email     Username chosen by the user.
  * @param hash      Hashed password of the user.
  * @param salt      Salt used for hashing the user's password.
  * @param createdAt Timestamp when the user was created.

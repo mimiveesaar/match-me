@@ -5,7 +5,8 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import tech.kood.match_me.user_management.models.HashedPassword;
 
 public final class PasswordUtils {
-    // Encodes a password, generating a salt using bcrypt and returning a HashedPassword
+    // Encodes a password, generating a salt using bcrypt and returning a
+    // HashedPassword
     public static HashedPassword encode(String plainPassword) {
         if (plainPassword == null || plainPassword.isBlank()) {
             throw new IllegalArgumentException("Password cannot be null or blank");
@@ -22,6 +23,6 @@ public final class PasswordUtils {
         }
         // BCrypt stores the salt in the hash, but for explicit salt usage:
         String hashToCompare = BCrypt.hashpw(plainPassword, hashedPassword.salt());
-        return hashToCompare.equals(hashedPassword.salt());
+        return hashToCompare.equals(hashedPassword.hash());
     }
 }

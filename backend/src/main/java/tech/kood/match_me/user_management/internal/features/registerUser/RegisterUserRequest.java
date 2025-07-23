@@ -8,7 +8,7 @@ import java.util.UUID;
  *
  * @param requestId The unique internal identifier for this registration
  *                  request.
- * @param username  The username of the user to be registered; must not be null
+ * @param email     The username of the user to be registered; must not be null
  *                  or blank.
  * @param password  The password for the new user; must not be null or blank.
  * @param email     The email address of the user; must not be null or blank.
