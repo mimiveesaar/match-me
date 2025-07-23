@@ -3,7 +3,7 @@ package tech.kood.match_me.user_management.internal.features.refreshToken.invali
 import java.util.Optional;
 
 public interface InvalidateRefreshTokenResults {
-    record Success(String message) implements InvalidateRefreshTokenResults {
+    record Success() implements InvalidateRefreshTokenResults {
     }
 
     record TokenNotFound(String token, Optional<String> tracingId) implements InvalidateRefreshTokenResults {

@@ -1,5 +1,6 @@
 package tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import tech.kood.match_me.user_management.internal.database.repostitories.RefreshTokenRepository;
@@ -9,29 +10,42 @@ public class InvalidateRefreshTokenHandler {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public InvalidateRefreshTokenHandler(RefreshTokenRepository refreshTokenRepository) {
+    private final ApplicationEventPublisher events;
+
+    public InvalidateRefreshTokenHandler(RefreshTokenRepository refreshTokenRepository,
+            ApplicationEventPublisher events) {
         this.refreshTokenRepository = refreshTokenRepository;
+        this.events = events;
     }
 
     public InvalidateRefreshTokenResults handle(InvalidateRefreshTokenRequest request) {
-
         try {
 
             if (request.token() == null || request.token().isBlank()) {
-                return new InvalidateRefreshTokenResults.InvalidRequest("Token must not be null or blank",
+                var result = new InvalidateRefreshTokenResults.InvalidRequest("Token must not be null or blank",
                         request.tracingId());
+                events.publishEvent(new InvalidateRefreshTokenEvent(request, result));
+                return result;
             }
 
-            var result = refreshTokenRepository.deleteToken(request.token());
+            var tokenExists = refreshTokenRepository.deleteToken(request.token());
 
-            if (!result) {
-                return new InvalidateRefreshTokenResults.TokenNotFound(request.token(), request.tracingId());
+            if (!tokenExists) {
+                var tokenNotFoundResult = new InvalidateRefreshTokenResults.TokenNotFound(request.token(),
+                        request.tracingId());
+                events.publishEvent(new InvalidateRefreshTokenEvent(request, tokenNotFoundResult));
+                return tokenNotFoundResult;
             }
 
-            return new InvalidateRefreshTokenResults.Success("Token invalidated successfully");
+            var result = new InvalidateRefreshTokenResults.Success();
+            events.publishEvent(new InvalidateRefreshTokenEvent(request, result));
+            return result;
         } catch (Exception e) {
-            return new InvalidateRefreshTokenResults.SystemError("An unexpected error occurred: " + e.getMessage(),
+            var result = new InvalidateRefreshTokenResults.SystemError(
+                    "An unexpected error occurred: " + e.getMessage(),
                     request.tracingId());
+            events.publishEvent(new InvalidateRefreshTokenEvent(request, result));
+            return result;
         }
     }
 }
