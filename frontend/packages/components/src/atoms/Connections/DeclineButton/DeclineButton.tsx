@@ -3,18 +3,26 @@
 import React, { ReactNode } from "react";
 import { X } from "lucide-react";
 
-interface DeclineButtonProps {
+export interface DeclineButtonProps {
   className?: string;
 }
 
-export const DeclineButton = ({ className = "" }: DeclineButtonProps) => {
+export const DeclineButton = ({ className }: DeclineButtonProps) => {
   return (
     <button
       type="button"
-      className="inline-flex cursor-pointer items-center justify-center transition-transform hover:scale-110"
-      onClick={() => alert(`Are you sure you want to decline this connection?`)}
+      className="inline-flex cursor-pointer items-center justify-center transition hover:scale-110"
+      onClick={() => alert(``)}
     >
-      <X className={`${className}`} />
+      <X className={`h-5 w-5 ${className}`} />
     </button>
   );
+};
+
+export const DeclineButtonRed = () => {
+  return <DeclineButton className="text-coral hover:text-red-800"/>;
+}
+
+export const DeclineButtonIvory = () => {
+  return <DeclineButton className="text-ivory hover:text-red-500" />;
 };

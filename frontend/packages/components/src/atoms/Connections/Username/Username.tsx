@@ -2,13 +2,13 @@ import React, { ReactNode } from "react";
 
 interface UsernameProps {
   username: string;
-};
+  className?: string;
+}
 
-export const Username = ({ username }: UsernameProps) => {
-  
+export const Username = ({ username, className }: UsernameProps) => {
   return (
-    <span className="text-ivory text-sm font-medium font-ibm_plex_sans">
+    <span className={`text-ivory font-ibm_plex_sans font-medium ${className}`}>
       {username}
     </span>
   );
-}
+};
