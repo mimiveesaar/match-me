@@ -1,6 +1,6 @@
 package tech.kood.match_me.user_management.internal.features.login;
 
-public record LoginRequestEvent(
+public record LoginEvent(
         LoginRequest request,
-        LoginRequestResults result) {
+        LoginResults result) {
 }

@@ -13,14 +13,14 @@ import tech.kood.match_me.user_management.internal.mappers.UserMapper;
 import tech.kood.match_me.user_management.internal.utils.PasswordUtils;
 
 @Service
-public final class LoginRequestHandler {
+public final class LoginHandler {
 
     private final UserRepository userRepository;
     private final CreateRefreshTokenHandler createRefreshTokenHandler;
     private final UserMapper userMapper;
     private final ApplicationEventPublisher events;
 
-    public LoginRequestHandler(
+    public LoginHandler(
             UserRepository userRepository,
             CreateRefreshTokenHandler createRefreshTokenHandler,
             ApplicationEventPublisher events,
@@ -31,30 +31,30 @@ public final class LoginRequestHandler {
         this.events = events;
     }
 
-    public LoginRequestResults handle(LoginRequest request) {
+    public LoginResults handle(LoginRequest request) {
         try {
             if (request.email() == null || request.password() == null) {
 
-                var result = new LoginRequestResults.InvalidRequest("Email and password must not be null",
+                var result = new LoginResults.InvalidRequest("Email and password must not be null",
                         request.tracingId());
 
-                events.publishEvent(new LoginRequestEvent(request, result));
+                events.publishEvent(new LoginEvent(request, result));
                 return result;
             }
 
             if (request.email().isBlank() || request.password().isBlank()) {
-                var result = new LoginRequestResults.InvalidRequest("Email and password cannot be empty.",
+                var result = new LoginResults.InvalidRequest("Email and password cannot be empty.",
                         request.tracingId());
 
-                events.publishEvent(new LoginRequestEvent(request, result));
+                events.publishEvent(new LoginEvent(request, result));
                 return result;
             }
 
             var userEntity = userRepository.findUserByEmail(request.email());
             if (userEntity.isEmpty()) {
-                var result = new LoginRequestResults.InvalidCredentials(request.email(), request.password());
+                var result = new LoginResults.InvalidCredentials(request.email(), request.password());
 
-                events.publishEvent(new LoginRequestEvent(request, result));
+                events.publishEvent(new LoginEvent(request, result));
                 return result;
             }
 
@@ -62,9 +62,9 @@ public final class LoginRequestHandler {
 
             // Check if the provided password matches the stored hashed password.
             if (!PasswordUtils.matches(request.password(), foundUser.password())) {
-                var result = new LoginRequestResults.InvalidCredentials(request.email(), request.password());
+                var result = new LoginResults.InvalidCredentials(request.email(), request.password());
 
-                events.publishEvent(new LoginRequestEvent(request, result));
+                events.publishEvent(new LoginEvent(request, result));
                 return result;
             }
 
@@ -76,23 +76,23 @@ public final class LoginRequestHandler {
             var tokenResult = createRefreshTokenHandler.handle(refreshTokenRequest);
 
             if (!(tokenResult instanceof CreateRefreshTokenResults.Success)) {
-                var result = new LoginRequestResults.SystemError("Failed to create refresh token.",
+                var result = new LoginResults.SystemError("Failed to create refresh token.",
                         request.tracingId());
-                events.publishEvent(new LoginRequestEvent(request, result));
+                events.publishEvent(new LoginEvent(request, result));
                 return result;
             }
 
-            var result = new LoginRequestResults.Success(
+            var result = new LoginResults.Success(
                     ((CreateRefreshTokenResults.Success) tokenResult).refreshToken(),
                     foundUser, request.tracingId());
-            events.publishEvent(new LoginRequestEvent(request, result));
+            events.publishEvent(new LoginEvent(request, result));
             return result;
 
         } catch (Exception e) {
-            var result = new LoginRequestResults.SystemError(
+            var result = new LoginResults.SystemError(
                     "An unexpected error occurred during login: " + e.getMessage(),
                     request.tracingId());
-            events.publishEvent(new LoginRequestEvent(request, result));
+            events.publishEvent(new LoginEvent(request, result));
             return result;
         }
     }
