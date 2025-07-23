@@ -8,18 +8,20 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 @SpringBootTest
 public abstract class UserManagementTestBase {
-    protected static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine");
+    protected static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
+            .withReuse(true);
 
     // Start the PostgreSQL container before all tests.
-    // @BeforeAll is not ran before @DynamicPropertySource, when using TEST_CYCLE_PER_CLASS.
+    // @BeforeAll is not ran before @DynamicPropertySource, when using
+    // TEST_CYCLE_PER_CLASS.
     static {
         postgres.start();
     }
 
-    @AfterAll
-    static void afterAll() {
-        postgres.stop();
-    }
+    // @AfterAll
+    // static void afterAll() {
+    // postgres.stop();
+    // }
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
