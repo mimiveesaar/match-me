@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.internal.features.jwt;
+package tech.kood.match_me.user_management.internal.features.jwt.getAccessToken;
 
 import java.time.Instant;
 
@@ -72,7 +72,7 @@ public class GetAccessTokenHandler {
                 String token = JWT.create()
                         .withIssuer(userManagementConfig.getJwtIssuer())
                         .withExpiresAt(Instant.now().plusSeconds(userManagementConfig.getJwtExpiration()))
-                        .withClaim("user", refreshToken.token().userId().toString())
+                        .withClaim("userId", refreshToken.token().userId().toString())
                         .sign(jwtAlgo);
 
                 var result = new GetAccessTokenResults.Success(token, request.tracingId());

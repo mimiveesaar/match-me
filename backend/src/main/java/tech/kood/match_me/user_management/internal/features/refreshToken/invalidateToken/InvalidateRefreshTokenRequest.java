@@ -8,7 +8,7 @@ import java.util.UUID;
  *
  * 
  * @param requestId the unique identifier for this request
- * @param token     the refresh token to be invalidated
+ * @param jwt       the refresh token to be invalidated
  * @param tracingId an optional tracing identifier for request tracking
  */
 public record InvalidateRefreshTokenRequest(

@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.internal.features.jwt;
+package tech.kood.match_me.user_management.internal.features.jwt.getAccessToken;
 
 import java.util.Optional;
 import java.util.UUID;

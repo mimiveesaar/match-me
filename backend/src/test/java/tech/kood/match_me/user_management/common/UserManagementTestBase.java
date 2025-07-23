@@ -1,27 +1,24 @@
 package tech.kood.match_me.user_management.common;
 
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class UserManagementTestBase {
+
+    @Container
     protected static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
             .withReuse(true);
 
-    // Start the PostgreSQL container before all tests.
-    // @BeforeAll is not ran before @DynamicPropertySource, when using
-    // TEST_CYCLE_PER_CLASS.
     static {
         postgres.start();
     }
-
-    // @AfterAll
-    // static void afterAll() {
-    // postgres.stop();
-    // }
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
