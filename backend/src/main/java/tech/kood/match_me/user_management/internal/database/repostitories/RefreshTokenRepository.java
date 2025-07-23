@@ -85,4 +85,20 @@ public class RefreshTokenRepository {
                         return Optional.empty();
                 }
         }
+
+        public Optional<RefreshTokenEntity> findValidToken(String token, Instant currentTime) {
+                String sql = "SELECT * FROM user_management.refresh_tokens WHERE token = :token AND expires_at >= :current_time";
+
+                try {
+                        return Optional.ofNullable(
+                                        jdbcTemplate.queryForObject(sql,
+                                                        Map.of(
+                                                                        "token", token,
+                                                                        "current_time", Timestamp.from(currentTime)),
+                                                        this.refreshTokenRowMapper));
+                } catch (EmptyResultDataAccessException e) {
+                        // Handle the case where the token is not found or is invalid
+                        return Optional.empty();
+                }
+        }
 }

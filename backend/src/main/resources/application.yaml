@@ -1,7 +1,8 @@
 user-management:
   jwt:
-    secret: your_jwt_secret
+    secret: q+6sNpZcOymRrX2U6o4aU2jCLvQhVkODoUwiyQ6QL/I=
     expiration: 3600
+    issuer: match-me
   refresh-token:
     expiration: 604800
     clean-up-interval: 20

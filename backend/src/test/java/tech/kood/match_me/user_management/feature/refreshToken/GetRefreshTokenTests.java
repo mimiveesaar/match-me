@@ -19,7 +19,7 @@ import tech.kood.match_me.user_management.internal.features.refreshToken.createT
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenResults;
 import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenRequest;
-import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenRequestHandler;
+import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenHandler;
 import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenResults;
 import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
 import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserResults;
@@ -43,7 +43,7 @@ public class GetRefreshTokenTests extends UserManagementTestBase {
     CreateRefreshTokenHandler createRefreshTokenHandler;
 
     @Autowired
-    GetRefreshTokenRequestHandler getRefreshTokenRequestHandler;
+    GetRefreshTokenHandler getRefreshTokenRequestHandler;
 
     @Autowired
     @Qualifier("userManagementFlyway")

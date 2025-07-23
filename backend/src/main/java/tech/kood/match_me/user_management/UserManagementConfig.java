@@ -17,9 +17,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
+import com.auth0.jwt.algorithms.Algorithm;
+
 @Configuration
 public class UserManagementConfig {
-    
 
     @Value("${user-management.username.min-length:3}")
     private int usernameMinLength;
@@ -35,6 +36,9 @@ public class UserManagementConfig {
 
     @Value("${user-management.jwt.expiration:3600}")
     private int jwtExpiration;
+
+    @Value("${user-management.jwt.issuer}")
+    private String jwtIssuer;
 
     @Value("${user-management.refresh-token.expiration}")
     private int refreshTokenExpiration;
@@ -52,6 +56,10 @@ public class UserManagementConfig {
 
     public int getJwtExpiration() {
         return jwtExpiration;
+    }
+
+    public String getJwtIssuer() {
+        return jwtIssuer;
     }
 
     public int getRefreshTokenExpiration() {
@@ -81,10 +89,15 @@ public class UserManagementConfig {
     }
 
     @Bean
+    @Qualifier("userManagementJwtAlgorithm")
+    public Algorithm userManagementJwtAlgorithm() {
+        return Algorithm.HMAC256(jwtSecret);
+    }
+
+    @Bean
     @Qualifier("userManagementJdbcTemplate")
     public JdbcTemplate userManagementJdbcTemplate(
-        @Qualifier("userManagementDataSource") DataSource dataSource
-    ) {
+            @Qualifier("userManagementDataSource") DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
 
@@ -96,15 +109,15 @@ public class UserManagementConfig {
 
     @Bean
     @Qualifier("userManagementTaskScheduler")
-    public TaskScheduler taskScheduler(@Qualifier("userManagementScheduledExecutorService") ScheduledExecutorService scheduledExecutorService) {
-        return new ConcurrentTaskScheduler(scheduledExecutorService); 
+    public TaskScheduler taskScheduler(
+            @Qualifier("userManagementScheduledExecutorService") ScheduledExecutorService scheduledExecutorService) {
+        return new ConcurrentTaskScheduler(scheduledExecutorService);
     }
 
     @Bean
     @Qualifier("userManagementNamedParameterJdbcTemplate")
     public NamedParameterJdbcTemplate userManagementNamedParameterJdbcTemplate(
-        @Qualifier("userManagementDataSource") DataSource dataSource
-    ) {
+            @Qualifier("userManagementDataSource") DataSource dataSource) {
         return new NamedParameterJdbcTemplate(dataSource);
     }
 
