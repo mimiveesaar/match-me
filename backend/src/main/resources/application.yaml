@@ -1,12 +1,22 @@
 spring:
   datasource:
-    url: jdbc:postgresql://postgres:5432/match_me_db
-    username: admin
-    password: admin
-    driver-class-name: org.postgresql.Driver
-
+    user-management:
+      jdbc-url: jdbc:postgresql://postgres_container:5432/match_me_db
+      username: admin
+      password: admin
+      driver-class-name: org.postgresql.Driver
   application:
     name: match-me
-
   flyway:
     enabled: false
+
+testcontainers:
+  reuse:
+    enabled: false
+
+logging:
+  level:
+    org.springframework.jdbc.datasource: DEBUG
+    org.hibernate.engine.jdbc.env.internal: DEBUG
+    org.hibernate.engine.jdbc.connections.internal: DEBUG
+    org.springframework.boot.autoconfigure.jdbc: DEBUG

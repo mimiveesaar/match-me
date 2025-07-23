@@ -5,9 +5,10 @@ import java.util.List;
 public class MatchFilter {
     private int minAge;
     private int maxAge;
-    private List<String> bodyform;
+    private String homeplanet;
+    private String bodyform;
     private List<String> interests;
-    private List<String> lookingFor;
+    private String lookingFor;
 
     // Getters and setters
 
@@ -23,10 +24,16 @@ public class MatchFilter {
     public void setMaxAge(int maxAge) {
         this.maxAge = maxAge;
     }
-    public List<String> getBodyform() {
+    public String getHomeplanet() {
+        return homeplanet;
+    }
+    public void setHomeplanet(String homeplanet) {
+        this.homeplanet = homeplanet;
+    }
+    public String getBodyform() {
         return bodyform;
     }
-    public void setBodyform(List<String> bodyform) {
+    public void setBodyform(String bodyform) {
         this.bodyform = bodyform;
     }
     public List<String> getInterests() {
@@ -35,10 +42,10 @@ public class MatchFilter {
     public void setInterests(List<String> interests) {
         this.interests = interests;
     }
-    public List<String> getLookingFor() {
+    public String getLookingFor() {
         return lookingFor;
     }
-    public void setLookingFor(List<String> lookingFor) {
+    public void setLookingFor(String lookingFor) {
         this.lookingFor = lookingFor;
     }
 }

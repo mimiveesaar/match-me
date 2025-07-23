@@ -1,89 +1,84 @@
 package tech.kood.match_me.matching.model;
 
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
+
+    private String username;
 
     private int age;
 
-    @Embedded
-    private Location location;
+    private String homeplanet;
 
     private String bodyform;
 
     @ElementCollection
     private List<String> interests;
 
-    @ElementCollection
-    private List<String> lookingFor;
+    private String bio;
+
+    private String lookingFor;
 
     // --- Constructors ---
 
     public User() {}
 
-    public User(int age, Location location, String bodyform, List<String> interests, List<String> lookingFor) {
+    public User(String username, int age, String homeplanet, String bodyform, List<String> interests, String bio, String lookingFor) {
+        this.username = username;
         this.age = age;
-        this.location = location;
+        this.homeplanet = homeplanet;
         this.bodyform = bodyform;
         this.interests = interests;
+        this.bio = bio;
         this.lookingFor = lookingFor;
     }
 
     // --- Getters and Setters ---
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
+
+    public String getUsername() {
+        return username;
+    }   
 
     public int getAge() {
         return age;
     }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
+    public String getHomeplanet() {
+        return homeplanet;
     }
 
     public String getBodyform() {
         return bodyform;
     }
 
-    public void setBodyform(String bodyform) {
-        this.bodyform = bodyform;
-    }
-
     public List<String> getInterests() {
         return interests;
     }
 
-    public void setInterests(List<String> interests) {
-        this.interests = interests;
+    public String getBio() {
+        return bio;
     }
 
-    public List<String> getLookingFor() {
+    public String getLookingFor() {
         return lookingFor;
-    }
-
-    public void setLookingFor(List<String> lookingFor) {
-        this.lookingFor = lookingFor;
     }
 }

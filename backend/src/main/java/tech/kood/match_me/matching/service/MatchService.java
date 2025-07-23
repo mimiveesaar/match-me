@@ -25,7 +25,8 @@ public class MatchService {
                 .filter(user -> user.getAge() >= filter.getMinAge() && user.getAge() <= filter.getMaxAge())
                 .filter(user -> filter.getBodyform().isEmpty() || filter.getBodyform().contains(user.getBodyform()))
                 .filter(user -> filter.getInterests().isEmpty() || !disjoint(user.getInterests(), filter.getInterests()))
-                .filter(user -> filter.getLookingFor().isEmpty() || !disjoint(user.getLookingFor(), filter.getLookingFor()))
+                .filter(user -> filter.getLookingFor().isEmpty() || filter.getLookingFor().contains(user.getLookingFor()))
+                .filter(user -> filter.getHomeplanet().isEmpty() || filter.getHomeplanet().contains(user.getHomeplanet()))
                 .collect(Collectors.toList());
     }
 
