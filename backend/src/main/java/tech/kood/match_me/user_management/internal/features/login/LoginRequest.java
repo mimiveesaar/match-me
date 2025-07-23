@@ -4,8 +4,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public record LoginRequest(
-        UUID requestId,
-        String username,
-        String password,
-        Optional<String> tracingId) {
+                UUID requestId,
+                String email,
+                String password,
+                Optional<String> tracingId) {
 }

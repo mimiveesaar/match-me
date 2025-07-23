@@ -33,26 +33,26 @@ public final class LoginRequestHandler {
 
     public LoginRequestResults handle(LoginRequest request) {
         try {
-            if (request.username() == null || request.password() == null) {
+            if (request.email() == null || request.password() == null) {
 
-                var result = new LoginRequestResults.InvalidRequest("Username and password must not be null",
+                var result = new LoginRequestResults.InvalidRequest("Email and password must not be null",
                         request.tracingId());
 
                 events.publishEvent(new LoginRequestEvent(request, result));
                 return result;
             }
 
-            if (request.username().isBlank() || request.password().isBlank()) {
-                var result = new LoginRequestResults.InvalidRequest("Username and password cannot be empty.",
+            if (request.email().isBlank() || request.password().isBlank()) {
+                var result = new LoginRequestResults.InvalidRequest("Email and password cannot be empty.",
                         request.tracingId());
 
                 events.publishEvent(new LoginRequestEvent(request, result));
                 return result;
             }
 
-            var userEntity = userRepository.findUserByUsername(request.username());
+            var userEntity = userRepository.findUserByEmail(request.email());
             if (userEntity.isEmpty()) {
-                var result = new LoginRequestResults.InvalidCredentials(request.username(), request.password());
+                var result = new LoginRequestResults.InvalidCredentials(request.email(), request.password());
 
                 events.publishEvent(new LoginRequestEvent(request, result));
                 return result;
@@ -62,7 +62,7 @@ public final class LoginRequestHandler {
 
             // Check if the provided password matches the stored hashed password.
             if (!PasswordUtils.matches(request.password(), foundUser.password())) {
-                var result = new LoginRequestResults.InvalidCredentials(request.username(), request.password());
+                var result = new LoginRequestResults.InvalidCredentials(request.email(), request.password());
 
                 events.publishEvent(new LoginRequestEvent(request, result));
                 return result;

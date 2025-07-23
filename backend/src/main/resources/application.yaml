@@ -22,3 +22,7 @@ spring:
     name: match-me
   flyway:
     enabled: false
+
+testcontainers:
+  reuse:
+    enabled: true
