@@ -12,6 +12,9 @@ public sealed interface GetRefreshTokenResults {
     record InvalidRequest(String message, Optional<String> tracingId) implements GetRefreshTokenResults {
     }
 
-    record InvalidToken(String message, Optional<String> tracingId) implements GetRefreshTokenResults {
+    record InvalidToken(String token, Optional<String> tracingId) implements GetRefreshTokenResults {
+    }
+
+    record SystemError(String message, Optional<String> tracingId) implements GetRefreshTokenResults {
     }
 }
