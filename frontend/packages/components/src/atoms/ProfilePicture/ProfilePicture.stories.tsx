@@ -19,3 +19,11 @@ export const Default: Story = {
     height: 160,
   },
 };
+
+export const SmallCircle: Story = {
+  args: {
+    width: 50,
+    height: 50,
+    className: "rounded-full",
+  },
+};
