@@ -11,8 +11,7 @@ import tech.kood.match_me.user_management.models.User;
  * the user, and an optional tracing ID for tracking purposes.
  *
  * @param requestId the unique identifier for this refresh token request
- * @param user      the unique identifier of the user requesting the token
- *                  refresh
+ * @param user      user for whom the refresh token is being created.
  * @param tracingId an optional tracing identifier for request tracking and
  *                  debugging
  *

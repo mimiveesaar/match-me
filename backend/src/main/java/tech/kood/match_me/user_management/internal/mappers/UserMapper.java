@@ -11,24 +11,23 @@ import tech.kood.match_me.user_management.models.User;
 @Component
 @Primary
 public final class UserMapper {
-    
+
     public UserDTO toUserDTO(User user) {
         if (user == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
-        
+
         return new UserDTO(
-            user.id(),
-            user.username(),
-            user.email()
-        );
+                user.id(),
+                user.username(),
+                user.email());
     }
 
     public UserDTO toUserDTO(UserEntity userEntity) {
         if (userEntity == null) {
             throw new IllegalArgumentException("UserEntity cannot be null");
         }
-     
+
         return toUserDTO(toUser(userEntity));
     }
 
@@ -36,14 +35,13 @@ public final class UserMapper {
         if (userEntity == null) {
             throw new IllegalArgumentException("UserEntity cannot be null");
         }
-        
+
         return new User(
-            userEntity.id(),
-            userEntity.username(),
-            userEntity.email(),
-            new HashedPassword(userEntity.hash(), userEntity.salt()),
-            userEntity.createdAt(),
-            userEntity.updatedAt()
-        );
+                userEntity.id(),
+                userEntity.username(),
+                userEntity.email(),
+                new HashedPassword(userEntity.passwordHash(), userEntity.passwordSalt()),
+                userEntity.createdAt(),
+                userEntity.updatedAt());
     }
 }
