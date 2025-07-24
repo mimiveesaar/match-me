@@ -15,18 +15,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import tech.kood.match_me.user_management.api.DTOs.RegisterUserRequestDTO;
-import tech.kood.match_me.user_management.api.DTOs.registerUser.RegisterUserEmailExistsDTO;
-import tech.kood.match_me.user_management.api.DTOs.registerUser.RegisterUserInvalidEmailDTO;
-import tech.kood.match_me.user_management.api.DTOs.registerUser.RegisterUserInvalidPasswordDTO;
-import tech.kood.match_me.user_management.api.DTOs.registerUser.RegisterUserResultsDTO;
-import tech.kood.match_me.user_management.api.DTOs.registerUser.RegisterUserSuccessDTO;
-import tech.kood.match_me.user_management.api.DTOs.registerUser.RegisterUserSystemErrorDTO;
-import tech.kood.match_me.user_management.api.DTOs.registerUser.RegisterUserUsernameExistsDTO;
+import tech.kood.match_me.user_management.api.DTOs.RegisterUserResultsDTO;
 import tech.kood.match_me.user_management.internal.mappers.RegisterUserResultsMapper;
 
 @RestController
 @RequestMapping("/api/user-management")
-@Tag(name = "Register User", description = "API for registering a new user")
+@Tag(name = "User Management")
 public class RegisterUserEndpoint {
 
     private final RegisterUserHandler registerUserHandler;
@@ -39,26 +33,22 @@ public class RegisterUserEndpoint {
     }
 
     @PostMapping("/register")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "User registered successfully",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(
-                                            implementation = RegisterUserSuccessDTO.class))),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "Invalid request data or user already exists",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(
-                                            discriminatorProperty = "kind",
-                                            oneOf = {RegisterUserUsernameExistsDTO.class,
-                                                    RegisterUserEmailExistsDTO.class,
-                                                    RegisterUserInvalidEmailDTO.class,
-                                                    RegisterUserInvalidPasswordDTO.class}))),
-                    @ApiResponse(responseCode = "500", description = "Internal server error",
-                            content = @Content(schema = @Schema(
-                                    implementation = RegisterUserResultsDTO.class)))})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User registered successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(
+                                    implementation = RegisterUserResultsDTO.Success.class))),
+            @ApiResponse(responseCode = "400",
+                    description = "Invalid request data or user already exists",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(discriminatorProperty = "kind",
+                                    oneOf = {RegisterUserResultsDTO.UsernameExists.class,
+                                            RegisterUserResultsDTO.EmailExists.class,
+                                            RegisterUserResultsDTO.InvalidEmail.class,
+                                            RegisterUserResultsDTO.InvalidPassword.class}))),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(
+                            schema = @Schema(implementation = RegisterUserResultsDTO.class)))})
 
     public ResponseEntity<RegisterUserResultsDTO> registerUser(
             @RequestBody RegisterUserRequestDTO request) {
@@ -70,10 +60,10 @@ public class RegisterUserEndpoint {
         var responseDTO = registerUserResultsMapper.toDTO(result);
 
         switch (responseDTO) {
-            case RegisterUserSuccessDTO success -> {
+            case RegisterUserResultsDTO.Success success -> {
                 return ResponseEntity.ok(success);
             }
-            case RegisterUserSystemErrorDTO systemError -> {
+            case RegisterUserResultsDTO.SystemError systemError -> {
                 // For system errors, we return a 500 Internal Server Error
                 return ResponseEntity.status(500).body(systemError);
             }
