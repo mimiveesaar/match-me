@@ -15,12 +15,12 @@ import tech.kood.match_me.user_management.internal.mappers.RegisterUserResultsMa
 @RestController
 @RequestMapping("/api/user-management")
 public class RegisterUserEndpoint {
-    
+
     private final RegisterUserHandler registerUserHandler;
     private final RegisterUserResultsMapper registerUserResultsMapper;
 
-    public RegisterUserEndpoint(RegisterUserHandler registerUserHandler, 
-                                RegisterUserResultsMapper registerUserResultsMapper) {
+    public RegisterUserEndpoint(RegisterUserHandler registerUserHandler,
+            RegisterUserResultsMapper registerUserResultsMapper) {
         this.registerUserHandler = registerUserHandler;
         this.registerUserResultsMapper = registerUserResultsMapper;
     }
@@ -29,12 +29,11 @@ public class RegisterUserEndpoint {
     public RegisterUserResultsDTO registerUser(@RequestBody RegisterUserRequestDTO request) {
 
         var internalRequest = new RegisterUserRequest(
-            UUID.randomUUID(),
-            request.username(),
-            request.password(),
-            request.email(),
-            Optional.ofNullable(request.tracingId())
-        );
+                UUID.randomUUID(),
+                request.username(),
+                request.password(),
+                request.email(),
+                Optional.of(UUID.randomUUID().toString()));
 
         var result = registerUserHandler.handle(internalRequest);
         return registerUserResultsMapper.toDTO(result);

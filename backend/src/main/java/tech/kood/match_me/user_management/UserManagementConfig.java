@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 
 @Configuration
@@ -92,6 +93,14 @@ public class UserManagementConfig {
     @Qualifier("userManagementJwtAlgorithm")
     public Algorithm userManagementJwtAlgorithm() {
         return Algorithm.HMAC256(jwtSecret);
+    }
+
+    @Bean
+    @Qualifier("userManagementJwtVerifier")
+    public JWTVerifier userManagementJwtVerifier(@Qualifier("userManagementJwtAlgorithm") Algorithm algorithm) {
+        return com.auth0.jwt.JWT.require(algorithm)
+                .withIssuer(jwtIssuer)
+                .build();
     }
 
     @Bean
