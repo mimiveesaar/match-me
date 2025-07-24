@@ -11,8 +11,8 @@ export const DeclineButton = ({ className }: DeclineButtonProps) => {
   return (
     <button
       type="button"
-      className="mt-1 flex size-4 cursor-pointer items-center justify-center transition hover:scale-125"
-      onClick={() => alert(``)}
+      className="mt-1 flex size-5 cursor-pointer items-center justify-center transition hover:scale-125"
+      onClick={() => alert(`Are you sure you want to disconnect?`)}
     >
       <X className={`h-5 w-5 ${className}`} />
     </button>

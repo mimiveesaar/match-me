@@ -7,7 +7,9 @@ interface UsernameProps {
 
 export const Username = ({ username, className }: UsernameProps) => {
   return (
-    <span className={`text-ivory font-ibm_plex_sans font-medium ${className}`}>
+    <span
+      className={`text-ivory font-ibm_plex_sans text-xl font-medium ${className}`}
+    >
       {username}
     </span>
   );

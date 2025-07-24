@@ -6,12 +6,12 @@ import { RoundProfilePicture } from "@atoms/ProfilePicture/ProfilePicture";
 
 export const ConnectionProfile = () => {
   return (
-    <div className="flex w-full max-w-96 md:max-w-72 items-center justify-between px-10 py-2">
+    <div className="flex w-full max-w-96 items-center justify-between px-10 py-2 md:max-w-72">
       <div className="flex items-center justify-center space-x-4">
         <RoundProfilePicture />
-        <Username className="text-xl font-medium" username="Marty" />
+        <Username username="Marty" />
       </div>
-      <DeclineButtonIvory className="" />
+      <DeclineButtonIvory />
     </div>
   );
 };
