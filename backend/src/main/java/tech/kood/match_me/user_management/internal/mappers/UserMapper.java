@@ -18,7 +18,7 @@ public final class UserMapper {
         }
 
         return new UserDTO(
-                user.id(),
+                user.id().toString(),
                 user.username(),
                 user.email());
     }
