@@ -21,7 +21,7 @@ public sealed interface RegisterUserResultsDTO permits RegisterUserResultsDTO.Su
         public record EmailExists(String email, String kind, String tracingId)
                         implements RegisterUserResultsDTO {
                 public EmailExists(String email, String tracingId) {
-                        this(email, "RegisterUserEmailExists", tracingId);
+                        this(email, "email_exists", tracingId);
                 }
 
         }
@@ -30,7 +30,7 @@ public sealed interface RegisterUserResultsDTO permits RegisterUserResultsDTO.Su
         public record InvalidEmail(String email, String kind, String tracingId)
                         implements RegisterUserResultsDTO {
                 public InvalidEmail(String email, String tracingId) {
-                        this(email, "RegisterUserInvalidEmail", tracingId);
+                        this(email, "invalid_email", tracingId);
                 }
         }
 
@@ -40,7 +40,7 @@ public sealed interface RegisterUserResultsDTO permits RegisterUserResultsDTO.Su
 
                 public InvalidPassword(String password, InvalidPasswordType type,
                                 String tracingId) {
-                        this(password, type, "RegisterUserInvalidPassword", tracingId);
+                        this(password, type, "invalid_password", tracingId);
                 }
         }
 
@@ -60,7 +60,7 @@ public sealed interface RegisterUserResultsDTO permits RegisterUserResultsDTO.Su
 
                 public InvalidUsername(String username, InvalidUsernameType type,
                                 String tracingId) {
-                        this(username, "RegisterUserInvalidUsername", type, tracingId);
+                        this(username, "invalid_username", type, tracingId);
                 }
         }
 
@@ -68,7 +68,7 @@ public sealed interface RegisterUserResultsDTO permits RegisterUserResultsDTO.Su
         public record Success(UserDTO user, String kind, String tracingId)
                         implements RegisterUserResultsDTO {
                 public Success(UserDTO user, String tracingId) {
-                        this(user, "RegisterUserSuccess", tracingId);
+                        this(user, "success", tracingId);
                 }
         }
 
@@ -76,7 +76,7 @@ public sealed interface RegisterUserResultsDTO permits RegisterUserResultsDTO.Su
         public record SystemError(String message, String kind, String tracingId)
                         implements RegisterUserResultsDTO {
                 public SystemError(String message, String tracingId) {
-                        this(message, "RegisterUserSystemError", tracingId);
+                        this(message, "system_error", tracingId);
                 }
         }
 

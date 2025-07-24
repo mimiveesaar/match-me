@@ -34,20 +34,19 @@ public class RegisterUserEndpoint {
 
     @PostMapping("/register")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User registered successfully",
+            @ApiResponse(responseCode = "200", description = "User registered successfully.",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(
                                     implementation = RegisterUserResultsDTO.Success.class))),
-            @ApiResponse(responseCode = "400",
-                    description = "Invalid request data or user already exists",
+            @ApiResponse(responseCode = "400", description = "Invalid request.",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(discriminatorProperty = "kind",
                                     oneOf = {RegisterUserResultsDTO.UsernameExists.class,
                                             RegisterUserResultsDTO.EmailExists.class,
                                             RegisterUserResultsDTO.InvalidEmail.class,
                                             RegisterUserResultsDTO.InvalidPassword.class}))),
-            @ApiResponse(responseCode = "500", description = "Internal server error",
-                    content = @Content(
+            @ApiResponse(responseCode = "500", description = "Internal server error.",
+                    content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = RegisterUserResultsDTO.class)))})
 
     public ResponseEntity<RegisterUserResultsDTO> registerUser(
