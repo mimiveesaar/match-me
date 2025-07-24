@@ -1,16 +1,18 @@
 "use client";
 
-import { DeclineButton } from "@atoms/Connections/DeclineButton/DeclineButton";
+import { DeclineButtonIvory } from "@atoms/Connections/DeclineButton/DeclineButton";
 import { Username } from "@atoms/Connections/Username/Username";
-import { ProfilePicture } from "@atoms/ProfilePicture/ProfilePicture";
+import { RoundProfilePicture } from "@atoms/ProfilePicture/ProfilePicture";
 import React, { useState } from "react";
 
 export const OutgoingProfile = () => {
   return (
-    <div>
-      <ProfilePicture />
-      <Username username="Marty" />
-      <DeclineButton />
+    <div className="flex w-full max-w-96 items-center justify-between px-10 py-2 md:max-w-72">
+      <div className="flex items-center justify-center space-x-4">
+        <RoundProfilePicture />
+        <Username username="Marty" />
+      </div>
+      <DeclineButtonIvory />
     </div>
   );
 };
