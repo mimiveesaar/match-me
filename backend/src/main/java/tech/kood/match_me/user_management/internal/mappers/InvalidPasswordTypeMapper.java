@@ -1,14 +1,14 @@
 package tech.kood.match_me.user_management.internal.mappers;
 
 import org.springframework.stereotype.Component;
-
 import tech.kood.match_me.user_management.api.DTOs.RegisterUserResultsDTO;
 import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserResults;
 
 @Component
 public final class InvalidPasswordTypeMapper {
 
-    public RegisterUserResultsDTO.InvalidPasswordType toInvalidPasswordType(RegisterUserResults.InvalidPasswordType type) {
+    public RegisterUserResultsDTO.InvalidPasswordType toInvalidPasswordTypeDTO(
+            RegisterUserResults.InvalidPasswordType type) {
         if (type == null) {
             throw new IllegalArgumentException("InvalidPasswordType cannot be null");
         }
@@ -19,5 +19,4 @@ public final class InvalidPasswordTypeMapper {
             case WEAK -> RegisterUserResultsDTO.InvalidPasswordType.WEAK;
         };
     }
-    
 }
