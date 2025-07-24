@@ -13,5 +13,9 @@ export default meta;
 type Story = StoryObj<typeof ConnectionProfile>;
 
 export const Default: Story = {
-  render: () => <ConnectionProfile />,
+  render: () => (
+    <div className="flex w-screen items-center justify-center">
+      <ConnectionProfile />
+    </div>
+  ),
 };

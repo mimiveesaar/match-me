@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { AcceptButton } from './AcceptButton';
+import { AcceptButton } from "./AcceptButton";
 
 const meta: Meta<typeof AcceptButton> = {
   title: "Atoms/Connections/Accept Button",

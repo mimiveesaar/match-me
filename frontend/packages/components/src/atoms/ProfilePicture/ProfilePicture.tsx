@@ -37,8 +37,8 @@ export const RoundProfilePicture: React.FC<RoundProfilePictureProps> = ({
   className,
 }) => (
   <ProfilePicture
-    width={50}
-    height={50}
+    width={30}
+    height={30}
     className={`rounded-full ${className}`}
     imageUrl={imageUrl}
   />
