@@ -15,7 +15,7 @@ type Story = StoryObj<typeof ConnectionProfile>;
 export const Default: Story = {
   render: () => (
     <div className="flex w-screen items-center justify-center">
-      <ConnectionProfile />
+      <ConnectionProfile username="" profilePictureUrl="" />
     </div>
   ),
 };

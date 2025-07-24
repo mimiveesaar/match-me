@@ -4,14 +4,24 @@ import { DeclineButtonIvory } from "@atoms/Connections/DeclineButton/DeclineButt
 import { Username } from "@atoms/Connections/Username/Username";
 import { RoundProfilePicture } from "@atoms/ProfilePicture/ProfilePicture";
 
-export const ConnectionProfile = () => {
+export interface ConnectionProfileProps {
+  username?: string;
+  profilePictureUrl?: string;
+  onDecline?: () => void;
+}
+
+export const ConnectionProfile = ({
+  username,
+  profilePictureUrl,
+  onDecline,
+}: ConnectionProfileProps) => {
   return (
-    <div className="flex w-full max-w-96 items-center justify-between px-10 py-2 md:max-w-72">
+    <div className="flex w-full max-w-96 items-center justify-between px-1 py-2">
       <div className="flex items-center justify-center space-x-4">
-        <RoundProfilePicture />
-        <Username username="Marty" />
+        <RoundProfilePicture imageUrl={profilePictureUrl} />
+        <Username username={username} />
       </div>
-      <DeclineButtonIvory />
+      <DeclineButtonIvory onClick={onDecline} />
     </div>
   );
 };
