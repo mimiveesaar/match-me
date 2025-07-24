@@ -2,9 +2,9 @@ import { MyConnectionsIcon } from "@atoms/Connections/MyConnectionsIcon/MyConnec
 import React, { useState } from "react";
 
 export const MyConnectionsHeader = () => {
-    return (
-        <div>
-          <MyConnectionsIcon/> 
-        </div>
-    );
-}
+  return (
+    <div>
+      <MyConnectionsIcon />
+    </div>
+  );
+};
