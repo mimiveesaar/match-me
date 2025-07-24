@@ -11,7 +11,7 @@ export const DeclineButton = ({ className }: DeclineButtonProps) => {
   return (
     <button
       type="button"
-      className="inline-flex cursor-pointer items-center justify-center transition hover:scale-110"
+      className="mt-1 flex size-4 cursor-pointer items-center justify-center transition hover:scale-125"
       onClick={() => alert(``)}
     >
       <X className={`h-5 w-5 ${className}`} />
@@ -19,10 +19,14 @@ export const DeclineButton = ({ className }: DeclineButtonProps) => {
   );
 };
 
-export const DeclineButtonRed = () => {
-  return <DeclineButton className="text-coral hover:text-red-800"/>;
-}
+export const DeclineButtonRed = ({ className }: DeclineButtonProps) => {
+  return (
+    <DeclineButton className={`text-coral hover:text-red-800 ${className}`} />
+  );
+};
 
-export const DeclineButtonIvory = () => {
-  return <DeclineButton className="text-ivory hover:text-red-500" />;
+export const DeclineButtonIvory = ({ className }: DeclineButtonProps) => {
+  return (
+    <DeclineButton className={`text-ivory hover:text-red-500 ${className}`} />
+  );
 };
