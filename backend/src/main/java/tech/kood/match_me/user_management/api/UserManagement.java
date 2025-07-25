@@ -39,4 +39,6 @@ public interface UserManagement {
      * @return A {@link GetUserByIdResults} object containing the user details if found.
      */
     GetUserByIdResults getUserById(GetUserByIdResults request);
+
+    
 }

@@ -19,7 +19,7 @@ import tech.kood.match_me.user_management.api.DTOs.RegisterUserResultsDTO;
 import tech.kood.match_me.user_management.internal.mappers.RegisterUserResultsMapper;
 
 @RestController
-@RequestMapping("/api/user-management")
+@RequestMapping("/api/v1/user-management/auth")
 @Tag(name = "User Management")
 public class RegisterUserEndpoint {
 

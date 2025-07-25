@@ -86,7 +86,7 @@ public sealed interface RegisterUserResultsDTO permits RegisterUserResultsDTO.Su
 
 
                 public UsernameExists(String username, String tracingId) {
-                        this(username, "RegisterUserUsernameExists", tracingId);
+                        this(username, "username_exists", tracingId);
                 }
         }
 }

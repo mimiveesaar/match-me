@@ -25,8 +25,7 @@ public class GetAccessTokenHandler {
 
     private final Algorithm jwtAlgo;
 
-    public GetAccessTokenHandler(
-            ApplicationEventPublisher events,
+    public GetAccessTokenHandler(ApplicationEventPublisher events,
             GetRefreshTokenHandler getRefreshTokenHandler,
             UserManagementConfig userManagementConfig,
             @Qualifier("userManagementJwtAlgorithm") Algorithm jwtAlgo) {
@@ -39,8 +38,8 @@ public class GetAccessTokenHandler {
     public GetAccessTokenResults handle(GetAccessTokenRequest request) {
         try {
             if (request.refreshToken() == null || request.refreshToken().isBlank()) {
-                var result = new GetAccessTokenResults.InvalidRequest("Refresh token must not be null or empty",
-                        request.tracingId());
+                var result = new GetAccessTokenResults.InvalidRequest(
+                        "Refresh token must not be null or empty", request.tracingId());
                 events.publishEvent(new GetAccessTokenEvent(request, result));
                 return result;
             }
@@ -49,19 +48,22 @@ public class GetAccessTokenHandler {
                     new GetRefreshTokenRequest(request.refreshToken(), request.tracingId()));
 
             if (refreshTokenResult instanceof GetRefreshTokenResults.InvalidToken invalidToken) {
-                var result = new GetAccessTokenResults.InvalidToken(invalidToken.token(), request.tracingId());
+                var result = new GetAccessTokenResults.InvalidToken(invalidToken.token(),
+                        request.tracingId());
                 events.publishEvent(new GetAccessTokenEvent(request, result));
                 return result;
             }
 
             if (refreshTokenResult instanceof GetRefreshTokenResults.InvalidRequest invalidRequest) {
-                var result = new GetAccessTokenResults.InvalidRequest(invalidRequest.message(), request.tracingId());
+                var result = new GetAccessTokenResults.InvalidRequest(invalidRequest.message(),
+                        request.tracingId());
                 events.publishEvent(new GetAccessTokenEvent(request, result));
                 return result;
             }
 
             if (refreshTokenResult instanceof GetRefreshTokenResults.SystemError systemError) {
-                var result = new GetAccessTokenResults.SystemError(systemError.message(), request.tracingId());
+                var result = new GetAccessTokenResults.SystemError(systemError.message(),
+                        request.tracingId());
                 events.publishEvent(new GetAccessTokenEvent(request, result));
                 return result;
             }
@@ -69,9 +71,10 @@ public class GetAccessTokenHandler {
             if (refreshTokenResult instanceof GetRefreshTokenResults.Success refreshToken) {
 
                 // Generate JWT token using the refresh token's user ID.
-                String token = JWT.create()
-                        .withIssuer(userManagementConfig.getJwtIssuer())
-                        .withExpiresAt(Instant.now().plusSeconds(userManagementConfig.getJwtExpiration()))
+                String token = JWT.create().withIssuer(userManagementConfig.getJwtIssuer())
+                        .withIssuedAt(Instant.now())
+                        .withExpiresAt(
+                                Instant.now().plusSeconds(userManagementConfig.getJwtExpiration()))
                         .withClaim("userId", refreshToken.token().userId().toString())
                         .sign(jwtAlgo);
 
@@ -81,15 +84,14 @@ public class GetAccessTokenHandler {
                 return result;
             }
 
-            var result = new GetAccessTokenResults.SystemError("Unexpected result from refresh token handler",
-                    request.tracingId());
+            var result = new GetAccessTokenResults.SystemError(
+                    "Unexpected result from refresh token handler", request.tracingId());
             events.publishEvent(new GetAccessTokenEvent(request, result));
             return result;
 
         } catch (Exception e) {
             var result = new GetAccessTokenResults.SystemError(
-                    "An unexpected error occurred: " + e.getMessage(),
-                    request.tracingId());
+                    "An unexpected error occurred: " + e.getMessage(), request.tracingId());
             events.publishEvent(new GetAccessTokenEvent(request, result));
             return result;
         }

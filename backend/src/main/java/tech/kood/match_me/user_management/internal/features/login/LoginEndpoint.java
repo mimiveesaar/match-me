@@ -17,7 +17,7 @@ import tech.kood.match_me.user_management.api.DTOs.LoginResultsDTO;
 import tech.kood.match_me.user_management.internal.mappers.LoginResultsMapper;
 
 @RestController
-@RequestMapping("/api/user-management")
+@RequestMapping("/api/v1/user-management/auth")
 @Tag(name = "User Management", description = "API for user management operations")
 public class LoginEndpoint {
 
@@ -53,8 +53,7 @@ public class LoginEndpoint {
     public ResponseEntity<LoginResultsDTO> loginUser(@RequestBody LoginRequestDTO request) {
 
         var internalRequest = new LoginRequest(UUID.randomUUID(), request.email(),
-                request.password(), Optional.of(UUID.randomUUID().toString()) 
-        );
+                request.password(), Optional.of(UUID.randomUUID().toString()));
 
         var result = loginHandler.handle(internalRequest);
         var responseDTO = loginResultsMapper.toDTO(result);
