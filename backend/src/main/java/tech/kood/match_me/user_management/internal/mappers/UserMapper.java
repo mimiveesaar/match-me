@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import tech.kood.match_me.user_management.api.DTOs.UserDTO;
-import tech.kood.match_me.user_management.internal.entities.UserEntity;
+import tech.kood.match_me.user_management.internal.database.entities.UserEntity;
 import tech.kood.match_me.user_management.models.HashedPassword;
 import tech.kood.match_me.user_management.models.User;
 

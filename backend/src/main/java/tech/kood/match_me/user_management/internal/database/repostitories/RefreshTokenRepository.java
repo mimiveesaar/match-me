@@ -10,9 +10,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-
+import tech.kood.match_me.user_management.internal.database.entities.RefreshTokenEntity;
 import tech.kood.match_me.user_management.internal.database.mappers.RefreshTokenRowMapper;
-import tech.kood.match_me.user_management.internal.entities.RefreshTokenEntity;
 
 @Repository
 public class RefreshTokenRepository {

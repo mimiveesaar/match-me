@@ -7,8 +7,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import tech.kood.match_me.user_management.UserManagementConfig;
+import tech.kood.match_me.user_management.internal.database.entities.UserEntity;
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
-import tech.kood.match_me.user_management.internal.entities.UserEntity;
 import tech.kood.match_me.user_management.internal.mappers.UserMapper;
 import tech.kood.match_me.user_management.internal.utils.EmailValidator;
 import tech.kood.match_me.user_management.internal.utils.PasswordUtils;

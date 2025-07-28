@@ -1,8 +1,7 @@
 package tech.kood.match_me.user_management.internal.database.mappers;
 
 import org.springframework.stereotype.Component;
-import tech.kood.match_me.user_management.internal.entities.RefreshTokenEntity;
-
+import tech.kood.match_me.user_management.internal.database.entities.RefreshTokenEntity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;

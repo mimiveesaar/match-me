@@ -7,8 +7,7 @@ import java.util.UUID;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-
-import tech.kood.match_me.user_management.internal.entities.UserEntity;
+import tech.kood.match_me.user_management.internal.database.entities.UserEntity;
 
 
 @Component

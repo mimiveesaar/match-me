@@ -9,9 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-
+import tech.kood.match_me.user_management.internal.database.entities.UserEntity;
 import tech.kood.match_me.user_management.internal.database.mappers.UserRowMapper;
-import tech.kood.match_me.user_management.internal.entities.UserEntity;
 
 @Repository
 public class UserRepository {
