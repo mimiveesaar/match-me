@@ -1,4 +1,4 @@
-CREATE TABLE user_management.refresh_tokens
+CREATE TABLE IF NOT EXISTS user_management.refresh_tokens
 (
     id         UUID PRIMARY KEY,
     user_id    UUID NOT NULL,

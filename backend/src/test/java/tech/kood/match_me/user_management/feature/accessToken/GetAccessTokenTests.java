@@ -45,10 +45,6 @@ public class GetAccessTokenTests extends UserManagementTestBase {
     @Autowired
     GetAccessTokenHandler getAccessTokenHandler;
 
-    @BeforeAll
-    void migrate() {
-        var result = userManagementFlyway.migrate();
-    }
 
     @Test
     public void shouldGetAccessTokenForValidRefreshToken() {
@@ -57,13 +53,14 @@ public class GetAccessTokenTests extends UserManagementTestBase {
         assert registerResult instanceof RegisterUserResults.Success;
 
         var user = ((RegisterUserResults.Success) registerResult).user();
-        var createTokenRequest = new CreateRefreshTokenRequest(UUID.randomUUID(), user, Optional.empty());
+        var createTokenRequest =
+                new CreateRefreshTokenRequest(UUID.randomUUID(), user, Optional.empty());
         var createTokenResult = createRefreshTokenHandler.handle(createTokenRequest);
         assert createTokenResult instanceof CreateRefreshTokenResults.Success;
 
         var refreshToken = ((CreateRefreshTokenResults.Success) createTokenResult).refreshToken();
-        var getAccessTokenRequest = new GetAccessTokenRequest(UUID.randomUUID(), refreshToken.token(),
-                Optional.empty());
+        var getAccessTokenRequest = new GetAccessTokenRequest(UUID.randomUUID(),
+                refreshToken.token(), Optional.empty());
         var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
 
         assert getAccessTokenResult instanceof GetAccessTokenResults.Success;
@@ -74,20 +71,20 @@ public class GetAccessTokenTests extends UserManagementTestBase {
 
     @Test
     public void shouldHandleInvalidRefreshToken() {
-        var getAccessTokenRequest = new GetAccessTokenRequest(UUID.randomUUID(), "invalid-token", Optional.empty());
+        var getAccessTokenRequest =
+                new GetAccessTokenRequest(UUID.randomUUID(), "invalid-token", Optional.empty());
         var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
 
-        assert getAccessTokenResult instanceof GetAccessTokenResults.InvalidToken
-                : "The handler should return an InvalidToken result for an invalid refresh token";
+        assert getAccessTokenResult instanceof GetAccessTokenResults.InvalidToken : "The handler should return an InvalidToken result for an invalid refresh token";
     }
 
     @Test
     public void shouldHandleMissingRefreshToken() {
-        var getAccessTokenRequest = new GetAccessTokenRequest(UUID.randomUUID(), null, Optional.empty());
+        var getAccessTokenRequest =
+                new GetAccessTokenRequest(UUID.randomUUID(), null, Optional.empty());
         var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
 
-        assert getAccessTokenResult instanceof GetAccessTokenResults.InvalidRequest
-                : "The handler should return an InvalidRequest result for a null refresh token";
+        assert getAccessTokenResult instanceof GetAccessTokenResults.InvalidRequest : "The handler should return an InvalidRequest result for a null refresh token";
     }
 
 }

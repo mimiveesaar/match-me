@@ -43,10 +43,6 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
     @Qualifier("userManagementFlyway")
     Flyway userManagementFlyway;
 
-    @BeforeAll
-    void migrate() {
-        var result = userManagementFlyway.migrate();
-    }
 
     @Test
     void shouldCreateRefreshTokenForValidUser() {
@@ -55,7 +51,8 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
         assert registerResult instanceof RegisterUserResults.Success;
 
         var user = ((RegisterUserResults.Success) registerResult).user();
-        var createTokenRequest = new CreateRefreshTokenRequest(UUID.randomUUID(), user, Optional.empty());
+        var createTokenRequest =
+                new CreateRefreshTokenRequest(UUID.randomUUID(), user, Optional.empty());
         var createTokenResult = createRefreshTokenHandler.handle(createTokenRequest);
 
         assert createTokenResult instanceof CreateRefreshTokenResults.Success;
@@ -63,16 +60,18 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
         var successResult = (CreateRefreshTokenResults.Success) createTokenResult;
 
         var token = refreshTokenRepository.findToken(successResult.refreshToken().token());
-        assert token.isPresent() : "The refresh token should be created and found in the repository";
-        assert token.get().userId().equals(user.id()) : "The refresh token should belong to the correct user";
+        assert token
+                .isPresent() : "The refresh token should be created and found in the repository";
+        assert token.get().userId()
+                .equals(user.id()) : "The refresh token should belong to the correct user";
     }
 
     @Test
     void shouldHandleInvalidRequest() {
-        var invalidRequest = new CreateRefreshTokenRequest(UUID.randomUUID(), null, Optional.empty());
+        var invalidRequest =
+                new CreateRefreshTokenRequest(UUID.randomUUID(), null, Optional.empty());
         var result = createRefreshTokenHandler.handle(invalidRequest);
-        assert result instanceof CreateRefreshTokenResults.InvalidRequest
-                : "The handler should return an InvalidRequest result for null user";
+        assert result instanceof CreateRefreshTokenResults.InvalidRequest : "The handler should return an InvalidRequest result for null user";
     }
 
 }

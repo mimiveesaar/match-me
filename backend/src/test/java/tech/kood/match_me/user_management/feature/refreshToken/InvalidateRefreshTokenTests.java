@@ -49,11 +49,6 @@ public class InvalidateRefreshTokenTests extends UserManagementTestBase {
     @Autowired
     InvalidateRefreshTokenHandler invalidateRefreshTokenHandler;
 
-    @BeforeAll
-    void migrate() {
-        var result = userManagementFlyway.migrate();
-    }
-
     @Test
     void shouldInvalidateRefreshToken() {
         var registerRequest = RegisterUserRequestMocker.createValidRequest();
@@ -61,7 +56,8 @@ public class InvalidateRefreshTokenTests extends UserManagementTestBase {
         assert registerResult instanceof RegisterUserResults.Success;
 
         var user = ((RegisterUserResults.Success) registerResult).user();
-        var createTokenRequest = new CreateRefreshTokenRequest(UUID.randomUUID(), user, Optional.empty());
+        var createTokenRequest =
+                new CreateRefreshTokenRequest(UUID.randomUUID(), user, Optional.empty());
         var createTokenResult = createRefreshTokenHandler.handle(createTokenRequest);
 
         assert createTokenResult instanceof CreateRefreshTokenResults.Success;
@@ -77,6 +73,7 @@ public class InvalidateRefreshTokenTests extends UserManagementTestBase {
         assert invalidateResult instanceof InvalidateRefreshTokenResults.Success;
 
         var tokenCheck = refreshTokenRepository.findToken(successResult.refreshToken().token());
-        assert tokenCheck.isEmpty() : "The refresh token should be invalidated and not found in the repository";
+        assert tokenCheck
+                .isEmpty() : "The refresh token should be invalidated and not found in the repository";
     }
 }

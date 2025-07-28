@@ -49,10 +49,6 @@ public class GetRefreshTokenTests extends UserManagementTestBase {
     @Qualifier("userManagementFlyway")
     Flyway userManagementFlyway;
 
-    @BeforeAll
-    void migrate() {
-        var result = userManagementFlyway.migrate();
-    }
 
     @Test
     void shouldGetRefreshTokenForValidUser() {
@@ -61,17 +57,16 @@ public class GetRefreshTokenTests extends UserManagementTestBase {
         assert registerResult instanceof RegisterUserResults.Success;
 
         var user = ((RegisterUserResults.Success) registerResult).user();
-        var createTokenRequest = new CreateRefreshTokenRequest(UUID.randomUUID(), user, Optional.empty());
+        var createTokenRequest =
+                new CreateRefreshTokenRequest(UUID.randomUUID(), user, Optional.empty());
         var createTokenResult = createRefreshTokenHandler.handle(createTokenRequest);
 
         assert createTokenResult instanceof CreateRefreshTokenResults.Success;
 
         var successResult = (CreateRefreshTokenResults.Success) createTokenResult;
 
-        var getRefreshTokenRequest = new GetRefreshTokenRequest(
-                UUID.randomUUID(),
-                successResult.refreshToken().token(),
-                Optional.empty());
+        var getRefreshTokenRequest = new GetRefreshTokenRequest(UUID.randomUUID(),
+                successResult.refreshToken().token(), Optional.empty());
         var getRefreshTokenResult = getRefreshTokenRequestHandler.handle(getRefreshTokenRequest);
         assert getRefreshTokenResult instanceof GetRefreshTokenResults.Success;
 

@@ -39,10 +39,6 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
     @Autowired
     UserRepository userRepository;
 
-    @BeforeAll
-    void migrate() {
-        var result = userManagementFlyway.migrate();
-    }
 
     @Test
     void testSaveRefreshToken() {
@@ -65,7 +61,8 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
         var entity = refreshTokenMapper.toEntity(refreshToken);
         refreshTokenRepository.save(entity);
 
-        boolean isValid = refreshTokenRepository.validateToken(refreshToken.token(), mockUser.id(), Instant.now());
+        boolean isValid = refreshTokenRepository.validateToken(refreshToken.token(), mockUser.id(),
+                Instant.now());
         assert isValid : "The token should be valid";
     }
 
@@ -87,12 +84,17 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
         var mockUser = UserEntityMocker.createValidUserEntity();
         userRepository.saveUser(mockUser);
 
-        var refreshToken = refreshTokenFactory.create(mockUser.id(), Instant.now().minusSeconds(3600)); // Token expired
-                                                                                                        // 1 hour ago
+        var refreshToken =
+                refreshTokenFactory.create(mockUser.id(), Instant.now().minusSeconds(3600)); // Token
+                                                                                             // expired
+                                                                                             // 1
+                                                                                             // hour
+                                                                                             // ago
         var entity = refreshTokenMapper.toEntity(refreshToken);
         refreshTokenRepository.save(entity);
 
-        boolean isValid = refreshTokenRepository.validateToken(refreshToken.token(), mockUser.id(), Instant.now());
+        boolean isValid = refreshTokenRepository.validateToken(refreshToken.token(), mockUser.id(),
+                Instant.now());
         assert !isValid : "The token should be invalid";
     }
 
@@ -101,14 +103,19 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
         var mockUser = UserEntityMocker.createValidUserEntity();
         userRepository.saveUser(mockUser);
 
-        var refreshToken = refreshTokenFactory.create(mockUser.id(), Instant.now().minusSeconds(3600)); // Token expired
-                                                                                                        // 1 hour ago
+        var refreshToken =
+                refreshTokenFactory.create(mockUser.id(), Instant.now().minusSeconds(3600)); // Token
+                                                                                             // expired
+                                                                                             // 1
+                                                                                             // hour
+                                                                                             // ago
         var entity = refreshTokenMapper.toEntity(refreshToken);
         refreshTokenRepository.save(entity);
 
         refreshTokenRepository.deleteExpiredTokens(Instant.now());
 
-        boolean isValid = refreshTokenRepository.validateToken(refreshToken.token(), mockUser.id(), Instant.now());
+        boolean isValid = refreshTokenRepository.validateToken(refreshToken.token(), mockUser.id(),
+                Instant.now());
         assert !isValid : "The token should be invalid";
     }
 
@@ -123,7 +130,8 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
 
         refreshTokenRepository.deleteToken(refreshToken.token());
 
-        boolean isValid = refreshTokenRepository.validateToken(refreshToken.token(), mockUser.id(), Instant.now());
+        boolean isValid = refreshTokenRepository.validateToken(refreshToken.token(), mockUser.id(),
+                Instant.now());
         assert !isValid : "The token should be deleted and invalid";
     }
 }

@@ -16,7 +16,7 @@ import tech.kood.match_me.user_management.internal.features.registerUser.Registe
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
 
 @SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS) 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
 public class RegisterUserTests extends UserManagementTestBase {
 
@@ -24,16 +24,11 @@ public class RegisterUserTests extends UserManagementTestBase {
     UserRepository userRepository;
 
     @Autowired
-    @Qualifier("userManagementFlyway") Flyway userManagementFlyway;
+    @Qualifier("userManagementFlyway")
+    Flyway userManagementFlyway;
 
     @Autowired
     RegisterUserHandler registerUserHandler;
-
-
-    @BeforeAll
-    void migrate() {
-        var result = userManagementFlyway.migrate();
-    }
 
     @Test
     void shouldCreateValidUser() {
@@ -73,7 +68,8 @@ public class RegisterUserTests extends UserManagementTestBase {
         var request = RegisterUserRequestMocker.createShortUsernameRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidUsername;
-        assert ((RegisterUserResults.InvalidUsername) result).type() == RegisterUserResults.InvalidUsernameType.TOO_SHORT;
+        assert ((RegisterUserResults.InvalidUsername) result)
+                .type() == RegisterUserResults.InvalidUsernameType.TOO_SHORT;
     }
 
     @Test
@@ -81,7 +77,8 @@ public class RegisterUserTests extends UserManagementTestBase {
         var request = RegisterUserRequestMocker.createLongUsernameRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidUsername;
-        assert ((RegisterUserResults.InvalidUsername) result).type() == RegisterUserResults.InvalidUsernameType.TOO_LONG;
+        assert ((RegisterUserResults.InvalidUsername) result)
+                .type() == RegisterUserResults.InvalidUsernameType.TOO_LONG;
     }
 
     @Test
@@ -89,7 +86,8 @@ public class RegisterUserTests extends UserManagementTestBase {
         var request = RegisterUserRequestMocker.createInvalidUsernameRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidUsername;
-        assert ((RegisterUserResults.InvalidUsername) result).type() == RegisterUserResults.InvalidUsernameType.INVALID_CHARACTERS;
+        assert ((RegisterUserResults.InvalidUsername) result)
+                .type() == RegisterUserResults.InvalidUsernameType.INVALID_CHARACTERS;
     }
 
     @Test
@@ -97,7 +95,8 @@ public class RegisterUserTests extends UserManagementTestBase {
         var request = RegisterUserRequestMocker.createInvalidPasswordRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidPassword;
-        assert ((RegisterUserResults.InvalidPassword) result).type() == RegisterUserResults.InvalidPasswordType.TOO_SHORT;
+        assert ((RegisterUserResults.InvalidPassword) result)
+                .type() == RegisterUserResults.InvalidPasswordType.TOO_SHORT;
     }
 
     @Test
@@ -105,22 +104,26 @@ public class RegisterUserTests extends UserManagementTestBase {
         var request = RegisterUserRequestMocker.createNullRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidUsername;
-        assert ((RegisterUserResults.InvalidUsername) result).type() == RegisterUserResults.InvalidUsernameType.TOO_SHORT;
+        assert ((RegisterUserResults.InvalidUsername) result)
+                .type() == RegisterUserResults.InvalidUsernameType.TOO_SHORT;
     }
 
     @Test
     void shouldNotCreateUserWithEmptyUsername() {
-            var request = RegisterUserRequestMocker.createEmptyUsernameRequest();
-            var result = registerUserHandler.handle(request);
-            assert result instanceof RegisterUserResults.InvalidUsername;
-            assert ((RegisterUserResults.InvalidUsername) result).type() == RegisterUserResults.InvalidUsernameType.TOO_SHORT;
+        var request = RegisterUserRequestMocker.createEmptyUsernameRequest();
+        var result = registerUserHandler.handle(request);
+        assert result instanceof RegisterUserResults.InvalidUsername;
+        assert ((RegisterUserResults.InvalidUsername) result)
+                .type() == RegisterUserResults.InvalidUsernameType.TOO_SHORT;
     }
+
     @Test
     void shouldNotCreateUserWithEmptyPassword() {
         var request = RegisterUserRequestMocker.createEmptyPasswordRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidPassword;
-        assert ((RegisterUserResults.InvalidPassword) result).type() == RegisterUserResults.InvalidPasswordType.TOO_SHORT;
+        assert ((RegisterUserResults.InvalidPassword) result)
+                .type() == RegisterUserResults.InvalidPasswordType.TOO_SHORT;
     }
 
     @Test
@@ -135,6 +138,7 @@ public class RegisterUserTests extends UserManagementTestBase {
         var request = RegisterUserRequestMocker.createLongPasswordRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidPassword;
-        assert ((RegisterUserResults.InvalidPassword) result).type() == RegisterUserResults.InvalidPasswordType.TOO_LONG;
+        assert ((RegisterUserResults.InvalidPassword) result)
+                .type() == RegisterUserResults.InvalidPasswordType.TOO_LONG;
     }
 }

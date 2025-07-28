@@ -39,11 +39,6 @@ public class LoginRequestTests extends UserManagementTestBase {
     @Autowired
     LoginHandler loginRequestHandler;
 
-    @BeforeEach
-    void setUp() {
-        userManagementFlyway.migrate();
-    }
-
     @Test
     void shouldLoginWithValidCredentials() {
 
@@ -52,11 +47,8 @@ public class LoginRequestTests extends UserManagementTestBase {
         var registerResult = registerUserHandler.handle(registerUserRequest);
         assert registerResult instanceof RegisterUserResults.Success;
 
-        var loginRequest = new LoginRequest(
-                UUID.randomUUID(),
-                registerUserRequest.email(),
-                registerUserRequest.password(),
-                Optional.empty());
+        var loginRequest = new LoginRequest(UUID.randomUUID(), registerUserRequest.email(),
+                registerUserRequest.password(), Optional.empty());
 
         var loginResult = loginRequestHandler.handle(loginRequest);
         assert loginResult instanceof LoginResults.Success;

@@ -51,11 +51,6 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
     @Autowired
     ValidateAccessTokenHandler validateAccessTokenHandler;
 
-    @BeforeAll
-    void migrate() {
-        var result = userManagementFlyway.migrate();
-    }
-
     @Test
     public void shouldValidateAccessToken() {
         var registerRequest = RegisterUserRequestMocker.createValidRequest();
@@ -63,13 +58,14 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
         assert registerResult instanceof RegisterUserResults.Success;
 
         var user = ((RegisterUserResults.Success) registerResult).user();
-        var createTokenRequest = new CreateRefreshTokenRequest(UUID.randomUUID(), user, Optional.empty());
+        var createTokenRequest =
+                new CreateRefreshTokenRequest(UUID.randomUUID(), user, Optional.empty());
         var createTokenResult = createRefreshTokenHandler.handle(createTokenRequest);
         assert createTokenResult instanceof CreateRefreshTokenResults.Success;
 
         var refreshToken = ((CreateRefreshTokenResults.Success) createTokenResult).refreshToken();
-        var getAccessTokenRequest = new GetAccessTokenRequest(UUID.randomUUID(), refreshToken.token(),
-                Optional.empty());
+        var getAccessTokenRequest = new GetAccessTokenRequest(UUID.randomUUID(),
+                refreshToken.token(), Optional.empty());
         var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
 
         assert getAccessTokenResult instanceof GetAccessTokenResults.Success;
@@ -77,7 +73,8 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
         var jwt = ((GetAccessTokenResults.Success) getAccessTokenResult).jwt();
         assert jwt != null;
 
-        var validateRequest = new ValidateAccessTokenRequest(UUID.randomUUID(), jwt, Optional.empty());
+        var validateRequest =
+                new ValidateAccessTokenRequest(UUID.randomUUID(), jwt, Optional.empty());
         var validateResult = validateAccessTokenHandler.handle(validateRequest);
 
         assert validateResult instanceof ValidateAccessTokenResults.Success;
@@ -88,20 +85,20 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
 
     @Test
     public void shouldHandleInvalidAccessToken() {
-        var validateRequest = new ValidateAccessTokenRequest(UUID.randomUUID(), "invalid-token", Optional.empty());
+        var validateRequest = new ValidateAccessTokenRequest(UUID.randomUUID(), "invalid-token",
+                Optional.empty());
         var validateResult = validateAccessTokenHandler.handle(validateRequest);
 
-        assert validateResult instanceof ValidateAccessTokenResults.InvalidToken
-                : "The handler should return an InvalidToken result for an invalid access token";
+        assert validateResult instanceof ValidateAccessTokenResults.InvalidToken : "The handler should return an InvalidToken result for an invalid access token";
     }
 
     @Test
     public void shouldHandleMissingAccessToken() {
-        var validateRequest = new ValidateAccessTokenRequest(UUID.randomUUID(), null, Optional.empty());
+        var validateRequest =
+                new ValidateAccessTokenRequest(UUID.randomUUID(), null, Optional.empty());
         var validateResult = validateAccessTokenHandler.handle(validateRequest);
 
-        assert validateResult instanceof ValidateAccessTokenResults.InvalidRequest
-                : "The handler should return an InvalidRequest result for a missing access token";
+        assert validateResult instanceof ValidateAccessTokenResults.InvalidRequest : "The handler should return an InvalidRequest result for a missing access token";
     }
 
 }

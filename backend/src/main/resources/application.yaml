@@ -13,6 +13,11 @@ logging:
     tech.kood.match_me.user_management: DEBUG
 
 spring:
+  activemq:
+    broker-url: vm://localhost?broker.persistent=false
+    in-memory: true
+    packages:
+      trust-all: true
   datasource:
     user-management:
       jdbc-url: jdbc:postgresql://localhost:5432/user_management

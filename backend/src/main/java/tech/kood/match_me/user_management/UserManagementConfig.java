@@ -97,10 +97,9 @@ public class UserManagementConfig {
 
     @Bean
     @Qualifier("userManagementJwtVerifier")
-    public JWTVerifier userManagementJwtVerifier(@Qualifier("userManagementJwtAlgorithm") Algorithm algorithm) {
-        return com.auth0.jwt.JWT.require(algorithm)
-                .withIssuer(jwtIssuer)
-                .build();
+    public JWTVerifier userManagementJwtVerifier(
+            @Qualifier("userManagementJwtAlgorithm") Algorithm algorithm) {
+        return com.auth0.jwt.JWT.require(algorithm).withIssuer(jwtIssuer).build();
     }
 
     @Bean
@@ -131,11 +130,12 @@ public class UserManagementConfig {
     }
 
     @Bean
-    public Flyway userManagementFlyway(@Qualifier("userManagementDataSource") DataSource dataSource) {
-        return Flyway.configure()
-                .dataSource(dataSource)
+    public Flyway userManagementFlyway(
+            @Qualifier("userManagementDataSource") DataSource dataSource) {
+        var flyway = Flyway.configure().dataSource(dataSource)
                 .locations("classpath:/user_management/database/flyway")
-                .baselineOnMigrate(true)
                 .load();
+        flyway.migrate();
+        return flyway;
     }
 }

@@ -17,23 +17,20 @@ import tech.kood.match_me.user_management.mocks.UserEntityMocker;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS) 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
 public class UserRepositoryTests extends UserManagementTestBase {
-    
+
     @Autowired
     UserRepository userRepository;
 
     @Autowired
-    @Qualifier("userManagementFlyway") Flyway userManagementFlyway;
+    @Qualifier("userManagementFlyway")
+    Flyway userManagementFlyway;
 
     @Autowired
     RegisterUserHandler registerUserHandler;
 
-    @BeforeAll
-    void migrate() {
-        var result = userManagementFlyway.migrate();
-    }
 
     @Test
     void shouldCreateValidUser() {
