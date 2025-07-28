@@ -1,12 +1,9 @@
 package tech.kood.match_me.user_management.repositories;
 
 import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
@@ -16,8 +13,7 @@ import tech.kood.match_me.user_management.mocks.UserEntityMocker;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+
 @Transactional
 public class UserRepositoryTests extends UserManagementTestBase {
 
@@ -29,18 +25,21 @@ public class UserRepositoryTests extends UserManagementTestBase {
     Flyway userManagementFlyway;
 
     @Autowired
+    UserEntityMocker userEntityMocker;
+
+    @Autowired
     RegisterUserHandler registerUserHandler;
 
 
     @Test
     void shouldCreateValidUser() {
-        var userEntity = UserEntityMocker.createValidUserEntity();
+        var userEntity = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(userEntity);
     }
 
     @Test
     void shouldFindUserByUsername() {
-        var userEntity = UserEntityMocker.createValidUserEntity();
+        var userEntity = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(userEntity);
         var found = userRepository.findUserByUsername(userEntity.username());
         assertFalse(found.isEmpty(), "User should be found by username");
@@ -49,7 +48,7 @@ public class UserRepositoryTests extends UserManagementTestBase {
 
     @Test
     void shouldFindUserByEmail() {
-        var userEntity = UserEntityMocker.createValidUserEntity();
+        var userEntity = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(userEntity);
         var found = userRepository.findUserByEmail(userEntity.email());
         assertFalse(found.isEmpty(), "User should be found by email");
@@ -71,7 +70,7 @@ public class UserRepositoryTests extends UserManagementTestBase {
 
     @Test
     void shouldFindUserById() {
-        var userEntity = UserEntityMocker.createValidUserEntity();
+        var userEntity = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(userEntity);
         var found = userRepository.findUserById(userEntity.id());
         assertFalse(found.isEmpty(), "User should be found by ID");
@@ -80,21 +79,21 @@ public class UserRepositoryTests extends UserManagementTestBase {
 
     @Test
     void shouldReturnTrueIfUsernameExists() {
-        var userEntity = UserEntityMocker.createValidUserEntity();
+        var userEntity = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(userEntity);
         assertTrue(userRepository.usernameExists(userEntity.username()));
     }
 
     @Test
     void shouldReturnTrueIfEmailExists() {
-        var userEntity = UserEntityMocker.createValidUserEntity();
+        var userEntity = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(userEntity);
         assertTrue(userRepository.emailExists(userEntity.email()));
     }
 
     @Test
     void shouldDeleteAllUsers() {
-        var userEntity = UserEntityMocker.createValidUserEntity();
+        var userEntity = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(userEntity);
         userRepository.deleteAll();
         assertFalse(userRepository.usernameExists(userEntity.username()));

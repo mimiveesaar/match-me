@@ -30,50 +30,54 @@ import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
 @Transactional
 public class InvalidateRefreshTokenTests extends UserManagementTestBase {
 
-    @Autowired
-    UserRepository userRepository;
+        @Autowired
+        UserRepository userRepository;
 
-    @Autowired
-    RefreshTokenRepository refreshTokenRepository;
+        @Autowired
+        RefreshTokenRepository refreshTokenRepository;
 
-    @Autowired
-    @Qualifier("userManagementFlyway")
-    Flyway userManagementFlyway;
+        @Autowired
+        @Qualifier("userManagementFlyway")
+        Flyway userManagementFlyway;
 
-    @Autowired
-    RegisterUserHandler registerUserHandler;
+        @Autowired
+        RegisterUserHandler registerUserHandler;
 
-    @Autowired
-    CreateRefreshTokenHandler createRefreshTokenHandler;
+        @Autowired
+        CreateRefreshTokenHandler createRefreshTokenHandler;
 
-    @Autowired
-    InvalidateRefreshTokenHandler invalidateRefreshTokenHandler;
+        @Autowired
+        InvalidateRefreshTokenHandler invalidateRefreshTokenHandler;
 
-    @Test
-    void shouldInvalidateRefreshToken() {
-        var registerRequest = RegisterUserRequestMocker.createValidRequest();
-        var registerResult = registerUserHandler.handle(registerRequest);
-        assert registerResult instanceof RegisterUserResults.Success;
+        @Autowired
+        RegisterUserRequestMocker registerUserRequestMocker;
 
-        var user = ((RegisterUserResults.Success) registerResult).user();
-        var createTokenRequest =
-                new CreateRefreshTokenRequest(UUID.randomUUID(), user, Optional.empty());
-        var createTokenResult = createRefreshTokenHandler.handle(createTokenRequest);
+        @Test
+        void shouldInvalidateRefreshToken() {
+                var registerRequest = registerUserRequestMocker.createValidRequest();
+                var registerResult = registerUserHandler.handle(registerRequest);
+                assert registerResult instanceof RegisterUserResults.Success;
 
-        assert createTokenResult instanceof CreateRefreshTokenResults.Success;
+                var user = ((RegisterUserResults.Success) registerResult).user();
+                var createTokenRequest = new CreateRefreshTokenRequest(UUID.randomUUID(), user,
+                                Optional.empty());
+                var createTokenResult = createRefreshTokenHandler.handle(createTokenRequest);
 
-        var successResult = (CreateRefreshTokenResults.Success) createTokenResult;
+                assert createTokenResult instanceof CreateRefreshTokenResults.Success;
 
-        // Act: Invalidate the refresh token
-        var invalidateRequest = new InvalidateRefreshTokenRequest(UUID.randomUUID(),
-                successResult.refreshToken().token(), Optional.empty());
-        var invalidateResult = invalidateRefreshTokenHandler.handle(invalidateRequest);
+                var successResult = (CreateRefreshTokenResults.Success) createTokenResult;
 
-        // Assert: Check if the token was invalidated successfully
-        assert invalidateResult instanceof InvalidateRefreshTokenResults.Success;
+                // Act: Invalidate the refresh token
+                var invalidateRequest = new InvalidateRefreshTokenRequest(UUID.randomUUID(),
+                                successResult.refreshToken().token(), Optional.empty());
+                var invalidateResult = invalidateRefreshTokenHandler.handle(invalidateRequest);
 
-        var tokenCheck = refreshTokenRepository.findToken(successResult.refreshToken().token());
-        assert tokenCheck
-                .isEmpty() : "The refresh token should be invalidated and not found in the repository";
-    }
+                // Assert: Check if the token was invalidated successfully
+                assert invalidateResult instanceof InvalidateRefreshTokenResults.Success;
+
+                var tokenCheck = refreshTokenRepository
+                                .findToken(successResult.refreshToken().token());
+                assert tokenCheck
+                                .isEmpty() : "The refresh token should be invalidated and not found in the repository";
+        }
 }

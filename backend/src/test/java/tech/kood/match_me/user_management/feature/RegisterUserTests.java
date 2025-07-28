@@ -30,16 +30,19 @@ public class RegisterUserTests extends UserManagementTestBase {
     @Autowired
     RegisterUserHandler registerUserHandler;
 
+    @Autowired
+    RegisterUserRequestMocker registerUserRequestMocker;
+
     @Test
     void shouldCreateValidUser() {
-        var request = RegisterUserRequestMocker.createValidRequest();
+        var request = registerUserRequestMocker.createValidRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.Success;
     }
 
     @Test
     void shouldNotCreateUserWithExistingUsername() {
-        var request = RegisterUserRequestMocker.createValidRequest();
+        var request = registerUserRequestMocker.createValidRequest();
         registerUserHandler.handle(request);
         var result = registerUserHandler.handle(request);
         var result2 = registerUserHandler.handle(request);
@@ -48,8 +51,8 @@ public class RegisterUserTests extends UserManagementTestBase {
 
     @Test
     void shouldNotCreateUserWithExistingEmail() {
-        var request = RegisterUserRequestMocker.createValidRequest();
-        var request2 = RegisterUserRequestMocker.createValidRequest();
+        var request = registerUserRequestMocker.createValidRequest();
+        var request2 = registerUserRequestMocker.createValidRequest();
         request2 = request2.withEmail(request.email());
         registerUserHandler.handle(request);
         var result = registerUserHandler.handle(request2);
@@ -58,14 +61,14 @@ public class RegisterUserTests extends UserManagementTestBase {
 
     @Test
     void shouldNotCreateUserWithInvalidEmail() {
-        var request = RegisterUserRequestMocker.createInvalidEmailRequest();
+        var request = registerUserRequestMocker.createInvalidEmailRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidEmail;
     }
 
     @Test
     void shouldNotCreateUserWithShortUsername() {
-        var request = RegisterUserRequestMocker.createShortUsernameRequest();
+        var request = registerUserRequestMocker.createShortUsernameRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidUsername;
         assert ((RegisterUserResults.InvalidUsername) result)
@@ -74,7 +77,7 @@ public class RegisterUserTests extends UserManagementTestBase {
 
     @Test
     void shouldNotCreateUserWithLongUsername() {
-        var request = RegisterUserRequestMocker.createLongUsernameRequest();
+        var request = registerUserRequestMocker.createLongUsernameRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidUsername;
         assert ((RegisterUserResults.InvalidUsername) result)
@@ -83,7 +86,7 @@ public class RegisterUserTests extends UserManagementTestBase {
 
     @Test
     void shouldNotCreateUserWithInvalidUsername() {
-        var request = RegisterUserRequestMocker.createInvalidUsernameRequest();
+        var request = registerUserRequestMocker.createInvalidUsernameRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidUsername;
         assert ((RegisterUserResults.InvalidUsername) result)
@@ -92,7 +95,7 @@ public class RegisterUserTests extends UserManagementTestBase {
 
     @Test
     void shouldNotCreateUserWithInvalidPassword() {
-        var request = RegisterUserRequestMocker.createInvalidPasswordRequest();
+        var request = registerUserRequestMocker.createInvalidPasswordRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidPassword;
         assert ((RegisterUserResults.InvalidPassword) result)
@@ -101,7 +104,7 @@ public class RegisterUserTests extends UserManagementTestBase {
 
     @Test
     void shouldNotCreateUserWithNullRequest() {
-        var request = RegisterUserRequestMocker.createNullRequest();
+        var request = registerUserRequestMocker.createNullRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidUsername;
         assert ((RegisterUserResults.InvalidUsername) result)
@@ -110,7 +113,7 @@ public class RegisterUserTests extends UserManagementTestBase {
 
     @Test
     void shouldNotCreateUserWithEmptyUsername() {
-        var request = RegisterUserRequestMocker.createEmptyUsernameRequest();
+        var request = registerUserRequestMocker.createEmptyUsernameRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidUsername;
         assert ((RegisterUserResults.InvalidUsername) result)
@@ -119,7 +122,7 @@ public class RegisterUserTests extends UserManagementTestBase {
 
     @Test
     void shouldNotCreateUserWithEmptyPassword() {
-        var request = RegisterUserRequestMocker.createEmptyPasswordRequest();
+        var request = registerUserRequestMocker.createEmptyPasswordRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidPassword;
         assert ((RegisterUserResults.InvalidPassword) result)
@@ -128,14 +131,14 @@ public class RegisterUserTests extends UserManagementTestBase {
 
     @Test
     void shouldNotCreateUserWithEmptyEmail() {
-        var request = RegisterUserRequestMocker.createEmptyEmailRequest();
+        var request = registerUserRequestMocker.createEmptyEmailRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidEmail;
     }
 
     @Test
     void shouldNotCreateUserWithLongPassword() {
-        var request = RegisterUserRequestMocker.createLongPasswordRequest();
+        var request = registerUserRequestMocker.createLongPasswordRequest();
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidPassword;
         assert ((RegisterUserResults.InvalidPassword) result)

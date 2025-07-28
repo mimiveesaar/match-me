@@ -49,10 +49,12 @@ public class GetRefreshTokenTests extends UserManagementTestBase {
     @Qualifier("userManagementFlyway")
     Flyway userManagementFlyway;
 
+    @Autowired
+    RegisterUserRequestMocker registerUserRequestMocker;
 
     @Test
     void shouldGetRefreshTokenForValidUser() {
-        var registerRequest = RegisterUserRequestMocker.createValidRequest();
+        var registerRequest = registerUserRequestMocker.createValidRequest();
         var registerResult = registerUserHandler.handle(registerRequest);
         assert registerResult instanceof RegisterUserResults.Success;
 

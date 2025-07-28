@@ -39,10 +39,13 @@ public class LoginRequestTests extends UserManagementTestBase {
     @Autowired
     LoginHandler loginRequestHandler;
 
+    @Autowired
+    RegisterUserRequestMocker registerUserRequestMocker;
+
     @Test
     void shouldLoginWithValidCredentials() {
 
-        var registerUserRequest = RegisterUserRequestMocker.createValidRequest();
+        var registerUserRequest = registerUserRequestMocker.createValidRequest();
 
         var registerResult = registerUserHandler.handle(registerUserRequest);
         assert registerResult instanceof RegisterUserResults.Success;

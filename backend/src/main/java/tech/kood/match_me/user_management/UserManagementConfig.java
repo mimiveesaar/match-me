@@ -14,9 +14,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
-
+import org.springframework.transaction.PlatformTransactionManager;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 
@@ -84,6 +85,7 @@ public class UserManagementConfig {
     }
 
     @Bean
+    @Qualifier("userManagementDataSource")
     @ConfigurationProperties("spring.datasource.user-management")
     public DataSource userManagementDataSource() {
         return DataSourceBuilder.create().build();
@@ -116,6 +118,13 @@ public class UserManagementConfig {
     }
 
     @Bean
+    @Qualifier("userManagementTransactionManager")
+    public PlatformTransactionManager userManagementTransactionManager(
+            @Qualifier("userManagementDataSource") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+
+    @Bean
     @Qualifier("userManagementTaskScheduler")
     public TaskScheduler taskScheduler(
             @Qualifier("userManagementScheduledExecutorService") ScheduledExecutorService scheduledExecutorService) {
@@ -129,13 +138,12 @@ public class UserManagementConfig {
         return new NamedParameterJdbcTemplate(dataSource);
     }
 
-    @Bean
+    @Bean(initMethod = "migrate")
+    @Qualifier("userManagementFlyway")
     public Flyway userManagementFlyway(
             @Qualifier("userManagementDataSource") DataSource dataSource) {
         var flyway = Flyway.configure().dataSource(dataSource)
-                .locations("classpath:/user_management/database/flyway")
-                .load();
-        flyway.migrate();
+                .locations("classpath:/user_management/database/flyway").load();
         return flyway;
     }
 }

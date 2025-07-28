@@ -24,6 +24,11 @@ spring:
       username: user_management
       password: user_management
       driver-class-name: org.postgresql.Driver
+    connections:
+      jdbc-url: jdbc:postgresql://localhost:5432/connections
+      username: connections
+      password: connections
+      driver-class-name: org.postgresql.Driver
   application:
     name: match-me
   flyway:

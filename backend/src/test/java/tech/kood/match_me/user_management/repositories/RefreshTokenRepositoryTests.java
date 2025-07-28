@@ -39,11 +39,14 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UserEntityMocker userEntityMocker;
+
 
     @Test
     void testSaveRefreshToken() {
 
-        var mockUser = UserEntityMocker.createValidUserEntity();
+        var mockUser = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(mockUser);
 
         var refreshToken = refreshTokenFactory.create(mockUser.id());
@@ -54,7 +57,7 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
     @Test
     void testValidateToken() {
 
-        var mockUser = UserEntityMocker.createValidUserEntity();
+        var mockUser = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(mockUser);
 
         var refreshToken = refreshTokenFactory.create(mockUser.id());
@@ -68,7 +71,7 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
 
     @Test
     void testFindToken() {
-        var mockUser = UserEntityMocker.createValidUserEntity();
+        var mockUser = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(mockUser);
 
         var refreshToken = refreshTokenFactory.create(mockUser.id());
@@ -81,7 +84,7 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
 
     @Test
     void testExpiredTokenInvalid() {
-        var mockUser = UserEntityMocker.createValidUserEntity();
+        var mockUser = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(mockUser);
 
         var refreshToken =
@@ -100,7 +103,7 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
 
     @Test
     void testDeleteExpiredTokens() {
-        var mockUser = UserEntityMocker.createValidUserEntity();
+        var mockUser = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(mockUser);
 
         var refreshToken =
@@ -121,7 +124,7 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
 
     @Test
     void testDeleteByToken() {
-        var mockUser = UserEntityMocker.createValidUserEntity();
+        var mockUser = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(mockUser);
 
         var refreshToken = refreshTokenFactory.create(mockUser.id());

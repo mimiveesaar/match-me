@@ -21,6 +21,7 @@ import tech.kood.match_me.user_management.internal.features.refreshToken.createT
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenResults;
 import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
+import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserRequest;
 import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
 
@@ -45,10 +46,13 @@ public class GetAccessTokenTests extends UserManagementTestBase {
     @Autowired
     GetAccessTokenHandler getAccessTokenHandler;
 
+    @Autowired
+    RegisterUserRequestMocker registerUserRequestMocker;
+
 
     @Test
     public void shouldGetAccessTokenForValidRefreshToken() {
-        var registerRequest = RegisterUserRequestMocker.createValidRequest();
+        var registerRequest = registerUserRequestMocker.createValidRequest();
         var registerResult = registerUserHandler.handle(registerRequest);
         assert registerResult instanceof RegisterUserResults.Success;
 

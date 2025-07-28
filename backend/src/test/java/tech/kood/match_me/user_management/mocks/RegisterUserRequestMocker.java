@@ -12,55 +12,51 @@ public class RegisterUserRequestMocker {
 
     public static Faker faker = new Faker();
 
-    public static RegisterUserRequest createValidRequest() {
-        return new RegisterUserRequest(
-            UUID.randomUUID(),
-            faker.name().username(),
-            faker.internet().password(8, 16),
-            faker.internet().emailAddress(),
-            Optional.of(UUID.randomUUID().toString())
-        );
+    public RegisterUserRequest createValidRequest() {
+        return new RegisterUserRequest(UUID.randomUUID(), faker.name().username(),
+                faker.internet().password(8, 16), faker.internet().emailAddress(),
+                Optional.of(UUID.randomUUID().toString()));
     }
 
-    public static RegisterUserRequest createInvalidUsernameRequest() {
+    public RegisterUserRequest createInvalidUsernameRequest() {
         return createValidRequest().withUsername("invalid username!");
     }
 
-    public static RegisterUserRequest createInvalidPasswordRequest() {
+    public RegisterUserRequest createInvalidPasswordRequest() {
         return createValidRequest().withPassword("short");
     }
 
-    public static RegisterUserRequest createNullRequest() {
+    public RegisterUserRequest createNullRequest() {
         return createValidRequest().withUsername(null).withPassword(null).withEmail(null);
     }
 
-    public static RegisterUserRequest createInvalidEmailRequest() {
+    public RegisterUserRequest createInvalidEmailRequest() {
         return createValidRequest().withEmail("invalid-email");
     }
 
 
-    public static RegisterUserRequest createShortUsernameRequest() {
+    public RegisterUserRequest createShortUsernameRequest() {
         return createValidRequest().withUsername("1");
     }
 
-    public static RegisterUserRequest createEmptyUsernameRequest() {
+    public RegisterUserRequest createEmptyUsernameRequest() {
         return createValidRequest().withUsername("");
     }
 
-    public static RegisterUserRequest createEmptyPasswordRequest() {
+    public RegisterUserRequest createEmptyPasswordRequest() {
         return createValidRequest().withPassword("");
     }
 
-    public static RegisterUserRequest createEmptyEmailRequest() {
+    public RegisterUserRequest createEmptyEmailRequest() {
         return createValidRequest().withEmail("");
     }
 
-    public static RegisterUserRequest createLongUsernameRequest() {
+    public RegisterUserRequest createLongUsernameRequest() {
         String longUsername = "u".repeat(300);
         return createValidRequest().withUsername(longUsername);
     }
 
-    public static RegisterUserRequest createLongPasswordRequest() {
+    public RegisterUserRequest createLongPasswordRequest() {
         String longPassword = "p".repeat(300);
         return createValidRequest().withPassword(longPassword);
     }

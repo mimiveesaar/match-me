@@ -43,9 +43,12 @@ public class GetUserTests extends UserManagementTestBase {
         @Autowired
         GetUserHandler getUserHandler;
 
+        @Autowired
+        RegisterUserRequestMocker registerUserRequestMocker;
+
         @Test
         void shouldGetUserByUsername() {
-                var registerRequest = RegisterUserRequestMocker.createValidRequest();
+                var registerRequest = registerUserRequestMocker.createValidRequest();
                 var registerResult = registerUserHandler.handle(registerRequest);
                 assert registerResult instanceof RegisterUserResults.Success;
 
@@ -60,7 +63,7 @@ public class GetUserTests extends UserManagementTestBase {
 
         @Test
         void shouldGetUserById() {
-                var registerRequest = RegisterUserRequestMocker.createValidRequest();
+                var registerRequest = registerUserRequestMocker.createValidRequest();
                 var registerResult = registerUserHandler.handle(registerRequest);
                 assert registerResult instanceof RegisterUserResults.Success;
 
@@ -75,7 +78,7 @@ public class GetUserTests extends UserManagementTestBase {
 
         @Test
         void shouldGetUserByEmail() {
-                var registerRequest = RegisterUserRequestMocker.createValidRequest();
+                var registerRequest = registerUserRequestMocker.createValidRequest();
                 var registerResult = registerUserHandler.handle(registerRequest);
                 assert registerResult instanceof RegisterUserResults.Success;
 
@@ -115,8 +118,8 @@ public class GetUserTests extends UserManagementTestBase {
 
         @Test
         void shouldGetUserByUsernameAfterRegisteringMultipleUsers() {
-                var req1 = RegisterUserRequestMocker.createValidRequest();
-                var req2 = RegisterUserRequestMocker.createValidRequest();
+                var req1 = registerUserRequestMocker.createValidRequest();
+                var req2 = registerUserRequestMocker.createValidRequest();
                 var res1 = registerUserHandler.handle(req1);
                 var res2 = registerUserHandler.handle(req2);
                 assert res1 instanceof RegisterUserResults.Success;
@@ -135,8 +138,8 @@ public class GetUserTests extends UserManagementTestBase {
 
         @Test
         void shouldGetUserByEmailAfterRegisteringMultipleUsers() {
-                var req1 = RegisterUserRequestMocker.createValidRequest();
-                var req2 = RegisterUserRequestMocker.createValidRequest();
+                var req1 = registerUserRequestMocker.createValidRequest();
+                var req2 = registerUserRequestMocker.createValidRequest();
                 var res1 = registerUserHandler.handle(req1);
                 var res2 = registerUserHandler.handle(req2);
                 assert res1 instanceof RegisterUserResults.Success;
@@ -155,8 +158,8 @@ public class GetUserTests extends UserManagementTestBase {
 
         @Test
         void shouldGetUserByIdAfterRegisteringMultipleUsers() {
-                var req1 = RegisterUserRequestMocker.createValidRequest();
-                var req2 = RegisterUserRequestMocker.createValidRequest();
+                var req1 = registerUserRequestMocker.createValidRequest();
+                var req2 = registerUserRequestMocker.createValidRequest();
                 var res1 = registerUserHandler.handle(req1);
                 var res2 = registerUserHandler.handle(req2);
                 assert res1 instanceof RegisterUserResults.Success;
