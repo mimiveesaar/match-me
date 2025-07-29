@@ -1,9 +1,8 @@
-package tech.kood.match_me.connections.database.mappers;
+package tech.kood.match_me.connections.internal.database.mappers;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import tech.kood.match_me.connections.database.entities.BlockedConnectionEntity;
-
+import tech.kood.match_me.connections.internal.database.entities.BlockedConnectionEntity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;

@@ -7,8 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.connections.ConnectionsTestApplication;
 import tech.kood.match_me.connections.common.ConnectionsTestBase;
-import tech.kood.match_me.connections.database.entities.PendingConnectionEntity;
-
+import tech.kood.match_me.connections.internal.database.entities.PendingConnectionEntity;
+import tech.kood.match_me.connections.internal.database.repositories.PendingConnectionsRepository;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;

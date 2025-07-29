@@ -8,8 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.connections.ConnectionsTestApplication;
 import tech.kood.match_me.connections.common.ConnectionsTestBase;
-import tech.kood.match_me.connections.database.entities.RejectedConnectionEntity;
-
+import tech.kood.match_me.connections.internal.database.entities.RejectedConnectionEntity;
+import tech.kood.match_me.connections.internal.database.repositories.RejectedConnectionsRepository;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;

@@ -9,8 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.connections.ConnectionsTestApplication;
 import tech.kood.match_me.connections.common.ConnectionsTestBase;
-import tech.kood.match_me.connections.database.entities.BlockedConnectionEntity;
-
+import tech.kood.match_me.connections.internal.database.entities.BlockedConnectionEntity;
+import tech.kood.match_me.connections.internal.database.repositories.BlockedConnectionsRepository;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;

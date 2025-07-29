@@ -4,6 +4,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
+import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.jms.core.JmsTemplate;
 
 @Configuration
@@ -19,5 +20,10 @@ public class JmsConfig {
     @Bean
     public JmsTemplate jmsTemplate(ActiveMQConnectionFactory connectionFactory) {
         return new JmsTemplate(connectionFactory);
+    }
+
+    @Bean
+    public JmsMessagingTemplate jmsMessagingTemplate(JmsTemplate jmsTemplate) {
+        return new JmsMessagingTemplate(jmsTemplate);
     }
 }

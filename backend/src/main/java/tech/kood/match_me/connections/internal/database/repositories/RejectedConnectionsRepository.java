@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.database.repositories;
+package tech.kood.match_me.connections.internal.database.repositories;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -10,9 +10,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import tech.kood.match_me.connections.database.entities.RejectedConnectionEntity;
-import tech.kood.match_me.connections.database.mappers.RejectedConnectionRowMapper;
+import tech.kood.match_me.connections.internal.database.entities.RejectedConnectionEntity;
+import tech.kood.match_me.connections.internal.database.mappers.RejectedConnectionRowMapper;
 
 @Repository
 public class RejectedConnectionsRepository {

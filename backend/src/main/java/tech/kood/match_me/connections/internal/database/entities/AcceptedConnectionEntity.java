@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.database.entities;
+package tech.kood.match_me.connections.internal.database.entities;
 
 import java.time.Instant;
 import java.util.UUID;
