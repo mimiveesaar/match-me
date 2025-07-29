@@ -11,13 +11,37 @@ logging:
   level:
     root: INFO
     tech.kood.match_me.user_management: DEBUG
+    org.springframework.jms: DEBUG
+    org.apache.activemq: DEBUG
+    org.springframework.boot.autoconfigure.jms: DEBUG
+
+hawtio:
+  authenticationEnabled: false
+
+management:
+  endpoints:
+    web:
+      base-path: /
+      path-mapping:
+        hawtio : hawtio/console
+      exposure:
+        include:
+        - hawtio
+        - jolokia
 
 spring:
-  activemq:
-    broker-url: vm://localhost?broker.persistent=false
-    in-memory: true
-    packages:
-      trust-all: true
+  jmx:
+    enabled: true
+  jms: 
+    cache:
+      session-cache-size: 5
+  artemis:
+    mode: embedded
+    password: match-me
+    user: match-me
+    embedded:
+      enabled: true
+      persistent: false
   datasource:
     user-management:
       jdbc-url: jdbc:postgresql://localhost:5432/user_management

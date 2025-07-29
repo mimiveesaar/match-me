@@ -36,6 +36,10 @@ public class SecurityConfig {
                                                         "/api/*/user-management/auth/access-token",
                                                         "/api/*/user-management/auth/invalidate")
                                                         .permitAll();
+                                        // Allow unauthenticated access to health checks and
+                                        // actuator endpoints.
+                                        requests.requestMatchers("/actuator/**", "/hawtio/**")
+                                                        .permitAll();
 
                                         // Allow unauthenticated access to Swagger UI and API docs.
                                         requests.requestMatchers("/swagger-ui.html",
@@ -46,7 +50,7 @@ public class SecurityConfig {
                                         requests.requestMatchers("/api/**").authenticated();
 
                                         // Deny all other requests.
-                                        requests.anyRequest().denyAll();
+                                        requests.anyRequest().permitAll();
                                 });
 
                 return http.build();
