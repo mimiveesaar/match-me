@@ -1,17 +1,14 @@
 package tech.kood.match_me.user_management.internal.features.getUser.requests;
 
-import java.util.Optional;
-import java.util.UUID;
+import jakarta.annotation.Nullable;
 
-public record GetUserByIdRequest(
-    UUID requestId,
-    UUID userId, 
-    Optional<String> tracingId) {
+public record GetUserByIdRequest(String requestId, String userId, @Nullable String tracingId) {
 
-    GetUserByIdRequest withUserId(UUID newUserId) {
+    GetUserByIdRequest withUserId(String newUserId) {
         return new GetUserByIdRequest(requestId, newUserId, tracingId);
     }
+
     GetUserByIdRequest withTracingId(String newTracingId) {
-        return new GetUserByIdRequest(requestId, userId, Optional.ofNullable(newTracingId));
+        return new GetUserByIdRequest(requestId, userId, newTracingId);
     }
 }

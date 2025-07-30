@@ -1,6 +1,5 @@
 package tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken;
 
-import java.util.Optional;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,8 +54,9 @@ public final class InvalidateRefreshTokenEndpoint {
         public ResponseEntity<InvalidateRefreshTokenResultsDTO> invalidateRefreshToken(
                         @RequestBody InvalidateRefreshTokenRequestDTO request) {
 
-                var internalRequest = new InvalidateRefreshTokenRequest(UUID.randomUUID(),
-                                request.refreshToken(), Optional.of(UUID.randomUUID().toString()));
+                var internalRequest = new InvalidateRefreshTokenRequest(
+                                UUID.randomUUID().toString(), request.refreshToken(),
+                                UUID.randomUUID().toString());
 
                 var result = invalidateRefreshTokenHandler.handle(internalRequest);
                 var responseDTO = new InvalidateRefreshTokenMapper().toDTO(result);

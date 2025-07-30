@@ -1,22 +1,19 @@
 package tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.io.Serializable;
 
 /**
  * Represents a request to invalidate a refresh token.
  *
  * 
  * @param requestId the unique identifier for this request
- * @param jwt       the refresh token to be invalidated
+ * @param jwt the refresh token to be invalidated
  * @param tracingId an optional tracing identifier for request tracking
  */
-public record InvalidateRefreshTokenRequest(
-        UUID requestId,
-        String token,
-        Optional<String> tracingId) {
+public record InvalidateRefreshTokenRequest(String requestId, String token, String tracingId)
+        implements Serializable {
 
-    public InvalidateRefreshTokenRequest withRequestId(UUID newRequestId) {
+    public InvalidateRefreshTokenRequest withRequestId(String newRequestId) {
         return new InvalidateRefreshTokenRequest(newRequestId, token, tracingId);
     }
 
@@ -24,7 +21,7 @@ public record InvalidateRefreshTokenRequest(
         return new InvalidateRefreshTokenRequest(requestId, newToken, tracingId);
     }
 
-    public InvalidateRefreshTokenRequest withTracingId(Optional<String> newTracingId) {
+    public InvalidateRefreshTokenRequest withTracingId(String newTracingId) {
         return new InvalidateRefreshTokenRequest(requestId, token, newTracingId);
     }
 }

@@ -55,8 +55,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 case ValidateAccessTokenResults.Success(AccessToken accessToken, Optional<String> tracingId) -> {
                     var userId = accessToken.userId();
 
-                    var getUserByIdRequest = new GetUserByIdRequest(UUID.randomUUID(),
-                            UUID.fromString(userId), tracingId);
+                    var getUserByIdRequest = new GetUserByIdRequest(UUID.randomUUID().toString(),
+                            userId, tracingId);
                     var userDetails = getUserHandler.handle(getUserByIdRequest);
 
                     UsernamePasswordAuthenticationToken auth =

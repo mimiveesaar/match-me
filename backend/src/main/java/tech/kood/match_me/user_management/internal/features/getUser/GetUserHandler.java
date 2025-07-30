@@ -3,6 +3,7 @@ package tech.kood.match_me.user_management.internal.features.getUser;
 import java.util.UUID;
 
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
@@ -19,21 +20,20 @@ import tech.kood.match_me.user_management.internal.mappers.UserMapper;
 
 @Service
 public class GetUserHandler {
-    
+
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final ApplicationEventPublisher events;
 
-    public GetUserHandler(
-        UserRepository userRepository,
-        UserMapper userMapper,
-        ApplicationEventPublisher events) {
+    public GetUserHandler(UserRepository userRepository, UserMapper userMapper,
+            ApplicationEventPublisher events) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.events = events;
     }
 
-       public GetUserByUsernameResults handle(GetUserByUsernameRequest request) {
+    @JmsListener(destination = GetUserQueues.GET_USER_BY_USERNAME_QUEUE)
+    public GetUserByUsernameResults handle(GetUserByUsernameRequest request) {
         String username = request.username();
 
         try {
@@ -46,17 +46,20 @@ public class GetUserHandler {
                 events.publishEvent(new GetUserByUsernameEvent(request, result));
                 return result;
             } else {
-                var result = new GetUserByUsernameResults.UserNotFound(username, request.tracingId());
+                var result =
+                        new GetUserByUsernameResults.UserNotFound(username, request.tracingId());
                 events.publishEvent(new GetUserByUsernameEvent(request, result));
                 return result;
             }
         } catch (Exception e) {
-            var result = new GetUserByUsernameResults.SystemError("Failed to retrieve user by username: " + e.getMessage(), request.tracingId());
+            var result = new GetUserByUsernameResults.SystemError(
+                    "Failed to retrieve user by username: " + e.getMessage(), request.tracingId());
             events.publishEvent(new GetUserByUsernameEvent(request, result));
             return result;
         }
     }
 
+    @JmsListener(destination = GetUserQueues.GET_USER_BY_EMAIL_QUEUE)
     public GetUserByEmailResults handle(GetUserByEmailRequest request) {
         String email = request.email();
 
@@ -66,23 +69,28 @@ public class GetUserHandler {
                 var userEntity = userQueryResult.get();
                 var user = userMapper.toUser(userEntity);
 
-                var result = new GetUserByEmailResults.Success(user, request.requestId(), request.tracingId());
+                var result = new GetUserByEmailResults.Success(user, request.requestId(),
+                        request.tracingId());
                 events.publishEvent(new GetUserByEmailEvent(request, result));
                 return result;
             } else {
-                var result = new GetUserByEmailResults.UserNotFound(email, request.requestId(), request.tracingId());
+                var result = new GetUserByEmailResults.UserNotFound(email, request.requestId(),
+                        request.tracingId());
                 events.publishEvent(new GetUserByEmailEvent(request, result));
                 return result;
             }
         } catch (Exception e) {
-            var result = new GetUserByEmailResults.SystemError("Failed to retrieve user by email: " + e.getMessage(), request.requestId(), request.tracingId());
+            var result = new GetUserByEmailResults.SystemError(
+                    "Failed to retrieve user by email: " + e.getMessage(), request.requestId(),
+                    request.tracingId());
             events.publishEvent(new GetUserByEmailEvent(request, result));
             return result;
         }
     }
 
+    @JmsListener(destination = GetUserQueues.GET_USER_BY_ID_QUEUE)
     public GetUserByIdResults handle(GetUserByIdRequest request) {
-        UUID id = request.userId();
+        UUID id = UUID.fromString(request.userId());
 
         try {
             var userQueryResult = userRepository.findUserById(id);
@@ -90,16 +98,20 @@ public class GetUserHandler {
                 var userEntity = userQueryResult.get();
                 var user = userMapper.toUser(userEntity);
 
-                var result = new GetUserByIdResults.Success(user, request.requestId(), request.tracingId());
+                var result = new GetUserByIdResults.Success(user, request.requestId(),
+                        request.tracingId());
                 events.publishEvent(new GetUserByIdEvent(request, result));
                 return result;
             } else {
-                var result = new GetUserByIdResults.UserNotFound(id, request.requestId(), request.tracingId());
+                var result = new GetUserByIdResults.UserNotFound(id.toString(), request.requestId(),
+                        request.tracingId());
                 events.publishEvent(new GetUserByIdEvent(request, result));
                 return result;
             }
         } catch (Exception e) {
-            var result = new GetUserByIdResults.SystemError("Failed to retrieve user by ID: " + e.getMessage(), request.requestId(), request.tracingId());
+            var result = new GetUserByIdResults.SystemError(
+                    "Failed to retrieve user by ID: " + e.getMessage(), request.requestId(),
+                    request.tracingId());
             events.publishEvent(new GetUserByIdEvent(request, result));
             return result;
         }

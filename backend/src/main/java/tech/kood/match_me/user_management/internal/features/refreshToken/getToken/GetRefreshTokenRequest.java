@@ -1,14 +1,11 @@
 package tech.kood.match_me.user_management.internal.features.refreshToken.getToken;
 
-import java.util.Optional;
 import java.util.UUID;
+import jakarta.annotation.Nullable;
 
-public record GetRefreshTokenRequest(
-        UUID requestID,
-        String token,
-        Optional<String> tracingId) {
+public record GetRefreshTokenRequest(String requestID, String token, @Nullable String tracingId) {
 
-    public GetRefreshTokenRequest(String token, Optional<String> tracingId) {
-        this(UUID.randomUUID(), token, tracingId);
+    public GetRefreshTokenRequest(String token, @Nullable String tracingId) {
+        this(UUID.randomUUID().toString(), token, tracingId);
     }
 }

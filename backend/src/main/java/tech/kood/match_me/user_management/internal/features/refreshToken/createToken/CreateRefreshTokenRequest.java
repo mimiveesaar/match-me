@@ -1,27 +1,20 @@
 package tech.kood.match_me.user_management.internal.features.refreshToken.createToken;
 
-import java.util.Optional;
-import java.util.UUID;
-
+import jakarta.annotation.Nullable;
 import tech.kood.match_me.user_management.models.User;
 
 /**
- * Represents a request to refresh a token, containing identifiers for the
- * request,
- * the user, and an optional tracing ID for tracking purposes.
+ * Represents a request to refresh a token, containing identifiers for the request, the user, and an
+ * optional tracing ID for tracking purposes.
  *
  * @param requestId the unique identifier for this refresh token request
- * @param user      user for whom the refresh token is being created.
- * @param tracingId an optional tracing identifier for request tracking and
- *                  debugging
+ * @param user user for whom the refresh token is being created.
+ * @param tracingId an optional tracing identifier for request tracking and debugging
  *
  */
-public record CreateRefreshTokenRequest(
-        UUID requestId,
-        User user,
-        Optional<String> tracingId) {
+public record CreateRefreshTokenRequest(String requestId, User user, @Nullable String tracingId) {
 
-    public CreateRefreshTokenRequest withRequestId(UUID newRequestId) {
+    public CreateRefreshTokenRequest withRequestId(String newRequestId) {
         return new CreateRefreshTokenRequest(newRequestId, user, tracingId);
     }
 
@@ -29,7 +22,7 @@ public record CreateRefreshTokenRequest(
         return new CreateRefreshTokenRequest(requestId, newUser, tracingId);
     }
 
-    public CreateRefreshTokenRequest withTracingId(Optional<String> newTracingId) {
+    public CreateRefreshTokenRequest withTracingId(String newTracingId) {
         return new CreateRefreshTokenRequest(requestId, user, newTracingId);
     }
 }

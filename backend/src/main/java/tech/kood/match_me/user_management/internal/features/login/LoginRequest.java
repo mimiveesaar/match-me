@@ -1,11 +1,7 @@
 package tech.kood.match_me.user_management.internal.features.login;
 
-import java.util.Optional;
-import java.util.UUID;
+import jakarta.annotation.Nullable;
 
-public record LoginRequest(
-                UUID requestId,
-                String email,
-                String password,
-                Optional<String> tracingId) {
+public record LoginRequest(String requestId, String email, String password,
+        @Nullable String tracingId) {
 }

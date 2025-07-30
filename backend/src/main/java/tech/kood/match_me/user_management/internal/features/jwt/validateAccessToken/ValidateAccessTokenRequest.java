@@ -1,14 +1,9 @@
 package tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken;
 
-import java.util.Optional;
-import java.util.UUID;
+import jakarta.annotation.Nullable;
+import java.io.Serializable;
 
-public record ValidateAccessTokenRequest(
-        UUID requestID,
-        String jwtToken,
-        Optional<String> tracingId) {
 
-    public ValidateAccessTokenRequest(String jwtToken, Optional<String> tracingId) {
-        this(UUID.randomUUID(), jwtToken, tracingId);
-    }
+public record ValidateAccessTokenRequest(String requestID, String jwtToken,
+        @Nullable String tracingId) implements Serializable {
 }
