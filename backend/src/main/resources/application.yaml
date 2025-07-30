@@ -1,9 +1,9 @@
 spring:
   datasource:
     user-management:
-      jdbc-url: jdbc:postgresql://postgres_container:5432/match_me_db
-      username: admin
-      password: admin
+      jdbc-url: jdbc:postgresql://postgres_container:5432/matching
+      username: matching
+      password: matching
       driver-class-name: org.postgresql.Driver
   application:
     name: match-me

@@ -3,8 +3,8 @@ package tech.kood.match_me.matching.dto;
 import java.util.List;
 
 public class MatchFilter {
-    private int minAge;
-    private int maxAge;
+    private Integer minAge;
+    private Integer maxAge;
     private String homeplanet;
     private String bodyform;
     private List<String> interests;
@@ -12,16 +12,16 @@ public class MatchFilter {
 
     // Getters and setters
 
-    public int getMinAge() {
+    public Integer getMinAge() {
         return minAge;
     }
-    public void setMinAge(int minAge) {
+    public void setMinAge(Integer minAge) {
         this.minAge = minAge;
     }
-    public int getMaxAge() {
+    public Integer getMaxAge() {
         return maxAge;
     }
-    public void setMaxAge(int maxAge) {
+    public void setMaxAge(Integer maxAge) {
         this.maxAge = maxAge;
     }
     public String getHomeplanet() {

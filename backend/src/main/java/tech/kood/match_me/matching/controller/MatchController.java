@@ -1,11 +1,15 @@
 package tech.kood.match_me.matching.controller;
 
-import org.springframework.web.bind.annotation.*;
-import tech.kood.match_me.matching.model.User;
-import tech.kood.match_me.matching.dto.MatchFilter;
-import tech.kood.match_me.matching.service.MatchService;
-
 import java.util.List;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import tech.kood.match_me.matching.dto.MatchFilter;
+import tech.kood.match_me.matching.model.User;
+import tech.kood.match_me.matching.service.MatchService;
 
 @RestController
 @RequestMapping("/api")
@@ -19,6 +23,7 @@ public class MatchController {
 
     @PostMapping("/matches")
     public List<User> getMatches(@RequestBody MatchFilter filter) {
+        System.out.println("got filter: " + filter);
         return matchService.getMatches(filter);
     }
 }

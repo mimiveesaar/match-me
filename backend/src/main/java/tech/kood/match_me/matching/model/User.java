@@ -27,8 +27,8 @@ public class User {
 
     private String bodyform;
 
-    @ElementCollection
-    private List<String> interests;
+    // @ElementCollection
+    // private List<String> interests;
 
     private String bio;
 
@@ -43,7 +43,7 @@ public class User {
         this.age = age;
         this.homeplanet = homeplanet;
         this.bodyform = bodyform;
-        this.interests = interests;
+        // this.interests = interests;
         this.bio = bio;
         this.lookingFor = lookingFor;
     }
@@ -58,7 +58,7 @@ public class User {
         return username;
     }   
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
@@ -70,9 +70,9 @@ public class User {
         return bodyform;
     }
 
-    public List<String> getInterests() {
-        return interests;
-    }
+    // public List<String> getInterests() {
+    //     return interests;
+    // }
 
     public String getBio() {
         return bio;
