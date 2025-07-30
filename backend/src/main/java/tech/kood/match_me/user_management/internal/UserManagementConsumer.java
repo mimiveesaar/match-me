@@ -1,0 +1,129 @@
+package tech.kood.match_me.user_management.internal;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
+import jakarta.jms.TextMessage;
+import tech.kood.match_me.user_management.internal.features.getUser.GetUserHandler;
+import tech.kood.match_me.user_management.internal.features.getUser.requests.GetUserByEmailRequest;
+import tech.kood.match_me.user_management.internal.features.getUser.requests.GetUserByIdRequest;
+import tech.kood.match_me.user_management.internal.features.getUser.requests.GetUserByUsernameRequest;
+import tech.kood.match_me.user_management.internal.features.jwt.getAccessToken.GetAccessTokenHandler;
+import tech.kood.match_me.user_management.internal.features.jwt.getAccessToken.GetAccessTokenRequest;
+import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenHandler;
+import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
+import tech.kood.match_me.user_management.internal.features.login.LoginHandler;
+import tech.kood.match_me.user_management.internal.features.login.LoginRequest;
+import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenRequest;
+import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenRequest;
+import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenRequest;
+import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
+import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserRequest;
+
+@Component
+public class UserManagementConsumer {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private final GetAccessTokenHandler getAccessTokenHandler;
+
+    private final ValidateAccessTokenHandler validateAccessTokenHandler;
+
+    private final GetUserHandler getUserHandler;
+
+    private final LoginHandler loginHandler;
+
+    private final CreateRefreshTokenHandler createRefreshTokenHandler;
+
+    private final GetRefreshTokenHandler getRefreshTokenHandler;
+
+    private final InvalidateRefreshTokenHandler invalidateRefreshTokenHandler;
+
+    private final RegisterUserHandler registerUserHandler;
+
+    public UserManagementConsumer(GetAccessTokenHandler getAccessTokenHandler,
+            ValidateAccessTokenHandler validateAccessTokenHandler, GetUserHandler getUserHandler,
+            LoginHandler loginHandler, CreateRefreshTokenHandler createRefreshTokenHandler,
+            GetRefreshTokenHandler getRefreshTokenHandler,
+            InvalidateRefreshTokenHandler invalidateRefreshTokenHandler,
+            RegisterUserHandler registerUserHandler) {
+        this.getAccessTokenHandler = getAccessTokenHandler;
+        this.validateAccessTokenHandler = validateAccessTokenHandler;
+        this.getUserHandler = getUserHandler;
+        this.loginHandler = loginHandler;
+        this.createRefreshTokenHandler = createRefreshTokenHandler;
+        this.getRefreshTokenHandler = getRefreshTokenHandler;
+        this.invalidateRefreshTokenHandler = invalidateRefreshTokenHandler;
+        this.registerUserHandler = registerUserHandler;
+    }
+
+    @JmsListener(destination = "tech.kood.match_me.user_management.queue", concurrency = "1-1")
+    public Object consume(Message message) {
+        try {
+            String type = message.getStringProperty("_type");
+
+            if (type == null || type.isBlank()) {
+                throw new JMSException("Message type is not set");
+            }
+
+            if (message instanceof TextMessage textMessage) {
+                String payload = textMessage.getText();
+
+                if (type.equals(GetAccessTokenRequest.class.getName())) {
+                    GetAccessTokenRequest request =
+                            objectMapper.readValue(payload, GetAccessTokenRequest.class);
+
+                    return getAccessTokenHandler.handle(request);
+                } else if (type.equals(ValidateAccessTokenRequest.class.getName())) {
+                    ValidateAccessTokenRequest request =
+                            objectMapper.readValue(payload, ValidateAccessTokenRequest.class);
+
+                    return validateAccessTokenHandler.handle(request);
+                } else if (type.equals(GetUserByEmailRequest.class.getName())) {
+                    GetUserByEmailRequest request =
+                            objectMapper.readValue(payload, GetUserByEmailRequest.class);
+
+                    return getUserHandler.handle(request);
+                } else if (type.equals(GetUserByIdRequest.class.getName())) {
+                    GetUserByIdRequest request =
+                            objectMapper.readValue(payload, GetUserByIdRequest.class);
+
+                    return getUserHandler.handle(request);
+                } else if (type.equals(GetUserByUsernameRequest.class.getName())) {
+                    GetUserByUsernameRequest request =
+                            objectMapper.readValue(payload, GetUserByUsernameRequest.class);
+
+                    return getUserHandler.handle(request);
+                } else if (type.equals(LoginRequest.class.getName())) {
+                    LoginRequest request = objectMapper.readValue(payload, LoginRequest.class);
+
+                    return loginHandler.handle(request);
+                } else if (type.equals(InvalidateRefreshTokenRequest.class.getName())) {
+                    InvalidateRefreshTokenRequest request =
+                            objectMapper.readValue(payload, InvalidateRefreshTokenRequest.class);
+
+                    return invalidateRefreshTokenHandler.handle(request);
+                } else if (type.equals(RegisterUserRequest.class.getName())) {
+                    RegisterUserRequest request =
+                            objectMapper.readValue(payload, RegisterUserRequest.class);
+
+                    return registerUserHandler.handle(request);
+                } else {
+                    return null;
+                }
+
+            }
+        } catch (JMSException | JsonProcessingException e) {
+            e.printStackTrace();
+        } // This is used for polymorphic handling
+
+        return message;
+    }
+}

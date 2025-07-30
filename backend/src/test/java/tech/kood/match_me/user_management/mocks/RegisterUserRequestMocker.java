@@ -1,6 +1,5 @@
 package tech.kood.match_me.user_management.mocks;
 
-import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 import com.github.javafaker.Faker;
@@ -13,9 +12,9 @@ public class RegisterUserRequestMocker {
     public static Faker faker = new Faker();
 
     public RegisterUserRequest createValidRequest() {
-        return new RegisterUserRequest(UUID.randomUUID(), faker.name().username(),
+        return new RegisterUserRequest(UUID.randomUUID().toString(), faker.name().username(),
                 faker.internet().password(8, 16), faker.internet().emailAddress(),
-                Optional.of(UUID.randomUUID().toString()));
+                UUID.randomUUID().toString());
     }
 
     public RegisterUserRequest createInvalidUsernameRequest() {

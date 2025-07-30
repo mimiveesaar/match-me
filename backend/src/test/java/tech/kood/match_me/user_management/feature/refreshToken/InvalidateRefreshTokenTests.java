@@ -1,10 +1,8 @@
 package tech.kood.match_me.user_management.feature.refreshToken;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,8 +57,8 @@ public class InvalidateRefreshTokenTests extends UserManagementTestBase {
                 assert registerResult instanceof RegisterUserResults.Success;
 
                 var user = ((RegisterUserResults.Success) registerResult).user();
-                var createTokenRequest = new CreateRefreshTokenRequest(UUID.randomUUID(), user,
-                                Optional.empty());
+                var createTokenRequest = new CreateRefreshTokenRequest(UUID.randomUUID().toString(),
+                                user, null);
                 var createTokenResult = createRefreshTokenHandler.handle(createTokenRequest);
 
                 assert createTokenResult instanceof CreateRefreshTokenResults.Success;
@@ -68,8 +66,9 @@ public class InvalidateRefreshTokenTests extends UserManagementTestBase {
                 var successResult = (CreateRefreshTokenResults.Success) createTokenResult;
 
                 // Act: Invalidate the refresh token
-                var invalidateRequest = new InvalidateRefreshTokenRequest(UUID.randomUUID(),
-                                successResult.refreshToken().token(), Optional.empty());
+                var invalidateRequest =
+                                new InvalidateRefreshTokenRequest(UUID.randomUUID().toString(),
+                                                successResult.refreshToken().token(), null);
                 var invalidateResult = invalidateRefreshTokenHandler.handle(invalidateRequest);
 
                 // Assert: Check if the token was invalidated successfully

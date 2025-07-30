@@ -1,10 +1,8 @@
 package tech.kood.match_me.user_management.feature.refreshToken;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,8 +52,8 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
                 assert registerResult instanceof RegisterUserResults.Success;
 
                 var user = ((RegisterUserResults.Success) registerResult).user();
-                var createTokenRequest = new CreateRefreshTokenRequest(UUID.randomUUID(), user,
-                                Optional.empty());
+                var createTokenRequest = new CreateRefreshTokenRequest(UUID.randomUUID().toString(),
+                                user, null);
                 var createTokenResult = createRefreshTokenHandler.handle(createTokenRequest);
 
                 assert createTokenResult instanceof CreateRefreshTokenResults.Success;
@@ -70,8 +68,8 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
 
         @Test
         void shouldHandleInvalidRequest() {
-                var invalidRequest = new CreateRefreshTokenRequest(UUID.randomUUID(), null,
-                                Optional.empty());
+                var invalidRequest = new CreateRefreshTokenRequest(UUID.randomUUID().toString(),
+                                null, null);
                 var result = createRefreshTokenHandler.handle(invalidRequest);
                 assert result instanceof CreateRefreshTokenResults.InvalidRequest : "The handler should return an InvalidRequest result for null user";
         }

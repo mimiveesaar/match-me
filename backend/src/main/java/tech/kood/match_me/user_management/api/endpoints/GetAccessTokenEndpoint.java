@@ -1,6 +1,5 @@
-package tech.kood.match_me.user_management.internal.features.jwt.getAccessToken;
+package tech.kood.match_me.user_management.api.endpoints;
 
-import java.util.Optional;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,22 +11,27 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.GetAccessTokenRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.GetAccessTokenResultsDTO;
+import tech.kood.match_me.user_management.internal.features.jwt.getAccessToken.GetAccessTokenHandler;
+import tech.kood.match_me.user_management.internal.features.jwt.getAccessToken.GetAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.mappers.GetAccessTokenMapper;
 
 @RestController
 @RequestMapping("/api/v1/user-management/auth")
 @Tag(name = "User Management")
 public class GetAccessTokenEndpoint {
-        private final GetAccessTokenHandler getAccessTokenHandler;
 
         private final GetAccessTokenMapper getAccessTokenMapper;
 
+        private final UserManagementPublisher userManagementPublisher;
+
         public GetAccessTokenEndpoint(GetAccessTokenHandler getAccessTokenHandler,
-                        GetAccessTokenMapper getAccessTokenMapper) {
-                this.getAccessTokenHandler = getAccessTokenHandler;
+                        GetAccessTokenMapper getAccessTokenMapper,
+                        UserManagementPublisher userManagementPublisher) {
                 this.getAccessTokenMapper = getAccessTokenMapper;
+                this.userManagementPublisher = userManagementPublisher;
         }
 
         @PostMapping("/access-token")
@@ -53,9 +57,10 @@ public class GetAccessTokenEndpoint {
                         @RequestBody GetAccessTokenRequestDTO request) {
 
                 var internalRequest = new GetAccessTokenRequest(request.refreshToken(),
-                                Optional.of(UUID.randomUUID().toString()));
+                                UUID.randomUUID().toString());
 
-                var result = getAccessTokenHandler.handle(internalRequest);
+
+                var result = userManagementPublisher.publish(internalRequest);
                 var responseDTO = getAccessTokenMapper.toDTO(result);
 
                 return switch (responseDTO) {

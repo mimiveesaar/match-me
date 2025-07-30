@@ -20,10 +20,8 @@ public final class LoginHandler {
     private final UserMapper userMapper;
     private final ApplicationEventPublisher events;
 
-    public LoginHandler(
-            UserRepository userRepository,
-            CreateRefreshTokenHandler createRefreshTokenHandler,
-            ApplicationEventPublisher events,
+    public LoginHandler(UserRepository userRepository,
+            CreateRefreshTokenHandler createRefreshTokenHandler, ApplicationEventPublisher events,
             UserMapper userMapper) {
         this.userRepository = userRepository;
         this.createRefreshTokenHandler = createRefreshTokenHandler;
@@ -52,7 +50,8 @@ public final class LoginHandler {
 
             var userEntity = userRepository.findUserByEmail(request.email());
             if (userEntity.isEmpty()) {
-                var result = new LoginResults.InvalidCredentials(request.email(), request.password());
+                var result =
+                        new LoginResults.InvalidCredentials(request.email(), request.password());
 
                 events.publishEvent(new LoginEvent(request, result));
                 return result;
@@ -62,16 +61,15 @@ public final class LoginHandler {
 
             // Check if the provided password matches the stored hashed password.
             if (!PasswordUtils.matches(request.password(), foundUser.password())) {
-                var result = new LoginResults.InvalidCredentials(request.email(), request.password());
+                var result =
+                        new LoginResults.InvalidCredentials(request.email(), request.password());
 
                 events.publishEvent(new LoginEvent(request, result));
                 return result;
             }
 
-            var refreshTokenRequest = new CreateRefreshTokenRequest(
-                    UUID.randomUUID(),
-                    foundUser,
-                    request.tracingId());
+            var refreshTokenRequest = new CreateRefreshTokenRequest(UUID.randomUUID().toString(),
+                    foundUser, request.tracingId());
 
             var tokenResult = createRefreshTokenHandler.handle(refreshTokenRequest);
 
@@ -83,8 +81,8 @@ public final class LoginHandler {
             }
 
             var result = new LoginResults.Success(
-                    ((CreateRefreshTokenResults.Success) tokenResult).refreshToken(),
-                    foundUser, request.tracingId());
+                    ((CreateRefreshTokenResults.Success) tokenResult).refreshToken(), foundUser,
+                    request.tracingId());
             events.publishEvent(new LoginEvent(request, result));
             return result;
 

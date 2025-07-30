@@ -1,10 +1,8 @@
 package tech.kood.match_me.user_management.feature.accessToken;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,15 +59,15 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
                 assert registerResult instanceof RegisterUserResults.Success;
 
                 var user = ((RegisterUserResults.Success) registerResult).user();
-                var createTokenRequest = new CreateRefreshTokenRequest(UUID.randomUUID(), user,
-                                Optional.empty());
+                var createTokenRequest = new CreateRefreshTokenRequest(UUID.randomUUID().toString(),
+                                user, null);
                 var createTokenResult = createRefreshTokenHandler.handle(createTokenRequest);
                 assert createTokenResult instanceof CreateRefreshTokenResults.Success;
 
                 var refreshToken = ((CreateRefreshTokenResults.Success) createTokenResult)
                                 .refreshToken();
-                var getAccessTokenRequest = new GetAccessTokenRequest(UUID.randomUUID(),
-                                refreshToken.token(), Optional.empty());
+                var getAccessTokenRequest = new GetAccessTokenRequest(UUID.randomUUID().toString(),
+                                refreshToken.token(), null);
                 var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
 
                 assert getAccessTokenResult instanceof GetAccessTokenResults.Success;
@@ -77,8 +75,8 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
                 var jwt = ((GetAccessTokenResults.Success) getAccessTokenResult).jwt();
                 assert jwt != null;
 
-                var validateRequest = new ValidateAccessTokenRequest(UUID.randomUUID(), jwt,
-                                Optional.empty());
+                var validateRequest = new ValidateAccessTokenRequest(UUID.randomUUID().toString(),
+                                jwt, null);
                 var validateResult = validateAccessTokenHandler.handle(validateRequest);
 
                 assert validateResult instanceof ValidateAccessTokenResults.Success;
@@ -90,8 +88,8 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
 
         @Test
         public void shouldHandleInvalidAccessToken() {
-                var validateRequest = new ValidateAccessTokenRequest(UUID.randomUUID(),
-                                "invalid-token", Optional.empty());
+                var validateRequest = new ValidateAccessTokenRequest(UUID.randomUUID().toString(),
+                                "invalid-token", null);
                 var validateResult = validateAccessTokenHandler.handle(validateRequest);
 
                 assert validateResult instanceof ValidateAccessTokenResults.InvalidToken : "The handler should return an InvalidToken result for an invalid access token";
@@ -99,8 +97,8 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
 
         @Test
         public void shouldHandleMissingAccessToken() {
-                var validateRequest = new ValidateAccessTokenRequest(UUID.randomUUID(), null,
-                                Optional.empty());
+                var validateRequest = new ValidateAccessTokenRequest(UUID.randomUUID().toString(),
+                                null, null);
                 var validateResult = validateAccessTokenHandler.handle(validateRequest);
 
                 assert validateResult instanceof ValidateAccessTokenResults.InvalidRequest : "The handler should return an InvalidRequest result for a missing access token";

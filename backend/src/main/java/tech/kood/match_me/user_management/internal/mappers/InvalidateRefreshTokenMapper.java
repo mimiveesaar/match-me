@@ -12,13 +12,13 @@ public final class InvalidateRefreshTokenMapper {
             case InvalidateRefreshTokenResults.Success success -> new InvalidateRefreshTokenResultsDTO.Success();
 
             case InvalidateRefreshTokenResults.TokenNotFound tokenNotFound -> new InvalidateRefreshTokenResultsDTO.TokenNotFound(
-                    tokenNotFound.token(), tokenNotFound.tracingId().orElse(null));
+                    tokenNotFound.token(), tokenNotFound.tracingId());
 
             case InvalidateRefreshTokenResults.InvalidRequest invalidRequest -> new InvalidateRefreshTokenResultsDTO.InvalidRequest(
-                    invalidRequest.message(), invalidRequest.tracingId().orElse(null));
+                    invalidRequest.message(), invalidRequest.tracingId());
 
             case InvalidateRefreshTokenResults.SystemError systemError -> new InvalidateRefreshTokenResultsDTO.SystemError(
-                    systemError.message(), systemError.tracingId().orElse(null));
+                    systemError.message(), systemError.tracingId());
         };
     }
 }

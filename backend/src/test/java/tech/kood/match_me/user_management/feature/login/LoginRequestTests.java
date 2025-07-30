@@ -50,8 +50,8 @@ public class LoginRequestTests extends UserManagementTestBase {
         var registerResult = registerUserHandler.handle(registerUserRequest);
         assert registerResult instanceof RegisterUserResults.Success;
 
-        var loginRequest = new LoginRequest(UUID.randomUUID(), registerUserRequest.email(),
-                registerUserRequest.password(), Optional.empty());
+        var loginRequest = new LoginRequest(UUID.randomUUID().toString(),
+                registerUserRequest.email(), registerUserRequest.password(), null);
 
         var loginResult = loginRequestHandler.handle(loginRequest);
         assert loginResult instanceof LoginResults.Success;

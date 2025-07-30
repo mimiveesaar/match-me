@@ -60,15 +60,15 @@ public class GetRefreshTokenTests extends UserManagementTestBase {
 
         var user = ((RegisterUserResults.Success) registerResult).user();
         var createTokenRequest =
-                new CreateRefreshTokenRequest(UUID.randomUUID(), user, Optional.empty());
+                new CreateRefreshTokenRequest(UUID.randomUUID().toString(), user, null);
         var createTokenResult = createRefreshTokenHandler.handle(createTokenRequest);
 
         assert createTokenResult instanceof CreateRefreshTokenResults.Success;
 
         var successResult = (CreateRefreshTokenResults.Success) createTokenResult;
 
-        var getRefreshTokenRequest = new GetRefreshTokenRequest(UUID.randomUUID(),
-                successResult.refreshToken().token(), Optional.empty());
+        var getRefreshTokenRequest = new GetRefreshTokenRequest(UUID.randomUUID().toString(),
+                successResult.refreshToken().token(), null);
         var getRefreshTokenResult = getRefreshTokenRequestHandler.handle(getRefreshTokenRequest);
         assert getRefreshTokenResult instanceof GetRefreshTokenResults.Success;
 

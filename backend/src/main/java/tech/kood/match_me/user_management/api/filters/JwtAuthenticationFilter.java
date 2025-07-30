@@ -1,7 +1,6 @@
 package tech.kood.match_me.user_management.api.filters;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.UUID;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,17 +45,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String jwt = authorizationHeader.substring(7);
         if (jwt != null) {
-            var validationRequest = new ValidateAccessTokenRequest(UUID.randomUUID(), jwt,
-                    Optional.of(UUID.randomUUID().toString()));
+            var validationRequest = new ValidateAccessTokenRequest(UUID.randomUUID().toString(),
+                    jwt, UUID.randomUUID().toString());
 
             var validationResult = validateAccessTokenHandler.handle(validationRequest);
 
             switch (validationResult) {
-                case ValidateAccessTokenResults.Success(AccessToken accessToken, Optional<String> tracingId) -> {
+                case ValidateAccessTokenResults.Success(AccessToken accessToken, String tracingId) -> {
                     var userId = accessToken.userId();
 
-                    var getUserByIdRequest = new GetUserByIdRequest(UUID.randomUUID().toString(),
-                            userId, tracingId);
+                    var getUserByIdRequest =
+                            new GetUserByIdRequest(UUID.randomUUID().toString(), userId, tracingId);
                     var userDetails = getUserHandler.handle(getUserByIdRequest);
 
                     UsernamePasswordAuthenticationToken auth =
@@ -66,9 +65,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
-                case ValidateAccessTokenResults.InvalidToken(String accessToken, Optional<String> tracingId) -> {
+                case ValidateAccessTokenResults.InvalidToken(String accessToken, String tracingId) -> {
                 }
-                case ValidateAccessTokenResults.InvalidRequest(String message, Optional<String> tracingId) -> {
+                case ValidateAccessTokenResults.InvalidRequest(String message, String tracingId) -> {
                 }
             }
 

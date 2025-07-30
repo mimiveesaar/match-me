@@ -1,6 +1,5 @@
-package tech.kood.match_me.user_management.internal.features.login;
+package tech.kood.match_me.user_management.api.endpoints;
 
-import java.util.Optional;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,8 +11,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.LoginRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.LoginResultsDTO;
+import tech.kood.match_me.user_management.internal.features.login.LoginHandler;
+import tech.kood.match_me.user_management.internal.features.login.LoginRequest;
 import tech.kood.match_me.user_management.internal.mappers.LoginResultsMapper;
 
 @RestController
@@ -21,13 +23,15 @@ import tech.kood.match_me.user_management.internal.mappers.LoginResultsMapper;
 @Tag(name = "User Management", description = "API for user management operations")
 public class LoginEndpoint {
 
-    private final LoginHandler loginHandler;
 
     private final LoginResultsMapper loginResultsMapper;
 
-    public LoginEndpoint(LoginHandler loginHandler, LoginResultsMapper loginResultsMapper) {
-        this.loginHandler = loginHandler;
+    private final UserManagementPublisher userManagementPublisher;
+
+    public LoginEndpoint(LoginHandler loginHandler, LoginResultsMapper loginResultsMapper,
+            UserManagementPublisher userManagementPublisher) {
         this.loginResultsMapper = loginResultsMapper;
+        this.userManagementPublisher = userManagementPublisher;
     }
 
     @PostMapping("/login")
@@ -52,10 +56,10 @@ public class LoginEndpoint {
 
     public ResponseEntity<LoginResultsDTO> loginUser(@RequestBody LoginRequestDTO request) {
 
-        var internalRequest = new LoginRequest(UUID.randomUUID(), request.email(),
-                request.password(), Optional.of(UUID.randomUUID().toString()));
+        var internalRequest = new LoginRequest(UUID.randomUUID().toString(), request.email(),
+                request.password(), UUID.randomUUID().toString());
 
-        var result = loginHandler.handle(internalRequest);
+        var result = userManagementPublisher.publish(internalRequest);
         var responseDTO = loginResultsMapper.toDTO(result);
 
 

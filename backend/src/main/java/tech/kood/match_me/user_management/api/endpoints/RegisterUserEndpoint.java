@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.internal.features.registerUser;
+package tech.kood.match_me.user_management.api.endpoints;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -14,8 +14,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.RegisterUserRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.RegisterUserResultsDTO;
+import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
+import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserRequest;
 import tech.kood.match_me.user_management.internal.mappers.RegisterUserResultsMapper;
 
 @RestController
@@ -23,13 +26,14 @@ import tech.kood.match_me.user_management.internal.mappers.RegisterUserResultsMa
 @Tag(name = "User Management")
 public class RegisterUserEndpoint {
 
-    private final RegisterUserHandler registerUserHandler;
     private final RegisterUserResultsMapper registerUserResultsMapper;
+    private final UserManagementPublisher userManagementPublisher;
 
     public RegisterUserEndpoint(RegisterUserHandler registerUserHandler,
-            RegisterUserResultsMapper registerUserResultsMapper) {
-        this.registerUserHandler = registerUserHandler;
+            RegisterUserResultsMapper registerUserResultsMapper,
+            UserManagementPublisher userManagementPublisher) {
         this.registerUserResultsMapper = registerUserResultsMapper;
+        this.userManagementPublisher = userManagementPublisher;
     }
 
     @PostMapping("/register")
@@ -52,10 +56,11 @@ public class RegisterUserEndpoint {
     public ResponseEntity<RegisterUserResultsDTO> registerUser(
             @RequestBody RegisterUserRequestDTO request) {
 
-        var internalRequest = new RegisterUserRequest(UUID.randomUUID(), request.username(),
-                request.password(), request.email(), Optional.of(UUID.randomUUID().toString()));
+        var internalRequest =
+                new RegisterUserRequest(UUID.randomUUID().toString(), request.username(),
+                        request.password(), request.email(), UUID.randomUUID().toString());
 
-        var result = registerUserHandler.handle(internalRequest);
+        var result = userManagementPublisher.publish(internalRequest);
         var responseDTO = registerUserResultsMapper.toDTO(result);
 
         switch (responseDTO) {

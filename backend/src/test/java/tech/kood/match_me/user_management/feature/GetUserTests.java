@@ -54,8 +54,8 @@ public class GetUserTests extends UserManagementTestBase {
 
                 var username = registerRequest.username();
 
-                var getRequest = new GetUserByUsernameRequest(UUID.randomUUID(), username,
-                                Optional.of(UUID.randomUUID().toString()));
+                var getRequest = new GetUserByUsernameRequest(UUID.randomUUID().toString(),
+                                username, UUID.randomUUID().toString());
 
                 var getResult = getUserHandler.handle(getRequest);
                 assert getResult instanceof GetUserByUsernameResults.Success;
@@ -69,8 +69,8 @@ public class GetUserTests extends UserManagementTestBase {
 
                 var userId = ((RegisterUserResults.Success) registerResult).user().id();
 
-                var getRequest = new GetUserByIdRequest(UUID.randomUUID(), userId,
-                                Optional.of(UUID.randomUUID().toString()));
+                var getRequest = new GetUserByIdRequest(UUID.randomUUID().toString(),
+                                userId.toString(), UUID.randomUUID().toString());
 
                 var getResult = getUserHandler.handle(getRequest);
                 assert getResult instanceof GetUserByIdResults.Success;
@@ -84,8 +84,8 @@ public class GetUserTests extends UserManagementTestBase {
 
                 var email = registerRequest.email();
 
-                var getRequest = new GetUserByEmailRequest(UUID.randomUUID(), email,
-                                Optional.of(UUID.randomUUID().toString()));
+                var getRequest = new GetUserByEmailRequest(UUID.randomUUID().toString(), email,
+                                UUID.randomUUID().toString());
 
                 var getResult = getUserHandler.handle(getRequest);
                 assert getResult instanceof GetUserByEmailResults.Success;
@@ -93,8 +93,8 @@ public class GetUserTests extends UserManagementTestBase {
 
         @Test
         void shouldReturnUserNotFoundForInvalidUsername() {
-                var getRequest = new GetUserByUsernameRequest(UUID.randomUUID(), "nonexistentuser",
-                                Optional.of(UUID.randomUUID().toString()));
+                var getRequest = new GetUserByUsernameRequest(UUID.randomUUID().toString(),
+                                "nonexistentuser", UUID.randomUUID().toString());
 
                 var getResult = getUserHandler.handle(getRequest);
                 assert getResult instanceof GetUserByUsernameResults.UserNotFound;
@@ -102,16 +102,16 @@ public class GetUserTests extends UserManagementTestBase {
 
         @Test
         void shouldReturnUserNotFoundForInvalidId() {
-                var getRequest = new GetUserByIdRequest(UUID.randomUUID(), UUID.randomUUID(),
-                                Optional.of(UUID.randomUUID().toString()));
+                var getRequest = new GetUserByIdRequest(UUID.randomUUID().toString(),
+                                UUID.randomUUID().toString(), UUID.randomUUID().toString());
                 var getResult = getUserHandler.handle(getRequest);
                 assert getResult instanceof GetUserByIdResults.UserNotFound;
         }
 
         @Test
         void shouldReturnUserNotFoundForInvalidEmail() {
-                var getRequest = new GetUserByEmailRequest(UUID.randomUUID(),
-                                "nonexistent@email.com", Optional.of(UUID.randomUUID().toString()));
+                var getRequest = new GetUserByEmailRequest(UUID.randomUUID().toString(),
+                                "nonexistent@email.com", UUID.randomUUID().toString());
                 var getResult = getUserHandler.handle(getRequest);
                 assert getResult instanceof GetUserByEmailResults.UserNotFound;
         }
@@ -126,10 +126,10 @@ public class GetUserTests extends UserManagementTestBase {
                 assert res2 instanceof RegisterUserResults.Success;
                 var username1 = req1.username();
                 var username2 = req2.username();
-                var getRequest1 = new GetUserByUsernameRequest(UUID.randomUUID(), username1,
-                                Optional.of(UUID.randomUUID().toString()));
-                var getRequest2 = new GetUserByUsernameRequest(UUID.randomUUID(), username2,
-                                Optional.of(UUID.randomUUID().toString()));
+                var getRequest1 = new GetUserByUsernameRequest(UUID.randomUUID().toString(),
+                                username1, UUID.randomUUID().toString());
+                var getRequest2 = new GetUserByUsernameRequest(UUID.randomUUID().toString(),
+                                username2, UUID.randomUUID().toString());
                 var getResult1 = getUserHandler.handle(getRequest1);
                 var getResult2 = getUserHandler.handle(getRequest2);
                 assert getResult1 instanceof GetUserByUsernameResults.Success;
@@ -146,10 +146,10 @@ public class GetUserTests extends UserManagementTestBase {
                 assert res2 instanceof RegisterUserResults.Success;
                 var email1 = req1.email();
                 var email2 = req2.email();
-                var getRequest1 = new GetUserByEmailRequest(UUID.randomUUID(), email1,
-                                Optional.of(UUID.randomUUID().toString()));
-                var getRequest2 = new GetUserByEmailRequest(UUID.randomUUID(), email2,
-                                Optional.of(UUID.randomUUID().toString()));
+                var getRequest1 = new GetUserByEmailRequest(UUID.randomUUID().toString(), email1,
+                                UUID.randomUUID().toString());
+                var getRequest2 = new GetUserByEmailRequest(UUID.randomUUID().toString(), email2,
+                                UUID.randomUUID().toString());
                 var getResult1 = getUserHandler.handle(getRequest1);
                 var getResult2 = getUserHandler.handle(getRequest2);
                 assert getResult1 instanceof GetUserByEmailResults.Success;
@@ -166,10 +166,10 @@ public class GetUserTests extends UserManagementTestBase {
                 assert res2 instanceof RegisterUserResults.Success;
                 var userId1 = ((RegisterUserResults.Success) res1).user().id();
                 var userId2 = ((RegisterUserResults.Success) res2).user().id();
-                var getRequest1 = new GetUserByIdRequest(UUID.randomUUID(), userId1,
-                                Optional.of(UUID.randomUUID().toString()));
-                var getRequest2 = new GetUserByIdRequest(UUID.randomUUID(), userId2,
-                                Optional.of(UUID.randomUUID().toString()));
+                var getRequest1 = new GetUserByIdRequest(UUID.randomUUID().toString(),
+                                userId1.toString(), UUID.randomUUID().toString());
+                var getRequest2 = new GetUserByIdRequest(UUID.randomUUID().toString(),
+                                userId2.toString(), UUID.randomUUID().toString());
                 var getResult1 = getUserHandler.handle(getRequest1);
                 var getResult2 = getUserHandler.handle(getRequest2);
                 assert getResult1 instanceof GetUserByIdResults.Success;

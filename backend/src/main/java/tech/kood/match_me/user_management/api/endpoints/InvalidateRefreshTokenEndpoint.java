@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken;
+package tech.kood.match_me.user_management.api.endpoints;
 
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.InvalidateRefreshTokenRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.InvalidateRefreshTokenResultsDTO;
+import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.mappers.InvalidateRefreshTokenMapper;
 
 @RestController
@@ -17,11 +20,13 @@ import tech.kood.match_me.user_management.internal.mappers.InvalidateRefreshToke
 @Tag(name = "User Management")
 public final class InvalidateRefreshTokenEndpoint {
 
-        private final InvalidateRefreshTokenHandler invalidateRefreshTokenHandler;
+
+        private final UserManagementPublisher userManagementPublisher;
 
         public InvalidateRefreshTokenEndpoint(
-                        InvalidateRefreshTokenHandler invalidateRefreshTokenHandler) {
-                this.invalidateRefreshTokenHandler = invalidateRefreshTokenHandler;
+                        InvalidateRefreshTokenHandler invalidateRefreshTokenHandler,
+                        UserManagementPublisher userManagementPublisher) {
+                this.userManagementPublisher = userManagementPublisher;
         }
 
         @PostMapping("/invalidate")
@@ -58,7 +63,8 @@ public final class InvalidateRefreshTokenEndpoint {
                                 UUID.randomUUID().toString(), request.refreshToken(),
                                 UUID.randomUUID().toString());
 
-                var result = invalidateRefreshTokenHandler.handle(internalRequest);
+
+                var result = userManagementPublisher.publish(internalRequest);
                 var responseDTO = new InvalidateRefreshTokenMapper().toDTO(result);
 
                 return switch (responseDTO) {
