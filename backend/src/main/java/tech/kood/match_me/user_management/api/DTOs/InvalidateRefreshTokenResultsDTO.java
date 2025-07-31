@@ -1,24 +1,36 @@
 package tech.kood.match_me.user_management.api.DTOs;
 
+import java.io.Serializable;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-public sealed interface InvalidateRefreshTokenResultsDTO permits
+
+@Schema(name = "InvalidateRefreshTokenResultsDTO",
+        oneOf = {InvalidateRefreshTokenResultsDTO.Success.class,
+                InvalidateRefreshTokenResultsDTO.TokenNotFound.class,
+                InvalidateRefreshTokenResultsDTO.InvalidRequest.class,
+                InvalidateRefreshTokenResultsDTO.SystemError.class})
+public sealed interface InvalidateRefreshTokenResultsDTO extends Serializable permits
         InvalidateRefreshTokenResultsDTO.Success, InvalidateRefreshTokenResultsDTO.TokenNotFound,
         InvalidateRefreshTokenResultsDTO.InvalidRequest,
         InvalidateRefreshTokenResultsDTO.SystemError {
-    record Success(String kind) implements InvalidateRefreshTokenResultsDTO {
-        public Success() {
-            this("success");
+
+    @Schema(name = "InvalidateRefreshTokenSuccessDTO")
+    record Success(String kind, String tracingId) implements InvalidateRefreshTokenResultsDTO {
+        public Success(String tracingId) {
+            this("success", tracingId);
         }
     }
 
-    record TokenNotFound(String token, String kind, String tracingId)
+    @Schema(name = "InvalidateRefreshTokenTokenNotFoundDTO")
+    record TokenNotFound(String refreshToken, String kind, String tracingId)
             implements InvalidateRefreshTokenResultsDTO {
 
-        public TokenNotFound(String token, String tracingId) {
-            this(token, "not_found", tracingId);
+        public TokenNotFound(String refreshToken, String tracingId) {
+            this(refreshToken, "not_found", tracingId);
         }
     }
 
+    @Schema(name = "InvalidateRefreshTokenInvalidRequestDTO")
     record InvalidRequest(String message, String kind, String tracingId)
             implements InvalidateRefreshTokenResultsDTO {
 
@@ -27,6 +39,7 @@ public sealed interface InvalidateRefreshTokenResultsDTO permits
         }
     }
 
+    @Schema(name = "InvalidateRefreshTokenSystemErrorDTO")
     record SystemError(String message, String kind, String tracingId)
             implements InvalidateRefreshTokenResultsDTO {
 

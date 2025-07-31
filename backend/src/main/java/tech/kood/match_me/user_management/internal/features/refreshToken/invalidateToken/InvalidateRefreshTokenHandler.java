@@ -22,8 +22,8 @@ public class InvalidateRefreshTokenHandler {
         try {
 
             if (request.token() == null || request.token().isBlank()) {
-                var result = new InvalidateRefreshTokenResults.InvalidRequest("Token must not be null or blank",
-                        request.tracingId());
+                var result = new InvalidateRefreshTokenResults.InvalidRequest(
+                        "Token must not be null or blank", request.tracingId());
                 events.publishEvent(new InvalidateRefreshTokenEvent(request, result));
                 return result;
             }
@@ -31,19 +31,18 @@ public class InvalidateRefreshTokenHandler {
             var tokenExists = refreshTokenRepository.deleteToken(request.token());
 
             if (!tokenExists) {
-                var tokenNotFoundResult = new InvalidateRefreshTokenResults.TokenNotFound(request.token(),
-                        request.tracingId());
+                var tokenNotFoundResult = new InvalidateRefreshTokenResults.TokenNotFound(
+                        request.token(), request.tracingId());
                 events.publishEvent(new InvalidateRefreshTokenEvent(request, tokenNotFoundResult));
                 return tokenNotFoundResult;
             }
 
-            var result = new InvalidateRefreshTokenResults.Success();
+            var result = new InvalidateRefreshTokenResults.Success(request.tracingId());
             events.publishEvent(new InvalidateRefreshTokenEvent(request, result));
             return result;
         } catch (Exception e) {
             var result = new InvalidateRefreshTokenResults.SystemError(
-                    "An unexpected error occurred: " + e.getMessage(),
-                    request.tracingId());
+                    "An unexpected error occurred: " + e.getMessage(), request.tracingId());
             events.publishEvent(new InvalidateRefreshTokenEvent(request, result));
             return result;
         }

@@ -1,15 +1,20 @@
 package tech.kood.match_me.user_management.api.DTOs;
 
+import java.io.Serializable;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public sealed interface LoginResultsDTO
+
+@Schema(name = "LoginResultsDTO", oneOf = {LoginResultsDTO.Success.class,
+        LoginResultsDTO.InvalidCredentials.class, LoginResultsDTO.InvalidRequest.class,
+        LoginResultsDTO.SystemError.class})
+public sealed interface LoginResultsDTO extends Serializable
         permits LoginResultsDTO.Success, LoginResultsDTO.InvalidCredentials,
         LoginResultsDTO.InvalidRequest, LoginResultsDTO.SystemError {
 
     @Schema(name = "LoginResultsSuccessDTO")
-    record Success(String token, String kind) implements LoginResultsDTO {
-        public Success(String token) {
-            this(token, "success");
+    record Success(String refreshToken, String kind) implements LoginResultsDTO {
+        public Success(String refreshToken) {
+            this(refreshToken, "success");
         }
     }
 

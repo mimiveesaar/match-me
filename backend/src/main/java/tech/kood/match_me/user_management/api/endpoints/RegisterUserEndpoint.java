@@ -1,6 +1,5 @@
 package tech.kood.match_me.user_management.api.endpoints;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;

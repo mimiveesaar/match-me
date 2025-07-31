@@ -9,7 +9,8 @@ public final class InvalidateRefreshTokenMapper {
 
     public InvalidateRefreshTokenResultsDTO toDTO(InvalidateRefreshTokenResults results) {
         return switch (results) {
-            case InvalidateRefreshTokenResults.Success success -> new InvalidateRefreshTokenResultsDTO.Success();
+            case InvalidateRefreshTokenResults.Success success -> new InvalidateRefreshTokenResultsDTO.Success(
+                    success.tracingId());
 
             case InvalidateRefreshTokenResults.TokenNotFound tokenNotFound -> new InvalidateRefreshTokenResultsDTO.TokenNotFound(
                     tokenNotFound.token(), tokenNotFound.tracingId());

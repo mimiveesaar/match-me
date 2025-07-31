@@ -1,6 +1,7 @@
 
 package tech.kood.match_me.user_management.api.DTOs;
 
+import java.io.Serializable;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 
@@ -11,10 +12,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
                 RegisterUserResultsDTO.InvalidPassword.class,
                 RegisterUserResultsDTO.InvalidUsername.class,
                 RegisterUserResultsDTO.SystemError.class})
-public sealed interface RegisterUserResultsDTO permits RegisterUserResultsDTO.Success,
-                RegisterUserResultsDTO.UsernameExists, RegisterUserResultsDTO.EmailExists,
-                RegisterUserResultsDTO.InvalidEmail, RegisterUserResultsDTO.InvalidPassword,
-                RegisterUserResultsDTO.InvalidUsername, RegisterUserResultsDTO.SystemError {
+public sealed interface RegisterUserResultsDTO extends Serializable
+                permits RegisterUserResultsDTO.Success, RegisterUserResultsDTO.UsernameExists,
+                RegisterUserResultsDTO.EmailExists, RegisterUserResultsDTO.InvalidEmail,
+                RegisterUserResultsDTO.InvalidPassword, RegisterUserResultsDTO.InvalidUsername,
+                RegisterUserResultsDTO.SystemError {
 
 
         @Schema(name = "RegisterUserEmailExistsDTO")
