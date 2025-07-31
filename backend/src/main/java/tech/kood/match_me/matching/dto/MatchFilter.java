@@ -5,10 +5,10 @@ import java.util.List;
 public class MatchFilter {
     private Integer minAge;
     private Integer maxAge;
-    private String homeplanet;
-    private String bodyform;
+    private Integer homeplanetId;
+    private Integer bodyformId;
     private List<String> interests;
-    private String lookingFor;
+    private Integer lookingForId;
 
     // Getters and setters
 
@@ -24,17 +24,17 @@ public class MatchFilter {
     public void setMaxAge(Integer maxAge) {
         this.maxAge = maxAge;
     }
-    public String getHomeplanet() {
-        return homeplanet;
+    public Integer getHomeplanetId() {
+        return homeplanetId;
     }
-    public void setHomeplanet(String homeplanet) {
-        this.homeplanet = homeplanet;
+    public void setHomeplanetId(Integer homeplanet) {
+        this.homeplanetId = homeplanet;
     }
-    public String getBodyform() {
-        return bodyform;
+    public Integer getBodyformId() {
+        return bodyformId;
     }
-    public void setBodyform(String bodyform) {
-        this.bodyform = bodyform;
+    public void setBodyformId(Integer bodyform) {
+        this.bodyformId = bodyform;
     }
     public List<String> getInterests() {
         return interests;
@@ -42,10 +42,10 @@ public class MatchFilter {
     public void setInterests(List<String> interests) {
         this.interests = interests;
     }
-    public String getLookingFor() {
-        return lookingFor;
+    public Integer getLookingForId() {
+        return lookingForId;
     }
-    public void setLookingFor(String lookingFor) {
-        this.lookingFor = lookingFor;
+    public void setLookingForId(Integer lookingFor) {
+        this.lookingForId = lookingFor;
     }
 }

@@ -14,40 +14,40 @@ import java.util.List;
 public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
 
     @PersistenceContext
-    private EntityManager em;
+    private EntityManager entityManager;
 
     @Override
     public List<User> findByFilter(MatchFilter filter) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<User> cq = cb.createQuery(User.class);
-        Root<User> user = cq.from(User.class);
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> query = cb.createQuery(User.class);
+        Root<User> root = query.from(User.class);
 
         List<Predicate> predicates = new ArrayList<>();
 
+        if (filter.getHomeplanetId() != null) {
+            predicates.add(cb.equal(root.get("homeplanetId"), filter.getHomeplanetId()));
+        }
+
+        if (filter.getLookingForId() != null) {
+            predicates.add(cb.equal(root.get("lookingForId"), filter.getLookingForId()));
+        }
+
+        if (filter.getBodyformId() != null) {
+            predicates.add(cb.equal(root.get("bodyformId"), filter.getBodyformId()));
+        }
+
         if (filter.getMinAge() != null) {
-            predicates.add(cb.greaterThanOrEqualTo(user.get("age"), filter.getMinAge()));
+            predicates.add(cb.greaterThanOrEqualTo(root.get("age"), filter.getMinAge()));
         }
 
         if (filter.getMaxAge() != null) {
-            predicates.add(cb.lessThanOrEqualTo(user.get("age"), filter.getMaxAge()));
+            predicates.add(cb.lessThanOrEqualTo(root.get("age"), filter.getMaxAge()));
         }
 
-        if (filter.getHomeplanet() != null) {
-            predicates.add(cb.equal(user.get("homeplanet"), filter.getHomeplanet()));
-        }
+        // Add more filters here as needed
 
-        if (filter.getBodyform() != null) {
-            predicates.add(cb.equal(user.get("bodyform"), filter.getBodyform()));
-        }
+        query.where(cb.and(predicates.toArray(new Predicate[0])));
 
-        if (filter.getLookingFor() != null) {
-            predicates.add(cb.equal(user.get("lookingFor"), filter.getLookingFor()));
-        }
-
-        // Optional: handle interests if needed
-
-        cq.where(predicates.toArray(new Predicate[0]));
-
-        return em.createQuery(cq).getResultList();
+        return entityManager.createQuery(query).getResultList();
     }
 }
