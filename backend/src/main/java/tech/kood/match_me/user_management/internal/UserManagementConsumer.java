@@ -1,6 +1,5 @@
 package tech.kood.match_me.user_management.internal;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,9 +18,7 @@ import tech.kood.match_me.user_management.internal.features.jwt.validateAccessTo
 import tech.kood.match_me.user_management.internal.features.login.LoginHandler;
 import tech.kood.match_me.user_management.internal.features.login.LoginRequest;
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenHandler;
 import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
@@ -30,7 +27,7 @@ import tech.kood.match_me.user_management.internal.features.registerUser.Registe
 @Component
 public class UserManagementConsumer {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     private final GetAccessTokenHandler getAccessTokenHandler;
 
@@ -53,7 +50,7 @@ public class UserManagementConsumer {
             LoginHandler loginHandler, CreateRefreshTokenHandler createRefreshTokenHandler,
             GetRefreshTokenHandler getRefreshTokenHandler,
             InvalidateRefreshTokenHandler invalidateRefreshTokenHandler,
-            RegisterUserHandler registerUserHandler) {
+            RegisterUserHandler registerUserHandler, ObjectMapper objectMapper) {
         this.getAccessTokenHandler = getAccessTokenHandler;
         this.validateAccessTokenHandler = validateAccessTokenHandler;
         this.getUserHandler = getUserHandler;
@@ -62,6 +59,7 @@ public class UserManagementConsumer {
         this.getRefreshTokenHandler = getRefreshTokenHandler;
         this.invalidateRefreshTokenHandler = invalidateRefreshTokenHandler;
         this.registerUserHandler = registerUserHandler;
+        this.objectMapper = objectMapper;
     }
 
     @JmsListener(destination = "tech.kood.match_me.user_management.queue", concurrency = "1-1")
