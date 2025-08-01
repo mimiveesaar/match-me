@@ -1,6 +1,9 @@
 package tech.kood.match_me.matching.model;
 
 import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -14,26 +17,39 @@ public class User {
 
     private int age;
 
-    @Column(name = "homeplanetid")
-    private Integer homeplanetId;
+    @ManyToOne
+    @JoinColumn(name = "homeplanet_id", referencedColumnName = "id")
+    private Homeplanet homeplanet;
 
-    @Column(name = "bodyformid")
-    private Integer bodyformId;
+    @ManyToOne
+    @JoinColumn(name = "bodyform_id", referencedColumnName = "id")
+    private Bodyform bodyform;
 
-    @Column(name = "lookingforid")
-    private Integer lookingForId;
+    @ManyToOne
+    @JoinColumn(name = "looking_for_id", referencedColumnName = "id")
+    private LookingFor lookingFor;
 
     private String bio;
 
-    public User() {}
+    @ManyToMany
+    @JoinTable(
+            name = "user_interests", 
+            joinColumns = @JoinColumn(name = "user_id"), 
+            inverseJoinColumns = @JoinColumn(name = "interest_id")
+    )
+    private Set<Interest> interests = new HashSet<>();
 
-    public User(String username, int age, Integer homeplanetId, Integer bodyformId, String bio, Integer lookingForId) {
+    public User() {
+    }
+
+    public User(String username, int age, Homeplanet homeplanet, Bodyform bodyform, String bio, LookingFor lookingFor, Set<Interest> interests) {
         this.username = username;
         this.age = age;
-        this.homeplanetId = homeplanetId;
-        this.bodyformId = bodyformId;
+        this.homeplanet = homeplanet;
+        this.bodyform = bodyform;
         this.bio = bio;
-        this.lookingForId = lookingForId;
+        this.lookingFor = lookingFor;
+        this.interests = interests;
     }
 
     public UUID getId() {
@@ -48,19 +64,23 @@ public class User {
         return age;
     }
 
-    public Integer getHomeplanetId() {
-        return homeplanetId;
+    public Homeplanet getHomeplanet() {
+        return homeplanet;
     }
 
-    public Integer getBodyformId() {
-        return bodyformId;
+    public Bodyform bodyform() {
+        return bodyform;
     }
 
     public String getBio() {
         return bio;
     }
 
-    public Integer getLookingForId() {
-        return lookingForId;
+    public LookingFor getLookingFor() {
+        return lookingFor;
+    }
+
+    public Set<Interest> interests() {
+        return interests;
     }
 }
