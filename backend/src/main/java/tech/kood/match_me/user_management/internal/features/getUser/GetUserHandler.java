@@ -3,7 +3,6 @@ package tech.kood.match_me.user_management.internal.features.getUser;
 import java.util.UUID;
 
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
@@ -32,7 +31,6 @@ public class GetUserHandler {
         this.events = events;
     }
 
-    @JmsListener(destination = GetUserQueues.GET_USER_BY_USERNAME_QUEUE)
     public GetUserByUsernameResults handle(GetUserByUsernameRequest request) {
         String username = request.username();
 
@@ -59,7 +57,6 @@ public class GetUserHandler {
         }
     }
 
-    @JmsListener(destination = GetUserQueues.GET_USER_BY_EMAIL_QUEUE)
     public GetUserByEmailResults handle(GetUserByEmailRequest request) {
         String email = request.email();
 
@@ -88,7 +85,6 @@ public class GetUserHandler {
         }
     }
 
-    @JmsListener(destination = GetUserQueues.GET_USER_BY_ID_QUEUE)
     public GetUserByIdResults handle(GetUserByIdRequest request) {
         UUID id = UUID.fromString(request.userId());
 

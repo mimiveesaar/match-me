@@ -14,7 +14,7 @@ import tech.kood.match_me.connections.internal.database.entities.BlockedConnecti
 import tech.kood.match_me.connections.internal.database.mappers.BlockedConnectionRowMapper;
 
 @Repository
-public class BlockedConnectionsRepository {
+public final class BlockedConnectionsRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final BlockedConnectionRowMapper blockedConnectionRowMapper;

@@ -1,13 +1,10 @@
 package tech.kood.match_me.connections.internal.features.connectionRequest;
 
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ConnectionRequestHandler {
 
-    @JmsListener(destination = "tech.kood.match_me.connections.connectionRequest.queue",
-            concurrency = "1-1")
     public ConnectionRequestResults handle(ConnectionRequest request) {
         // Logic to handle the connection request
         // This is a placeholder for actual business logic

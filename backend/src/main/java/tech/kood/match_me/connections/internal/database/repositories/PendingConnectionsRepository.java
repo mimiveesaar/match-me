@@ -15,7 +15,7 @@ import tech.kood.match_me.connections.internal.database.entities.PendingConnecti
 import tech.kood.match_me.connections.internal.database.mappers.PendingConnectionRowMapper;
 
 @Repository
-public class PendingConnectionsRepository {
+public final class PendingConnectionsRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final PendingConnectionRowMapper pendingConnectionRowMapper;
