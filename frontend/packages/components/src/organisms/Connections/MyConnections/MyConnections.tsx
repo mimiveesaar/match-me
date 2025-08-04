@@ -18,19 +18,23 @@ export interface MyConnection {
 export const MyConnections = ({ myConnections }: MyConnectionsProps) => {
   const [connections, setConnections] = useState<MyConnection[]>(myConnections);
   return (
-    <div className="flex w-full max-w-92 flex-col items-start justify-center space-y-2 rounded-3xl bg-moss p-5 md:max-w-72">
+    <div className="bg-moss flex h-44 w-full flex-col items-start space-y-2 rounded-3xl p-5 sm:w-64 md:w-80">
       <MyConnectionsHeader />
-      <div className="flex w-full flex-col">
-        {connections.map((connection) => (
-          <ConnectionProfile
-            key={connection.id}
-            username={connection.username}
-            profilePictureUrl={connection.profilePictureUrl}
-            onDecline={() => {
-              setConnections(connections.filter((c) => c.id !== connection.id));
-            }}
-          />
-        ))}
+      <div className="flex w-full overflow-y-auto">
+        <div className="flex w-full flex-col pr-1.5">
+          {connections.map((connection) => (
+            <ConnectionProfile
+              key={connection.id}
+              username={connection.username}
+              profilePictureUrl={connection.profilePictureUrl}
+              onDecline={() => {
+                setConnections(
+                  connections.filter((c) => c.id !== connection.id),
+                );
+              }}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
