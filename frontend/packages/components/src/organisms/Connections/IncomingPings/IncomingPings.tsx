@@ -19,8 +19,8 @@ export const IncomingPings = ({ incomingPings }: IncomingPingsProps) => {
   return (
     <div className="flex h-44 w-full flex-col items-start space-y-2 rounded-3xl border border-black/70 p-5 sm:w-64 md:w-80">
       <IncomingPingsHeader />
-      <div className="flex w-full overflow-y-auto">
-        <div className="flex w-full pr-1.5 flex-col">
+      <div className="mt-1 flex w-full overflow-y-auto">
+        <div className="flex w-full flex-col pr-1.5">
           {pings.map((ping) => (
             <IncomingProfile
               key={ping.id}
