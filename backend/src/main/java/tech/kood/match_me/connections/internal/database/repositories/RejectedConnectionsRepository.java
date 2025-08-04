@@ -14,7 +14,7 @@ import tech.kood.match_me.connections.internal.database.entities.RejectedConnect
 import tech.kood.match_me.connections.internal.database.mappers.RejectedConnectionRowMapper;
 
 @Repository
-public class RejectedConnectionsRepository {
+public final class RejectedConnectionsRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final RejectedConnectionRowMapper rejectedConnectionRowMapper;
