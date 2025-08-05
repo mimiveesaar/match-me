@@ -112,7 +112,7 @@ const meta: Meta<typeof Connections> = {
       myConnections: [
         {
           id: "1",
-          username: "Dave",
+          username: "Dave Hoiwefiaiorngion",
           profilePictureUrl:
             "https://images.unsplash.com/photo-1502685104226-9c5b5c5b5c5b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2hhcmxpZXxlbnwwfHwwfHw%3D&w=600&q=60",
         },

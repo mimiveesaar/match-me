@@ -19,9 +19,9 @@ export interface MyConnection {
 export const MyConnections = ({ myConnections }: MyConnectionsProps) => {
   const [connections, setConnections] = useState<MyConnection[]>(myConnections);
   return (
-    <div className="bg-moss flex max-h-86 min-h-44 w-full flex-col items-start space-y-2 rounded-3xl p-5 sm:w-64 md:h-screen md:w-80">
+    <div className="bg-moss flex h-86 min-h-44 w-full flex-col items-start space-y-2 rounded-3xl p-5 sm:w-64 md:w-100 lg:h-145">
       <MyConnectionsHeader />
-      <div className="flex w-full mt-2 overflow-y-auto">
+      <div className="mt-2 flex w-full overflow-y-auto">
         <div className="flex w-full flex-col pr-1.5">
           {connections.map((connection, index) => (
             <div className="relative" key={connection.id}>
