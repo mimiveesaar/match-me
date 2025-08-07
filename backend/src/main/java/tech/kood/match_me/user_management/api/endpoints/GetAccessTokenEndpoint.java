@@ -14,8 +14,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.GetAccessTokenRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.GetAccessTokenResultsDTO;
-import tech.kood.match_me.user_management.internal.features.jwt.getAccessToken.GetAccessTokenHandler;
-import tech.kood.match_me.user_management.internal.features.jwt.getAccessToken.GetAccessTokenRequest;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenHandler;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.mappers.GetAccessTokenMapper;
 
 @RestController

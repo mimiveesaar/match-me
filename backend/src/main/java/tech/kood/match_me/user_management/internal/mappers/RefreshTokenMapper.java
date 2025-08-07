@@ -2,7 +2,7 @@ package tech.kood.match_me.user_management.internal.mappers;
 
 import org.springframework.stereotype.Component;
 import tech.kood.match_me.user_management.internal.database.entities.RefreshTokenEntity;
-import tech.kood.match_me.user_management.models.RefreshToken;
+import tech.kood.match_me.user_management.internal.domain.models.RefreshToken;
 
 @Component
 public final class RefreshTokenMapper {

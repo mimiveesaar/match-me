@@ -3,8 +3,7 @@ package tech.kood.match_me.user_management.mocks;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 import com.github.javafaker.Faker;
-
-import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserRequest;
+import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserRequest;
 
 @Component
 public class RegisterUserRequestMocker {

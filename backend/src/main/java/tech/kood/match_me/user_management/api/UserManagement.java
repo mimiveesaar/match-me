@@ -1,10 +1,10 @@
 package tech.kood.match_me.user_management.api;
 
-import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByEmailResults;
-import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByIdResults;
-import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByUsernameResults;
-import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserRequest;
-import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserResults;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByEmailResults;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByIdResults;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByUsernameResults;
+import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserRequest;
+import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserResults;
 
 public interface UserManagement {
     

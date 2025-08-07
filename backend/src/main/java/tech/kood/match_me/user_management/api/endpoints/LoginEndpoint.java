@@ -14,8 +14,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.LoginRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.LoginResultsDTO;
-import tech.kood.match_me.user_management.internal.features.login.LoginHandler;
-import tech.kood.match_me.user_management.internal.features.login.LoginRequest;
+import tech.kood.match_me.user_management.internal.domain.features.login.LoginHandler;
+import tech.kood.match_me.user_management.internal.domain.features.login.LoginRequest;
 import tech.kood.match_me.user_management.internal.mappers.LoginResultsMapper;
 
 @RestController

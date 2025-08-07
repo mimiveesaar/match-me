@@ -11,12 +11,12 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import tech.kood.match_me.user_management.internal.features.getUser.GetUserHandler;
-import tech.kood.match_me.user_management.internal.features.getUser.requests.GetUserByIdRequest;
-import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenHandler;
-import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
-import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenResults;
-import tech.kood.match_me.user_management.models.AccessToken;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.GetUserHandler;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByIdQuery;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenHandler;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenResults;
+import tech.kood.match_me.user_management.internal.domain.models.AccessToken;
 
 
 @Service
@@ -55,7 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     var userId = accessToken.userId();
 
                     var getUserByIdRequest =
-                            new GetUserByIdRequest(UUID.randomUUID().toString(), userId, tracingId);
+                            new GetUserByIdQuery(UUID.randomUUID().toString(), userId, tracingId);
                     var userDetails = getUserHandler.handle(getUserByIdRequest);
 
                     UsernamePasswordAuthenticationToken auth =

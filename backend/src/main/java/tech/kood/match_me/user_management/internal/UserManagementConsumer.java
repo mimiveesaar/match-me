@@ -7,22 +7,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.TextMessage;
-import tech.kood.match_me.user_management.internal.features.getUser.GetUserHandler;
-import tech.kood.match_me.user_management.internal.features.getUser.requests.GetUserByEmailRequest;
-import tech.kood.match_me.user_management.internal.features.getUser.requests.GetUserByIdRequest;
-import tech.kood.match_me.user_management.internal.features.getUser.requests.GetUserByUsernameRequest;
-import tech.kood.match_me.user_management.internal.features.jwt.getAccessToken.GetAccessTokenHandler;
-import tech.kood.match_me.user_management.internal.features.jwt.getAccessToken.GetAccessTokenRequest;
-import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenHandler;
-import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
-import tech.kood.match_me.user_management.internal.features.login.LoginHandler;
-import tech.kood.match_me.user_management.internal.features.login.LoginRequest;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenRequest;
-import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
-import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserRequest;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.GetUserHandler;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByEmailQuery;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByIdQuery;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByUsernameRequest;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenHandler;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenRequest;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenHandler;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
+import tech.kood.match_me.user_management.internal.domain.features.login.LoginHandler;
+import tech.kood.match_me.user_management.internal.domain.features.login.LoginRequest;
+import tech.kood.match_me.user_management.internal.domain.features.refreshToken.createToken.CreateRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.domain.features.refreshToken.getToken.GetRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.domain.features.refreshToken.invalidateToken.InvalidateRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.domain.features.refreshToken.invalidateToken.InvalidateRefreshTokenRequest;
+import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserHandler;
+import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserRequest;
 
 @Component
 public class UserManagementConsumer {
@@ -84,14 +84,14 @@ public class UserManagementConsumer {
                             objectMapper.readValue(payload, ValidateAccessTokenRequest.class);
 
                     return validateAccessTokenHandler.handle(request);
-                } else if (type.equals(GetUserByEmailRequest.class.getName())) {
-                    GetUserByEmailRequest request =
-                            objectMapper.readValue(payload, GetUserByEmailRequest.class);
+                } else if (type.equals(GetUserByEmailQuery.class.getName())) {
+                    GetUserByEmailQuery request =
+                            objectMapper.readValue(payload, GetUserByEmailQuery.class);
 
                     return getUserHandler.handle(request);
-                } else if (type.equals(GetUserByIdRequest.class.getName())) {
-                    GetUserByIdRequest request =
-                            objectMapper.readValue(payload, GetUserByIdRequest.class);
+                } else if (type.equals(GetUserByIdQuery.class.getName())) {
+                    GetUserByIdQuery request =
+                            objectMapper.readValue(payload, GetUserByIdQuery.class);
 
                     return getUserHandler.handle(request);
                 } else if (type.equals(GetUserByUsernameRequest.class.getName())) {

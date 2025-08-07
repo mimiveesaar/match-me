@@ -2,7 +2,7 @@ package tech.kood.match_me.user_management.internal.mappers;
 
 import org.springframework.stereotype.Component;
 import tech.kood.match_me.user_management.api.DTOs.RegisterUserResultsDTO;
-import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserResults;
+import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserResults;
 
 @Component
 public final class InvalidUsernameTypeMapper {

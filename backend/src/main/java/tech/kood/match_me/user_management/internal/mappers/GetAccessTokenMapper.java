@@ -2,7 +2,7 @@ package tech.kood.match_me.user_management.internal.mappers;
 
 import org.springframework.stereotype.Component;
 import tech.kood.match_me.user_management.api.DTOs.GetAccessTokenResultsDTO;
-import tech.kood.match_me.user_management.internal.features.jwt.getAccessToken.GetAccessTokenResults;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenResults;
 
 @Component
 public final class GetAccessTokenMapper {

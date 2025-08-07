@@ -4,9 +4,8 @@ import java.time.Instant;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 import com.github.javafaker.Faker;
-
+import tech.kood.match_me.user_management.internal.domain.models.User;
 import tech.kood.match_me.user_management.internal.utils.PasswordUtils;
-import tech.kood.match_me.user_management.models.User;
 
 @Component
 public class UserMocker {

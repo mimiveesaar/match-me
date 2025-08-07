@@ -1,8 +1,7 @@
 package tech.kood.match_me.user_management.internal.utils;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
-
-import tech.kood.match_me.user_management.models.HashedPassword;
+import tech.kood.match_me.user_management.internal.domain.models.HashedPassword;
 
 public final class PasswordUtils {
     // Encodes a password, generating a salt using bcrypt and returning a

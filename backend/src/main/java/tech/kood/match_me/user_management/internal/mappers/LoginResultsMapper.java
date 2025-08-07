@@ -3,7 +3,7 @@ package tech.kood.match_me.user_management.internal.mappers;
 import org.springframework.stereotype.Component;
 
 import tech.kood.match_me.user_management.api.DTOs.LoginResultsDTO;
-import tech.kood.match_me.user_management.internal.features.login.LoginResults;
+import tech.kood.match_me.user_management.internal.domain.features.login.LoginResults;
 
 @Component
 public final class LoginResultsMapper {

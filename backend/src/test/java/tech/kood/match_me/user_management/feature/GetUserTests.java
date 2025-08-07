@@ -11,17 +11,16 @@ import org.junit.jupiter.api.TestInstance;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
-import tech.kood.match_me.user_management.internal.features.getUser.GetUserHandler;
-import tech.kood.match_me.user_management.internal.features.getUser.requests.GetUserByEmailRequest;
-import tech.kood.match_me.user_management.internal.features.getUser.requests.GetUserByIdRequest;
-import tech.kood.match_me.user_management.internal.features.getUser.requests.GetUserByUsernameRequest;
-import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByEmailResults;
-import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByIdResults;
-import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByUsernameResults;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.GetUserHandler;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByEmailQuery;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByIdQuery;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByUsernameRequest;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByEmailResults;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByIdResults;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByUsernameResults;
+import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserHandler;
+import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
-import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
-import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserResults;
-
 import java.util.Optional;
 import java.util.UUID;
 
@@ -69,7 +68,7 @@ public class GetUserTests extends UserManagementTestBase {
 
                 var userId = ((RegisterUserResults.Success) registerResult).user().id();
 
-                var getRequest = new GetUserByIdRequest(UUID.randomUUID().toString(),
+                var getRequest = new GetUserByIdQuery(UUID.randomUUID().toString(),
                                 userId.toString(), UUID.randomUUID().toString());
 
                 var getResult = getUserHandler.handle(getRequest);
@@ -84,7 +83,7 @@ public class GetUserTests extends UserManagementTestBase {
 
                 var email = registerRequest.email();
 
-                var getRequest = new GetUserByEmailRequest(UUID.randomUUID().toString(), email,
+                var getRequest = new GetUserByEmailQuery(UUID.randomUUID().toString(), email,
                                 UUID.randomUUID().toString());
 
                 var getResult = getUserHandler.handle(getRequest);
@@ -102,7 +101,7 @@ public class GetUserTests extends UserManagementTestBase {
 
         @Test
         void shouldReturnUserNotFoundForInvalidId() {
-                var getRequest = new GetUserByIdRequest(UUID.randomUUID().toString(),
+                var getRequest = new GetUserByIdQuery(UUID.randomUUID().toString(),
                                 UUID.randomUUID().toString(), UUID.randomUUID().toString());
                 var getResult = getUserHandler.handle(getRequest);
                 assert getResult instanceof GetUserByIdResults.UserNotFound;
@@ -110,7 +109,7 @@ public class GetUserTests extends UserManagementTestBase {
 
         @Test
         void shouldReturnUserNotFoundForInvalidEmail() {
-                var getRequest = new GetUserByEmailRequest(UUID.randomUUID().toString(),
+                var getRequest = new GetUserByEmailQuery(UUID.randomUUID().toString(),
                                 "nonexistent@email.com", UUID.randomUUID().toString());
                 var getResult = getUserHandler.handle(getRequest);
                 assert getResult instanceof GetUserByEmailResults.UserNotFound;
@@ -146,9 +145,9 @@ public class GetUserTests extends UserManagementTestBase {
                 assert res2 instanceof RegisterUserResults.Success;
                 var email1 = req1.email();
                 var email2 = req2.email();
-                var getRequest1 = new GetUserByEmailRequest(UUID.randomUUID().toString(), email1,
+                var getRequest1 = new GetUserByEmailQuery(UUID.randomUUID().toString(), email1,
                                 UUID.randomUUID().toString());
-                var getRequest2 = new GetUserByEmailRequest(UUID.randomUUID().toString(), email2,
+                var getRequest2 = new GetUserByEmailQuery(UUID.randomUUID().toString(), email2,
                                 UUID.randomUUID().toString());
                 var getResult1 = getUserHandler.handle(getRequest1);
                 var getResult2 = getUserHandler.handle(getRequest2);
@@ -166,9 +165,9 @@ public class GetUserTests extends UserManagementTestBase {
                 assert res2 instanceof RegisterUserResults.Success;
                 var userId1 = ((RegisterUserResults.Success) res1).user().id();
                 var userId2 = ((RegisterUserResults.Success) res2).user().id();
-                var getRequest1 = new GetUserByIdRequest(UUID.randomUUID().toString(),
+                var getRequest1 = new GetUserByIdQuery(UUID.randomUUID().toString(),
                                 userId1.toString(), UUID.randomUUID().toString());
-                var getRequest2 = new GetUserByIdRequest(UUID.randomUUID().toString(),
+                var getRequest2 = new GetUserByIdQuery(UUID.randomUUID().toString(),
                                 userId2.toString(), UUID.randomUUID().toString());
                 var getResult1 = getUserHandler.handle(getRequest1);
                 var getResult2 = getUserHandler.handle(getRequest2);

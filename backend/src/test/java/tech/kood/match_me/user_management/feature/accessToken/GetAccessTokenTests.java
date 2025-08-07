@@ -12,14 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
-import tech.kood.match_me.user_management.internal.features.jwt.getAccessToken.GetAccessTokenHandler;
-import tech.kood.match_me.user_management.internal.features.jwt.getAccessToken.GetAccessTokenRequest;
-import tech.kood.match_me.user_management.internal.features.jwt.getAccessToken.GetAccessTokenResults;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenRequest;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenResults;
-import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
-import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserResults;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenHandler;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenRequest;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenResults;
+import tech.kood.match_me.user_management.internal.domain.features.refreshToken.createToken.CreateRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.domain.features.refreshToken.createToken.CreateRefreshTokenRequest;
+import tech.kood.match_me.user_management.internal.domain.features.refreshToken.createToken.CreateRefreshTokenResults;
+import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserHandler;
+import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
 
 @SpringBootTest
