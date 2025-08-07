@@ -10,5 +10,9 @@ export default meta;
 type Story = StoryObj<typeof MenuBase>;
 
 export const Default: Story = {
-  render: () => <MenuBase children={undefined} />,
+  render: () => (
+    <div className="flex justify-center items-center h-screen">
+      <MenuBase children={undefined} />
+    </div>
+  ),
 };

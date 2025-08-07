@@ -17,22 +17,24 @@ export interface IncomingPing {
 export const IncomingPings = ({ incomingPings }: IncomingPingsProps) => {
   const [pings, setPings] = useState<IncomingPing[]>(incomingPings);
   return (
-    <div className="flex w-full max-w-92 flex-col items-start justify-center space-y-2 rounded-3xl border border-black/70 p-5 md:max-w-72">
+    <div className="flex h-44 w-full flex-col items-start space-y-2 rounded-3xl border border-black/70 p-5 sm:h-56 sm:w-64 lg:w-96 lg:h-70">
       <IncomingPingsHeader />
-      <div className="flex w-full flex-col">
-        {pings.map((ping) => (
-          <IncomingProfile
-            key={ping.id}
-            username={ping.username}
-            profilePictureUrl={ping.profilePictureUrl}
-            onAccept={() => {
-              setPings(pings.filter((p) => p.id !== ping.id));
-            }}
-            onDecline={() => {
-              setPings(pings.filter((p) => p.id !== ping.id));
-            }}
-          />
-        ))}
+      <div className="mt-1 flex w-full overflow-y-auto">
+        <div className="flex w-full flex-col pr-1.5">
+          {pings.map((ping) => (
+            <IncomingProfile
+              key={ping.id}
+              username={ping.username}
+              profilePictureUrl={ping.profilePictureUrl}
+              onAccept={() => {
+                setPings(pings.filter((p) => p.id !== ping.id));
+              }}
+              onDecline={() => {
+                setPings(pings.filter((p) => p.id !== ping.id));
+              }}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
