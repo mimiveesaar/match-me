@@ -69,7 +69,7 @@ public class CreateAccessTokenHandler
                                                                 .plusSeconds(userManagementConfig
                                                                                 .getJwtExpiration()))
                                                 .withClaim("userId",
-                                                                refreshToken.token().userId()
+                                                                refreshToken.token.userId()
                                                                                 .toString())
                                                 .sign(jwtAlgo);
 

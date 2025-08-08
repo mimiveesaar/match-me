@@ -2,44 +2,118 @@ package tech.kood.match_me.user_management.internal.domain.models;
 
 import java.time.Instant;
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
 
-public record RefreshToken(UUID id, UUID userId, String token, Instant createdAt, Instant expiresAt) {
+/**
+ * Represents a refresh token in the system.
+ * <ul>
+ * <li>{@code id} - Unique identifier for the refresh token (must not be null).</li>
+ * <li>{@code userId} - The user ID associated with the token (must not be null).</li>
+ * <li>{@code token} - The token string (must not be null or blank).</li>
+ * <li>{@code createdAt} - Timestamp when the token was created (must not be null).</li>
+ * <li>{@code expiresAt} - Timestamp when the token expires (must not be null).</li>
+ * </ul>
+ * <p>
+ * Use the static factory method {@link #of(UUID, UUID, String, Instant, Instant)} to create
+ * instances, which performs validation. If validation fails, a {@link ConstraintViolationException}
+ * is thrown.
+ * </p>
+ * <p>
+ * Provides "with" methods to create modified copies of the refresh token with updated fields.
+ * </p>
+ */
+public final class RefreshToken {
 
-    public RefreshToken {
-        if (id == null) {
-            throw new IllegalArgumentException("ID cannot be null");
-        }
-        if (userId == null) {
-            throw new IllegalArgumentException("User ID cannot be null");
-        }
-        if (token == null || token.isBlank()) {
-            throw new IllegalArgumentException("Token cannot be null or blank");
-        }
-        if (createdAt == null) {
-            throw new IllegalArgumentException("Created at timestamp cannot be null");
-        }
-        if (expiresAt == null) {
-            throw new IllegalArgumentException("Expires at timestamp cannot be null");
-        }
+    @NotNull
+    @JsonProperty("id")
+    public final UUID id;
+
+    @NotNull
+    @JsonProperty("userId")
+    public final UUID userId;
+
+    @NotBlank
+    @JsonProperty("token")
+    public final String token;
+
+    @NotNull
+    @JsonProperty("createdAt")
+    public final Instant createdAt;
+
+    @NotNull
+    @JsonProperty("expiresAt")
+    public final Instant expiresAt;
+
+    private RefreshToken(@JsonProperty("id") @NotNull UUID id,
+            @JsonProperty("userId") @NotNull UUID userId,
+            @JsonProperty("token") @NotBlank String token,
+            @JsonProperty("createdAt") @NotNull Instant createdAt,
+            @JsonProperty("expiresAt") @NotNull Instant expiresAt) {
+        this.id = id;
+        this.userId = userId;
+        this.token = token;
+        this.createdAt = createdAt;
+        this.expiresAt = expiresAt;
     }
 
-    public RefreshToken withToken(String token) {
-        return new RefreshToken(id, userId, token, createdAt, expiresAt);
+    @JsonCreator
+    public static RefreshToken of(@JsonProperty("id") @NotNull UUID id,
+            @JsonProperty("userId") @NotNull UUID userId,
+            @JsonProperty("token") @NotBlank String token,
+            @JsonProperty("createdAt") @NotNull Instant createdAt,
+            @JsonProperty("expiresAt") @NotNull Instant expiresAt) {
+        var refreshToken = new RefreshToken(id, userId, token, createdAt, expiresAt);
+        var violations = DomainObjectInputValidator.instance.validate(refreshToken);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException("Invalid RefreshToken: " + violations,
+                    violations);
+        }
+        return refreshToken;
     }
 
-    public RefreshToken withExpiresAt(Instant expiresAt) {
-        return new RefreshToken(id, userId, token, createdAt, expiresAt);
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof RefreshToken))
+            return false;
+        RefreshToken other = (RefreshToken) obj;
+        return id.equals(other.id);
     }
 
-    public RefreshToken withCreatedAt(Instant createdAt) {
-        return new RefreshToken(id, userId, token, createdAt, expiresAt);
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 
-    public RefreshToken withUserId(UUID userId) {
-        return new RefreshToken(id, userId, token, createdAt, expiresAt);
+    @Override
+    public String toString() {
+        return "RefreshToken{" + "id=" + id + ", userId=" + userId + ", token='" + token + '\''
+                + ", createdAt=" + createdAt + ", expiresAt=" + expiresAt + '}';
     }
 
-    public RefreshToken withId(UUID id) {
-        return new RefreshToken(id, userId, token, createdAt, expiresAt);
+    public RefreshToken withId(UUID newId) {
+        return RefreshToken.of(newId, userId, token, createdAt, expiresAt);
+    }
+
+    public RefreshToken withUserId(UUID newUserId) {
+        return RefreshToken.of(id, newUserId, token, createdAt, expiresAt);
+    }
+
+    public RefreshToken withToken(String newToken) {
+        return RefreshToken.of(id, userId, newToken, createdAt, expiresAt);
+    }
+
+    public RefreshToken withCreatedAt(Instant newCreatedAt) {
+        return RefreshToken.of(id, userId, token, newCreatedAt, expiresAt);
+    }
+
+    public RefreshToken withExpiresAt(Instant newExpiresAt) {
+        return RefreshToken.of(id, userId, token, createdAt, newExpiresAt);
     }
 }

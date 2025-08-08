@@ -6,7 +6,6 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import tech.kood.match_me.user_management.internal.common.cqrs.Command;
 import tech.kood.match_me.user_management.internal.common.cqrs.Query;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
 

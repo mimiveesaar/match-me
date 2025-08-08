@@ -2,46 +2,117 @@ package tech.kood.match_me.user_management.internal.domain.models;
 
 import java.time.Instant;
 import java.util.UUID;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
 
 /**
  * Represents a user in the system.
- *
- * @param id        Unique identifier for the user. Cannot be null or blank.
- * @param email     The user's username. Cannot be null or blank.
- * @param email     The user's email address. Cannot be null or blank.
- * @param password  The user's hashed password. Cannot be null.
- * @param createdAt Timestamp when the user was created. Automatically set to
- *                  the current time.
- * @param updatedAt Timestamp when the user was last updated. Automatically set
- *                  to the current
- * @throws IllegalArgumentException if any parameter is invalid (null, blank, or
- *                                  non-positive where not allowed).
+ * <ul>
+ * <li>{@code id} - Unique identifier for the user (must not be null).</li>
+ * <li>{@code username} - The user's username (must not be null or blank).</li>
+ * <li>{@code email} - The user's email address (must not be null or blank).</li>
+ * <li>{@code password} - The user's hashed password (must not be null).</li>
+ * <li>{@code createdAt} - Timestamp when the user was created (must not be null).</li>
+ * <li>{@code updatedAt} - Timestamp when the user was last updated (must not be null).</li>
+ * </ul>
+ * <p>
+ * Use the static factory method {@link #of(UUID, String, String, HashedPassword, Instant, Instant)}
+ * to create instances, which performs validation. If validation fails, a
+ * {@link ConstraintViolationException} is thrown.
+ * </p>
+ * <p>
+ * Provides "with" methods to create modified copies of the user with updated fields.
+ * </p>
  */
-public record User(
-        UUID id,
-        String username,
-        String email,
-        HashedPassword password,
-        Instant createdAt,
-        Instant updatedAt) {
-    public User {
-        if (id == null) {
-            throw new IllegalArgumentException("User ID cannot be null or blank");
-        }
-        if (username == null || username.isBlank()) {
-            throw new IllegalArgumentException("Username cannot be null or blank");
-        }
-        if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("Email cannot be null or blank");
-        }
-        if (password == null) {
-            throw new IllegalArgumentException("Password cannot be null");
-        }
-        if (createdAt == null) {
-            throw new IllegalArgumentException("CreatedAt cannot be null");
-        }
-        if (updatedAt == null) {
-            throw new IllegalArgumentException("UpdatedAt cannot be null");
-        }
+public final class User {
+
+    @NotNull
+    public final UserId id;
+
+    @NotBlank
+    public final String username;
+
+    @Email
+    public final String email;
+
+    @NotNull
+    public final HashedPassword password;
+
+    @NotNull
+    public final Instant createdAt;
+
+    @NotNull
+    public final Instant updatedAt;
+
+    private User(@NotNull UserId id, @NotBlank String username, @NotBlank String email,
+            @NotNull HashedPassword password, @NotNull Instant createdAt,
+            @NotNull Instant updatedAt) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
+
+    public static User of(@NotNull UserId id, @NotBlank String username, @NotBlank String email,
+            @NotNull HashedPassword password, @NotNull Instant createdAt,
+            @NotNull Instant updatedAt) {
+        var user = new User(id, username, email, password, createdAt, updatedAt);
+        var violations = DomainObjectInputValidator.instance.validate(user);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException("Invalid User: " + violations, violations);
+        }
+        return user;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof User))
+            return false;
+        User other = (User) obj;
+        return id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.value.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "User{" + "id=" + id + ", username='" + username + '\'' + ", email='" + email + '\''
+                + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';
+    }
+
+    public User withId(UserId newId) {
+        return User.of(newId, username, email, password, createdAt, updatedAt);
+    }
+
+    public User withUsername(String newUsername) {
+        return User.of(id, newUsername, email, password, createdAt, updatedAt);
+    }
+
+    public User withEmail(String newEmail) {
+        return User.of(id, username, newEmail, password, createdAt, updatedAt);
+    }
+
+    public User withPassword(HashedPassword newPassword) {
+        return User.of(id, username, email, newPassword, createdAt, updatedAt);
+    }
+
+    public User withCreatedAt(Instant newCreatedAt) {
+        return User.of(id, username, email, password, newCreatedAt, updatedAt);
+    }
+
+    public User withUpdatedAt(Instant newUpdatedAt) {
+        return User.of(id, username, email, password, createdAt, newUpdatedAt);
+    }
+
+
 }
