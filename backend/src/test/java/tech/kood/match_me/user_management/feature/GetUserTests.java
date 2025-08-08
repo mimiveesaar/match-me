@@ -14,9 +14,9 @@ import tech.kood.match_me.user_management.internal.database.repostitories.UserRe
 import tech.kood.match_me.user_management.internal.domain.features.getUser.GetUserHandler;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByEmailQuery;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByIdQuery;
-import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByUsernameRequest;
-import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByEmailResults;
-import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByIdResults;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByUsernameQuery;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByEmailQueryResults;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByIdQueryResults;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByUsernameResults;
 import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserHandler;
 import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserResults;
@@ -53,8 +53,8 @@ public class GetUserTests extends UserManagementTestBase {
 
                 var username = registerRequest.username();
 
-                var getRequest = new GetUserByUsernameRequest(UUID.randomUUID().toString(),
-                                username, UUID.randomUUID().toString());
+                var getRequest = new GetUserByUsernameQuery(UUID.randomUUID().toString(), username,
+                                UUID.randomUUID().toString());
 
                 var getResult = getUserHandler.handle(getRequest);
                 assert getResult instanceof GetUserByUsernameResults.Success;
@@ -72,7 +72,7 @@ public class GetUserTests extends UserManagementTestBase {
                                 userId.toString(), UUID.randomUUID().toString());
 
                 var getResult = getUserHandler.handle(getRequest);
-                assert getResult instanceof GetUserByIdResults.Success;
+                assert getResult instanceof GetUserByIdQueryResults.Success;
         }
 
         @Test
@@ -87,12 +87,12 @@ public class GetUserTests extends UserManagementTestBase {
                                 UUID.randomUUID().toString());
 
                 var getResult = getUserHandler.handle(getRequest);
-                assert getResult instanceof GetUserByEmailResults.Success;
+                assert getResult instanceof GetUserByEmailQueryResults.Success;
         }
 
         @Test
         void shouldReturnUserNotFoundForInvalidUsername() {
-                var getRequest = new GetUserByUsernameRequest(UUID.randomUUID().toString(),
+                var getRequest = new GetUserByUsernameQuery(UUID.randomUUID().toString(),
                                 "nonexistentuser", UUID.randomUUID().toString());
 
                 var getResult = getUserHandler.handle(getRequest);
@@ -104,7 +104,7 @@ public class GetUserTests extends UserManagementTestBase {
                 var getRequest = new GetUserByIdQuery(UUID.randomUUID().toString(),
                                 UUID.randomUUID().toString(), UUID.randomUUID().toString());
                 var getResult = getUserHandler.handle(getRequest);
-                assert getResult instanceof GetUserByIdResults.UserNotFound;
+                assert getResult instanceof GetUserByIdQueryResults.UserNotFound;
         }
 
         @Test
@@ -112,7 +112,7 @@ public class GetUserTests extends UserManagementTestBase {
                 var getRequest = new GetUserByEmailQuery(UUID.randomUUID().toString(),
                                 "nonexistent@email.com", UUID.randomUUID().toString());
                 var getResult = getUserHandler.handle(getRequest);
-                assert getResult instanceof GetUserByEmailResults.UserNotFound;
+                assert getResult instanceof GetUserByEmailQueryResults.UserNotFound;
         }
 
         @Test
@@ -125,9 +125,9 @@ public class GetUserTests extends UserManagementTestBase {
                 assert res2 instanceof RegisterUserResults.Success;
                 var username1 = req1.username();
                 var username2 = req2.username();
-                var getRequest1 = new GetUserByUsernameRequest(UUID.randomUUID().toString(),
+                var getRequest1 = new GetUserByUsernameQuery(UUID.randomUUID().toString(),
                                 username1, UUID.randomUUID().toString());
-                var getRequest2 = new GetUserByUsernameRequest(UUID.randomUUID().toString(),
+                var getRequest2 = new GetUserByUsernameQuery(UUID.randomUUID().toString(),
                                 username2, UUID.randomUUID().toString());
                 var getResult1 = getUserHandler.handle(getRequest1);
                 var getResult2 = getUserHandler.handle(getRequest2);
@@ -151,8 +151,8 @@ public class GetUserTests extends UserManagementTestBase {
                                 UUID.randomUUID().toString());
                 var getResult1 = getUserHandler.handle(getRequest1);
                 var getResult2 = getUserHandler.handle(getRequest2);
-                assert getResult1 instanceof GetUserByEmailResults.Success;
-                assert getResult2 instanceof GetUserByEmailResults.Success;
+                assert getResult1 instanceof GetUserByEmailQueryResults.Success;
+                assert getResult2 instanceof GetUserByEmailQueryResults.Success;
         }
 
         @Test
@@ -171,8 +171,8 @@ public class GetUserTests extends UserManagementTestBase {
                                 userId2.toString(), UUID.randomUUID().toString());
                 var getResult1 = getUserHandler.handle(getRequest1);
                 var getResult2 = getUserHandler.handle(getRequest2);
-                assert getResult1 instanceof GetUserByIdResults.Success;
-                assert getResult2 instanceof GetUserByIdResults.Success;
+                assert getResult1 instanceof GetUserByIdQueryResults.Success;
+                assert getResult2 instanceof GetUserByIdQueryResults.Success;
         }
 
 }

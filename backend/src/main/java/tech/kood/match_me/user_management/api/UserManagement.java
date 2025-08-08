@@ -1,13 +1,13 @@
 package tech.kood.match_me.user_management.api;
 
-import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByEmailResults;
-import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByIdResults;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByEmailQueryResults;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByIdQueryResults;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByUsernameResults;
 import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserRequest;
 import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserResults;
 
 public interface UserManagement {
-    
+
     /**
      * Registers a new user with the provided details.
      *
@@ -20,9 +20,9 @@ public interface UserManagement {
      * Retrieves user information based on the provided email address.
      *
      * @param request The request object containing the email to search for.
-     * @return A {@link GetUserByEmailResults} object containing the user details if found.
+     * @return A {@link GetUserByEmailQueryResults} object containing the user details if found.
      */
-    GetUserByEmailResults getUserByEmail(GetUserByEmailResults request);
+    GetUserByEmailQueryResults getUserByEmail(GetUserByEmailQueryResults request);
 
     /**
      * Retrieves user information based on the provided username.
@@ -36,9 +36,9 @@ public interface UserManagement {
      * Retrieves user information based on the provided user ID.
      *
      * @param request The request object containing the user ID to search for.
-     * @return A {@link GetUserByIdResults} object containing the user details if found.
+     * @return A {@link GetUserByIdQueryResults} object containing the user details if found.
      */
-    GetUserByIdResults getUserById(GetUserByIdResults request);
+    GetUserByIdQueryResults getUserById(GetUserByIdQueryResults request);
 
-    
+
 }

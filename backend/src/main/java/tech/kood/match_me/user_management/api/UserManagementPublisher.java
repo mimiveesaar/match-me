@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 import tech.kood.match_me.user_management.internal.UserManagementMessaging;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByEmailQuery;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByIdQuery;
-import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByUsernameRequest;
-import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByEmailResults;
-import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByIdResults;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByUsernameQuery;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByEmailQueryResults;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByIdQueryResults;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByUsernameResults;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenResults;
@@ -38,19 +38,19 @@ public class UserManagementPublisher {
     }
 
 
-    public GetUserByIdResults publish(GetUserByIdQuery request) {
+    public GetUserByIdQueryResults publish(GetUserByIdQuery request) {
         return jmsMessaging.convertSendAndReceive(UserManagementMessaging.USER_MANAGEMENT_QUEUE,
-                request, GetUserByIdResults.class);
+                request, GetUserByIdQueryResults.class);
     }
 
-    public GetUserByUsernameResults publish(GetUserByUsernameRequest request) {
+    public GetUserByUsernameResults publish(GetUserByUsernameQuery request) {
         return jmsMessaging.convertSendAndReceive(UserManagementMessaging.USER_MANAGEMENT_QUEUE,
                 request, GetUserByUsernameResults.class);
     }
 
-    public GetUserByEmailResults publish(GetUserByEmailQuery request) {
+    public GetUserByEmailQueryResults publish(GetUserByEmailQuery request) {
         return jmsMessaging.convertSendAndReceive(UserManagementMessaging.USER_MANAGEMENT_QUEUE,
-                request, GetUserByEmailResults.class);
+                request, GetUserByEmailQueryResults.class);
     }
 
     public LoginResults publish(LoginRequest request) {

@@ -8,7 +8,8 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.constraints.NotNull;
-import tech.kood.match_me.user_management.common.Query;
+import tech.kood.match_me.user_management.internal.common.cqrs.Query;
+import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
 import tech.kood.match_me.user_management.internal.domain.models.UserId;
 
 
@@ -34,9 +35,6 @@ import tech.kood.match_me.user_management.internal.domain.models.UserId;
 
 public final class GetUserByIdQuery implements Query {
 
-    private static final Validator validator =
-            Validation.buildDefaultValidatorFactory().getValidator();
-
     @NotNull
     @JsonProperty("requestId")
     public final UUID requestId;
@@ -61,7 +59,7 @@ public final class GetUserByIdQuery implements Query {
             @JsonProperty("userId") @NotNull UserId userId,
             @JsonProperty("tracingId") @Nullable String tracingId) {
         var query = new GetUserByIdQuery(requestId, userId, tracingId);
-        var violations = validator.validate(query);
+        var violations = DomainObjectInputValidator.instance.validate(query);
 
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException("Invalid GetUserByIdQuery: " + violations,

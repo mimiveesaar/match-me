@@ -10,7 +10,7 @@ import jakarta.jms.TextMessage;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.GetUserHandler;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByEmailQuery;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByIdQuery;
-import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByUsernameRequest;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByUsernameQuery;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenHandler;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenHandler;
@@ -94,9 +94,9 @@ public class UserManagementConsumer {
                             objectMapper.readValue(payload, GetUserByIdQuery.class);
 
                     return getUserHandler.handle(request);
-                } else if (type.equals(GetUserByUsernameRequest.class.getName())) {
-                    GetUserByUsernameRequest request =
-                            objectMapper.readValue(payload, GetUserByUsernameRequest.class);
+                } else if (type.equals(GetUserByUsernameQuery.class.getName())) {
+                    GetUserByUsernameQuery request =
+                            objectMapper.readValue(payload, GetUserByUsernameQuery.class);
 
                     return getUserHandler.handle(request);
                 } else if (type.equals(LoginRequest.class.getName())) {

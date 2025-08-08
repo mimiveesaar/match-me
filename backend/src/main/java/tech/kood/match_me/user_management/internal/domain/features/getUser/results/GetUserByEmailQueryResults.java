@@ -5,22 +5,19 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
 import tech.kood.match_me.user_management.internal.domain.models.User;
 
-public sealed interface GetUserByUsernameResults extends Serializable
-        permits GetUserByUsernameResults.Success, GetUserByUsernameResults.UserNotFound,
-        GetUserByUsernameResults.SystemError, GetUserByUsernameResults.InvalidUsername {
 
-    /**
-     * Represents a successful result of fetching a user by username.
-     *
-     * @param user The {@link User} object containing user details.
-     * @param requestId The unique internal identifier for the request.
-     * @param tracingId An optional tracing identifier for external request tracking.
-     */
-    final class Success implements GetUserByUsernameResults {
+public sealed interface GetUserByEmailQueryResults extends Serializable
+        permits GetUserByEmailQueryResults.Success, GetUserByEmailQueryResults.UserNotFound,
+        GetUserByEmailQueryResults.SystemError, GetUserByEmailQueryResults.InvalidEmail {
+
+
+    final class Success implements GetUserByEmailQueryResults {
 
         @NotNull
         @JsonProperty("requestId")
@@ -55,37 +52,38 @@ public sealed interface GetUserByUsernameResults extends Serializable
     }
 
     /**
-     * Represents the result when a user is not found by their username.
+     * Represents the result when a user is not found by their email.
      *
-     * @param username The username of the user that was not found.
+     * @param email The email of the user that was not found.
      * @param requestId The unique internal identifier for the request.
      * @param tracingId An optional tracing identifier for external request tracking.
      */
-    final class UserNotFound implements GetUserByUsernameResults {
+    final class UserNotFound implements GetUserByEmailQueryResults {
 
         @NotNull
         @JsonProperty("requestId")
         public final UUID requestId;
 
         @NotNull
-        @JsonProperty("username")
-        public final String username;
+        @Email
+        @JsonProperty("email")
+        public final String email;
 
         @Nullable
         @JsonProperty("tracingId")
         public final String tracingId;
 
-        private UserNotFound(String username, UUID requestId, @Nullable String tracingId) {
-            this.username = username;
+        private UserNotFound(String email, UUID requestId, @Nullable String tracingId) {
+            this.email = email;
             this.requestId = requestId;
             this.tracingId = tracingId;
         }
 
         @JsonCreator
-        public static UserNotFound of(@JsonProperty("username") @NotNull String username,
+        public static UserNotFound of(@JsonProperty("email") @NotEmpty String email,
                 @JsonProperty("requestId") @NotNull UUID requestId,
                 @JsonProperty("tracingId") @Nullable String tracingId) {
-            var userNotFound = new UserNotFound(username, requestId, tracingId);
+            var userNotFound = new UserNotFound(email, requestId, tracingId);
 
             var violations = DomainObjectInputValidator.instance.validate(userNotFound);
             if (!violations.isEmpty()) {
@@ -97,66 +95,60 @@ public sealed interface GetUserByUsernameResults extends Serializable
     }
 
     /**
-     * Represents the result of a failed attempt to retrieve a user by username due to an invalid
-     * username.
+     * Represents the result of a failed attempt to retrieve a user by email due to an invalid email
+     * format.
      *
-     * @param username The username that was invalid.
+     * @param email The email that was invalid.
      * @param requestId The unique internal identifier for the request.
      * @param tracingId An optional tracing identifier for external request tracking.
      */
-    final class InvalidUsername implements GetUserByUsernameResults {
+    final class InvalidEmail implements GetUserByEmailQueryResults {
 
         @NotNull
-        @JsonProperty("requestId")
         public final UUID requestId;
 
         @NotNull
-        @JsonProperty("username")
-        public final String username;
+        public final String email;
 
         @Nullable
-        @JsonProperty("tracingId")
         public final String tracingId;
 
-        private InvalidUsername(String username, UUID requestId, @Nullable String tracingId) {
-            this.username = username;
+        private InvalidEmail(String email, UUID requestId, @Nullable String tracingId) {
+            this.email = email;
             this.requestId = requestId;
             this.tracingId = tracingId;
         }
 
         @JsonCreator
-        public static InvalidUsername of(@JsonProperty("username") @NotNull String username,
+        public static InvalidEmail of(@JsonProperty("email") @NotNull String email,
                 @JsonProperty("requestId") @NotNull UUID requestId,
                 @JsonProperty("tracingId") @Nullable String tracingId) {
-            var invalidUsername = new InvalidUsername(username, requestId, tracingId);
+            var invalidEmail = new InvalidEmail(email, requestId, tracingId);
 
-            var violations = DomainObjectInputValidator.instance.validate(invalidUsername);
+            var violations = DomainObjectInputValidator.instance.validate(invalidEmail);
             if (!violations.isEmpty()) {
                 throw new jakarta.validation.ConstraintViolationException(violations);
             }
-            return invalidUsername;
+            return invalidEmail;
         }
     }
 
     /**
-     * Represents a system error result for the GetUserByUsername operation.
+     * Represents a system error result for the GetUserByEmail operation.
      *
      * @param message The error message describing the system error.
      * @param requestId The unique internal identifier for the request.
      * @param tracingId An optional tracing identifier for external request tracking.
      */
-    final class SystemError implements GetUserByUsernameResults {
+    final class SystemError implements GetUserByEmailQueryResults {
 
         @NotNull
-        @JsonProperty("requestId")
-        public final UUID requestId;
-
-        @NotNull
-        @JsonProperty("message")
         public final String message;
 
+        @NotNull
+        public final UUID requestId;
+
         @Nullable
-        @JsonProperty("tracingId")
         public final String tracingId;
 
         private SystemError(String message, UUID requestId, @Nullable String tracingId) {
@@ -165,10 +157,8 @@ public sealed interface GetUserByUsernameResults extends Serializable
             this.tracingId = tracingId;
         }
 
-        @JsonCreator
-        public static SystemError of(@JsonProperty("message") @NotNull String message,
-                @JsonProperty("requestId") @NotNull UUID requestId,
-                @JsonProperty("tracingId") @Nullable String tracingId) {
+        public static SystemError of(@NotEmpty String message, @NotNull UUID requestId,
+                @Nullable String tracingId) {
             var systemError = new SystemError(message, requestId, tracingId);
 
             var violations = DomainObjectInputValidator.instance.validate(systemError);
@@ -179,3 +169,4 @@ public sealed interface GetUserByUsernameResults extends Serializable
         }
     }
 }
+

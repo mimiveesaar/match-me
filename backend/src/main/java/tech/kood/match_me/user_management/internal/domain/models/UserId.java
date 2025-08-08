@@ -2,6 +2,8 @@ package tech.kood.match_me.user_management.internal.domain.models;
 
 import java.util.Objects;
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 public final class UserId {
     public final UUID value;
@@ -10,6 +12,13 @@ public final class UserId {
         if (value == null)
             throw new IllegalArgumentException("UserId cannot be null");
         this.value = value;
+    }
+
+    @JsonCreator
+    public UserId(String value) {
+        if (value == null || value.isEmpty())
+            throw new IllegalArgumentException("UserId cannot be null or empty");
+        this.value = UUID.fromString(value);
     }
 
     @Override
@@ -28,6 +37,7 @@ public final class UserId {
     }
 
     @Override
+    @JsonValue
     public String toString() {
         return value.toString();
     }

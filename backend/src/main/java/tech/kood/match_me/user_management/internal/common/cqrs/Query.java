@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.common;
+package tech.kood.match_me.user_management.internal.common.cqrs;
 
 import java.io.Serializable;
 

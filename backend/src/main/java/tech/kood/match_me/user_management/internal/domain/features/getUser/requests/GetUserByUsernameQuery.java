@@ -1,17 +1,15 @@
 package tech.kood.match_me.user_management.internal.domain.features.getUser.requests;
 
 import java.util.UUID;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
 
 
 /**
- * Represents a query to retrieve a user by their email address.
+ * Represents a query to retrieve a user by their username.
  * <p>
  * This class is immutable and uses Bean Validation annotations to ensure that the provided fields
  * meet the required constraints.
@@ -19,7 +17,7 @@ import tech.kood.match_me.user_management.internal.common.validation.DomainObjec
  *
  * <ul>
  * <li>{@code requestId}: A unique identifier for the request. Must not be null.</li>
- * <li>{@code email}: The email address of the user to retrieve. Must be a valid email address.</li>
+ * <li>{@code username}: The username of the user to retrieve. Must be a valid username.</li>
  * <li>{@code tracingId}: An optional tracing identifier for request tracking.</li>
  * </ul>
  *
@@ -29,48 +27,46 @@ import tech.kood.match_me.user_management.internal.common.validation.DomainObjec
  * constraints are violated.
  * </p>
  */
-public final class GetUserByEmailQuery
+public final class GetUserByUsernameQuery
         implements tech.kood.match_me.user_management.internal.common.cqrs.Query {
-
 
     @JsonProperty("requestId")
     @NotNull
     public final UUID requestId;
 
-    @JsonProperty("email")
-    @Email
-    public final String email;
+    @JsonProperty("username")
+    @NotNull
+    public final String username;
 
     @JsonProperty("tracingId")
     @Nullable
     public final String tracingId;
 
-    private GetUserByEmailQuery(@NotNull UUID requestId, @Email String email,
+    private GetUserByUsernameQuery(@NotNull UUID requestId, @NotNull String username,
             @Nullable String tracingId) {
         this.requestId = requestId;
-        this.email = email;
+        this.username = username;
         this.tracingId = tracingId;
     }
 
-    @JsonCreator
-    public static GetUserByEmailQuery of(@JsonProperty("requestId") @NotNull UUID requestId,
-            @JsonProperty("email") @Email String email,
+    public static GetUserByUsernameQuery of(@JsonProperty("requestId") @NotNull UUID requestId,
+            @JsonProperty("username") @NotNull String username,
             @JsonProperty("tracingId") @Nullable String tracingId) {
-        var query = new GetUserByEmailQuery(requestId, email, tracingId);
+        var query = new GetUserByUsernameQuery(requestId, username, tracingId);
         var violations = DomainObjectInputValidator.instance.validate(query);
 
         if (!violations.isEmpty()) {
-            throw new ConstraintViolationException("Invalid GetUserByEmailRequest: " + violations,
+            throw new ConstraintViolationException("Invalid GetUserByUsernameQuery: " + violations,
                     violations);
         }
         return query;
     }
 
-    public GetUserByEmailQuery withEmail(GetUserByEmailQuery query, String email) {
-        return GetUserByEmailQuery.of(query.requestId, email, query.tracingId);
+    public GetUserByUsernameQuery withUsername(GetUserByUsernameQuery query, String username) {
+        return GetUserByUsernameQuery.of(query.requestId, username, query.tracingId);
     }
 
-    public GetUserByEmailQuery withTracingId(GetUserByEmailQuery query, String tracingId) {
-        return GetUserByEmailQuery.of(query.requestId, query.email, tracingId);
+    public GetUserByUsernameQuery withTracingId(GetUserByUsernameQuery query, String tracingId) {
+        return GetUserByUsernameQuery.of(query.requestId, query.username, tracingId);
     }
 }
