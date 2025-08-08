@@ -1,17 +1,17 @@
 package tech.kood.match_me.user_management.internal.domain.features.getUser.results;
 
-import java.io.Serializable;
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+import tech.kood.match_me.user_management.internal.common.cqrs.Result;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
 import tech.kood.match_me.user_management.internal.domain.models.User;
 
-public sealed interface GetUserByUsernameResults extends Serializable
-        permits GetUserByUsernameResults.Success, GetUserByUsernameResults.UserNotFound,
-        GetUserByUsernameResults.SystemError, GetUserByUsernameResults.InvalidUsername {
+public sealed interface GetUserByUsernameQueryResults extends Result
+        permits GetUserByUsernameQueryResults.Success, GetUserByUsernameQueryResults.UserNotFound,
+        GetUserByUsernameQueryResults.SystemError {
 
     /**
      * Represents a successful result of fetching a user by username.
@@ -20,7 +20,7 @@ public sealed interface GetUserByUsernameResults extends Serializable
      * @param requestId The unique internal identifier for the request.
      * @param tracingId An optional tracing identifier for external request tracking.
      */
-    final class Success implements GetUserByUsernameResults {
+    final class Success implements GetUserByUsernameQueryResults {
 
         @NotNull
         @JsonProperty("requestId")
@@ -61,7 +61,7 @@ public sealed interface GetUserByUsernameResults extends Serializable
      * @param requestId The unique internal identifier for the request.
      * @param tracingId An optional tracing identifier for external request tracking.
      */
-    final class UserNotFound implements GetUserByUsernameResults {
+    final class UserNotFound implements GetUserByUsernameQueryResults {
 
         @NotNull
         @JsonProperty("requestId")
@@ -97,55 +97,13 @@ public sealed interface GetUserByUsernameResults extends Serializable
     }
 
     /**
-     * Represents the result of a failed attempt to retrieve a user by username due to an invalid
-     * username.
-     *
-     * @param username The username that was invalid.
-     * @param requestId The unique internal identifier for the request.
-     * @param tracingId An optional tracing identifier for external request tracking.
-     */
-    final class InvalidUsername implements GetUserByUsernameResults {
-
-        @NotNull
-        @JsonProperty("requestId")
-        public final UUID requestId;
-
-        @NotNull
-        @JsonProperty("username")
-        public final String username;
-
-        @Nullable
-        @JsonProperty("tracingId")
-        public final String tracingId;
-
-        private InvalidUsername(String username, UUID requestId, @Nullable String tracingId) {
-            this.username = username;
-            this.requestId = requestId;
-            this.tracingId = tracingId;
-        }
-
-        @JsonCreator
-        public static InvalidUsername of(@JsonProperty("username") @NotNull String username,
-                @JsonProperty("requestId") @NotNull UUID requestId,
-                @JsonProperty("tracingId") @Nullable String tracingId) {
-            var invalidUsername = new InvalidUsername(username, requestId, tracingId);
-
-            var violations = DomainObjectInputValidator.instance.validate(invalidUsername);
-            if (!violations.isEmpty()) {
-                throw new jakarta.validation.ConstraintViolationException(violations);
-            }
-            return invalidUsername;
-        }
-    }
-
-    /**
      * Represents a system error result for the GetUserByUsername operation.
      *
      * @param message The error message describing the system error.
      * @param requestId The unique internal identifier for the request.
      * @param tracingId An optional tracing identifier for external request tracking.
      */
-    final class SystemError implements GetUserByUsernameResults {
+    final class SystemError implements GetUserByUsernameQueryResults {
 
         @NotNull
         @JsonProperty("requestId")

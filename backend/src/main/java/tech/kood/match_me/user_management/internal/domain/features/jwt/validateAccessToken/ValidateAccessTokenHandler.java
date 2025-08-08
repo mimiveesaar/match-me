@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.interfaces.Claim;
-
+import tech.kood.match_me.user_management.internal.common.cqrs.QueryHandler;
 import tech.kood.match_me.user_management.internal.domain.models.AccessToken;
 
 @Service
-public class ValidateAccessTokenHandler {
+public class ValidateAccessTokenHandler implements QueryHandler<ValidateAccessTokenRequest, ValidateAccessTokenResults> {
 
     private final JWTVerifier jwtVerifier;
 

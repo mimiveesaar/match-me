@@ -5,11 +5,13 @@ import java.time.Instant;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import tech.kood.match_me.user_management.internal.common.cqrs.QueryHandler;
 import tech.kood.match_me.user_management.internal.database.repostitories.RefreshTokenRepository;
 import tech.kood.match_me.user_management.internal.mappers.RefreshTokenMapper;
 
 @Service
-public final class GetRefreshTokenHandler {
+public final class GetRefreshTokenHandler
+        implements QueryHandler<GetRefreshTokenRequest, GetRefreshTokenResults> {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -29,7 +31,6 @@ public final class GetRefreshTokenHandler {
      * <p>
      * This method performs the following steps:
      * <ul>
-     * <li>Validates that the token in the request is not null or blank.</li>
      * <li>Attempts to find a valid refresh token entity using the provided token and the current
      * time.</li>
      * <li>If the token is invalid or not found, returns an {@code InvalidToken} result.</li>
@@ -44,31 +45,24 @@ public final class GetRefreshTokenHandler {
      * @return a {@link GetRefreshTokenResults} representing the outcome of the operation
      */
     public GetRefreshTokenResults handle(GetRefreshTokenRequest request) {
-
-        if (request.token() == null || request.token().isBlank()) {
-            var result = new GetRefreshTokenResults.InvalidRequest(
-                    "Token must not be null or empty", request.tracingId());
-            events.publishEvent(new GetRefreshTokenEvent(request, result));
-            return result;
-        }
-
         try {
-
-            var tokenEntity = refreshTokenRepository.findValidToken(request.token(), Instant.now());
+            var tokenEntity = refreshTokenRepository.findValidToken(request.token, Instant.now());
             if (tokenEntity.isEmpty()) {
-                var result = new GetRefreshTokenResults.InvalidToken(request.token(),
-                        request.tracingId());
+                var result = GetRefreshTokenResults.InvalidToken.of(request.token,
+                        request.requestId, request.tracingId);
                 events.publishEvent(new GetRefreshTokenEvent(request, result));
                 return result;
             }
 
-            var result = new GetRefreshTokenResults.Success(
-                    refreshTokenMapper.toRefreshToken(tokenEntity.get()), request.tracingId());
+            var result = GetRefreshTokenResults.Success.of(
+                    refreshTokenMapper.toRefreshToken(tokenEntity.get()), request.requestId,
+                    request.tracingId);
             events.publishEvent(new GetRefreshTokenEvent(request, result));
             return result;
         } catch (Exception e) {
-            var result = new GetRefreshTokenResults.SystemError(
-                    "An unexpected error occurred: " + e.getMessage(), request.tracingId());
+            var result = GetRefreshTokenResults.SystemError.of(
+                    "An unexpected error occurred: " + e.getMessage(), request.requestId,
+                    request.tracingId);
             events.publishEvent(new GetRefreshTokenEvent(request, result));
             return result;
         }

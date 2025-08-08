@@ -17,7 +17,7 @@ import tech.kood.match_me.user_management.internal.domain.features.getUser.reque
 import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByUsernameQuery;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByEmailQueryResults;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByIdQueryResults;
-import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByUsernameResults;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByUsernameQueryResults;
 import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserHandler;
 import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
@@ -57,7 +57,7 @@ public class GetUserTests extends UserManagementTestBase {
                                 UUID.randomUUID().toString());
 
                 var getResult = getUserHandler.handle(getRequest);
-                assert getResult instanceof GetUserByUsernameResults.Success;
+                assert getResult instanceof GetUserByUsernameQueryResults.Success;
         }
 
         @Test
@@ -96,7 +96,7 @@ public class GetUserTests extends UserManagementTestBase {
                                 "nonexistentuser", UUID.randomUUID().toString());
 
                 var getResult = getUserHandler.handle(getRequest);
-                assert getResult instanceof GetUserByUsernameResults.UserNotFound;
+                assert getResult instanceof GetUserByUsernameQueryResults.UserNotFound;
         }
 
         @Test
@@ -131,8 +131,8 @@ public class GetUserTests extends UserManagementTestBase {
                                 username2, UUID.randomUUID().toString());
                 var getResult1 = getUserHandler.handle(getRequest1);
                 var getResult2 = getUserHandler.handle(getRequest2);
-                assert getResult1 instanceof GetUserByUsernameResults.Success;
-                assert getResult2 instanceof GetUserByUsernameResults.Success;
+                assert getResult1 instanceof GetUserByUsernameQueryResults.Success;
+                assert getResult2 instanceof GetUserByUsernameQueryResults.Success;
         }
 
         @Test

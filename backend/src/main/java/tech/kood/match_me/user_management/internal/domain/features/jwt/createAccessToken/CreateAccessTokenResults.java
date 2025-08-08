@@ -1,15 +1,15 @@
 package tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken;
 
-import java.io.Serializable;
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import tech.kood.match_me.user_management.internal.common.cqrs.Result;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
 
-public sealed interface CreateAccessTokenResults extends Serializable
+public sealed interface CreateAccessTokenResults extends Result
         permits CreateAccessTokenResults.Success, CreateAccessTokenResults.InvalidToken,
         CreateAccessTokenResults.SystemError {
 

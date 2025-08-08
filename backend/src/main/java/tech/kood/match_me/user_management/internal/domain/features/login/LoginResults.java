@@ -1,34 +1,129 @@
 package tech.kood.match_me.user_management.internal.domain.features.login;
 
+import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import tech.kood.match_me.user_management.internal.common.cqrs.Result;
+import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
 import tech.kood.match_me.user_management.internal.domain.models.RefreshToken;
 import tech.kood.match_me.user_management.internal.domain.models.User;
 
-public sealed interface LoginResults permits LoginResults.Success, LoginResults.InvalidCredentials,
-        LoginResults.InvalidRequest, LoginResults.SystemError {
+public sealed interface LoginResults extends Result
+        permits LoginResults.Success, LoginResults.InvalidCredentials, LoginResults.SystemError {
 
-    record Success(RefreshToken refreshToken, User user, @Nullable String tracingId)
-            implements LoginResults {
-    }
+    final class Success implements LoginResults {
 
+        @NotNull
+        @JsonProperty("requestId")
+        public final UUID requestId;
 
-    record InvalidCredentials(String username, String password, @Nullable String tracingId)
-            implements LoginResults {
-        public InvalidCredentials(String username, String password) {
-            this(username, password, null);
+        @NotNull
+        @JsonProperty("refreshToken")
+        public final RefreshToken refreshToken;
+
+        @NotNull
+        @JsonProperty("user")
+        public final User user;
+
+        @Nullable
+        @JsonProperty("tracingId")
+        public final String tracingId;
+
+        private Success(RefreshToken refreshToken, User user, UUID requestId,
+                @Nullable String tracingId) {
+            this.refreshToken = refreshToken;
+            this.user = user;
+            this.requestId = requestId;
+            this.tracingId = tracingId;
+        }
+
+        @JsonCreator
+        public static Success of(@JsonProperty("refreshToken") @NotNull RefreshToken refreshToken,
+                @JsonProperty("user") @NotNull User user,
+                @JsonProperty("requestId") @NotNull UUID requestId,
+                @JsonProperty("tracingId") @Nullable String tracingId) {
+            var success = new Success(refreshToken, user, requestId, tracingId);
+            var violations = DomainObjectInputValidator.instance.validate(success);
+            if (!violations.isEmpty()) {
+                throw new jakarta.validation.ConstraintViolationException(violations);
+            }
+            return success;
         }
     }
 
+    final class InvalidCredentials implements LoginResults {
 
-    record InvalidRequest(String message, @Nullable String tracingId) implements LoginResults {
-        public InvalidRequest() {
-            this("Invalid login request.", null);
+        @NotNull
+        @JsonProperty("requestId")
+        public final UUID requestId;
+
+        @NotEmpty
+        @JsonProperty("email")
+        public final String email;
+
+        @NotEmpty
+        @JsonProperty("password")
+        public final String password;
+
+        @Nullable
+        @JsonProperty("tracingId")
+        public final String tracingId;
+
+        private InvalidCredentials(String email, String password, UUID requestId,
+                @Nullable String tracingId) {
+            this.email = email;
+            this.password = password;
+            this.requestId = requestId;
+            this.tracingId = tracingId;
+        }
+
+        @JsonCreator
+        public static InvalidCredentials of(@JsonProperty("email") @NotEmpty String email,
+                @JsonProperty("password") @NotEmpty String password,
+                @JsonProperty("requestId") @NotNull UUID requestId,
+                @JsonProperty("tracingId") @Nullable String tracingId) {
+            var invalidCreds = new InvalidCredentials(email, password, requestId, tracingId);
+            var violations = DomainObjectInputValidator.instance.validate(invalidCreds);
+            if (!violations.isEmpty()) {
+                throw new jakarta.validation.ConstraintViolationException(violations);
+            }
+            return invalidCreds;
         }
     }
 
-    record SystemError(String message, @Nullable String tracingId) implements LoginResults {
-        public SystemError() {
-            this("An unexpected error occurred during login.", null);
+    final class SystemError implements LoginResults {
+
+        @NotNull
+        @JsonProperty("requestId")
+        public final UUID requestId;
+
+        @NotEmpty
+        @JsonProperty("message")
+        public final String message;
+
+        @Nullable
+        @JsonProperty("tracingId")
+        public final String tracingId;
+
+        private SystemError(String message, UUID requestId, @Nullable String tracingId) {
+            this.message = message;
+            this.requestId = requestId;
+            this.tracingId = tracingId;
+        }
+
+        @JsonCreator
+        public static SystemError of(@JsonProperty("message") @NotEmpty String message,
+                @JsonProperty("requestId") @NotNull UUID requestId,
+                @JsonProperty("tracingId") @Nullable String tracingId) {
+            var systemError = new SystemError(message, requestId, tracingId);
+            var violations = DomainObjectInputValidator.instance.validate(systemError);
+            if (!violations.isEmpty()) {
+                throw new jakarta.validation.ConstraintViolationException(violations);
+            }
+            return systemError;
         }
     }
 }

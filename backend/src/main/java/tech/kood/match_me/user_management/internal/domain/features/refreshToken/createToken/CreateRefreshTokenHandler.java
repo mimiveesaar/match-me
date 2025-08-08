@@ -4,12 +4,16 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import tech.kood.match_me.user_management.UserManagementConfig;
+import tech.kood.match_me.user_management.internal.common.cqrs.CommandHandler;
 import tech.kood.match_me.user_management.internal.database.repostitories.RefreshTokenRepository;
 import tech.kood.match_me.user_management.internal.domain.features.refreshToken.RefreshTokenFactory;
+import tech.kood.match_me.user_management.internal.domain.models.RefreshToken;
 import tech.kood.match_me.user_management.internal.mappers.RefreshTokenMapper;
 
+import java.util.UUID;
+
 @Service
-public class CreateRefreshTokenHandler {
+public class CreateRefreshTokenHandler implements CommandHandler<CreateRefreshTokenRequest, CreateRefreshTokenResults> {
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final RefreshTokenFactory refreshTokenFactory;
@@ -17,12 +21,9 @@ public class CreateRefreshTokenHandler {
     private final UserManagementConfig userManagementConfig;
     private final RefreshTokenMapper refreshTokenMapper;
 
-    public CreateRefreshTokenHandler(
-            RefreshTokenRepository refreshTokenRepository,
-            ApplicationEventPublisher events,
-            RefreshTokenFactory refreshTokenFactory,
-            RefreshTokenMapper refreshTokenMapper,
-            UserManagementConfig userManagementConfig) {
+    public CreateRefreshTokenHandler(RefreshTokenRepository refreshTokenRepository,
+            ApplicationEventPublisher events, RefreshTokenFactory refreshTokenFactory,
+            RefreshTokenMapper refreshTokenMapper, UserManagementConfig userManagementConfig) {
 
         this.refreshTokenRepository = refreshTokenRepository;
         this.events = events;
@@ -34,30 +35,18 @@ public class CreateRefreshTokenHandler {
     public CreateRefreshTokenResults handle(CreateRefreshTokenRequest request) {
 
         try {
-            // Validate the request
-            if (request.user() == null) {
-                var result = new CreateRefreshTokenResults.InvalidRequest("User ID must not be null", request.tracingId());
-                events.publishEvent(new CreateRefreshTokenEvent(request, result));
-                return result;
-            }
-
-            if (request.user().toString().isBlank()) {
-                var result = new CreateRefreshTokenResults.InvalidRequest("User ID must not be blank", request.tracingId());
-                events.publishEvent(new CreateRefreshTokenEvent(request, result));
-                return result;
-            }
-
             // We assume the user exists, as this is a refresh token operation.
             // Create a new refresh token
-            var refreshToken = this.refreshTokenFactory.create(request.user().id());
+            RefreshToken refreshToken = this.refreshTokenFactory.create(request.user.id());
             var refreshTokenEntity = refreshTokenMapper.toEntity(refreshToken);
             refreshTokenRepository.save(refreshTokenEntity);
 
-            var result = new CreateRefreshTokenResults.Success(refreshToken);
+            var result = CreateRefreshTokenResults.Success.of(refreshToken, UUID.fromString(request.requestId), request.tracingId);
             events.publishEvent(new CreateRefreshTokenEvent(request, result));
             return result;
         } catch (Exception e) {
-            var result = new CreateRefreshTokenResults.SystemError("An unexpected error occurred", request.tracingId());
+            var result = CreateRefreshTokenResults.SystemError.of("An unexpected error occurred",
+                    UUID.fromString(request.requestId), request.tracingId);
             events.publishEvent(new CreateRefreshTokenEvent(request, result));
             return result;
         }

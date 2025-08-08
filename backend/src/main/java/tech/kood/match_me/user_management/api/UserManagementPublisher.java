@@ -8,7 +8,7 @@ import tech.kood.match_me.user_management.internal.domain.features.getUser.reque
 import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByUsernameQuery;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByEmailQueryResults;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByIdQueryResults;
-import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByUsernameResults;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByUsernameQueryResults;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenResults;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
@@ -43,9 +43,9 @@ public class UserManagementPublisher {
                 request, GetUserByIdQueryResults.class);
     }
 
-    public GetUserByUsernameResults publish(GetUserByUsernameQuery request) {
+    public GetUserByUsernameQueryResults publish(GetUserByUsernameQuery request) {
         return jmsMessaging.convertSendAndReceive(UserManagementMessaging.USER_MANAGEMENT_QUEUE,
-                request, GetUserByUsernameResults.class);
+                request, GetUserByUsernameQueryResults.class);
     }
 
     public GetUserByEmailQueryResults publish(GetUserByEmailQuery request) {

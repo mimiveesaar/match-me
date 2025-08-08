@@ -1,18 +1,18 @@
 package tech.kood.match_me.user_management.internal.domain.features.getUser.results;
 
-import java.io.Serializable;
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+import tech.kood.match_me.user_management.internal.common.cqrs.Result;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
 import tech.kood.match_me.user_management.internal.domain.models.User;
 import tech.kood.match_me.user_management.internal.domain.models.UserId;
 
-public sealed interface GetUserByIdQueryResults extends Serializable
+public sealed interface GetUserByIdQueryResults extends Result
         permits GetUserByIdQueryResults.Success, GetUserByIdQueryResults.UserNotFound,
-        GetUserByIdQueryResults.SystemError, GetUserByIdQueryResults.InvalidUserId {
+        GetUserByIdQueryResults.SystemError {
 
     /**
      * Represents a successful result of fetching a user by ID.
@@ -94,38 +94,6 @@ public sealed interface GetUserByIdQueryResults extends Serializable
             }
 
             return userNotFound;
-        }
-    }
-
-    /**
-     * Represents the result of a failed attempt to retrieve a user by ID due to an invalid user ID.
-     *
-     * @param requestId The unique internal identifier for the request.
-     * @param tracingId An optional tracing identifier for external request tracking.
-     */
-    final class InvalidUserId implements GetUserByIdQueryResults {
-
-        @NotNull
-        public final UUID requestId;
-
-        @Nullable
-        public final String tracingId;
-
-        private InvalidUserId(UUID requestId, @Nullable String tracingId) {
-            this.requestId = requestId;
-            this.tracingId = tracingId;
-        }
-
-        @JsonCreator
-        public static InvalidUserId of(@JsonProperty("requestId") @NotNull UUID requestId,
-                @JsonProperty("tracingId") @Nullable String tracingId) {
-            var invalidUserId = new InvalidUserId(requestId, tracingId);
-
-            var violations = DomainObjectInputValidator.instance.validate(invalidUserId);
-            if (!violations.isEmpty()) {
-                throw new jakarta.validation.ConstraintViolationException(violations);
-            }
-            return invalidUserId;
         }
     }
 

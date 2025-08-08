@@ -2,7 +2,7 @@ package tech.kood.match_me.user_management.api;
 
 import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByEmailQueryResults;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByIdQueryResults;
-import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByUsernameResults;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByUsernameQueryResults;
 import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserRequest;
 import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserResults;
 
@@ -28,9 +28,9 @@ public interface UserManagement {
      * Retrieves user information based on the provided username.
      *
      * @param request The request object containing the username to search for.
-     * @return A {@link GetUserByUsernameResults} object containing the user details if found.
+     * @return A {@link GetUserByUsernameQueryResults} object containing the user details if found.
      */
-    GetUserByUsernameResults getUserByUsername(GetUserByUsernameResults request);
+    GetUserByUsernameQueryResults getUserByUsername(GetUserByUsernameQueryResults request);
 
     /**
      * Retrieves user information based on the provided user ID.

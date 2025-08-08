@@ -10,12 +10,14 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
 import tech.kood.match_me.user_management.UserManagementConfig;
+import tech.kood.match_me.user_management.internal.common.cqrs.CommandHandler;
 import tech.kood.match_me.user_management.internal.domain.features.refreshToken.getToken.GetRefreshTokenHandler;
 import tech.kood.match_me.user_management.internal.domain.features.refreshToken.getToken.GetRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.domain.features.refreshToken.getToken.GetRefreshTokenResults;
 
 @Service
-public class CreateAccessTokenHandler {
+public class CreateAccessTokenHandler
+                implements CommandHandler<CreateAccessTokenRequest, CreateAccessTokenResults> {
 
         private final ApplicationEventPublisher events;
 
@@ -37,13 +39,13 @@ public class CreateAccessTokenHandler {
 
         public CreateAccessTokenResults handle(CreateAccessTokenRequest request) {
                 try {
-                        var refreshTokenResult =
-                                        getRefreshTokenHandler.handle(new GetRefreshTokenRequest(
+                        var refreshTokenResult = getRefreshTokenHandler
+                                        .handle(GetRefreshTokenRequest.of(request.requestId,
                                                         request.refreshToken, request.tracingId));
 
                         if (refreshTokenResult instanceof GetRefreshTokenResults.InvalidToken invalidToken) {
                                 var result = CreateAccessTokenResults.InvalidToken.of(
-                                                invalidToken.token(), request.requestId,
+                                                invalidToken.token, request.requestId,
                                                 request.tracingId);
                                 events.publishEvent(new CreateAccessTokenEvent(request, result));
                                 return result;
@@ -51,7 +53,7 @@ public class CreateAccessTokenHandler {
 
                         if (refreshTokenResult instanceof GetRefreshTokenResults.SystemError systemError) {
                                 var result = CreateAccessTokenResults.SystemError.of(
-                                                systemError.message(), request.requestId,
+                                                systemError.message, request.requestId,
                                                 request.tracingId);
                                 events.publishEvent(new CreateAccessTokenEvent(request, result));
                                 return result;

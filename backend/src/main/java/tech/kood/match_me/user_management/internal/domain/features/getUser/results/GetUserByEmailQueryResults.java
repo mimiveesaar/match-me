@@ -1,6 +1,5 @@
 package tech.kood.match_me.user_management.internal.domain.features.getUser.results;
 
-import java.io.Serializable;
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,15 +7,32 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import tech.kood.match_me.user_management.internal.common.cqrs.Result;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
 import tech.kood.match_me.user_management.internal.domain.models.User;
 
 
-public sealed interface GetUserByEmailQueryResults extends Serializable
+public sealed interface GetUserByEmailQueryResults extends Result
         permits GetUserByEmailQueryResults.Success, GetUserByEmailQueryResults.UserNotFound,
-        GetUserByEmailQueryResults.SystemError, GetUserByEmailQueryResults.InvalidEmail {
+        GetUserByEmailQueryResults.SystemError {
 
 
+    /**
+     * Represents a successful result of the GetUserByEmail query.
+     * <p>
+     * This class encapsulates the details of a successful user retrieval operation, including the
+     * user information, the request identifier, and an optional tracing ID.
+     * </p>
+     *
+     * <p>
+     * Instances of this class are immutable and can only be created via the static
+     * {@link #of(User, UUID, String)} factory method, which also performs validation using
+     * {@link DomainObjectInputValidator}.
+     * </p>
+     *
+     * @implNote This class is package-private and intended for internal use within the user
+     *           management domain.
+     */
     final class Success implements GetUserByEmailQueryResults {
 
         @NotNull
@@ -91,45 +107,6 @@ public sealed interface GetUserByEmailQueryResults extends Serializable
             }
 
             return userNotFound;
-        }
-    }
-
-    /**
-     * Represents the result of a failed attempt to retrieve a user by email due to an invalid email
-     * format.
-     *
-     * @param email The email that was invalid.
-     * @param requestId The unique internal identifier for the request.
-     * @param tracingId An optional tracing identifier for external request tracking.
-     */
-    final class InvalidEmail implements GetUserByEmailQueryResults {
-
-        @NotNull
-        public final UUID requestId;
-
-        @NotNull
-        public final String email;
-
-        @Nullable
-        public final String tracingId;
-
-        private InvalidEmail(String email, UUID requestId, @Nullable String tracingId) {
-            this.email = email;
-            this.requestId = requestId;
-            this.tracingId = tracingId;
-        }
-
-        @JsonCreator
-        public static InvalidEmail of(@JsonProperty("email") @NotNull String email,
-                @JsonProperty("requestId") @NotNull UUID requestId,
-                @JsonProperty("tracingId") @Nullable String tracingId) {
-            var invalidEmail = new InvalidEmail(email, requestId, tracingId);
-
-            var violations = DomainObjectInputValidator.instance.validate(invalidEmail);
-            if (!violations.isEmpty()) {
-                throw new jakarta.validation.ConstraintViolationException(violations);
-            }
-            return invalidEmail;
         }
     }
 

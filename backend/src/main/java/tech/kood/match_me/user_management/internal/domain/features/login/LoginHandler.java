@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-
+import tech.kood.match_me.user_management.internal.common.cqrs.CommandHandler;
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
 import tech.kood.match_me.user_management.internal.domain.features.refreshToken.createToken.CreateRefreshTokenHandler;
 import tech.kood.match_me.user_management.internal.domain.features.refreshToken.createToken.CreateRefreshTokenRequest;
@@ -13,7 +13,7 @@ import tech.kood.match_me.user_management.internal.mappers.UserMapper;
 import tech.kood.match_me.user_management.internal.utils.PasswordUtils;
 
 @Service
-public final class LoginHandler {
+public final class LoginHandler implements CommandHandler<LoginRequest, LoginResults> {
 
     private final UserRepository userRepository;
     private final CreateRefreshTokenHandler createRefreshTokenHandler;
@@ -31,65 +31,45 @@ public final class LoginHandler {
 
     public LoginResults handle(LoginRequest request) {
         try {
-            if (request.email() == null || request.password() == null) {
 
-                var result = new LoginResults.InvalidRequest("Email and password must not be null",
-                        request.tracingId());
-
-                events.publishEvent(new LoginEvent(request, result));
-                return result;
-            }
-
-            if (request.email().isBlank() || request.password().isBlank()) {
-                var result = new LoginResults.InvalidRequest("Email and password cannot be empty.",
-                        request.tracingId());
-
-                events.publishEvent(new LoginEvent(request, result));
-                return result;
-            }
-
-            var userEntity = userRepository.findUserByEmail(request.email());
+            var userEntity = userRepository.findUserByEmail(request.email);
             if (userEntity.isEmpty()) {
-                var result =
-                        new LoginResults.InvalidCredentials(request.email(), request.password());
-
+                var result = LoginResults.InvalidCredentials.of(request.email, request.password,
+                        request.requestId, request.tracingId);
                 events.publishEvent(new LoginEvent(request, result));
                 return result;
             }
 
             var foundUser = userMapper.toUser(userEntity.get());
 
-            // Check if the provided password matches the stored hashed password.
-            if (!PasswordUtils.matches(request.password(), foundUser.password())) {
-                var result =
-                        new LoginResults.InvalidCredentials(request.email(), request.password());
-
+            if (!PasswordUtils.matches(request.password, foundUser.password())) {
+                var result = LoginResults.InvalidCredentials.of(request.email, request.password,
+                        request.requestId, request.tracingId);
                 events.publishEvent(new LoginEvent(request, result));
                 return result;
             }
 
-            var refreshTokenRequest = new CreateRefreshTokenRequest(UUID.randomUUID().toString(),
-                    foundUser, request.tracingId());
+            var refreshTokenRequest = CreateRefreshTokenRequest.of(UUID.randomUUID().toString(),
+                    foundUser, request.tracingId);
 
             var tokenResult = createRefreshTokenHandler.handle(refreshTokenRequest);
 
-            if (!(tokenResult instanceof CreateRefreshTokenResults.Success)) {
-                var result = new LoginResults.SystemError("Failed to create refresh token.",
-                        request.tracingId());
+            if (!(tokenResult instanceof CreateRefreshTokenResults.Success successResult)) {
+                var result = LoginResults.SystemError.of("Failed to create refresh token.",
+                        request.requestId, request.tracingId);
                 events.publishEvent(new LoginEvent(request, result));
                 return result;
             }
 
-            var result = new LoginResults.Success(
-                    ((CreateRefreshTokenResults.Success) tokenResult).refreshToken(), foundUser,
-                    request.tracingId());
+            var result = LoginResults.Success.of(successResult.refreshToken, foundUser,
+                    request.requestId, request.tracingId);
             events.publishEvent(new LoginEvent(request, result));
             return result;
 
         } catch (Exception e) {
-            var result = new LoginResults.SystemError(
+            var result = LoginResults.SystemError.of(
                     "An unexpected error occurred during login: " + e.getMessage(),
-                    request.tracingId());
+                    request.requestId, request.tracingId);
             events.publishEvent(new LoginEvent(request, result));
             return result;
         }
