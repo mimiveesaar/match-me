@@ -1,6 +1,9 @@
 package tech.kood.match_me.user_management.internal.domain.models;
 
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.NotBlank;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
 
@@ -21,12 +24,24 @@ import tech.kood.match_me.user_management.internal.common.validation.DomainObjec
 public final class AccessToken {
 
     @NotBlank
-    public final String jwt;
+    private final String jwt;
 
     @NotBlank
-    public final String userId;
+    private final UserId userId;
 
-    private AccessToken(String jwt, String userId) {
+    @JsonProperty("jwt")
+    @Nonnull
+    public String getJwt() {
+        return jwt;
+    }
+
+    @JsonProperty("userId")
+    @Nonnull
+    public UserId getUserId() {
+        return userId;
+    }
+
+    private AccessToken(String jwt, UserId userId) {
         this.jwt = jwt;
         this.userId = userId;
     }
@@ -39,7 +54,9 @@ public final class AccessToken {
      * @return a new AccessToken instance
      * @throws IllegalArgumentException if jwt or userId are invalid
      */
-    public static AccessToken of(String jwt, String userId) {
+
+    @JsonCreator
+    public static AccessToken of(String jwt, UserId userId) {
         var accessToken = new AccessToken(jwt, userId);
         var violations = DomainObjectInputValidator.instance.validate(accessToken);
         if (!violations.isEmpty()) {
@@ -52,7 +69,7 @@ public final class AccessToken {
         return AccessToken.of(newJwt, this.userId);
     }
 
-    public AccessToken withUserId(String newUserId) {
+    public AccessToken withUserId(UserId newUserId) {
         return AccessToken.of(this.jwt, newUserId);
     }
 

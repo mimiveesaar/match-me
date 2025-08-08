@@ -24,16 +24,28 @@ public sealed interface CreateAccessTokenResults extends Result
     final class Success implements CreateAccessTokenResults {
 
         @NotNull
-        @JsonProperty("requestId")
-        public final UUID requestId;
+        private final UUID requestId;
 
         @NotEmpty
-        @JsonProperty("jwt")
-        public final String jwt;
+        private final String jwt;
 
         @Nullable
+        private final String tracingId;
+
+        @JsonProperty("requestId")
+        public UUID getRequestId() {
+            return requestId;
+        }
+
+        @JsonProperty("jwt")
+        public String getJwt() {
+            return jwt;
+        }
+
         @JsonProperty("tracingId")
-        public final String tracingId;
+        public String getTracingId() {
+            return tracingId;
+        }
 
         private Success(String jwt, UUID requestId, String tracingId) {
             this.jwt = jwt;
@@ -65,16 +77,28 @@ public sealed interface CreateAccessTokenResults extends Result
     final class InvalidToken implements CreateAccessTokenResults {
 
         @NotNull
-        @JsonProperty("requestId")
-        public final UUID requestId;
+        private final UUID requestId;
 
         @NotEmpty
-        @JsonProperty("token")
-        public final String token;
+        private final String token;
 
         @Nullable
+        private final String tracingId;
+
+        @JsonProperty("requestId")
+        public UUID getRequestId() {
+            return requestId;
+        }
+
+        @JsonProperty("token")
+        public String getToken() {
+            return token;
+        }
+
         @JsonProperty("tracingId")
-        public final String tracingId;
+        public String getTracingId() {
+            return tracingId;
+        }
 
         private InvalidToken(String token, UUID requestId, @Nullable String tracingId) {
             this.token = token;
@@ -107,16 +131,28 @@ public sealed interface CreateAccessTokenResults extends Result
     final class SystemError implements CreateAccessTokenResults {
 
         @NotNull
-        @JsonProperty("requestId")
-        public final UUID requestId;
+        private final UUID requestId;
 
         @NotEmpty
-        @JsonProperty("message")
-        public final String message;
+        private final String message;
 
         @Nullable
+        private final String tracingId;
+
+        @JsonProperty("requestId")
+        public UUID getRequestId() {
+            return requestId;
+        }
+
+        @JsonProperty("message")
+        public String getMessage() {
+            return message;
+        }
+
         @JsonProperty("tracingId")
-        public final String tracingId;
+        public String getTracingId() {
+            return tracingId;
+        }
 
         private SystemError(String message, UUID requestId, @Nullable String tracingId) {
             this.message = message;

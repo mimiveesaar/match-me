@@ -1,7 +1,11 @@
 package tech.kood.match_me.user_management.internal.domain.models;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nonnull;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -27,25 +31,61 @@ import tech.kood.match_me.user_management.internal.common.validation.DomainObjec
  * Provides "with" methods to create modified copies of the user with updated fields.
  * </p>
  */
-public final class User {
+public final class User implements Serializable {
 
     @NotNull
-    public final UserId id;
+    private final UserId id;
 
     @NotBlank
-    public final String username;
+    private final String username;
 
     @Email
-    public final String email;
+    private final String email;
 
     @NotNull
-    public final HashedPassword password;
+    private final HashedPassword password;
 
     @NotNull
-    public final Instant createdAt;
+    private final Instant createdAt;
 
     @NotNull
-    public final Instant updatedAt;
+    private final Instant updatedAt;
+
+    @Nonnull
+    @JsonProperty("id")
+    public UserId getId() {
+        return id;
+    }
+
+    @Nonnull
+    @JsonProperty("username")
+    public String getUsername() {
+        return username;
+    }
+
+    @Nonnull
+    @JsonProperty("email")
+    public String getEmail() {
+        return email;
+    }
+
+    @Nonnull
+    @JsonProperty("password")
+    public HashedPassword getPassword() {
+        return password;
+    }
+
+    @Nonnull
+    @JsonProperty("createdAt")
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    @Nonnull
+    @JsonProperty("updatedAt")
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
 
     private User(@NotNull UserId id, @NotBlank String username, @NotBlank String email,
             @NotNull HashedPassword password, @NotNull Instant createdAt,
@@ -58,6 +98,7 @@ public final class User {
         this.updatedAt = updatedAt;
     }
 
+    @JsonCreator
     public static User of(@NotNull UserId id, @NotBlank String username, @NotBlank String email,
             @NotNull HashedPassword password, @NotNull Instant createdAt,
             @NotNull Instant updatedAt) {
@@ -81,7 +122,7 @@ public final class User {
 
     @Override
     public int hashCode() {
-        return id.value.hashCode();
+        return id.getValue().hashCode();
     }
 
     @Override

@@ -3,6 +3,7 @@ package tech.kood.match_me.user_management.internal.domain.features.getUser.requ
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.Email;
@@ -32,18 +33,33 @@ import tech.kood.match_me.user_management.internal.common.validation.DomainObjec
 public final class GetUserByEmailQuery
         implements tech.kood.match_me.user_management.internal.common.cqrs.Query {
 
+    @NotNull
+    private final UUID requestId;
+
+    @Email
+    @NotNull
+    private final String email;
+
+    @Nullable
+    private final String tracingId;
 
     @JsonProperty("requestId")
-    @NotNull
-    public final UUID requestId;
+    @Nonnull
+    public UUID getRequestId() {
+        return requestId;
+    }
 
     @JsonProperty("email")
-    @Email
-    public final String email;
+    @Nonnull
+    public String getEmail() {
+        return email;
+    }
 
     @JsonProperty("tracingId")
     @Nullable
-    public final String tracingId;
+    public String getTracingId() {
+        return tracingId;
+    }
 
     private GetUserByEmailQuery(@NotNull UUID requestId, @Email String email,
             @Nullable String tracingId) {

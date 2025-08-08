@@ -10,7 +10,8 @@ import tech.kood.match_me.user_management.internal.common.cqrs.QueryHandler;
 import tech.kood.match_me.user_management.internal.domain.models.AccessToken;
 
 @Service
-public class ValidateAccessTokenHandler implements QueryHandler<ValidateAccessTokenRequest, ValidateAccessTokenResults> {
+public class ValidateAccessTokenHandler
+        implements QueryHandler<ValidateAccessTokenRequest, ValidateAccessTokenResults> {
 
     private final JWTVerifier jwtVerifier;
 
@@ -26,19 +27,19 @@ public class ValidateAccessTokenHandler implements QueryHandler<ValidateAccessTo
     public ValidateAccessTokenResults handle(ValidateAccessTokenRequest request) {
         try {
 
-            var decodedJWT = jwtVerifier.verify(request.jwtToken);
+            var decodedJWT = jwtVerifier.verify(request.jwtToken());
             Claim userId = decodedJWT.getClaim("userId");
 
 
-            var accessToken = new AccessToken(request.jwtToken, userId.asString());
-            var result = ValidateAccessTokenResults.Success.of(accessToken, request.requestId,
-                    request.tracingId);
+            var accessToken = new AccessToken(request.jwtToken(), userId.asString());
+            var result = ValidateAccessTokenResults.Success.of(accessToken, request.requestId(),
+                    request.tracingId());
             events.publishEvent(new ValidateAccessTokenEvent(request, result));
 
             return result;
         } catch (Exception e) {
-            var result = ValidateAccessTokenResults.InvalidToken.of(request.jwtToken,
-                    request.requestId, request.tracingId);
+            var result = ValidateAccessTokenResults.InvalidToken.of(request.jwtToken(),
+                    request.requestId(), request.tracingId());
             events.publishEvent(new ValidateAccessTokenEvent(request, result));
             return result;
         }

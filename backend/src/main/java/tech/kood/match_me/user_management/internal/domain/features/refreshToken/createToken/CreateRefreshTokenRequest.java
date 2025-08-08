@@ -14,14 +14,14 @@ import tech.kood.match_me.user_management.internal.domain.models.User;
  * optional tracing ID for tracking purposes.
  *
  * <ul>
- *   <li>{@code requestId} - Unique identifier for the refresh token request (must not be null).</li>
- *   <li>{@code user} - User for whom the refresh token is being created (must not be null).</li>
- *   <li>{@code tracingId} - Optional tracing identifier for request tracking (nullable).</li>
+ * <li>{@code requestId} - Unique identifier for the refresh token request (must not be null).</li>
+ * <li>{@code user} - User for whom the refresh token is being created (must not be null).</li>
+ * <li>{@code tracingId} - Optional tracing identifier for request tracking (nullable).</li>
  * </ul>
  *
  * <p>
- * Use the static factory method {@link #of(String, User, String)} to create instances, which performs validation.
- * If validation fails, a {@link ConstraintViolationException} is thrown.
+ * Use the static factory method {@link #of(String, User, String)} to create instances, which
+ * performs validation. If validation fails, a {@link ConstraintViolationException} is thrown.
  * </p>
  *
  * <p>
@@ -30,17 +30,30 @@ import tech.kood.match_me.user_management.internal.domain.models.User;
  */
 public final class CreateRefreshTokenRequest implements Command {
 
-    @JsonProperty("requestId")
     @UUID
-    public final String requestId;
+    private final String requestId;
+
+    @NotNull
+    private final User user;
+
+    @Nullable
+    private final String tracingId;
+
+
+    @JsonProperty("requestId")
+    public String getRequestId() {
+        return requestId;
+    }
 
     @JsonProperty("user")
-    @NotNull
-    public final User user;
+    public User getUser() {
+        return user;
+    }
 
     @JsonProperty("tracingId")
-    @Nullable
-    public final String tracingId;
+    public String getTracingId() {
+        return tracingId;
+    }
 
     private CreateRefreshTokenRequest(@UUID String requestId, @NotNull User user,
             @Nullable String tracingId) {
@@ -49,6 +62,7 @@ public final class CreateRefreshTokenRequest implements Command {
         this.tracingId = tracingId;
     }
 
+
     public static CreateRefreshTokenRequest of(@JsonProperty("requestId") @UUID String requestId,
             @JsonProperty("user") @NotNull User user,
             @JsonProperty("tracingId") @Nullable String tracingId) {
@@ -56,8 +70,8 @@ public final class CreateRefreshTokenRequest implements Command {
         var violations = DomainObjectInputValidator.instance.validate(request);
 
         if (!violations.isEmpty()) {
-            throw new ConstraintViolationException("Invalid CreateRefreshTokenRequest: " + violations,
-                    violations);
+            throw new ConstraintViolationException(
+                    "Invalid CreateRefreshTokenRequest: " + violations, violations);
         }
         return request;
     }

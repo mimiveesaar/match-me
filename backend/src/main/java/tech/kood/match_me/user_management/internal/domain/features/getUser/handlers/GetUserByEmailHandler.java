@@ -25,7 +25,7 @@ public class GetUserByEmailHandler
     }
 
     public GetUserByEmailQueryResults handle(GetUserByEmailQuery request) {
-        String email = request.email;
+        String email = request.getEmail();
 
         try {
             var userQueryResult = userRepository.findUserByEmail(email);
@@ -33,20 +33,20 @@ public class GetUserByEmailHandler
                 var userEntity = userQueryResult.get();
                 var user = userMapper.toUser(userEntity);
 
-                var result = GetUserByEmailQueryResults.Success.of(user, request.requestId,
-                        request.tracingId);
+                var result = GetUserByEmailQueryResults.Success.of(user, request.getRequestId(),
+                        request.getTracingId());
                 events.publishEvent(new GetUserByEmailEvent(request, result));
                 return result;
             } else {
-                var result = GetUserByEmailQueryResults.UserNotFound.of(email, request.requestId,
-                        request.tracingId);
+                var result = GetUserByEmailQueryResults.UserNotFound.of(email,
+                        request.getRequestId(), request.getTracingId());
                 events.publishEvent(new GetUserByEmailEvent(request, result));
                 return result;
             }
         } catch (Exception e) {
             var result = GetUserByEmailQueryResults.SystemError.of(
-                    "Failed to retrieve user by email: " + e.getMessage(), request.requestId,
-                    request.tracingId);
+                    "Failed to retrieve user by email: " + e.getMessage(), request.getRequestId(),
+                    request.getTracingId());
             events.publishEvent(new GetUserByEmailEvent(request, result));
             return result;
         }

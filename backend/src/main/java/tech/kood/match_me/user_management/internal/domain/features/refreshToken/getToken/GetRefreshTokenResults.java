@@ -17,21 +17,34 @@ public sealed interface GetRefreshTokenResults extends Result
         final class Success implements GetRefreshTokenResults {
 
                 @NotNull
-                @JsonProperty("requestId")
-                public final UUID requestId;
+                private final UUID requestId;
 
                 @NotNull
-                @JsonProperty("token")
-                public final RefreshToken token;
+                private final RefreshToken token;
 
                 @Nullable
-                @JsonProperty("tracingId")
-                public final String tracingId;
+                private final String tracingId;
+
 
                 private Success(RefreshToken token, UUID requestId, @Nullable String tracingId) {
                         this.token = token;
                         this.requestId = requestId;
                         this.tracingId = tracingId;
+                }
+
+                @JsonProperty("token")
+                public RefreshToken getToken() {
+                        return token;
+                }
+
+                @JsonProperty("requestId")
+                public UUID getRequestId() {
+                        return requestId;
+                }
+
+                @JsonProperty("tracingId")
+                public String getTracingId() {
+                        return tracingId;
                 }
 
                 @JsonCreator
@@ -51,21 +64,34 @@ public sealed interface GetRefreshTokenResults extends Result
         final class InvalidToken implements GetRefreshTokenResults {
 
                 @NotNull
-                @JsonProperty("requestId")
-                public final UUID requestId;
+                private final UUID requestId;
 
                 @NotEmpty
-                @JsonProperty("token")
-                public final String token;
+                private final String token;
 
                 @Nullable
-                @JsonProperty("tracingId")
-                public final String tracingId;
+                private final String tracingId;
+
 
                 private InvalidToken(String token, UUID requestId, @Nullable String tracingId) {
                         this.token = token;
                         this.requestId = requestId;
                         this.tracingId = tracingId;
+                }
+
+                @JsonProperty("token")
+                public String getToken() {
+                        return token;
+                }
+
+                @JsonProperty("requestId")
+                public UUID getRequestId() {
+                        return requestId;
+                }
+
+                @JsonProperty("tracingId")
+                public String getTracingId() {
+                        return tracingId;
                 }
 
                 @JsonCreator
@@ -85,21 +111,34 @@ public sealed interface GetRefreshTokenResults extends Result
         final class SystemError implements GetRefreshTokenResults {
 
                 @NotNull
-                @JsonProperty("requestId")
-                public final UUID requestId;
+                private final UUID requestId;
 
                 @NotEmpty
-                @JsonProperty("message")
-                public final String message;
+                private final String message;
 
                 @Nullable
-                @JsonProperty("tracingId")
-                public final String tracingId;
+                private final String tracingId;
+
 
                 private SystemError(String message, UUID requestId, @Nullable String tracingId) {
                         this.message = message;
                         this.requestId = requestId;
                         this.tracingId = tracingId;
+                }
+
+                @JsonProperty("message")
+                public String getMessage() {
+                        return message;
+                }
+
+                @JsonProperty("requestId")
+                public UUID getRequestId() {
+                        return requestId;
+                }
+
+                @JsonProperty("tracingId")
+                public String getTracingId() {
+                        return tracingId;
                 }
 
                 @JsonCreator

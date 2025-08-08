@@ -23,16 +23,28 @@ public sealed interface ValidateAccessTokenResults extends Result permits
         final class Success implements ValidateAccessTokenResults {
 
                 @NotNull
-                @JsonProperty("requestId")
-                public final UUID requestId;
+                private final UUID requestId;
 
                 @NotNull
-                @JsonProperty("accessToken")
-                public final AccessToken accessToken;
+                private final AccessToken accessToken;
 
                 @Nullable
+                private final String tracingId;
+
+                @JsonProperty("requestId")
+                public UUID getRequestId() {
+                        return requestId;
+                }
+
+                @JsonProperty("accessToken")
+                public AccessToken getAccessToken() {
+                        return accessToken;
+                }
+
                 @JsonProperty("tracingId")
-                public final String tracingId;
+                public String getTracingId() {
+                        return tracingId;
+                }
 
                 private Success(AccessToken accessToken, UUID requestId, String tracingId) {
                         this.accessToken = accessToken;
@@ -65,16 +77,28 @@ public sealed interface ValidateAccessTokenResults extends Result permits
         final class InvalidToken implements ValidateAccessTokenResults {
 
                 @NotNull
-                @JsonProperty("requestId")
-                public final UUID requestId;
+                private final UUID requestId;
 
                 @NotNull
-                @JsonProperty("jwt")
-                public final String jwt;
+                private final String jwt;
 
                 @Nullable
+                private final String tracingId;
+
+                @JsonProperty("requestId")
+                public UUID getRequestId() {
+                        return requestId;
+                }
+
+                @JsonProperty("jwt")
+                public String getJwt() {
+                        return jwt;
+                }
+
                 @JsonProperty("tracingId")
-                public final String tracingId;
+                public String getTracingId() {
+                        return tracingId;
+                }
 
                 private InvalidToken(String jwt, UUID requestId, @Nullable String tracingId) {
                         this.jwt = jwt;

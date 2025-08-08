@@ -3,10 +3,9 @@ package tech.kood.match_me.user_management.internal.domain.features.getUser.requ
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
 import jakarta.validation.constraints.NotNull;
 import tech.kood.match_me.user_management.internal.common.cqrs.Query;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
@@ -36,16 +35,31 @@ import tech.kood.match_me.user_management.internal.domain.models.UserId;
 public final class GetUserByIdQuery implements Query {
 
     @NotNull
-    @JsonProperty("requestId")
-    public final UUID requestId;
+    private final UUID requestId;
 
     @NotNull
+    private final UserId userId;
+
+    @Nullable
+    private final String tracingId;
+
+    @Nonnull
+    @JsonProperty("requestId")
+    public UUID getRequestId() {
+        return requestId;
+    }
+
+    @Nonnull
     @JsonProperty("userId")
-    public final UserId userId;
+    public UserId getUserId() {
+        return userId;
+    }
 
     @Nullable
     @JsonProperty("tracingId")
-    public final String tracingId;
+    public String getTracingId() {
+        return tracingId;
+    }
 
     private GetUserByIdQuery(@NotNull UUID requestId, @NotNull UserId userId,
             @Nullable String tracingId) {

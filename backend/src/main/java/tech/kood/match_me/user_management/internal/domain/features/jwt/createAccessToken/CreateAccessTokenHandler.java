@@ -40,21 +40,22 @@ public class CreateAccessTokenHandler
         public CreateAccessTokenResults handle(CreateAccessTokenRequest request) {
                 try {
                         var refreshTokenResult = getRefreshTokenHandler
-                                        .handle(GetRefreshTokenRequest.of(request.requestId,
-                                                        request.refreshToken, request.tracingId));
+                                        .handle(GetRefreshTokenRequest.of(request.getRequestId(),
+                                                        request.getRefreshToken(),
+                                                        request.getTracingId()));
 
                         if (refreshTokenResult instanceof GetRefreshTokenResults.InvalidToken invalidToken) {
                                 var result = CreateAccessTokenResults.InvalidToken.of(
-                                                invalidToken.token, request.requestId,
-                                                request.tracingId);
+                                                invalidToken.token, request.getRequestId(),
+                                                request.getTracingId());
                                 events.publishEvent(new CreateAccessTokenEvent(request, result));
                                 return result;
                         }
 
                         if (refreshTokenResult instanceof GetRefreshTokenResults.SystemError systemError) {
                                 var result = CreateAccessTokenResults.SystemError.of(
-                                                systemError.message, request.requestId,
-                                                request.tracingId);
+                                                systemError.message, request.getRequestId(),
+                                                request.getTracingId());
                                 events.publishEvent(new CreateAccessTokenEvent(request, result));
                                 return result;
                         }
@@ -69,12 +70,12 @@ public class CreateAccessTokenHandler
                                                                 .plusSeconds(userManagementConfig
                                                                                 .getJwtExpiration()))
                                                 .withClaim("userId",
-                                                                refreshToken.token.userId()
+                                                                refreshToken.token
                                                                                 .toString())
                                                 .sign(jwtAlgo);
 
                                 var result = CreateAccessTokenResults.Success.of(jwt,
-                                                request.requestId, request.tracingId);
+                                                request.getRequestId(), request.getTracingId());
 
                                 events.publishEvent(new CreateAccessTokenEvent(request, result));
                                 return result;
@@ -82,14 +83,14 @@ public class CreateAccessTokenHandler
 
                         var result = CreateAccessTokenResults.SystemError.of(
                                         "Unexpected result from refresh token handler",
-                                        request.requestId, request.tracingId);
+                                        request.getRequestId(), request.getTracingId());
                         events.publishEvent(new CreateAccessTokenEvent(request, result));
                         return result;
 
                 } catch (Exception e) {
                         var result = CreateAccessTokenResults.SystemError.of(
                                         "An unexpected error occurred: " + e.getMessage(),
-                                        request.requestId, request.tracingId);
+                                        request.getRequestId(), request.getTracingId());
                         events.publishEvent(new CreateAccessTokenEvent(request, result));
                         return result;
                 }

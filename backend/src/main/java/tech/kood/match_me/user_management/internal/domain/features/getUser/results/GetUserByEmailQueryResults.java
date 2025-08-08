@@ -3,6 +3,7 @@ package tech.kood.match_me.user_management.internal.domain.features.getUser.resu
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -36,16 +37,31 @@ public sealed interface GetUserByEmailQueryResults extends Result
     final class Success implements GetUserByEmailQueryResults {
 
         @NotNull
-        @JsonProperty("requestId")
-        public final UUID requestId;
+        private final UUID requestId;
 
         @NotNull
-        @JsonProperty("user")
-        public final User user;
+        private final User user;
 
         @Nullable
+        private final String tracingId;
+
+        @JsonProperty("requestId")
+        @Nonnull
+        public UUID getRequestId() {
+            return requestId;
+        }
+
+        @JsonProperty("user")
+        @Nonnull
+        public User getUser() {
+            return user;
+        }
+
         @JsonProperty("tracingId")
-        public final String tracingId;
+        @Nullable
+        public String getTracingId() {
+            return tracingId;
+        }
 
         private Success(User user, UUID requestId, String tracingId) {
             this.user = user;
@@ -77,17 +93,32 @@ public sealed interface GetUserByEmailQueryResults extends Result
     final class UserNotFound implements GetUserByEmailQueryResults {
 
         @NotNull
-        @JsonProperty("requestId")
-        public final UUID requestId;
+        private final UUID requestId;
 
         @NotNull
         @Email
-        @JsonProperty("email")
-        public final String email;
+        private final String email;
 
         @Nullable
+        private final String tracingId;
+
+        @JsonProperty("requestId")
+        @Nonnull
+        public UUID getRequestId() {
+            return requestId;
+        }
+
+        @JsonProperty("email")
+        @Nonnull
+        public String getEmail() {
+            return email;
+        }
+
         @JsonProperty("tracingId")
-        public final String tracingId;
+        @Nullable
+        public String getTracingId() {
+            return tracingId;
+        }
 
         private UserNotFound(String email, UUID requestId, @Nullable String tracingId) {
             this.email = email;
@@ -120,13 +151,31 @@ public sealed interface GetUserByEmailQueryResults extends Result
     final class SystemError implements GetUserByEmailQueryResults {
 
         @NotNull
-        public final String message;
+        private final String message;
 
         @NotNull
-        public final UUID requestId;
+        private final UUID requestId;
 
         @Nullable
-        public final String tracingId;
+        private final String tracingId;
+
+        @JsonProperty("message")
+        @Nonnull
+        public String getMessage() {
+            return message;
+        }
+
+        @JsonProperty("requestId")
+        @Nonnull
+        public UUID getRequestId() {
+            return requestId;
+        }
+
+        @JsonProperty("tracingId")
+        @Nullable
+        public String getTracingId() {
+            return tracingId;
+        }
 
         private SystemError(String message, UUID requestId, @Nullable String tracingId) {
             this.message = message;
@@ -146,4 +195,3 @@ public sealed interface GetUserByEmailQueryResults extends Result
         }
     }
 }
-

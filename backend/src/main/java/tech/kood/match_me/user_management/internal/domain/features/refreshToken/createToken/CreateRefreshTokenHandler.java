@@ -13,7 +13,8 @@ import tech.kood.match_me.user_management.internal.mappers.RefreshTokenMapper;
 import java.util.UUID;
 
 @Service
-public class CreateRefreshTokenHandler implements CommandHandler<CreateRefreshTokenRequest, CreateRefreshTokenResults> {
+public class CreateRefreshTokenHandler
+        implements CommandHandler<CreateRefreshTokenRequest, CreateRefreshTokenResults> {
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final RefreshTokenFactory refreshTokenFactory;
@@ -37,11 +38,12 @@ public class CreateRefreshTokenHandler implements CommandHandler<CreateRefreshTo
         try {
             // We assume the user exists, as this is a refresh token operation.
             // Create a new refresh token
-            RefreshToken refreshToken = this.refreshTokenFactory.create(request.user.id());
+            RefreshToken refreshToken = this.refreshTokenFactory.create(request.getUser().id.value);
             var refreshTokenEntity = refreshTokenMapper.toEntity(refreshToken);
             refreshTokenRepository.save(refreshTokenEntity);
 
-            var result = CreateRefreshTokenResults.Success.of(refreshToken, UUID.fromString(request.requestId), request.tracingId);
+            var result = CreateRefreshTokenResults.Success.of(refreshToken,
+                    UUID.fromString(request.requestId), request.tracingId);
             events.publishEvent(new CreateRefreshTokenEvent(request, result));
             return result;
         } catch (Exception e) {

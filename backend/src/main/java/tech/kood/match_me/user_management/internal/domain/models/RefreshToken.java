@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nonnull;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -29,25 +30,51 @@ import tech.kood.match_me.user_management.internal.common.validation.DomainObjec
  */
 public final class RefreshToken {
 
-    @NotNull
-    @JsonProperty("id")
-    public final UUID id;
 
     @NotNull
-    @JsonProperty("userId")
-    public final UUID userId;
+    private final UUID id;
+
+    @NotNull
+    private final UUID userId;
 
     @NotBlank
+    private final String token;
+
+    @NotNull
+    private final Instant createdAt;
+
+    @NotNull
+    private final Instant expiresAt;
+
+    @JsonProperty("id")
+    @Nonnull
+    public UUID getId() {
+        return id;
+    }
+
+    @JsonProperty("userId")
+    @Nonnull
+    public UUID getUserId() {
+        return userId;
+    }
+
     @JsonProperty("token")
-    public final String token;
+    @Nonnull
+    public String getToken() {
+        return token;
+    }
 
-    @NotNull
     @JsonProperty("createdAt")
-    public final Instant createdAt;
+    @Nonnull
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
 
-    @NotNull
     @JsonProperty("expiresAt")
-    public final Instant expiresAt;
+    @Nonnull
+    public Instant getExpiresAt() {
+        return expiresAt;
+    }
 
     private RefreshToken(@JsonProperty("id") @NotNull UUID id,
             @JsonProperty("userId") @NotNull UUID userId,

@@ -46,23 +46,24 @@ public final class GetRefreshTokenHandler
      */
     public GetRefreshTokenResults handle(GetRefreshTokenRequest request) {
         try {
-            var tokenEntity = refreshTokenRepository.findValidToken(request.token, Instant.now());
+            var tokenEntity =
+                    refreshTokenRepository.findValidToken(request.getToken(), Instant.now());
             if (tokenEntity.isEmpty()) {
-                var result = GetRefreshTokenResults.InvalidToken.of(request.token,
-                        request.requestId, request.tracingId);
+                var result = GetRefreshTokenResults.InvalidToken.of(request.getToken(),
+                        request.getRequestId(), request.getTracingId());
                 events.publishEvent(new GetRefreshTokenEvent(request, result));
                 return result;
             }
 
             var result = GetRefreshTokenResults.Success.of(
-                    refreshTokenMapper.toRefreshToken(tokenEntity.get()), request.requestId,
-                    request.tracingId);
+                    refreshTokenMapper.toRefreshToken(tokenEntity.get()), request.getRequestId(),
+                    request.getTracingId());
             events.publishEvent(new GetRefreshTokenEvent(request, result));
             return result;
         } catch (Exception e) {
             var result = GetRefreshTokenResults.SystemError.of(
-                    "An unexpected error occurred: " + e.getMessage(), request.requestId,
-                    request.tracingId);
+                    "An unexpected error occurred: " + e.getMessage(), request.getRequestId(),
+                    request.getTracingId());
             events.publishEvent(new GetRefreshTokenEvent(request, result));
             return result;
         }

@@ -31,17 +31,32 @@ import tech.kood.match_me.user_management.internal.common.validation.DomainObjec
 public final class CreateAccessTokenRequest
         implements tech.kood.match_me.user_management.internal.common.cqrs.Command {
 
+    @NotNull
+    private final UUID requestId;
+
+    @NotEmpty
+    private final String refreshToken;
+
+    @Nullable
+    private final String tracingId;
+
     @JsonProperty("requestId")
     @NotNull
-    public final UUID requestId;
+    public UUID getRequestId() {
+        return requestId;
+    }
 
     @JsonProperty("refreshToken")
     @NotEmpty
-    public final String refreshToken;
+    public String getRefreshToken() {
+        return refreshToken;
+    }
 
     @JsonProperty("tracingId")
     @Nullable
-    public final String tracingId;
+    public String getTracingId() {
+        return tracingId;
+    }
 
     private CreateAccessTokenRequest(@NotNull UUID requestId, @NotNull String refreshToken,
             @Nullable String tracingId) {
@@ -65,11 +80,13 @@ public final class CreateAccessTokenRequest
 
     public CreateAccessTokenRequest withRefreshToken(CreateAccessTokenRequest request,
             String refreshToken) {
-        return CreateAccessTokenRequest.of(request.requestId, refreshToken, request.tracingId);
+        return CreateAccessTokenRequest.of(request.getRequestId(), refreshToken,
+                request.getTracingId());
     }
 
     public CreateAccessTokenRequest withTracingId(CreateAccessTokenRequest request,
             String tracingId) {
-        return CreateAccessTokenRequest.of(request.requestId, request.refreshToken, tracingId);
+        return CreateAccessTokenRequest.of(request.getRequestId(), request.getRefreshToken(),
+                tracingId);
     }
 }

@@ -1,6 +1,9 @@
 package tech.kood.match_me.user_management.internal.domain.models;
 
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.NotBlank;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
 
@@ -24,10 +27,23 @@ public final class HashedPassword {
 
 
     @NotBlank
-    public final String hash;
+    private final String hash;
 
     @NotBlank
-    public final String salt;
+    private final String salt;
+
+
+    @JsonProperty("hash")
+    @Nonnull
+    public String getHash() {
+        return hash;
+    }
+
+    @JsonProperty("salt")
+    @Nonnull
+    public String getSalt() {
+        return salt;
+    }
 
     private HashedPassword(String hash, String salt) {
         this.hash = hash;
@@ -42,7 +58,10 @@ public final class HashedPassword {
      * @return a new HashedPassword instance
      * @throws IllegalArgumentException if hash or salt are invalid
      */
-    public static HashedPassword of(String hash, String salt) {
+
+    @JsonCreator
+    public static HashedPassword of(@JsonProperty("hash") String hash,
+            @JsonProperty("salt") String salt) {
         var hashedPassword = new HashedPassword(hash, salt);
         var violations = DomainObjectInputValidator.instance.validate(hashedPassword);
 

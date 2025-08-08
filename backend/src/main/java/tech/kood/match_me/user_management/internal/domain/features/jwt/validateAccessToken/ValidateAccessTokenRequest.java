@@ -29,17 +29,29 @@ import tech.kood.match_me.user_management.internal.common.validation.DomainObjec
 public final class ValidateAccessTokenRequest
         implements tech.kood.match_me.user_management.internal.common.cqrs.Query {
 
-    @JsonProperty("requestId")
     @NotNull
-    public final UUID requestId;
+    private final UUID requestId;
+
+    @NotNull
+    private final String jwtToken;
+
+    @Nullable
+    private final String tracingId;
+
+    @JsonProperty("requestId")
+    public UUID getRequestId() {
+        return requestId;
+    }
 
     @JsonProperty("jwtToken")
-    @NotNull
-    public final String jwtToken;
+    public String getJwtToken() {
+        return jwtToken;
+    }
 
     @JsonProperty("tracingId")
-    @Nullable
-    public final String tracingId;
+    public String getTracingId() {
+        return tracingId;
+    }
 
     private ValidateAccessTokenRequest(@NotNull UUID requestId, @NotNull String jwtToken,
             @Nullable String tracingId) {
@@ -55,18 +67,21 @@ public final class ValidateAccessTokenRequest
         var violations = DomainObjectInputValidator.instance.validate(request);
 
         if (!violations.isEmpty()) {
-            throw new ConstraintViolationException("Invalid ValidateAccessTokenRequest: " + violations,
-                    violations);
+            throw new ConstraintViolationException(
+                    "Invalid ValidateAccessTokenRequest: " + violations, violations);
         }
         return request;
     }
 
     public ValidateAccessTokenRequest withJwtToken(ValidateAccessTokenRequest request,
             String jwtToken) {
-        return ValidateAccessTokenRequest.of(request.requestId, jwtToken, request.tracingId);
+        return ValidateAccessTokenRequest.of(request.getRequestId(), jwtToken,
+                request.getTracingId());
     }
 
-    public ValidateAccessTokenRequest withTracingId(ValidateAccessTokenRequest request, String tracingId) {
-        return ValidateAccessTokenRequest.of(request.requestId, request.jwtToken, tracingId);
+    public ValidateAccessTokenRequest withTracingId(ValidateAccessTokenRequest request,
+            String tracingId) {
+        return ValidateAccessTokenRequest.of(request.getRequestId(), request.getJwtToken(),
+                tracingId);
     }
 }

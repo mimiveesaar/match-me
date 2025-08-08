@@ -2,6 +2,7 @@ package tech.kood.match_me.user_management.internal.domain.features.refreshToken
 
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.NotBlank;
@@ -30,23 +31,39 @@ import tech.kood.match_me.user_management.internal.common.validation.DomainObjec
  */
 public final class GetRefreshTokenRequest implements Query {
 
-    @JsonProperty("requestId")
     @NotNull
-    public final UUID requestId;
+    private final UUID requestId;
 
-    @JsonProperty("token")
     @NotBlank
-    public final String token;
+    private final String token;
 
-    @JsonProperty("tracingId")
     @Nullable
-    public final String tracingId;
+    private final String tracingId;
+
 
     private GetRefreshTokenRequest(@NotNull UUID requestId, @NotBlank String token,
             @Nullable String tracingId) {
         this.requestId = requestId;
         this.token = token;
         this.tracingId = tracingId;
+    }
+
+    @JsonProperty("requestId")
+    @Nonnull
+    public UUID getRequestId() {
+        return requestId;
+    }
+
+    @JsonProperty("token")
+    @Nonnull
+    public String getToken() {
+        return token;
+    }
+
+    @JsonProperty("tracingId")
+    @Nullable
+    public String getTracingId() {
+        return tracingId;
     }
 
     public static GetRefreshTokenRequest of(@JsonProperty("requestId") @NotNull UUID requestId,
