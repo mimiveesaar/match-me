@@ -9,8 +9,8 @@ import tech.kood.match_me.user_management.internal.domain.features.getUser.reque
 import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByEmailQueryResults;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByIdQueryResults;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByUsernameResults;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenRequest;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenResults;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenRequest;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenResults;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenResults;
 import tech.kood.match_me.user_management.internal.domain.features.login.LoginRequest;
@@ -32,9 +32,9 @@ public class UserManagementPublisher {
         this.jmsMessaging = jmsMessaging;
     }
 
-    public GetAccessTokenResults publish(GetAccessTokenRequest request) {
+    public CreateAccessTokenResults publish(CreateAccessTokenRequest request) {
         return jmsMessaging.convertSendAndReceive(UserManagementMessaging.USER_MANAGEMENT_QUEUE,
-                request, GetAccessTokenResults.class);
+                request, CreateAccessTokenResults.class);
     }
 
 

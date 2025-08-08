@@ -11,8 +11,8 @@ import tech.kood.match_me.user_management.internal.domain.features.getUser.GetUs
 import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByEmailQuery;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByIdQuery;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByUsernameQuery;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenHandler;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenRequest;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenHandler;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenHandler;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.domain.features.login.LoginHandler;
@@ -29,7 +29,7 @@ public class UserManagementConsumer {
 
     private final ObjectMapper objectMapper;
 
-    private final GetAccessTokenHandler getAccessTokenHandler;
+    private final CreateAccessTokenHandler getAccessTokenHandler;
 
     private final ValidateAccessTokenHandler validateAccessTokenHandler;
 
@@ -45,7 +45,7 @@ public class UserManagementConsumer {
 
     private final RegisterUserHandler registerUserHandler;
 
-    public UserManagementConsumer(GetAccessTokenHandler getAccessTokenHandler,
+    public UserManagementConsumer(CreateAccessTokenHandler getAccessTokenHandler,
             ValidateAccessTokenHandler validateAccessTokenHandler, GetUserHandler getUserHandler,
             LoginHandler loginHandler, CreateRefreshTokenHandler createRefreshTokenHandler,
             GetRefreshTokenHandler getRefreshTokenHandler,
@@ -74,9 +74,9 @@ public class UserManagementConsumer {
             if (message instanceof TextMessage textMessage) {
                 String payload = textMessage.getText();
 
-                if (type.equals(GetAccessTokenRequest.class.getName())) {
-                    GetAccessTokenRequest request =
-                            objectMapper.readValue(payload, GetAccessTokenRequest.class);
+                if (type.equals(CreateAccessTokenRequest.class.getName())) {
+                    CreateAccessTokenRequest request =
+                            objectMapper.readValue(payload, CreateAccessTokenRequest.class);
 
                     return getAccessTokenHandler.handle(request);
                 } else if (type.equals(ValidateAccessTokenRequest.class.getName())) {

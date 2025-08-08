@@ -14,8 +14,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.GetAccessTokenRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.GetAccessTokenResultsDTO;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenHandler;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenRequest;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenHandler;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.mappers.GetAccessTokenMapper;
 
 @RestController
@@ -27,7 +27,7 @@ public class GetAccessTokenEndpoint {
 
         private final UserManagementPublisher userManagementPublisher;
 
-        public GetAccessTokenEndpoint(GetAccessTokenHandler getAccessTokenHandler,
+        public GetAccessTokenEndpoint(CreateAccessTokenHandler getAccessTokenHandler,
                         GetAccessTokenMapper getAccessTokenMapper,
                         UserManagementPublisher userManagementPublisher) {
                 this.getAccessTokenMapper = getAccessTokenMapper;
@@ -56,7 +56,7 @@ public class GetAccessTokenEndpoint {
         public ResponseEntity<GetAccessTokenResultsDTO> getAccessToken(
                         @RequestBody GetAccessTokenRequestDTO request) {
 
-                var internalRequest = new GetAccessTokenRequest(request.refreshToken(),
+                var internalRequest = new CreateAccessTokenRequest(request.refreshToken(),
                                 UUID.randomUUID().toString());
 
 

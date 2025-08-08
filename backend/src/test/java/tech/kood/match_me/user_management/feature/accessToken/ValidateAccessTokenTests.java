@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenHandler;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenRequest;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenResults;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenHandler;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenRequest;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenResults;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenHandler;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenResults;
@@ -44,7 +44,7 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
         CreateRefreshTokenHandler createRefreshTokenHandler;
 
         @Autowired
-        GetAccessTokenHandler getAccessTokenHandler;
+        CreateAccessTokenHandler getAccessTokenHandler;
 
         @Autowired
         ValidateAccessTokenHandler validateAccessTokenHandler;
@@ -66,29 +66,28 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
 
                 var refreshToken = ((CreateRefreshTokenResults.Success) createTokenResult)
                                 .refreshToken();
-                var getAccessTokenRequest = new GetAccessTokenRequest(UUID.randomUUID().toString(),
+                var getAccessTokenRequest = CreateAccessTokenRequest.of(UUID.randomUUID(),
                                 refreshToken.token(), null);
                 var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
 
-                assert getAccessTokenResult instanceof GetAccessTokenResults.Success;
+                assert getAccessTokenResult instanceof CreateAccessTokenResults.Success;
 
-                var jwt = ((GetAccessTokenResults.Success) getAccessTokenResult).jwt();
+                var jwt = ((CreateAccessTokenResults.Success) getAccessTokenResult).jwt;
                 assert jwt != null;
 
-                var validateRequest = new ValidateAccessTokenRequest(UUID.randomUUID().toString(),
+                var validateRequest = ValidateAccessTokenRequest.of(UUID.randomUUID(),
                                 jwt, null);
                 var validateResult = validateAccessTokenHandler.handle(validateRequest);
 
                 assert validateResult instanceof ValidateAccessTokenResults.Success;
 
-                var userId = ((ValidateAccessTokenResults.Success) validateResult).accessToken()
-                                .userId();
+                var userId = ((ValidateAccessTokenResults.Success) validateResult).accessToken.userId();
                 assert userId != null;
         }
 
         @Test
         public void shouldHandleInvalidAccessToken() {
-                var validateRequest = new ValidateAccessTokenRequest(UUID.randomUUID().toString(),
+                var validateRequest = ValidateAccessTokenRequest.of(UUID.randomUUID(),
                                 "invalid-token", null);
                 var validateResult = validateAccessTokenHandler.handle(validateRequest);
 
@@ -97,7 +96,7 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
 
         @Test
         public void shouldHandleMissingAccessToken() {
-                var validateRequest = new ValidateAccessTokenRequest(UUID.randomUUID().toString(),
+                var validateRequest = ValidateAccessTokenRequest.of(UUID.randomUUID(),
                                 null, null);
                 var validateResult = validateAccessTokenHandler.handle(validateRequest);
 

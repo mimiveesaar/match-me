@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenHandler;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenRequest;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.getAccessToken.GetAccessTokenResults;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenHandler;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenRequest;
+import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenResults;
 import tech.kood.match_me.user_management.internal.domain.features.refreshToken.createToken.CreateRefreshTokenHandler;
 import tech.kood.match_me.user_management.internal.domain.features.refreshToken.createToken.CreateRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.domain.features.refreshToken.createToken.CreateRefreshTokenResults;
@@ -41,7 +41,7 @@ public class GetAccessTokenTests extends UserManagementTestBase {
     CreateRefreshTokenHandler createRefreshTokenHandler;
 
     @Autowired
-    GetAccessTokenHandler getAccessTokenHandler;
+    CreateAccessTokenHandler getAccessTokenHandler;
 
     @Autowired
     RegisterUserRequestMocker registerUserRequestMocker;
@@ -61,31 +61,30 @@ public class GetAccessTokenTests extends UserManagementTestBase {
 
         var refreshToken = ((CreateRefreshTokenResults.Success) createTokenResult).refreshToken();
         var getAccessTokenRequest =
-                new GetAccessTokenRequest(UUID.randomUUID().toString(), refreshToken.token(), null);
+                CreateAccessTokenRequest.of(UUID.randomUUID(), refreshToken.token(), null);
         var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
 
-        assert getAccessTokenResult instanceof GetAccessTokenResults.Success;
+        assert getAccessTokenResult instanceof CreateAccessTokenResults.Success;
 
-        var accessToken = ((GetAccessTokenResults.Success) getAccessTokenResult).jwt();
+        var accessToken = ((CreateAccessTokenResults.Success) getAccessTokenResult).jwt;
         assert accessToken != null;
     }
 
     @Test
     public void shouldHandleInvalidRefreshToken() {
         var getAccessTokenRequest =
-                new GetAccessTokenRequest(UUID.randomUUID().toString(), "invalid-token", null);
+                CreateAccessTokenRequest.of(UUID.randomUUID(), "invalid-token", null);
         var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
 
-        assert getAccessTokenResult instanceof GetAccessTokenResults.InvalidToken : "The handler should return an InvalidToken result for an invalid refresh token";
+        assert getAccessTokenResult instanceof CreateAccessTokenResults.InvalidToken : "The handler should return an InvalidToken result for an invalid refresh token";
     }
 
     @Test
     public void shouldHandleMissingRefreshToken() {
-        var getAccessTokenRequest =
-                new GetAccessTokenRequest(UUID.randomUUID().toString(), null, null);
+        var getAccessTokenRequest = CreateAccessTokenRequest.of(UUID.randomUUID(), null, null);
         var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
 
-        assert getAccessTokenResult instanceof GetAccessTokenResults.InvalidRequest : "The handler should return an InvalidRequest result for a null refresh token";
+        assert getAccessTokenResult instanceof CreateAccessTokenResults.InvalidRequest : "The handler should return an InvalidRequest result for a null refresh token";
     }
 
 }
