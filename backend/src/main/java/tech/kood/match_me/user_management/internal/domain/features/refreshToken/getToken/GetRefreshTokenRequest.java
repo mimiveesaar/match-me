@@ -1,6 +1,7 @@
 package tech.kood.match_me.user_management.internal.domain.features.refreshToken.getToken;
 
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -40,14 +41,6 @@ public final class GetRefreshTokenRequest implements Query {
     @Nullable
     private final String tracingId;
 
-
-    private GetRefreshTokenRequest(@NotNull UUID requestId, @NotBlank String token,
-            @Nullable String tracingId) {
-        this.requestId = requestId;
-        this.token = token;
-        this.tracingId = tracingId;
-    }
-
     @JsonProperty("requestId")
     @Nonnull
     public UUID getRequestId() {
@@ -66,6 +59,14 @@ public final class GetRefreshTokenRequest implements Query {
         return tracingId;
     }
 
+    private GetRefreshTokenRequest(@NotNull UUID requestId, @NotBlank String token,
+            @Nullable String tracingId) {
+        this.requestId = requestId;
+        this.token = token;
+        this.tracingId = tracingId;
+    }
+
+    @JsonCreator
     public static GetRefreshTokenRequest of(@JsonProperty("requestId") @NotNull UUID requestId,
             @JsonProperty("token") @NotBlank String token,
             @JsonProperty("tracingId") @Nullable String tracingId) {
@@ -73,21 +74,20 @@ public final class GetRefreshTokenRequest implements Query {
         var violations = DomainObjectInputValidator.instance.validate(request);
 
         if (!violations.isEmpty()) {
-            throw new ConstraintViolationException("Invalid GetRefreshTokenRequest: " + violations,
-                    violations);
+            throw new ConstraintViolationException(violations);
         }
         return request;
     }
 
-    public GetRefreshTokenRequest withRequestId(UUID newRequestId) {
-        return GetRefreshTokenRequest.of(newRequestId, token, tracingId);
+    public GetRefreshTokenRequest withRequestId(UUID requestId) {
+        return GetRefreshTokenRequest.of(requestId, token, tracingId);
     }
 
-    public GetRefreshTokenRequest withToken(String newToken) {
-        return GetRefreshTokenRequest.of(requestId, newToken, tracingId);
+    public GetRefreshTokenRequest withToken(String token) {
+        return GetRefreshTokenRequest.of(requestId, token, tracingId);
     }
 
-    public GetRefreshTokenRequest withTracingId(String newTracingId) {
-        return GetRefreshTokenRequest.of(requestId, token, newTracingId);
+    public GetRefreshTokenRequest withTracingId(String tracingId) {
+        return GetRefreshTokenRequest.of(requestId, token, tracingId);
     }
 }

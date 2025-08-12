@@ -35,7 +35,8 @@ public final class InvalidateRefreshTokenHandler
      * <li>If the token doesn't exist, returns a {@code TokenNotFound} result.</li>
      * <li>If the token exists and is successfully deleted, returns a {@code Success} result.</li>
      * <li>In case of any unexpected exceptions, returns a {@code SystemError} result.</li>
-     * <li>Publishes a {@code InvalidateRefreshTokenEvent} with the request and result at each step.</li>
+     * <li>Publishes a {@code InvalidateRefreshTokenEvent} with the request and result at each
+     * step.</li>
      * </ul>
      *
      * @param request the {@link InvalidateRefreshTokenRequest} containing the token and tracing
@@ -44,23 +45,23 @@ public final class InvalidateRefreshTokenHandler
      */
     public InvalidateRefreshTokenResults handle(InvalidateRefreshTokenRequest request) {
         try {
-            var tokenExists = refreshTokenRepository.deleteToken(request.token);
+            var tokenExists = refreshTokenRepository.deleteToken(request.getToken());
 
             if (!tokenExists) {
-                var result = InvalidateRefreshTokenResults.TokenNotFound.of(
-                        request.token, request.requestId, request.tracingId);
+                var result = InvalidateRefreshTokenResults.TokenNotFound.of(request.getToken(),
+                        request.getRequestId(), request.getTracingId());
                 events.publishEvent(new InvalidateRefreshTokenEvent(request, result));
                 return result;
             }
 
-            var result = InvalidateRefreshTokenResults.Success.of(
-                    request.requestId, request.tracingId);
+            var result = InvalidateRefreshTokenResults.Success.of(request.getRequestId(),
+                    request.getTracingId());
             events.publishEvent(new InvalidateRefreshTokenEvent(request, result));
             return result;
         } catch (Exception e) {
             var result = InvalidateRefreshTokenResults.SystemError.of(
-                    "An unexpected error occurred: " + e.getMessage(), request.requestId,
-                    request.tracingId);
+                    "An unexpected error occurred: " + e.getMessage(), request.getRequestId(),
+                    request.getTracingId());
             events.publishEvent(new InvalidateRefreshTokenEvent(request, result));
             return result;
         }

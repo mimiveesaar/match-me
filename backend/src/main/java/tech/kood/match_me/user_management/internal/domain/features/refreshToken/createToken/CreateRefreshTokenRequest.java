@@ -1,10 +1,10 @@
 package tech.kood.match_me.user_management.internal.domain.features.refreshToken.createToken;
 
+import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.UUID;
 import tech.kood.match_me.user_management.internal.common.cqrs.Command;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
 import tech.kood.match_me.user_management.internal.domain.models.User;
@@ -30,8 +30,8 @@ import tech.kood.match_me.user_management.internal.domain.models.User;
  */
 public final class CreateRefreshTokenRequest implements Command {
 
-    @UUID
-    private final String requestId;
+    @NotNull
+    private final UUID requestId;
 
     @NotNull
     private final User user;
@@ -41,7 +41,7 @@ public final class CreateRefreshTokenRequest implements Command {
 
 
     @JsonProperty("requestId")
-    public String getRequestId() {
+    public UUID getRequestId() {
         return requestId;
     }
 
@@ -55,7 +55,7 @@ public final class CreateRefreshTokenRequest implements Command {
         return tracingId;
     }
 
-    private CreateRefreshTokenRequest(@UUID String requestId, @NotNull User user,
+    private CreateRefreshTokenRequest(UUID requestId, @NotNull User user,
             @Nullable String tracingId) {
         this.requestId = requestId;
         this.user = user;
@@ -63,7 +63,7 @@ public final class CreateRefreshTokenRequest implements Command {
     }
 
 
-    public static CreateRefreshTokenRequest of(@JsonProperty("requestId") @UUID String requestId,
+    public static CreateRefreshTokenRequest of(@JsonProperty("requestId") @NotNull UUID requestId,
             @JsonProperty("user") @NotNull User user,
             @JsonProperty("tracingId") @Nullable String tracingId) {
         var request = new CreateRefreshTokenRequest(requestId, user, tracingId);
@@ -71,20 +71,20 @@ public final class CreateRefreshTokenRequest implements Command {
 
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(
-                    "Invalid CreateRefreshTokenRequest: " + violations, violations);
+                    "Invalid CreateRefreshTokenRequest: " + violations.toString(), violations);
         }
         return request;
     }
 
-    public CreateRefreshTokenRequest withRequestId(String newRequestId) {
-        return CreateRefreshTokenRequest.of(newRequestId, user, tracingId);
+    public CreateRefreshTokenRequest withRequestId(UUID requestId) {
+        return CreateRefreshTokenRequest.of(requestId, user, tracingId);
     }
 
-    public CreateRefreshTokenRequest withUser(User newUser) {
-        return CreateRefreshTokenRequest.of(requestId, newUser, tracingId);
+    public CreateRefreshTokenRequest withUser(User user) {
+        return CreateRefreshTokenRequest.of(requestId, user, tracingId);
     }
 
-    public CreateRefreshTokenRequest withTracingId(String newTracingId) {
-        return CreateRefreshTokenRequest.of(requestId, user, newTracingId);
+    public CreateRefreshTokenRequest withTracingId(String tracingId) {
+        return CreateRefreshTokenRequest.of(requestId, user, tracingId);
     }
 }

@@ -1,6 +1,7 @@
 package tech.kood.match_me.user_management.internal.domain.features.refreshToken.invalidateToken;
 
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.validation.ConstraintViolationException;
@@ -10,8 +11,8 @@ import tech.kood.match_me.user_management.internal.common.cqrs.Command;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
 
 /**
- * Represents a request to invalidate a refresh token, containing identifiers for the request, the token,
- * and an optional tracing ID for tracking purposes.
+ * Represents a request to invalidate a refresh token, containing identifiers for the request, the
+ * token, and an optional tracing ID for tracking purposes.
  *
  * <ul>
  * <li>{@code requestId} - Unique identifier for the refresh token request (must not be null).</li>
@@ -30,17 +31,30 @@ import tech.kood.match_me.user_management.internal.common.validation.DomainObjec
  */
 public final class InvalidateRefreshTokenRequest implements Command {
 
-    @JsonProperty("requestId")
+
     @NotNull
-    public final UUID requestId;
+    private final UUID requestId;
+
+    @NotBlank
+    private final String token;
+
+    @Nullable
+    private final String tracingId;
+
+    @JsonProperty("requestId")
+    public UUID getRequestId() {
+        return requestId;
+    }
 
     @JsonProperty("token")
-    @NotBlank
-    public final String token;
+    public String getToken() {
+        return token;
+    }
 
     @JsonProperty("tracingId")
-    @Nullable
-    public final String tracingId;
+    public String getTracingId() {
+        return tracingId;
+    }
 
     private InvalidateRefreshTokenRequest(@NotNull UUID requestId, @NotBlank String token,
             @Nullable String tracingId) {
@@ -49,28 +63,29 @@ public final class InvalidateRefreshTokenRequest implements Command {
         this.tracingId = tracingId;
     }
 
-    public static InvalidateRefreshTokenRequest of(@JsonProperty("requestId") @NotNull UUID requestId,
+    @JsonCreator
+    public static InvalidateRefreshTokenRequest of(
+            @JsonProperty("requestId") @NotNull UUID requestId,
             @JsonProperty("token") @NotBlank String token,
             @JsonProperty("tracingId") @Nullable String tracingId) {
         var request = new InvalidateRefreshTokenRequest(requestId, token, tracingId);
         var violations = DomainObjectInputValidator.instance.validate(request);
 
         if (!violations.isEmpty()) {
-            throw new ConstraintViolationException("Invalid InvalidateRefreshTokenRequest: " + violations,
-                    violations);
+            throw new ConstraintViolationException(violations);
         }
         return request;
     }
 
-    public InvalidateRefreshTokenRequest withRequestId(UUID newRequestId) {
-        return InvalidateRefreshTokenRequest.of(newRequestId, token, tracingId);
+    public InvalidateRefreshTokenRequest withRequestId(UUID requestId) {
+        return InvalidateRefreshTokenRequest.of(requestId, token, tracingId);
     }
 
-    public InvalidateRefreshTokenRequest withToken(String newToken) {
-        return InvalidateRefreshTokenRequest.of(requestId, newToken, tracingId);
+    public InvalidateRefreshTokenRequest withToken(String token) {
+        return InvalidateRefreshTokenRequest.of(requestId, token, tracingId);
     }
 
-    public InvalidateRefreshTokenRequest withTracingId(String newTracingId) {
-        return InvalidateRefreshTokenRequest.of(requestId, token, newTracingId);
+    public InvalidateRefreshTokenRequest withTracingId(String tracingId) {
+        return InvalidateRefreshTokenRequest.of(requestId, token, tracingId);
     }
 }

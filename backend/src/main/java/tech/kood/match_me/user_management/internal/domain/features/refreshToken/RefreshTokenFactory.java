@@ -22,9 +22,10 @@ public final class RefreshTokenFactory {
         var id = UUID.randomUUID();
         var token = RefreshTokenUtils.generateToken();
         var createdAt = Instant.now();
-        var expiresAt = createdAt.plusSeconds(userManagementConfig.getRefreshTokenExpiration()); // 1 hour expiration
-
-        return new RefreshToken(id, userId, token, createdAt, expiresAt);
+        var expiresAt = createdAt.plusSeconds(userManagementConfig.getRefreshTokenExpiration()); // 1
+                                                                                                 // hour
+                                                                                                 // expiration
+        return RefreshToken.of(id, userId, token, createdAt, expiresAt);
     }
 
     public RefreshToken create(UUID userId, Instant expiresAt) {
@@ -32,6 +33,6 @@ public final class RefreshTokenFactory {
         var token = RefreshTokenUtils.generateToken();
         var createdAt = Instant.now();
 
-        return new RefreshToken(id, userId, token, createdAt, expiresAt);
+        return RefreshToken.of(id, userId, token, createdAt, expiresAt);
     }
 }

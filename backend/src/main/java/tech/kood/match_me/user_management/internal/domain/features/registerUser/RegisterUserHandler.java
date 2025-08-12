@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import tech.kood.match_me.user_management.UserManagementConfig;
+import tech.kood.match_me.user_management.internal.common.cqrs.QueryHandler;
 import tech.kood.match_me.user_management.internal.database.entities.UserEntity;
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
 import tech.kood.match_me.user_management.internal.domain.models.HashedPassword;
@@ -15,117 +16,121 @@ import tech.kood.match_me.user_management.internal.utils.EmailValidator;
 import tech.kood.match_me.user_management.internal.utils.PasswordUtils;
 
 @Service
-public class RegisterUserHandler {
+public final class RegisterUserHandler
+        implements QueryHandler<RegisterUserRequest, RegisterUserResults> {
 
-        private final UserRepository userRepository;
-        private final ApplicationEventPublisher events;
-        private final UserManagementConfig userManagementConfig;
-        private final UserMapper userMapper;
+    private final UserRepository userRepository;
+    private final ApplicationEventPublisher events;
+    private final UserManagementConfig userManagementConfig;
+    private final UserMapper userMapper;
 
-        private static final int BCRYPT_MAX_PASSWORD_LENGTH = 72;
+    private static final int BCRYPT_MAX_PASSWORD_LENGTH = 72;
 
-        public RegisterUserHandler(UserRepository userRepository, ApplicationEventPublisher events,
-                        UserMapper userMapper, UserManagementConfig userManagementConfig) {
+    public RegisterUserHandler(UserRepository userRepository, ApplicationEventPublisher events,
+            UserMapper userMapper, UserManagementConfig userManagementConfig) {
 
-                this.userRepository = userRepository;
-                this.events = events;
-                this.userMapper = userMapper;
-                this.userManagementConfig = userManagementConfig;
+        this.userRepository = userRepository;
+        this.events = events;
+        this.userMapper = userMapper;
+        this.userManagementConfig = userManagementConfig;
+    }
+
+    /**
+     * Handles the registration of a new user based on the provided request.
+     * <p>
+     * This method performs the following steps:
+     * <ul>
+     * <li>Validates the username, password, and email according to business rules</li>
+     * <li>Checks for username and email uniqueness</li>
+     * <li>Hashes the password</li>
+     * <li>Creates and saves a new user entity</li>
+     * <li>Returns appropriate results based on the outcome</li>
+     * <li>Publishes a {@code RegisterUserEvent} with the request and result at each step</li>
+     * </ul>
+     *
+     * @param request the {@link RegisterUserRequest} containing user registration details
+     * @return a {@link RegisterUserResults} representing the outcome of the operation
+     */
+    public RegisterUserResults handle(RegisterUserRequest request) {
+        try {
+            // Validate username length
+            if (request.getUsername().length() < userManagementConfig.getUsernameMinLength()) {
+                var result = RegisterUserResults.InvalidUsername.of(request.getUsername(),
+                        RegisterUserResults.InvalidUsernameType.TOO_SHORT, request.getRequestId(),
+                        request.getTracingId());
+                events.publishEvent(new RegisterUserEvent(request, result));
+                return result;
+            } else if (request.getUsername().length() > userManagementConfig
+                    .getUsernameMaxLength()) {
+                var result = RegisterUserResults.InvalidUsername.of(request.getUsername(),
+                        RegisterUserResults.InvalidUsernameType.TOO_LONG, request.getRequestId(),
+                        request.getTracingId());
+                events.publishEvent(new RegisterUserEvent(request, result));
+                return result;
+            } else if (!request.getUsername().matches("^[a-zA-Z0-9_.-]+$")) {
+                var result = RegisterUserResults.InvalidUsername.of(request.getUsername(),
+                        RegisterUserResults.InvalidUsernameType.INVALID_CHARACTERS,
+                        request.getRequestId(), request.getTracingId());
+                events.publishEvent(new RegisterUserEvent(request, result));
+                return result;
+            }
+
+            // Validate password length
+            if (request.getPassword().length() < userManagementConfig.getPasswordMinLength()) {
+                var result = RegisterUserResults.InvalidPassword.of(request.getPassword(),
+                        RegisterUserResults.InvalidPasswordType.TOO_SHORT, request.getRequestId(),
+                        request.getTracingId());
+                events.publishEvent(new RegisterUserEvent(request, result));
+                return result;
+            }
+
+            if (request.getPassword().length() > BCRYPT_MAX_PASSWORD_LENGTH || request.getPassword()
+                    .length() > userManagementConfig.getPasswordMaxLength()) {
+                var result = RegisterUserResults.InvalidPassword.of(request.getPassword(),
+                        RegisterUserResults.InvalidPasswordType.TOO_LONG, request.getRequestId(),
+                        request.getTracingId());
+                events.publishEvent(new RegisterUserEvent(request, result));
+                return result;
+            }
+
+            // Check for username uniqueness
+            if (userRepository.usernameExists(request.getUsername())) {
+                var result = RegisterUserResults.UsernameExists.of(request.getUsername(),
+                        request.getRequestId(), request.getTracingId());
+                events.publishEvent(new RegisterUserEvent(request, result));
+                return result;
+            }
+
+            // Check for email uniqueness
+            if (userRepository.emailExists(request.getEmail())) {
+                var result = RegisterUserResults.EmailExists.of(request.getEmail(),
+                        request.getRequestId(), request.getTracingId());
+                events.publishEvent(new RegisterUserEvent(request, result));
+                return result;
+            }
+
+            // Generate hash from the clear-text password.
+            HashedPassword hashedPassword = PasswordUtils.encode(request.getPassword());
+
+            // Create a new UserEntity.
+            var userEntity = new UserEntity(UUID.randomUUID(), request.getEmail(),
+                    request.getUsername(), hashedPassword.getHash(), hashedPassword.getSalt(),
+                    Instant.now(), Instant.now());
+
+            // Save the user entity to the database.
+            userRepository.saveUser(userEntity);
+
+            var result = new RegisterUserResults.Success(userMapper.toUser(userEntity),
+                    request.getTracingId());
+            events.publishEvent(new RegisterUserEvent(request, result));
+            return result;
+        } catch (Exception e) {
+            // Handle any exceptions that occur during saving.
+            var result = new RegisterUserResults.SystemError(
+                    "Failed to register user: " + e.getMessage(), request.getRequestId(),
+                    request.getTracingId());
+            events.publishEvent(new RegisterUserEvent(request, result));
+            return result;
         }
-
-        public RegisterUserResults handle(RegisterUserRequest request) {
-
-                // Validate the request
-                if (request.username() == null || request.username().isBlank()) {
-                        var result = new RegisterUserResults.InvalidUsername(request.username(),
-                                        RegisterUserResults.InvalidUsernameType.TOO_SHORT,
-                                        request.tracingId());
-                        events.publishEvent(new RegisterUserEvent(request, result));
-                        return result;
-                }
-
-                if (request.email() == null || request.email().isBlank()
-                                || EmailValidator.isValidEmail(request.email()) == false) {
-
-                        var result = new RegisterUserResults.InvalidEmail(request.email(),
-                                        request.tracingId());
-                        events.publishEvent(new RegisterUserEvent(request, result));
-                        return result;
-                }
-
-                if (request.username() == null || request.username().isBlank() || request.username()
-                                .length() < userManagementConfig.getUsernameMinLength()) {
-                        var result = new RegisterUserResults.InvalidUsername(request.username(),
-                                        RegisterUserResults.InvalidUsernameType.TOO_SHORT,
-                                        request.tracingId());
-                        events.publishEvent(new RegisterUserEvent(request, result));
-                        return result;
-                } else if (request.username().length() > userManagementConfig
-                                .getUsernameMaxLength()) {
-                        var result = new RegisterUserResults.InvalidUsername(request.username(),
-                                        RegisterUserResults.InvalidUsernameType.TOO_LONG,
-                                        request.tracingId());
-                        events.publishEvent(new RegisterUserEvent(request, result));
-                        return result;
-                } else if (!request.username().matches("^[a-zA-Z0-9_.-]+$")) {
-                        var result = new RegisterUserResults.InvalidUsername(request.username(),
-                                        RegisterUserResults.InvalidUsernameType.INVALID_CHARACTERS,
-                                        request.tracingId());
-                        events.publishEvent(new RegisterUserEvent(request, result));
-                        return result;
-                }
-
-                if (request.password() == null || request.password().isBlank() || request.password()
-                                .length() < userManagementConfig.getPasswordMinLength()) {
-                        var result = new RegisterUserResults.InvalidPassword(request.password(),
-                                        RegisterUserResults.InvalidPasswordType.TOO_SHORT,
-                                        request.tracingId());
-                        events.publishEvent(new RegisterUserEvent(request, result));
-                        return result;
-                }
-
-                if (request.password().length() > BCRYPT_MAX_PASSWORD_LENGTH || request.password()
-                                .length() > userManagementConfig.getPasswordMaxLength()) {
-                        var result = new RegisterUserResults.InvalidPassword(request.password(),
-                                        RegisterUserResults.InvalidPasswordType.TOO_LONG,
-                                        request.tracingId());
-                        events.publishEvent(new RegisterUserEvent(request, result));
-                        return result;
-                }
-
-                if (userRepository.usernameExists(request.username())) {
-                        var result = new RegisterUserResults.UsernameExists(request.username(),
-                                        request.tracingId());
-                        events.publishEvent(new RegisterUserEvent(request, result));
-                        return result;
-                }
-
-                if (userRepository.emailExists(request.email())) {
-                        var result = new RegisterUserResults.EmailExists(request.email(),
-                                        request.tracingId());
-                        events.publishEvent(new RegisterUserEvent(request, result));
-                        return result;
-                }
-
-                // Generate hash from the clear-text password.
-                HashedPassword hashedPassword = PasswordUtils.encode(request.password());
-
-                // Create a new UserEntity.
-                var userEntity = new UserEntity(UUID.randomUUID(), request.email(),
-                                request.username(), hashedPassword.hash(), hashedPassword.salt(),
-                                Instant.now(), Instant.now());
-
-                try {
-                        // Save the user entity to the database.
-                        userRepository.saveUser(userEntity);
-
-                        return new RegisterUserResults.Success(userMapper.toUser(userEntity),
-                                        request.tracingId());
-                } catch (Exception e) {
-                        // Handle any exceptions that occur during saving.
-                        return new RegisterUserResults.SystemError(
-                                        "Failed to register user: " + e.getMessage(),
-                                        request.tracingId());
-                }
-        }
+    }
 }

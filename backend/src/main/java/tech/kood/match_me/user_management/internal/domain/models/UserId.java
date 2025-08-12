@@ -10,24 +10,23 @@ import tech.kood.match_me.user_management.internal.common.validation.DomainObjec
 
 public final class UserId {
 
-
     @NotNull
     private final UUID value;
 
     @JsonValue
-    public String getValue() {
-        return value.toString();
+    public UUID getValue() {
+        return value;
     }
 
     private UserId(UUID value) {
         this.value = value;
     }
 
-    @JsonCreator
     public static UserId fromString(String value) {
         return of(UUID.fromString(value));
     }
 
+    @JsonCreator
     public static UserId of(UUID value) {
         var userId = new UserId(value);
         var violations = DomainObjectInputValidator.instance.validate(userId);

@@ -25,14 +25,6 @@ public sealed interface CreateRefreshTokenResults extends Result
                 @Nullable
                 private final String tracingId;
 
-
-                private Success(RefreshToken refreshToken, UUID requestId,
-                                @Nullable String tracingId) {
-                        this.refreshToken = refreshToken;
-                        this.requestId = requestId;
-                        this.tracingId = tracingId;
-                }
-
                 @JsonProperty("refreshToken")
                 public RefreshToken getRefreshToken() {
                         return refreshToken;
@@ -46,6 +38,14 @@ public sealed interface CreateRefreshTokenResults extends Result
                 @JsonProperty("tracingId")
                 public String getTracingId() {
                         return tracingId;
+                }
+
+
+                private Success(RefreshToken refreshToken, UUID requestId,
+                                @Nullable String tracingId) {
+                        this.refreshToken = refreshToken;
+                        this.requestId = requestId;
+                        this.tracingId = tracingId;
                 }
 
                 @JsonCreator
@@ -74,13 +74,6 @@ public sealed interface CreateRefreshTokenResults extends Result
                 @Nullable
                 private final String tracingId;
 
-
-                private UserNotFound(String userId, UUID requestId, @Nullable String tracingId) {
-                        this.userId = userId;
-                        this.requestId = requestId;
-                        this.tracingId = tracingId;
-                }
-
                 @JsonProperty("userId")
                 public String getUserId() {
                         return userId;
@@ -95,6 +88,14 @@ public sealed interface CreateRefreshTokenResults extends Result
                 public String getTracingId() {
                         return tracingId;
                 }
+
+
+                private UserNotFound(String userId, UUID requestId, @Nullable String tracingId) {
+                        this.userId = userId;
+                        this.requestId = requestId;
+                        this.tracingId = tracingId;
+                }
+
 
                 @JsonCreator
                 public static UserNotFound of(@JsonProperty("userId") @NotEmpty String userId,
@@ -121,13 +122,6 @@ public sealed interface CreateRefreshTokenResults extends Result
                 @Nullable
                 private final String tracingId;
 
-
-                private SystemError(String message, UUID requestId, @Nullable String tracingId) {
-                        this.message = message;
-                        this.requestId = requestId;
-                        this.tracingId = tracingId;
-                }
-
                 @JsonProperty("message")
                 public String getMessage() {
                         return message;
@@ -141,6 +135,13 @@ public sealed interface CreateRefreshTokenResults extends Result
                 @JsonProperty("tracingId")
                 public String getTracingId() {
                         return tracingId;
+                }
+
+
+                private SystemError(String message, UUID requestId, @Nullable String tracingId) {
+                        this.message = message;
+                        this.requestId = requestId;
+                        this.tracingId = tracingId;
                 }
 
                 @JsonCreator
