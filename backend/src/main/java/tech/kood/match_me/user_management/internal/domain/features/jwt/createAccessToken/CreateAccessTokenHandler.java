@@ -46,8 +46,8 @@ public class CreateAccessTokenHandler
 
                         if (refreshTokenResult instanceof GetRefreshTokenResults.InvalidToken invalidToken) {
                                 var result = CreateAccessTokenResults.InvalidToken.of(
-                                                invalidToken.getToken(), request.getRequestId(),
-                                                request.getTracingId());
+                                                invalidToken.getRefreshToken(),
+                                                request.getRequestId(), request.getTracingId());
                                 events.publishEvent(new CreateAccessTokenEvent(request, result));
                                 return result;
                         }
@@ -70,7 +70,8 @@ public class CreateAccessTokenHandler
                                                                 .plusSeconds(userManagementConfig
                                                                                 .getJwtExpiration()))
                                                 .withClaim("userId",
-                                                                refreshToken.getToken().toString())
+                                                                refreshToken.getRefreshToken()
+                                                                                .toString())
                                                 .sign(jwtAlgo);
 
                                 var result = CreateAccessTokenResults.Success.of(jwt,

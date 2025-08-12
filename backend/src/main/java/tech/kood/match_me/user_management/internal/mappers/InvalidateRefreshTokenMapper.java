@@ -13,7 +13,8 @@ public final class InvalidateRefreshTokenMapper {
                                         success.getTracingId());
 
                         case InvalidateRefreshTokenResults.TokenNotFound tokenNotFound -> new InvalidateRefreshTokenResultsDTO.TokenNotFound(
-                                        tokenNotFound.getToken(), tokenNotFound.getTracingId());
+                                        tokenNotFound.getRefreshToken(),
+                                        tokenNotFound.getTracingId());
 
                         case InvalidateRefreshTokenResults.InvalidRequest invalidRequest -> new InvalidateRefreshTokenResultsDTO.InvalidRequest(
                                         invalidRequest.getMessage(), invalidRequest.getTracingId());

@@ -13,8 +13,8 @@ public class UserEntityMocker {
 
     public UserEntity createValidUserEntity() {
         var passwordHash = PasswordUtils.encode(faker.internet().password(8, 16));
-        return new UserEntity(UUID.randomUUID(), faker.internet().emailAddress(),
-                faker.name().username(), passwordHash.hash(), passwordHash.salt(), Instant.now(),
-                Instant.now());
+        return UserEntity.of(UUID.randomUUID(), faker.internet().emailAddress(),
+                faker.name().username(), passwordHash.getHash(), passwordHash.getSalt(),
+                Instant.now(), Instant.now());
     }
 }

@@ -1,10 +1,8 @@
 package tech.kood.match_me.user_management.feature.login;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +48,8 @@ public class LoginRequestTests extends UserManagementTestBase {
         var registerResult = registerUserHandler.handle(registerUserRequest);
         assert registerResult instanceof RegisterUserResults.Success;
 
-        var loginRequest = new LoginRequest(UUID.randomUUID().toString(),
-                registerUserRequest.email(), registerUserRequest.password(), null);
+        var loginRequest = LoginRequest.of(UUID.randomUUID(), registerUserRequest.getEmail(),
+                registerUserRequest.getPassword(), null);
 
         var loginResult = loginRequestHandler.handle(loginRequest);
         assert loginResult instanceof LoginResults.Success;

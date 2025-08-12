@@ -41,18 +41,18 @@ public class UserRepositoryTests extends UserManagementTestBase {
     void shouldFindUserByUsername() {
         var userEntity = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(userEntity);
-        var found = userRepository.findUserByUsername(userEntity.username());
+        var found = userRepository.findUserByUsername(userEntity.getUsername());
         assertFalse(found.isEmpty(), "User should be found by username");
-        assertEquals(userEntity.username(), found.get().username());
+        assertEquals(userEntity.getUsername(), found.get().getUsername());
     }
 
     @Test
     void shouldFindUserByEmail() {
         var userEntity = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(userEntity);
-        var found = userRepository.findUserByEmail(userEntity.email());
+        var found = userRepository.findUserByEmail(userEntity.getEmail());
         assertFalse(found.isEmpty(), "User should be found by email");
-        assertEquals(userEntity.email(), found.get().email());
+        assertEquals(userEntity.getEmail(), found.get().getEmail());
     }
 
 
@@ -72,23 +72,23 @@ public class UserRepositoryTests extends UserManagementTestBase {
     void shouldFindUserById() {
         var userEntity = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(userEntity);
-        var found = userRepository.findUserById(userEntity.id());
+        var found = userRepository.findUserById(userEntity.getId());
         assertFalse(found.isEmpty(), "User should be found by ID");
-        assertEquals(userEntity.id(), found.get().id());
+        assertEquals(userEntity.getId(), found.get().getId());
     }
 
     @Test
     void shouldReturnTrueIfUsernameExists() {
         var userEntity = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(userEntity);
-        assertTrue(userRepository.usernameExists(userEntity.username()));
+        assertTrue(userRepository.usernameExists(userEntity.getUsername()));
     }
 
     @Test
     void shouldReturnTrueIfEmailExists() {
         var userEntity = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(userEntity);
-        assertTrue(userRepository.emailExists(userEntity.email()));
+        assertTrue(userRepository.emailExists(userEntity.getEmail()));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class UserRepositoryTests extends UserManagementTestBase {
         var userEntity = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(userEntity);
         userRepository.deleteAll();
-        assertFalse(userRepository.usernameExists(userEntity.username()));
-        assertFalse(userRepository.emailExists(userEntity.email()));
+        assertFalse(userRepository.usernameExists(userEntity.getUsername()));
+        assertFalse(userRepository.emailExists(userEntity.getEmail()));
     }
 }

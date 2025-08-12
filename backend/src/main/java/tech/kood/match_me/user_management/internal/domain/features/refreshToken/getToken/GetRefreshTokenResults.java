@@ -20,14 +20,14 @@ public sealed interface GetRefreshTokenResults extends Result
                 private final UUID requestId;
 
                 @NotNull
-                private final RefreshToken token;
+                private final RefreshToken refreshToken;
 
                 @Nullable
                 private final String tracingId;
 
-                @JsonProperty("token")
-                public RefreshToken getToken() {
-                        return token;
+                @JsonProperty("refreshToken")
+                public RefreshToken getRefreshToken() {
+                        return refreshToken;
                 }
 
                 @JsonProperty("requestId")
@@ -41,13 +41,13 @@ public sealed interface GetRefreshTokenResults extends Result
                 }
 
                 private Success(RefreshToken token, UUID requestId, @Nullable String tracingId) {
-                        this.token = token;
+                        this.refreshToken = token;
                         this.requestId = requestId;
                         this.tracingId = tracingId;
                 }
 
                 @JsonCreator
-                public static Success of(@JsonProperty("token") @NotNull RefreshToken token,
+                public static Success of(@JsonProperty("refreshToken") @NotNull RefreshToken token,
                                 @JsonProperty("requestId") @NotNull UUID requestId,
                                 @JsonProperty("tracingId") @Nullable String tracingId) {
                         var success = new Success(token, requestId, tracingId);
@@ -66,14 +66,14 @@ public sealed interface GetRefreshTokenResults extends Result
                 private final UUID requestId;
 
                 @NotEmpty
-                private final String token;
+                private final String refreshToken;
 
                 @Nullable
                 private final String tracingId;
 
-                @JsonProperty("token")
-                public String getToken() {
-                        return token;
+                @JsonProperty("refreshToken")
+                public String getRefreshToken() {
+                        return refreshToken;
                 }
 
                 @JsonProperty("requestId")
@@ -87,7 +87,7 @@ public sealed interface GetRefreshTokenResults extends Result
                 }
 
                 private InvalidToken(String token, UUID requestId, @Nullable String tracingId) {
-                        this.token = token;
+                        this.refreshToken = token;
                         this.requestId = requestId;
                         this.tracingId = tracingId;
                 }

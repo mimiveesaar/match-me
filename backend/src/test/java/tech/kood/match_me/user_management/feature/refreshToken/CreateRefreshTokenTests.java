@@ -51,19 +51,20 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
                 var registerResult = registerUserHandler.handle(registerRequest);
                 assert registerResult instanceof RegisterUserResults.Success;
 
-                var user = ((RegisterUserResults.Success) registerResult).user();
-                var createTokenRequest = CreateRefreshTokenRequest.of(UUID.randomUUID().toString(),
-                                user, null);
+                var user = ((RegisterUserResults.Success) registerResult).getUser();
+                var createTokenRequest =
+                                CreateRefreshTokenRequest.of(UUID.randomUUID(), user, null);
                 var createTokenResult = createRefreshTokenHandler.handle(createTokenRequest);
 
                 assert createTokenResult instanceof CreateRefreshTokenResults.Success;
 
                 var successResult = (CreateRefreshTokenResults.Success) createTokenResult;
 
-                var token = refreshTokenRepository.findToken(successResult.refreshToken.token);
+                var token = refreshTokenRepository
+                                .findToken(successResult.getRefreshToken().getToken());
                 assert token.isPresent() : "The refresh token should be created and found in the repository";
-                assert token.get().userId().equals(
-                                user.id()) : "The refresh token should belong to the correct user";
+                assert token.get().getUserId().equals(user.getId()
+                                .getValue()) : "The refresh token should belong to the correct user";
         }
 
         @Test
@@ -72,14 +73,14 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
                 var registerResult = registerUserHandler.handle(registerRequest);
                 assert registerResult instanceof RegisterUserResults.Success;
 
-                var user = ((RegisterUserResults.Success) registerResult).user();
+                var user = ((RegisterUserResults.Success) registerResult).getUser();
                 // Create a request with a non-existent user ID to simulate user not found
-                var createTokenRequest = CreateRefreshTokenRequest.of(UUID.randomUUID().toString(),
-                                user, null);
+                var createTokenRequest =
+                                CreateRefreshTokenRequest.of(UUID.randomUUID(), user, null);
                 var result = createRefreshTokenHandler.handle(createTokenRequest);
-                
-                // In the current implementation, we assume the user exists, so this would 
-                // actually succeed. To properly test UserNotFound, we would need to 
+
+                // In the current implementation, we assume the user exists, so this would
+                // actually succeed. To properly test UserNotFound, we would need to
                 // modify the handler to check if the user exists in the database.
                 // For now, we'll just test that it returns a Success result.
                 assert result instanceof CreateRefreshTokenResults.Success : "The handler should return a Success result for valid user";

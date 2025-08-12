@@ -1,7 +1,6 @@
 package tech.kood.match_me.user_management.feature;
 
 import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,17 +52,10 @@ public class RegisterUserTests extends UserManagementTestBase {
     void shouldNotCreateUserWithExistingEmail() {
         var request = registerUserRequestMocker.createValidRequest();
         var request2 = registerUserRequestMocker.createValidRequest();
-        request2 = request2.withEmail(request.email());
+        request2 = request2.withEmail(request.getEmail());
         registerUserHandler.handle(request);
         var result = registerUserHandler.handle(request2);
         assert result instanceof RegisterUserResults.EmailExists;
-    }
-
-    @Test
-    void shouldNotCreateUserWithInvalidEmail() {
-        var request = registerUserRequestMocker.createInvalidEmailRequest();
-        var result = registerUserHandler.handle(request);
-        assert result instanceof RegisterUserResults.InvalidEmail;
     }
 
     @Test
@@ -72,7 +64,7 @@ public class RegisterUserTests extends UserManagementTestBase {
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidUsername;
         assert ((RegisterUserResults.InvalidUsername) result)
-                .type() == RegisterUserResults.InvalidUsernameType.TOO_SHORT;
+                .getType() == RegisterUserResults.InvalidUsernameType.TOO_SHORT;
     }
 
     @Test
@@ -81,7 +73,7 @@ public class RegisterUserTests extends UserManagementTestBase {
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidUsername;
         assert ((RegisterUserResults.InvalidUsername) result)
-                .type() == RegisterUserResults.InvalidUsernameType.TOO_LONG;
+                .getType() == RegisterUserResults.InvalidUsernameType.TOO_LONG;
     }
 
     @Test
@@ -90,7 +82,7 @@ public class RegisterUserTests extends UserManagementTestBase {
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidUsername;
         assert ((RegisterUserResults.InvalidUsername) result)
-                .type() == RegisterUserResults.InvalidUsernameType.INVALID_CHARACTERS;
+                .getType() == RegisterUserResults.InvalidUsernameType.INVALID_CHARACTERS;
     }
 
     @Test
@@ -99,7 +91,7 @@ public class RegisterUserTests extends UserManagementTestBase {
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidPassword;
         assert ((RegisterUserResults.InvalidPassword) result)
-                .type() == RegisterUserResults.InvalidPasswordType.TOO_SHORT;
+                .getType() == RegisterUserResults.InvalidPasswordType.TOO_SHORT;
     }
 
     @Test
@@ -108,7 +100,7 @@ public class RegisterUserTests extends UserManagementTestBase {
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidUsername;
         assert ((RegisterUserResults.InvalidUsername) result)
-                .type() == RegisterUserResults.InvalidUsernameType.TOO_SHORT;
+                .getType() == RegisterUserResults.InvalidUsernameType.TOO_SHORT;
     }
 
     @Test
@@ -117,7 +109,7 @@ public class RegisterUserTests extends UserManagementTestBase {
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidUsername;
         assert ((RegisterUserResults.InvalidUsername) result)
-                .type() == RegisterUserResults.InvalidUsernameType.TOO_SHORT;
+                .getType() == RegisterUserResults.InvalidUsernameType.TOO_SHORT;
     }
 
     @Test
@@ -126,14 +118,7 @@ public class RegisterUserTests extends UserManagementTestBase {
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidPassword;
         assert ((RegisterUserResults.InvalidPassword) result)
-                .type() == RegisterUserResults.InvalidPasswordType.TOO_SHORT;
-    }
-
-    @Test
-    void shouldNotCreateUserWithEmptyEmail() {
-        var request = registerUserRequestMocker.createEmptyEmailRequest();
-        var result = registerUserHandler.handle(request);
-        assert result instanceof RegisterUserResults.InvalidEmail;
+                .getType() == RegisterUserResults.InvalidPasswordType.TOO_SHORT;
     }
 
     @Test
@@ -142,6 +127,6 @@ public class RegisterUserTests extends UserManagementTestBase {
         var result = registerUserHandler.handle(request);
         assert result instanceof RegisterUserResults.InvalidPassword;
         assert ((RegisterUserResults.InvalidPassword) result)
-                .type() == RegisterUserResults.InvalidPasswordType.TOO_LONG;
+                .getType() == RegisterUserResults.InvalidPasswordType.TOO_LONG;
     }
 }

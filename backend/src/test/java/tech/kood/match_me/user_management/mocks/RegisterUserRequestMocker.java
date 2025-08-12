@@ -11,7 +11,7 @@ public class RegisterUserRequestMocker {
     public static Faker faker = new Faker();
 
     public RegisterUserRequest createValidRequest() {
-        return new RegisterUserRequest(UUID.randomUUID().toString(), faker.name().username(),
+        return RegisterUserRequest.of(UUID.randomUUID(), faker.name().username(),
                 faker.internet().password(8, 16), faker.internet().emailAddress(),
                 UUID.randomUUID().toString());
     }

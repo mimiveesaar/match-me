@@ -3,7 +3,6 @@ package tech.kood.match_me.user_management.repositories;
 import java.time.Instant;
 
 import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
         var mockUser = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(mockUser);
 
-        var refreshToken = refreshTokenFactory.create(mockUser.id());
+        var refreshToken = refreshTokenFactory.create(mockUser.getId());
         var entity = refreshTokenMapper.toEntity(refreshToken);
         refreshTokenRepository.save(entity);
     }
@@ -60,12 +59,12 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
         var mockUser = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(mockUser);
 
-        var refreshToken = refreshTokenFactory.create(mockUser.id());
+        var refreshToken = refreshTokenFactory.create(mockUser.getId());
         var entity = refreshTokenMapper.toEntity(refreshToken);
         refreshTokenRepository.save(entity);
 
-        boolean isValid = refreshTokenRepository.validateToken(refreshToken.token(), mockUser.id(),
-                Instant.now());
+        boolean isValid = refreshTokenRepository.validateToken(refreshToken.getToken(),
+                mockUser.getId(), Instant.now());
         assert isValid : "The token should be valid";
     }
 
@@ -74,11 +73,11 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
         var mockUser = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(mockUser);
 
-        var refreshToken = refreshTokenFactory.create(mockUser.id());
+        var refreshToken = refreshTokenFactory.create(mockUser.getId());
         var entity = refreshTokenMapper.toEntity(refreshToken);
         refreshTokenRepository.save(entity);
 
-        var foundToken = refreshTokenRepository.findToken(refreshToken.token());
+        var foundToken = refreshTokenRepository.findToken(refreshToken.getToken());
         assert foundToken.isPresent() : "The token should be found";
     }
 
@@ -88,16 +87,16 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
         userRepository.saveUser(mockUser);
 
         var refreshToken =
-                refreshTokenFactory.create(mockUser.id(), Instant.now().minusSeconds(3600)); // Token
-                                                                                             // expired
-                                                                                             // 1
-                                                                                             // hour
-                                                                                             // ago
+                refreshTokenFactory.create(mockUser.getId(), Instant.now().minusSeconds(3600)); // Token
+                                                                                                // expired
+                                                                                                // 1
+                                                                                                // hour
+                                                                                                // ago
         var entity = refreshTokenMapper.toEntity(refreshToken);
         refreshTokenRepository.save(entity);
 
-        boolean isValid = refreshTokenRepository.validateToken(refreshToken.token(), mockUser.id(),
-                Instant.now());
+        boolean isValid = refreshTokenRepository.validateToken(refreshToken.getToken(),
+                mockUser.getId(), Instant.now());
         assert !isValid : "The token should be invalid";
     }
 
@@ -107,18 +106,18 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
         userRepository.saveUser(mockUser);
 
         var refreshToken =
-                refreshTokenFactory.create(mockUser.id(), Instant.now().minusSeconds(3600)); // Token
-                                                                                             // expired
-                                                                                             // 1
-                                                                                             // hour
-                                                                                             // ago
+                refreshTokenFactory.create(mockUser.getId(), Instant.now().minusSeconds(3600)); // Token
+                                                                                                // expired
+                                                                                                // 1
+                                                                                                // hour
+                                                                                                // ago
         var entity = refreshTokenMapper.toEntity(refreshToken);
         refreshTokenRepository.save(entity);
 
         refreshTokenRepository.deleteExpiredTokens(Instant.now());
 
-        boolean isValid = refreshTokenRepository.validateToken(refreshToken.token(), mockUser.id(),
-                Instant.now());
+        boolean isValid = refreshTokenRepository.validateToken(refreshToken.getToken(),
+                mockUser.getId(), Instant.now());
         assert !isValid : "The token should be invalid";
     }
 
@@ -127,14 +126,14 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
         var mockUser = userEntityMocker.createValidUserEntity();
         userRepository.saveUser(mockUser);
 
-        var refreshToken = refreshTokenFactory.create(mockUser.id());
+        var refreshToken = refreshTokenFactory.create(mockUser.getId());
         var entity = refreshTokenMapper.toEntity(refreshToken);
         refreshTokenRepository.save(entity);
 
-        refreshTokenRepository.deleteToken(refreshToken.token());
+        refreshTokenRepository.deleteToken(refreshToken.getToken());
 
-        boolean isValid = refreshTokenRepository.validateToken(refreshToken.token(), mockUser.id(),
-                Instant.now());
+        boolean isValid = refreshTokenRepository.validateToken(refreshToken.getToken(),
+                mockUser.getId(), Instant.now());
         assert !isValid : "The token should be deleted and invalid";
     }
 }

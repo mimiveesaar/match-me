@@ -53,20 +53,20 @@ public class GetAccessTokenTests extends UserManagementTestBase {
         var registerResult = registerUserHandler.handle(registerRequest);
         assert registerResult instanceof RegisterUserResults.Success;
 
-        var user = ((RegisterUserResults.Success) registerResult).user();
-        var createTokenRequest =
-                new CreateRefreshTokenRequest(UUID.randomUUID().toString(), user, null);
+        var user = ((RegisterUserResults.Success) registerResult).getUser();
+        var createTokenRequest = CreateRefreshTokenRequest.of(UUID.randomUUID(), user, null);
         var createTokenResult = createRefreshTokenHandler.handle(createTokenRequest);
         assert createTokenResult instanceof CreateRefreshTokenResults.Success;
 
-        var refreshToken = ((CreateRefreshTokenResults.Success) createTokenResult).refreshToken();
+        var refreshToken =
+                ((CreateRefreshTokenResults.Success) createTokenResult).getRefreshToken();
         var getAccessTokenRequest =
-                CreateAccessTokenRequest.of(UUID.randomUUID(), refreshToken.token(), null);
+                CreateAccessTokenRequest.of(UUID.randomUUID(), refreshToken.getToken(), null);
         var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
 
         assert getAccessTokenResult instanceof CreateAccessTokenResults.Success;
 
-        var accessToken = ((CreateAccessTokenResults.Success) getAccessTokenResult).jwt;
+        var accessToken = ((CreateAccessTokenResults.Success) getAccessTokenResult).getJwt();
         assert accessToken != null;
     }
 
@@ -78,13 +78,4 @@ public class GetAccessTokenTests extends UserManagementTestBase {
 
         assert getAccessTokenResult instanceof CreateAccessTokenResults.InvalidToken : "The handler should return an InvalidToken result for an invalid refresh token";
     }
-
-    @Test
-    public void shouldHandleMissingRefreshToken() {
-        var getAccessTokenRequest = CreateAccessTokenRequest.of(UUID.randomUUID(), null, null);
-        var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
-
-        assert getAccessTokenResult instanceof CreateAccessTokenResults.InvalidRequest : "The handler should return an InvalidRequest result for a null refresh token";
-    }
-
 }

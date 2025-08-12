@@ -45,11 +45,11 @@ public final class InvalidateRefreshTokenHandler
      */
     public InvalidateRefreshTokenResults handle(InvalidateRefreshTokenRequest request) {
         try {
-            var tokenExists = refreshTokenRepository.deleteToken(request.getToken());
+            var tokenExists = refreshTokenRepository.deleteToken(request.getRefreshToken());
 
             if (!tokenExists) {
-                var result = InvalidateRefreshTokenResults.TokenNotFound.of(request.getToken(),
-                        request.getRequestId(), request.getTracingId());
+                var result = InvalidateRefreshTokenResults.TokenNotFound.of(
+                        request.getRefreshToken(), request.getRequestId(), request.getTracingId());
                 events.publishEvent(new InvalidateRefreshTokenEvent(request, result));
                 return result;
             }

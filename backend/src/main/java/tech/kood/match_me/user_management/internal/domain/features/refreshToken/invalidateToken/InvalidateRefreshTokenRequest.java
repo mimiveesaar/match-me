@@ -36,7 +36,7 @@ public final class InvalidateRefreshTokenRequest implements Command {
     private final UUID requestId;
 
     @NotBlank
-    private final String token;
+    private final String refreshToken;
 
     @Nullable
     private final String tracingId;
@@ -46,9 +46,9 @@ public final class InvalidateRefreshTokenRequest implements Command {
         return requestId;
     }
 
-    @JsonProperty("token")
-    public String getToken() {
-        return token;
+    @JsonProperty("refreshToken")
+    public String getRefreshToken() {
+        return refreshToken;
     }
 
     @JsonProperty("tracingId")
@@ -59,16 +59,16 @@ public final class InvalidateRefreshTokenRequest implements Command {
     private InvalidateRefreshTokenRequest(@NotNull UUID requestId, @NotBlank String token,
             @Nullable String tracingId) {
         this.requestId = requestId;
-        this.token = token;
+        this.refreshToken = token;
         this.tracingId = tracingId;
     }
 
     @JsonCreator
     public static InvalidateRefreshTokenRequest of(
             @JsonProperty("requestId") @NotNull UUID requestId,
-            @JsonProperty("token") @NotBlank String token,
+            @JsonProperty("refreshToken") @NotBlank String refreshToken,
             @JsonProperty("tracingId") @Nullable String tracingId) {
-        var request = new InvalidateRefreshTokenRequest(requestId, token, tracingId);
+        var request = new InvalidateRefreshTokenRequest(requestId, refreshToken, tracingId);
         var violations = DomainObjectInputValidator.instance.validate(request);
 
         if (!violations.isEmpty()) {
@@ -78,7 +78,7 @@ public final class InvalidateRefreshTokenRequest implements Command {
     }
 
     public InvalidateRefreshTokenRequest withRequestId(UUID requestId) {
-        return InvalidateRefreshTokenRequest.of(requestId, token, tracingId);
+        return InvalidateRefreshTokenRequest.of(requestId, refreshToken, tracingId);
     }
 
     public InvalidateRefreshTokenRequest withToken(String token) {
@@ -86,6 +86,6 @@ public final class InvalidateRefreshTokenRequest implements Command {
     }
 
     public InvalidateRefreshTokenRequest withTracingId(String tracingId) {
-        return InvalidateRefreshTokenRequest.of(requestId, token, tracingId);
+        return InvalidateRefreshTokenRequest.of(requestId, refreshToken, tracingId);
     }
 }

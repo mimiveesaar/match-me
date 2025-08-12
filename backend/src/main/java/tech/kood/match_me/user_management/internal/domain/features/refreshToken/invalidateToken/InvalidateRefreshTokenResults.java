@@ -57,14 +57,14 @@ public sealed interface InvalidateRefreshTokenResults extends Result permits
                 private final UUID requestId;
 
                 @NotEmpty
-                private final String token;
+                private final String refreshToken;
 
                 @Nullable
                 private final String tracingId;
 
-                @JsonProperty("token")
-                public String getToken() {
-                        return token;
+                @JsonProperty("refreshToken")
+                public String getRefreshToken() {
+                        return refreshToken;
                 }
 
                 @JsonProperty("requestId")
@@ -79,16 +79,17 @@ public sealed interface InvalidateRefreshTokenResults extends Result permits
                 }
 
                 private TokenNotFound(String token, UUID requestId, @Nullable String tracingId) {
-                        this.token = token;
+                        this.refreshToken = token;
                         this.requestId = requestId;
                         this.tracingId = tracingId;
                 }
 
                 @JsonCreator
-                public static TokenNotFound of(@JsonProperty("token") @NotEmpty String token,
+                public static TokenNotFound of(
+                                @JsonProperty("refreshToken") @NotEmpty String refreshToken,
                                 @JsonProperty("requestId") @NotNull UUID requestId,
                                 @JsonProperty("tracingId") @Nullable String tracingId) {
-                        var tokenNotFound = new TokenNotFound(token, requestId, tracingId);
+                        var tokenNotFound = new TokenNotFound(refreshToken, requestId, tracingId);
                         var violations = DomainObjectInputValidator.instance
                                         .validate(tokenNotFound);
                         if (!violations.isEmpty()) {
