@@ -26,25 +26,25 @@ public final class RegisterUserResultsMapper {
 
                 return switch (result) {
                         case RegisterUserResults.Success success -> new RegisterUserResultsDTO.Success(
-                                        userMapper.toUserDTO(success.user()), success.tracingId());
+                                        userMapper.toUserDTO(success.getUser()),
+                                        success.getTracingId());
                         case RegisterUserResults.UsernameExists usernameExists -> new RegisterUserResultsDTO.UsernameExists(
-                                        usernameExists.username(), usernameExists.tracingId());
+                                        usernameExists.getUsername(),
+                                        usernameExists.getTracingId());
                         case RegisterUserResults.EmailExists emailExists -> new RegisterUserResultsDTO.EmailExists(
-                                        emailExists.email(), emailExists.tracingId());
-                        case RegisterUserResults.InvalidEmail invalidEmail -> new RegisterUserResultsDTO.InvalidEmail(
-                                        invalidEmail.email(), invalidEmail.tracingId());
+                                        emailExists.getEmail(), emailExists.getTracingId());
                         case RegisterUserResults.InvalidPassword invalidPasswordLength -> new RegisterUserResultsDTO.InvalidPassword(
-                                        invalidPasswordLength.password(),
+                                        invalidPasswordLength.getPassword(),
                                         invalidPasswordTypeMapper.toInvalidPasswordTypeDTO(
-                                                        invalidPasswordLength.type()),
-                                        invalidPasswordLength.tracingId());
+                                                        invalidPasswordLength.getType()),
+                                        invalidPasswordLength.getTracingId());
                         case RegisterUserResults.InvalidUsername invalidUsername -> new RegisterUserResultsDTO.InvalidUsername(
-                                        invalidUsername.username(),
+                                        invalidUsername.getUsername(),
                                         invalidUsernameTypeMapper.toInvalidUsernameType(
-                                                        invalidUsername.type()),
-                                        invalidUsername.tracingId());
+                                                        invalidUsername.getType()),
+                                        invalidUsername.getTracingId());
                         case RegisterUserResults.SystemError systemError -> new RegisterUserResultsDTO.SystemError(
-                                        systemError.message(), systemError.tracingId());
+                                        systemError.getMessage(), systemError.getTracingId());
                 };
         }
 }

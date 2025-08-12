@@ -2,6 +2,8 @@ package tech.kood.match_me.user_management.api.filters;
 
 import java.io.IOException;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -11,8 +13,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import tech.kood.match_me.user_management.internal.domain.features.getUser.GetUserHandler;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.handlers.GetUserByIdHandler;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByIdQuery;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByIdQueryResults;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenHandler;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenResults;
@@ -22,13 +25,14 @@ import tech.kood.match_me.user_management.internal.domain.models.AccessToken;
 @Service
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     private final ValidateAccessTokenHandler validateAccessTokenHandler;
 
-    private final GetUserHandler getUserHandler;
+    private final GetUserByIdHandler getUserHandler;
 
     public JwtAuthenticationFilter(ValidateAccessTokenHandler validateAccessTokenHandler,
-            GetUserHandler getUserHandler) {
+            GetUserByIdHandler getUserHandler) {
         this.validateAccessTokenHandler = validateAccessTokenHandler;
         this.getUserHandler = getUserHandler;
     }
@@ -44,33 +48,51 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String jwt = authorizationHeader.substring(7);
-        if (jwt != null) {
-            var validationRequest = new ValidateAccessTokenRequest(UUID.randomUUID().toString(),
-                    jwt, UUID.randomUUID().toString());
+        if (jwt == null || jwt.isEmpty()) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
+        // Generate consistent request IDs for tracing
+        UUID validationRequestId = UUID.randomUUID();
+        String tracingId = UUID.randomUUID().toString();
+        
+        try {
+            var validationRequest = ValidateAccessTokenRequest.of(validationRequestId, jwt, tracingId);
             var validationResult = validateAccessTokenHandler.handle(validationRequest);
 
-            switch (validationResult) {
-                case ValidateAccessTokenResults.Success(AccessToken accessToken, String tracingId) -> {
-                    var userId = accessToken.userId();
+            if (validationResult instanceof ValidateAccessTokenResults.Success successResult) {
+                AccessToken accessToken = successResult.getAccessToken();
+                var userId = accessToken.getUserId();
 
-                    var getUserByIdRequest =
-                            new GetUserByIdQuery(UUID.randomUUID().toString(), userId, tracingId);
-                    var userDetails = getUserHandler.handle(getUserByIdRequest);
+                UUID getUserRequestId = UUID.randomUUID();
+                var getUserByIdRequest = GetUserByIdQuery.of(getUserRequestId, userId, tracingId);
+                var userResult = getUserHandler.handle(getUserByIdRequest);
 
+                if (userResult instanceof GetUserByIdQueryResults.Success userSuccess) {
                     UsernamePasswordAuthenticationToken auth =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, null);
+                            new UsernamePasswordAuthenticationToken(userSuccess.getUser(), null, null);
 
                     auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
                     SecurityContextHolder.getContext().setAuthentication(auth);
+                } else if (userResult instanceof GetUserByIdQueryResults.UserNotFound) {
+                    logger.warn("User not found for ID: {} during JWT authentication", userId.getValue());
+                    // Authentication will not be set, allowing the request to proceed unauthenticated
+                    // This will likely be handled by Spring Security configuration
+                } else if (userResult instanceof GetUserByIdQueryResults.SystemError systemError) {
+                    logger.error("System error while fetching user by ID: {} during JWT authentication. Error: {}", 
+                            userId.getValue(), systemError.getMessage());
+                    // Authentication will not be set due to system error
                 }
-                case ValidateAccessTokenResults.InvalidToken(String accessToken, String tracingId) -> {
-                }
-                case ValidateAccessTokenResults.InvalidRequest(String message, String tracingId) -> {
-                }
+            } else if (validationResult instanceof ValidateAccessTokenResults.InvalidToken) {
+                logger.debug("Invalid JWT token provided for authentication");
+                // Token is invalid, authentication will not be set
+                // This will likely be handled by Spring Security configuration
             }
-
+        } catch (Exception e) {
+            logger.error("Unexpected error during JWT authentication", e);
+            // In case of unexpected errors, we don't set authentication
+            // This will likely be handled by Spring Security configuration
         }
 
         filterChain.doFilter(request, response);

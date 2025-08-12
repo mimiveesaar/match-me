@@ -56,8 +56,6 @@ public sealed interface GetUserByIdQueryResults extends Result
             this.tracingId = tracingId;
         }
 
-
-
         @JsonCreator
         public static Success of(@JsonProperty("user") User user,
                 @JsonProperty("requestId") UUID requestId,

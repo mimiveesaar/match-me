@@ -56,8 +56,8 @@ public class GetAccessTokenEndpoint {
         public ResponseEntity<GetAccessTokenResultsDTO> getAccessToken(
                         @RequestBody GetAccessTokenRequestDTO request) {
 
-                var internalRequest = new CreateAccessTokenRequest(request.refreshToken(),
-                                UUID.randomUUID().toString());
+                var internalRequest = CreateAccessTokenRequest.of(UUID.randomUUID(),
+                                request.refreshToken(), UUID.randomUUID().toString());
 
 
                 var result = userManagementPublisher.publish(internalRequest);

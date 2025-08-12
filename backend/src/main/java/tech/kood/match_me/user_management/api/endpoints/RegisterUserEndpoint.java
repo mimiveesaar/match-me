@@ -55,9 +55,8 @@ public class RegisterUserEndpoint {
     public ResponseEntity<RegisterUserResultsDTO> registerUser(
             @RequestBody RegisterUserRequestDTO request) {
 
-        var internalRequest =
-                new RegisterUserRequest(UUID.randomUUID().toString(), request.username(),
-                        request.password(), request.email(), UUID.randomUUID().toString());
+        var internalRequest = RegisterUserRequest.of(UUID.randomUUID(), request.username(),
+                request.password(), request.email(), UUID.randomUUID().toString());
 
         var result = userManagementPublisher.publish(internalRequest);
         var responseDTO = registerUserResultsMapper.toDTO(result);

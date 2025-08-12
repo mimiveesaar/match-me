@@ -17,20 +17,37 @@ public sealed interface LoginResults extends Result
     final class Success implements LoginResults {
 
         @NotNull
-        @JsonProperty("requestId")
-        public final UUID requestId;
+        private final UUID requestId;
 
         @NotNull
-        @JsonProperty("refreshToken")
-        public final RefreshToken refreshToken;
+        private final RefreshToken refreshToken;
 
         @NotNull
-        @JsonProperty("user")
-        public final User user;
+        private final User user;
 
         @Nullable
+        private final String tracingId;
+
+        @JsonProperty("refreshToken")
+        public RefreshToken getRefreshToken() {
+            return refreshToken;
+        }
+
+        @JsonProperty("user")
+        public User getUser() {
+            return user;
+        }
+
+        @JsonProperty("requestId")
+        public UUID getRequestId() {
+            return requestId;
+        }
+
         @JsonProperty("tracingId")
-        public final String tracingId;
+        @Nullable
+        public String getTracingId() {
+            return tracingId;
+        }
 
         private Success(RefreshToken refreshToken, User user, UUID requestId,
                 @Nullable String tracingId) {
@@ -52,25 +69,43 @@ public sealed interface LoginResults extends Result
             }
             return success;
         }
+
     }
 
     final class InvalidCredentials implements LoginResults {
 
         @NotNull
-        @JsonProperty("requestId")
-        public final UUID requestId;
+        private final UUID requestId;
 
         @NotEmpty
-        @JsonProperty("email")
-        public final String email;
+        private final String email;
 
         @NotEmpty
-        @JsonProperty("password")
-        public final String password;
+        private final String password;
 
         @Nullable
+        private final String tracingId;
+
+        @JsonProperty("email")
+        public String getEmail() {
+            return email;
+        }
+
+        @JsonProperty("password")
+        public String getPassword() {
+            return password;
+        }
+
+        @JsonProperty("requestId")
+        public UUID getRequestId() {
+            return requestId;
+        }
+
         @JsonProperty("tracingId")
-        public final String tracingId;
+        @Nullable
+        public String getTracingId() {
+            return tracingId;
+        }
 
         private InvalidCredentials(String email, String password, UUID requestId,
                 @Nullable String tracingId) {
@@ -97,16 +132,29 @@ public sealed interface LoginResults extends Result
     final class SystemError implements LoginResults {
 
         @NotNull
-        @JsonProperty("requestId")
-        public final UUID requestId;
+        private final UUID requestId;
 
         @NotEmpty
-        @JsonProperty("message")
-        public final String message;
+        private final String message;
 
         @Nullable
+        private final String tracingId;
+
+        @JsonProperty("message")
+        public String getMessage() {
+            return message;
+        }
+
+        @JsonProperty("requestId")
+        public UUID getRequestId() {
+            return requestId;
+        }
+
         @JsonProperty("tracingId")
-        public final String tracingId;
+        @Nullable
+        public String getTracingId() {
+            return tracingId;
+        }
 
         private SystemError(String message, UUID requestId, @Nullable String tracingId) {
             this.message = message;

@@ -10,13 +10,11 @@ public final class GetAccessTokenMapper {
         public GetAccessTokenResultsDTO toDTO(CreateAccessTokenResults result) {
                 return switch (result) {
                         case CreateAccessTokenResults.Success success -> new GetAccessTokenResultsDTO.Success(
-                                        success.jwt(), success.tracingId());
+                                        success.getJwt(), success.getTracingId());
                         case CreateAccessTokenResults.InvalidToken invalidToken -> new GetAccessTokenResultsDTO.InvalidToken(
-                                        invalidToken.token(), invalidToken.tracingId());
-                        case CreateAccessTokenResults.InvalidRequest invalidRequest -> new GetAccessTokenResultsDTO.InvalidRequest(
-                                        invalidRequest.message(), invalidRequest.tracingId());
+                                        invalidToken.getToken(), invalidToken.getTracingId());
                         case CreateAccessTokenResults.SystemError systemError -> new GetAccessTokenResultsDTO.SystemError(
-                                        systemError.message(), systemError.tracingId());
+                                        systemError.getMessage(), systemError.getTracingId());
                 };
         }
 }

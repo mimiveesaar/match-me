@@ -48,8 +48,8 @@ public sealed interface RegisterUserResults extends Result
                 }
 
                 @JsonCreator
-                public static Success of(@JsonProperty("user") @NotNull User user,
-                                @JsonProperty("requestId") @NotNull UUID requestId,
+                public static Success of(@JsonProperty("requestId") @NotNull UUID requestId,
+                                @JsonProperty("user") @NotNull User user,
                                 @JsonProperty("tracingId") @Nullable String tracingId) {
                         var success = new Success(user, requestId, tracingId);
                         var violations = DomainObjectInputValidator.instance.validate(success);
@@ -95,8 +95,8 @@ public sealed interface RegisterUserResults extends Result
                 }
 
                 @JsonCreator
-                public static UsernameExists of(@JsonProperty("username") @NotEmpty String username,
-                                @JsonProperty("requestId") @NotNull UUID requestId,
+                public static UsernameExists of(@JsonProperty("requestId") @NotNull UUID requestId,
+                                @JsonProperty("username") @NotEmpty String username,
                                 @JsonProperty("tracingId") @Nullable String tracingId) {
                         var usernameExists = new UsernameExists(username, requestId, tracingId);
                         var violations = DomainObjectInputValidator.instance
@@ -142,8 +142,8 @@ public sealed interface RegisterUserResults extends Result
                 }
 
                 @JsonCreator
-                public static EmailExists of(@JsonProperty("email") @NotEmpty String email,
-                                @JsonProperty("requestId") @NotNull UUID requestId,
+                public static EmailExists of(@JsonProperty("requestId") @NotNull UUID requestId,
+                                @JsonProperty("email") @NotEmpty String email,
                                 @JsonProperty("tracingId") @Nullable String tracingId) {
                         var emailExists = new EmailExists(email, requestId, tracingId);
                         var violations = DomainObjectInputValidator.instance.validate(emailExists);
@@ -203,10 +203,9 @@ public sealed interface RegisterUserResults extends Result
                 }
 
                 @JsonCreator
-                public static InvalidUsername of(
+                public static InvalidUsername of(@JsonProperty("requestId") @NotNull UUID requestId,
                                 @JsonProperty("username") @NotEmpty String username,
                                 @JsonProperty("type") @NotNull InvalidUsernameType type,
-                                @JsonProperty("requestId") @NotNull UUID requestId,
                                 @JsonProperty("tracingId") @Nullable String tracingId) {
                         var invalidUsername =
                                         new InvalidUsername(username, type, requestId, tracingId);
@@ -267,10 +266,9 @@ public sealed interface RegisterUserResults extends Result
                 }
 
                 @JsonCreator
-                public static InvalidPassword of(
+                public static InvalidPassword of(@JsonProperty("requestId") @NotNull UUID requestId,
                                 @JsonProperty("password") @NotEmpty String password,
                                 @JsonProperty("type") @NotNull InvalidPasswordType type,
-                                @JsonProperty("requestId") @NotNull UUID requestId,
                                 @JsonProperty("tracingId") @Nullable String tracingId) {
                         var invalidPassword =
                                         new InvalidPassword(password, type, requestId, tracingId);
@@ -317,8 +315,8 @@ public sealed interface RegisterUserResults extends Result
                 }
 
                 @JsonCreator
-                public static SystemError of(@JsonProperty("message") @NotEmpty String message,
-                                @JsonProperty("requestId") @NotNull UUID requestId,
+                public static SystemError of(@JsonProperty("requestId") @NotNull UUID requestId,
+                                @JsonProperty("message") @NotEmpty String message,
                                 @JsonProperty("tracingId") @Nullable String tracingId) {
                         var systemError = new SystemError(message, requestId, tracingId);
                         var violations = DomainObjectInputValidator.instance.validate(systemError);

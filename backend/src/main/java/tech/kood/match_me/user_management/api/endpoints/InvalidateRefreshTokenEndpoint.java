@@ -59,9 +59,8 @@ public final class InvalidateRefreshTokenEndpoint {
         public ResponseEntity<InvalidateRefreshTokenResultsDTO> invalidateRefreshToken(
                         @RequestBody InvalidateRefreshTokenRequestDTO request) {
 
-                var internalRequest = new InvalidateRefreshTokenRequest(
-                                UUID.randomUUID().toString(), request.refreshToken(),
-                                UUID.randomUUID().toString());
+                var internalRequest = InvalidateRefreshTokenRequest.of(UUID.randomUUID(),
+                                request.refreshToken(), UUID.randomUUID().toString());
 
 
                 var result = userManagementPublisher.publish(internalRequest);

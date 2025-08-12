@@ -12,7 +12,7 @@ public final class PasswordUtils {
         }
         String salt = BCrypt.gensalt();
         String hash = BCrypt.hashpw(plainPassword, salt);
-        return new HashedPassword(hash, salt);
+        return HashedPassword.of(hash, salt);
     }
 
     // Checks if the provided plain password matches the hash using the stored salt
@@ -21,7 +21,7 @@ public final class PasswordUtils {
             return false;
         }
         // BCrypt stores the salt in the hash, but for explicit salt usage:
-        String hashToCompare = BCrypt.hashpw(plainPassword, hashedPassword.salt());
-        return hashToCompare.equals(hashedPassword.hash());
+        String hashToCompare = BCrypt.hashpw(plainPassword, hashedPassword.getSalt());
+        return hashToCompare.equals(hashedPassword.getHash());
     }
 }

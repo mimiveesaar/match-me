@@ -25,25 +25,25 @@ public class GetUserByIdHandler implements QueryHandler<GetUserByIdQuery, GetUse
 
     public GetUserByIdQueryResults handle(GetUserByIdQuery request) {
         try {
-            var userQueryResult = userRepository.findUserById(request.userId().value);
+            var userQueryResult = userRepository.findUserById(request.getUserId().getValue());
             if (userQueryResult.isPresent()) {
                 var userEntity = userQueryResult.get();
                 var user = userMapper.toUser(userEntity);
 
-                var result = GetUserByIdQueryResults.Success.of(user, request.requestId(),
-                        request.tracingId());
+                var result = GetUserByIdQueryResults.Success.of(user, request.getRequestId(),
+                        request.getTracingId());
                 events.publishEvent(new GetUserByIdEvent(request, result));
                 return result;
             } else {
-                var result = GetUserByIdQueryResults.UserNotFound.of(request.userId(),
-                        request.requestId(), request.tracingId());
+                var result = GetUserByIdQueryResults.UserNotFound.of(request.getUserId(),
+                        request.getRequestId(), request.getTracingId());
                 events.publishEvent(new GetUserByIdEvent(request, result));
                 return result;
             }
         } catch (Exception e) {
             var result = GetUserByIdQueryResults.SystemError.of(
-                    "Failed to retrieve user by ID: " + e.getMessage(), request.requestId(),
-                    request.tracingId());
+                    "Failed to retrieve user by ID: " + e.getMessage(), request.getRequestId(),
+                    request.getTracingId());
             events.publishEvent(new GetUserByIdEvent(request, result));
             return result;
         }

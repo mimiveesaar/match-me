@@ -46,7 +46,7 @@ public class CreateAccessTokenHandler
 
                         if (refreshTokenResult instanceof GetRefreshTokenResults.InvalidToken invalidToken) {
                                 var result = CreateAccessTokenResults.InvalidToken.of(
-                                                invalidToken.token, request.getRequestId(),
+                                                invalidToken.getToken(), request.getRequestId(),
                                                 request.getTracingId());
                                 events.publishEvent(new CreateAccessTokenEvent(request, result));
                                 return result;
@@ -54,7 +54,7 @@ public class CreateAccessTokenHandler
 
                         if (refreshTokenResult instanceof GetRefreshTokenResults.SystemError systemError) {
                                 var result = CreateAccessTokenResults.SystemError.of(
-                                                systemError.message, request.getRequestId(),
+                                                systemError.getMessage(), request.getRequestId(),
                                                 request.getTracingId());
                                 events.publishEvent(new CreateAccessTokenEvent(request, result));
                                 return result;
@@ -70,8 +70,7 @@ public class CreateAccessTokenHandler
                                                                 .plusSeconds(userManagementConfig
                                                                                 .getJwtExpiration()))
                                                 .withClaim("userId",
-                                                                refreshToken.token
-                                                                                .toString())
+                                                                refreshToken.getToken().toString())
                                                 .sign(jwtAlgo);
 
                                 var result = CreateAccessTokenResults.Success.of(jwt,

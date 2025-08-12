@@ -25,27 +25,27 @@ public class GetUserByUsernameHandler
     }
 
     public GetUserByUsernameQueryResults handle(GetUserByUsernameQuery request) {
-        String username = request.username();
+        String username = request.getUsername();
 
         try {
             var userQueryResult = userRepository.findUserByUsername(username);
             if (userQueryResult.isPresent()) {
                 var userEntity = userQueryResult.get();
                 var user = userMapper.toUser(userEntity);
-                var result = GetUserByUsernameQueryResults.Success.of(user, request.requestId(),
-                        request.tracingId());
+                var result = GetUserByUsernameQueryResults.Success.of(user, request.getRequestId(),
+                        request.getTracingId());
                 events.publishEvent(new GetUserByUsernameEvent(request, result));
                 return result;
             } else {
                 var result = GetUserByUsernameQueryResults.UserNotFound.of(username,
-                        request.requestId(), request.tracingId());
+                        request.getRequestId(), request.getTracingId());
                 events.publishEvent(new GetUserByUsernameEvent(request, result));
                 return result;
             }
         } catch (Exception e) {
             var result = GetUserByUsernameQueryResults.SystemError.of(
-                    "Failed to retrieve user by username: " + e.getMessage(), request.requestId(),
-                    request.tracingId());
+                    "Failed to retrieve user by username: " + e.getMessage(),
+                    request.getRequestId(), request.getTracingId());
             events.publishEvent(new GetUserByUsernameEvent(request, result));
             return result;
         }

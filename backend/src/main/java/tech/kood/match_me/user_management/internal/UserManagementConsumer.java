@@ -7,7 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.TextMessage;
-import tech.kood.match_me.user_management.internal.domain.features.getUser.GetUserHandler;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.handlers.GetUserByEmailHandler;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.handlers.GetUserByIdHandler;
+import tech.kood.match_me.user_management.internal.domain.features.getUser.handlers.GetUserByUsernameHandler;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByEmailQuery;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByIdQuery;
 import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByUsernameQuery;
@@ -33,7 +35,11 @@ public class UserManagementConsumer {
 
     private final ValidateAccessTokenHandler validateAccessTokenHandler;
 
-    private final GetUserHandler getUserHandler;
+    private final GetUserByIdHandler getUserByIdHandler;
+
+    private final GetUserByUsernameHandler getUserByUsernameHandler;
+
+    private final GetUserByEmailHandler getUserByEmailHandler;
 
     private final LoginHandler loginHandler;
 
@@ -46,14 +52,19 @@ public class UserManagementConsumer {
     private final RegisterUserHandler registerUserHandler;
 
     public UserManagementConsumer(CreateAccessTokenHandler getAccessTokenHandler,
-            ValidateAccessTokenHandler validateAccessTokenHandler, GetUserHandler getUserHandler,
-            LoginHandler loginHandler, CreateRefreshTokenHandler createRefreshTokenHandler,
+            ValidateAccessTokenHandler validateAccessTokenHandler,
+            GetUserByIdHandler getUserByIdHandler,
+            GetUserByUsernameHandler getUserByUsernameHandler,
+            GetUserByEmailHandler getUserByEmailHandler, LoginHandler loginHandler,
+            CreateRefreshTokenHandler createRefreshTokenHandler,
             GetRefreshTokenHandler getRefreshTokenHandler,
             InvalidateRefreshTokenHandler invalidateRefreshTokenHandler,
             RegisterUserHandler registerUserHandler, ObjectMapper objectMapper) {
         this.getAccessTokenHandler = getAccessTokenHandler;
         this.validateAccessTokenHandler = validateAccessTokenHandler;
-        this.getUserHandler = getUserHandler;
+        this.getUserByIdHandler = getUserByIdHandler;
+        this.getUserByUsernameHandler = getUserByUsernameHandler;
+        this.getUserByEmailHandler = getUserByEmailHandler;
         this.loginHandler = loginHandler;
         this.createRefreshTokenHandler = createRefreshTokenHandler;
         this.getRefreshTokenHandler = getRefreshTokenHandler;
@@ -88,17 +99,17 @@ public class UserManagementConsumer {
                     GetUserByEmailQuery request =
                             objectMapper.readValue(payload, GetUserByEmailQuery.class);
 
-                    return getUserHandler.handle(request);
+                    return getUserByEmailHandler.handle(request);
                 } else if (type.equals(GetUserByIdQuery.class.getName())) {
                     GetUserByIdQuery request =
                             objectMapper.readValue(payload, GetUserByIdQuery.class);
 
-                    return getUserHandler.handle(request);
+                    return getUserByIdHandler.handle(request);
                 } else if (type.equals(GetUserByUsernameQuery.class.getName())) {
                     GetUserByUsernameQuery request =
                             objectMapper.readValue(payload, GetUserByUsernameQuery.class);
 
-                    return getUserHandler.handle(request);
+                    return getUserByUsernameHandler.handle(request);
                 } else if (type.equals(LoginRequest.class.getName())) {
                     LoginRequest request = objectMapper.readValue(payload, LoginRequest.class);
 

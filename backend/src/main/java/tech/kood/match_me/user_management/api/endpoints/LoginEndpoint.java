@@ -56,7 +56,7 @@ public class LoginEndpoint {
 
     public ResponseEntity<LoginResultsDTO> loginUser(@RequestBody LoginRequestDTO request) {
 
-        var internalRequest = new LoginRequest(UUID.randomUUID().toString(), request.email(),
+        var internalRequest = LoginRequest.of(UUID.randomUUID(), request.email(),
                 request.password(), UUID.randomUUID().toString());
 
         var result = userManagementPublisher.publish(internalRequest);

@@ -9,19 +9,29 @@ import jakarta.validation.constraints.NotNull;
 import tech.kood.match_me.user_management.internal.common.cqrs.Result;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
 
-public sealed interface InvalidateRefreshTokenResults extends Result
-                permits InvalidateRefreshTokenResults.Success, InvalidateRefreshTokenResults.TokenNotFound,
-                InvalidateRefreshTokenResults.InvalidRequest, InvalidateRefreshTokenResults.SystemError {
+public sealed interface InvalidateRefreshTokenResults extends Result permits
+                InvalidateRefreshTokenResults.Success, InvalidateRefreshTokenResults.TokenNotFound,
+                InvalidateRefreshTokenResults.InvalidRequest,
+                InvalidateRefreshTokenResults.SystemError {
 
         final class Success implements InvalidateRefreshTokenResults {
 
                 @NotNull
-                @JsonProperty("requestId")
-                public final UUID requestId;
+                private final UUID requestId;
 
                 @Nullable
+                private final String tracingId;
+
+                @JsonProperty("requestId")
+                public UUID getRequestId() {
+                        return requestId;
+                }
+
                 @JsonProperty("tracingId")
-                public final String tracingId;
+                @Nullable
+                public String getTracingId() {
+                        return tracingId;
+                }
 
                 private Success(UUID requestId, @Nullable String tracingId) {
                         this.requestId = requestId;
@@ -44,16 +54,29 @@ public sealed interface InvalidateRefreshTokenResults extends Result
         final class TokenNotFound implements InvalidateRefreshTokenResults {
 
                 @NotNull
-                @JsonProperty("requestId")
-                public final UUID requestId;
+                private final UUID requestId;
 
                 @NotEmpty
-                @JsonProperty("token")
-                public final String token;
+                private final String token;
 
                 @Nullable
+                private final String tracingId;
+
+                @JsonProperty("token")
+                public String getToken() {
+                        return token;
+                }
+
+                @JsonProperty("requestId")
+                public UUID getRequestId() {
+                        return requestId;
+                }
+
                 @JsonProperty("tracingId")
-                public final String tracingId;
+                @Nullable
+                public String getTracingId() {
+                        return tracingId;
+                }
 
                 private TokenNotFound(String token, UUID requestId, @Nullable String tracingId) {
                         this.token = token;
@@ -66,7 +89,8 @@ public sealed interface InvalidateRefreshTokenResults extends Result
                                 @JsonProperty("requestId") @NotNull UUID requestId,
                                 @JsonProperty("tracingId") @Nullable String tracingId) {
                         var tokenNotFound = new TokenNotFound(token, requestId, tracingId);
-                        var violations = DomainObjectInputValidator.instance.validate(tokenNotFound);
+                        var violations = DomainObjectInputValidator.instance
+                                        .validate(tokenNotFound);
                         if (!violations.isEmpty()) {
                                 throw new jakarta.validation.ConstraintViolationException(
                                                 violations);
@@ -78,16 +102,29 @@ public sealed interface InvalidateRefreshTokenResults extends Result
         final class InvalidRequest implements InvalidateRefreshTokenResults {
 
                 @NotNull
-                @JsonProperty("requestId")
-                public final UUID requestId;
+                private final UUID requestId;
 
                 @NotEmpty
-                @JsonProperty("message")
-                public final String message;
+                private final String message;
 
                 @Nullable
+                private final String tracingId;
+
+                @JsonProperty("message")
+                public String getMessage() {
+                        return message;
+                }
+
+                @JsonProperty("requestId")
+                public UUID getRequestId() {
+                        return requestId;
+                }
+
                 @JsonProperty("tracingId")
-                public final String tracingId;
+                @Nullable
+                public String getTracingId() {
+                        return tracingId;
+                }
 
                 private InvalidRequest(String message, UUID requestId, @Nullable String tracingId) {
                         this.message = message;
@@ -100,7 +137,8 @@ public sealed interface InvalidateRefreshTokenResults extends Result
                                 @JsonProperty("requestId") @NotNull UUID requestId,
                                 @JsonProperty("tracingId") @Nullable String tracingId) {
                         var invalidRequest = new InvalidRequest(message, requestId, tracingId);
-                        var violations = DomainObjectInputValidator.instance.validate(invalidRequest);
+                        var violations = DomainObjectInputValidator.instance
+                                        .validate(invalidRequest);
                         if (!violations.isEmpty()) {
                                 throw new jakarta.validation.ConstraintViolationException(
                                                 violations);
@@ -112,16 +150,29 @@ public sealed interface InvalidateRefreshTokenResults extends Result
         final class SystemError implements InvalidateRefreshTokenResults {
 
                 @NotNull
-                @JsonProperty("requestId")
-                public final UUID requestId;
+                private final UUID requestId;
 
                 @NotEmpty
-                @JsonProperty("message")
-                public final String message;
+                private final String message;
 
                 @Nullable
+                private final String tracingId;
+
+                @JsonProperty("message")
+                public String getMessage() {
+                        return message;
+                }
+
+                @JsonProperty("requestId")
+                public UUID getRequestId() {
+                        return requestId;
+                }
+
                 @JsonProperty("tracingId")
-                public final String tracingId;
+                @Nullable
+                public String getTracingId() {
+                        return tracingId;
+                }
 
                 private SystemError(String message, UUID requestId, @Nullable String tracingId) {
                         this.message = message;

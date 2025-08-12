@@ -10,11 +10,12 @@ public final class LoginResultsMapper {
 
     public LoginResultsDTO toDTO(LoginResults loginResult) {
         return switch (loginResult) {
-            case LoginResults.Success success -> new LoginResultsDTO.Success(success.refreshToken().token());
-            case LoginResults.InvalidCredentials invalid ->
-                new LoginResultsDTO.InvalidCredentials(invalid.username(), invalid.password());
-            case LoginResults.InvalidRequest invalid -> new LoginResultsDTO.InvalidRequest(invalid.message());
-            case LoginResults.SystemError error -> new LoginResultsDTO.SystemError(error.message());
+            case LoginResults.Success success -> new LoginResultsDTO.Success(
+                    success.getRefreshToken().getToken());
+            case LoginResults.InvalidCredentials invalid -> new LoginResultsDTO.InvalidCredentials(
+                    invalid.getEmail(), invalid.getPassword());
+            case LoginResults.SystemError error -> new LoginResultsDTO.SystemError(
+                    error.getMessage());
         };
     }
 }

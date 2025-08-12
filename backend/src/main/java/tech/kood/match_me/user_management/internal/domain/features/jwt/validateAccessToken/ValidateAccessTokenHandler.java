@@ -5,9 +5,11 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import tech.kood.match_me.user_management.internal.common.cqrs.QueryHandler;
 import tech.kood.match_me.user_management.internal.domain.models.AccessToken;
+import tech.kood.match_me.user_management.internal.domain.models.UserId;
 
 @Service
 public class ValidateAccessTokenHandler
@@ -27,19 +29,24 @@ public class ValidateAccessTokenHandler
     public ValidateAccessTokenResults handle(ValidateAccessTokenRequest request) {
         try {
 
-            var decodedJWT = jwtVerifier.verify(request.jwtToken());
+            var decodedJWT = jwtVerifier.verify(request.getJwtToken());
             Claim userId = decodedJWT.getClaim("userId");
 
+            if (userId.isMissing()) {
+                throw new IllegalArgumentException("Invalid JWT: userId claim is missing");
+            }
 
-            var accessToken = new AccessToken(request.jwtToken(), userId.asString());
-            var result = ValidateAccessTokenResults.Success.of(accessToken, request.requestId(),
-                    request.tracingId());
+            var accessToken =
+                    AccessToken.of(request.getJwtToken(), UserId.fromString(userId.asString()));
+
+            var result = ValidateAccessTokenResults.Success.of(accessToken, request.getRequestId(),
+                    request.getTracingId());
             events.publishEvent(new ValidateAccessTokenEvent(request, result));
 
             return result;
-        } catch (Exception e) {
-            var result = ValidateAccessTokenResults.InvalidToken.of(request.jwtToken(),
-                    request.requestId(), request.tracingId());
+        } catch (JWTVerificationException | IllegalArgumentException e) {
+            var result = ValidateAccessTokenResults.InvalidToken.of(request.getJwtToken(),
+                    request.getRequestId(), request.getTracingId());
             events.publishEvent(new ValidateAccessTokenEvent(request, result));
             return result;
         }

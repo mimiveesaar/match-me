@@ -39,46 +39,37 @@ public class RefreshTokenRepository {
 
         public void save(RefreshTokenEntity refreshToken) {
                 String sql = "INSERT INTO user_management.refresh_tokens (id, user_id, token, created_at, expires_at) "
-                                +
-                                "VALUES (:id, :user_id, :token, :created_at, :expires_at) " +
-                                "ON CONFLICT (id) DO UPDATE SET expires_at = :expires_at";
+                                + "VALUES (:id, :user_id, :token, :created_at, :expires_at) "
+                                + "ON CONFLICT (id) DO UPDATE SET expires_at = :expires_at";
 
-                Map<String, Object> params = Map.of(
-                                "id", refreshToken.id(),
-                                "user_id", refreshToken.userId(),
-                                "token", refreshToken.token(),
-                                "created_at", Timestamp.from(refreshToken.createdAt()),
-                                "expires_at", Timestamp.from(refreshToken.expiresAt()));
+                Map<String, Object> params = Map.of("id", refreshToken.getId().toString(),
+                                "user_id", refreshToken.getUserId().toString(), "token",
+                                refreshToken.getToken(), "created_at",
+                                Timestamp.from(refreshToken.getCreatedAt()), "expires_at",
+                                Timestamp.from(refreshToken.getExpiresAt()));
 
                 jdbcTemplate.update(sql, params);
         }
 
         public boolean validateToken(String token, UUID userId, Instant currentTime) {
                 String sql = "SELECT COUNT(*) FROM user_management.refresh_tokens WHERE token = :token AND user_id = :user_id AND expires_at >= :current_time";
-                Integer count = jdbcTemplate.queryForObject(sql,
-                                Map.of(
-                                                "token", token,
-                                                "user_id", userId,
-                                                "current_time", Timestamp.from(currentTime)),
+                Integer count = jdbcTemplate.queryForObject(sql, Map.of("token", token, "user_id",
+                                userId, "current_time", Timestamp.from(currentTime)),
                                 Integer.class);
                 return count != null && count > 0;
         }
 
         public void deleteExpiredTokens(Instant currentTime) {
                 String sql = "DELETE FROM user_management.refresh_tokens WHERE expires_at < :current_time";
-                jdbcTemplate.update(sql,
-                                Map.of(
-                                                "current_time", Timestamp.from(currentTime)));
+                jdbcTemplate.update(sql, Map.of("current_time", Timestamp.from(currentTime)));
         }
 
         public Optional<RefreshTokenEntity> findToken(String token) {
                 String sql = "SELECT * FROM user_management.refresh_tokens WHERE token = :token";
 
                 try {
-                        return Optional.ofNullable(
-                                        jdbcTemplate.queryForObject(sql,
-                                                        Map.of("token", token),
-                                                        this.refreshTokenRowMapper));
+                        return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+                                        Map.of("token", token), this.refreshTokenRowMapper));
                 } catch (EmptyResultDataAccessException e) {
                         // Handle the case where the token is not found
                         return Optional.empty();
@@ -89,12 +80,10 @@ public class RefreshTokenRepository {
                 String sql = "SELECT * FROM user_management.refresh_tokens WHERE token = :token AND expires_at >= :current_time";
 
                 try {
-                        return Optional.ofNullable(
-                                        jdbcTemplate.queryForObject(sql,
-                                                        Map.of(
-                                                                        "token", token,
-                                                                        "current_time", Timestamp.from(currentTime)),
-                                                        this.refreshTokenRowMapper));
+                        return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+                                        Map.of("token", token, "current_time",
+                                                        Timestamp.from(currentTime)),
+                                        this.refreshTokenRowMapper));
                 } catch (EmptyResultDataAccessException e) {
                         // Handle the case where the token is not found or is invalid
                         return Optional.empty();

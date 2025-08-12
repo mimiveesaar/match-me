@@ -1,6 +1,7 @@
 package tech.kood.match_me.user_management.internal.domain.features.login;
 
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.validation.ConstraintViolationException;
@@ -12,19 +13,20 @@ import tech.kood.match_me.user_management.internal.common.cqrs.Command;
 /**
  * Represents a login request command containing user credentials and optional tracing information.
  * <p>
- * This class is immutable and uses validation annotations to ensure that all required fields are present and valid.
+ * This class is immutable and uses validation annotations to ensure that all required fields are
+ * present and valid.
  * </p>
  *
  * <ul>
- *   <li>{@code requestId} - Unique identifier for the login request (must not be null).</li>
- *   <li>{@code email} - User's email address (must not be empty).</li>
- *   <li>{@code password} - User's password (must not be empty).</li>
- *   <li>{@code tracingId} - Optional tracing identifier for request tracking (nullable).</li>
+ * <li>{@code requestId} - Unique identifier for the login request (must not be null).</li>
+ * <li>{@code email} - User's email address (must not be empty).</li>
+ * <li>{@code password} - User's password (must not be empty).</li>
+ * <li>{@code tracingId} - Optional tracing identifier for request tracking (nullable).</li>
  * </ul>
  *
  * <p>
- * Use the static factory method {@link #of(UUID, String, String, String)} to create instances, which performs validation.
- * If validation fails, a {@link ConstraintViolationException} is thrown.
+ * Use the static factory method {@link #of(UUID, String, String, String)} to create instances,
+ * which performs validation. If validation fails, a {@link ConstraintViolationException} is thrown.
  * </p>
  *
  * <p>
@@ -33,21 +35,37 @@ import tech.kood.match_me.user_management.internal.common.cqrs.Command;
  */
 public final class LoginRequest implements Command {
 
-    @JsonProperty("requestId")
     @NotNull
-    public final UUID requestId;
+    private final UUID requestId;
+
+    @NotEmpty
+    private final String email;
+
+    @NotEmpty
+    private final String password;
+
+    @Nullable
+    private final String tracingId;
+
+    @JsonProperty("requestId")
+    public UUID getRequestId() {
+        return requestId;
+    }
 
     @JsonProperty("email")
-    @NotEmpty
-    public final String email;
+    public String getEmail() {
+        return email;
+    }
 
     @JsonProperty("password")
-    @NotEmpty
-    public final String password;
+    public String getPassword() {
+        return password;
+    }
 
     @JsonProperty("tracingId")
-    @Nullable
-    public final String tracingId;
+    public String getTracingId() {
+        return tracingId;
+    }
 
     private LoginRequest(@NotNull UUID requestId, @NotNull String email, @NotNull String password,
             @Nullable String tracingId) {
@@ -57,6 +75,7 @@ public final class LoginRequest implements Command {
         this.tracingId = tracingId;
     }
 
+    @JsonCreator
     public static LoginRequest of(@JsonProperty("requestId") @NotNull UUID requestId,
             @JsonProperty("email") @NotNull String email,
             @JsonProperty("password") @NotNull String password,

@@ -31,12 +31,6 @@ public sealed interface GetUserByUsernameQueryResults extends Result
         @Nullable
         private final String tracingId;
 
-        private Success(User user, UUID requestId, String tracingId) {
-            this.user = user;
-            this.requestId = requestId;
-            this.tracingId = tracingId;
-        }
-
         @JsonProperty("requestId")
         @NotNull
         public UUID getRequestId() {
@@ -53,6 +47,12 @@ public sealed interface GetUserByUsernameQueryResults extends Result
         @Nullable
         public String getTracingId() {
             return tracingId;
+        }
+
+        private Success(User user, UUID requestId, String tracingId) {
+            this.user = user;
+            this.requestId = requestId;
+            this.tracingId = tracingId;
         }
 
         @JsonCreator
@@ -87,12 +87,6 @@ public sealed interface GetUserByUsernameQueryResults extends Result
         @Nullable
         private final String tracingId;
 
-        private UserNotFound(String username, UUID requestId, @Nullable String tracingId) {
-            this.username = username;
-            this.requestId = requestId;
-            this.tracingId = tracingId;
-        }
-
         @JsonProperty("requestId")
         @NotNull
         public UUID getRequestId() {
@@ -109,6 +103,12 @@ public sealed interface GetUserByUsernameQueryResults extends Result
         @Nullable
         public String getTracingId() {
             return tracingId;
+        }
+
+        private UserNotFound(String username, UUID requestId, @Nullable String tracingId) {
+            this.username = username;
+            this.requestId = requestId;
+            this.tracingId = tracingId;
         }
 
         @JsonCreator
@@ -144,12 +144,6 @@ public sealed interface GetUserByUsernameQueryResults extends Result
         @Nullable
         private final String tracingId;
 
-        private SystemError(String message, UUID requestId, @Nullable String tracingId) {
-            this.message = message;
-            this.requestId = requestId;
-            this.tracingId = tracingId;
-        }
-
         @JsonProperty("requestId")
         @NotNull
         public UUID getRequestId() {
@@ -166,6 +160,12 @@ public sealed interface GetUserByUsernameQueryResults extends Result
         @Nullable
         public String getTracingId() {
             return tracingId;
+        }
+
+        private SystemError(String message, UUID requestId, @Nullable String tracingId) {
+            this.message = message;
+            this.requestId = requestId;
+            this.tracingId = tracingId;
         }
 
         @JsonCreator

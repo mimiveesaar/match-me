@@ -183,8 +183,9 @@ public sealed interface GetUserByEmailQueryResults extends Result
             this.tracingId = tracingId;
         }
 
-        public static SystemError of(@NotEmpty String message, @NotNull UUID requestId,
-                @Nullable String tracingId) {
+        @JsonCreator
+        public static SystemError of(@JsonProperty("message") @NotEmpty String message, @JsonProperty("requestId") @NotNull UUID requestId,
+                @JsonProperty("tracingId") @Nullable String tracingId) {
             var systemError = new SystemError(message, requestId, tracingId);
 
             var violations = DomainObjectInputValidator.instance.validate(systemError);

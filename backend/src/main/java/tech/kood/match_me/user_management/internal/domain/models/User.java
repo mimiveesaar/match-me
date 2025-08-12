@@ -43,7 +43,7 @@ public final class User implements Serializable {
     private final String email;
 
     @NotNull
-    private final HashedPassword password;
+    private final HashedPassword hashedPassword;
 
     @NotNull
     private final Instant createdAt;
@@ -70,9 +70,9 @@ public final class User implements Serializable {
     }
 
     @Nonnull
-    @JsonProperty("password")
-    public HashedPassword getPassword() {
-        return password;
+    @JsonProperty("hashedPassword")
+    public HashedPassword getHashedPassword() {
+        return hashedPassword;
     }
 
     @Nonnull
@@ -93,16 +93,19 @@ public final class User implements Serializable {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.password = password;
+        this.hashedPassword = password;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
     @JsonCreator
-    public static User of(@NotNull UserId id, @NotBlank String username, @NotBlank String email,
-            @NotNull HashedPassword password, @NotNull Instant createdAt,
-            @NotNull Instant updatedAt) {
-        var user = new User(id, username, email, password, createdAt, updatedAt);
+    public static User of(@JsonProperty("id") @NotNull UserId id,
+            @JsonProperty("username") @NotBlank String username,
+            @JsonProperty("email") @NotBlank String email,
+            @JsonProperty("hashedPassword") @NotNull HashedPassword hashedPassword,
+            @JsonProperty("createdAt") @NotNull Instant createdAt,
+            @JsonProperty("updatedAt") @NotNull Instant updatedAt) {
+        var user = new User(id, username, email, hashedPassword, createdAt, updatedAt);
         var violations = DomainObjectInputValidator.instance.validate(user);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException("Invalid User: " + violations, violations);
@@ -132,15 +135,15 @@ public final class User implements Serializable {
     }
 
     public User withId(UserId newId) {
-        return User.of(newId, username, email, password, createdAt, updatedAt);
+        return User.of(newId, username, email, hashedPassword, createdAt, updatedAt);
     }
 
     public User withUsername(String newUsername) {
-        return User.of(id, newUsername, email, password, createdAt, updatedAt);
+        return User.of(id, newUsername, email, hashedPassword, createdAt, updatedAt);
     }
 
     public User withEmail(String newEmail) {
-        return User.of(id, username, newEmail, password, createdAt, updatedAt);
+        return User.of(id, username, newEmail, hashedPassword, createdAt, updatedAt);
     }
 
     public User withPassword(HashedPassword newPassword) {
@@ -148,11 +151,11 @@ public final class User implements Serializable {
     }
 
     public User withCreatedAt(Instant newCreatedAt) {
-        return User.of(id, username, email, password, newCreatedAt, updatedAt);
+        return User.of(id, username, email, hashedPassword, newCreatedAt, updatedAt);
     }
 
     public User withUpdatedAt(Instant newUpdatedAt) {
-        return User.of(id, username, email, password, createdAt, newUpdatedAt);
+        return User.of(id, username, email, hashedPassword, createdAt, newUpdatedAt);
     }
 
 

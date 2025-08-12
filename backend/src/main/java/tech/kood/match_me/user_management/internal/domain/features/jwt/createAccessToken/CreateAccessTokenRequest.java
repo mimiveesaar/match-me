@@ -1,6 +1,7 @@
 package tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken;
 
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.validation.ConstraintViolationException;
@@ -65,6 +66,7 @@ public final class CreateAccessTokenRequest
         this.tracingId = tracingId;
     }
 
+    @JsonCreator
     public static CreateAccessTokenRequest of(@JsonProperty("requestId") @NotNull UUID requestId,
             @JsonProperty("refreshToken") @NotNull String refreshToken,
             @JsonProperty("tracingId") @Nullable String tracingId) {

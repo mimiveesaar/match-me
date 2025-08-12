@@ -7,6 +7,7 @@ import tech.kood.match_me.user_management.api.DTOs.UserDTO;
 import tech.kood.match_me.user_management.internal.database.entities.UserEntity;
 import tech.kood.match_me.user_management.internal.domain.models.HashedPassword;
 import tech.kood.match_me.user_management.internal.domain.models.User;
+import tech.kood.match_me.user_management.internal.domain.models.UserId;
 
 @Component
 @Primary
@@ -17,10 +18,7 @@ public final class UserMapper {
             throw new IllegalArgumentException("User cannot be null");
         }
 
-        return new UserDTO(
-                user.id().toString(),
-                user.username(),
-                user.email());
+        return new UserDTO(user.getId().toString(), user.getUsername(), user.getEmail());
     }
 
     public UserDTO toUserDTO(UserEntity userEntity) {
@@ -36,12 +34,9 @@ public final class UserMapper {
             throw new IllegalArgumentException("UserEntity cannot be null");
         }
 
-        return new User(
-                userEntity.id(),
-                userEntity.username(),
-                userEntity.email(),
-                new HashedPassword(userEntity.passwordHash(), userEntity.passwordSalt()),
-                userEntity.createdAt(),
-                userEntity.updatedAt());
+        return User.of(UserId.of(userEntity.getId()), userEntity.getUsername(),
+                userEntity.getEmail(),
+                HashedPassword.of(userEntity.getPasswordHash(), userEntity.getPasswordSalt()),
+                userEntity.getCreatedAt(), userEntity.getUpdatedAt());
     }
 }

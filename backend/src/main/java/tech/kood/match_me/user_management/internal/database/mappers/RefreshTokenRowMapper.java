@@ -12,13 +12,13 @@ import org.springframework.jdbc.core.RowMapper;
 public class RefreshTokenRowMapper implements RowMapper<RefreshTokenEntity> {
 
     @Override
-    public RefreshTokenEntity mapRow(ResultSet rs, int rowNum) throws SQLException  {
+    public RefreshTokenEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
         UUID id = rs.getObject("id", UUID.class);
         UUID userId = rs.getObject("user_id", UUID.class);
         String token = rs.getString("token");
         Instant createdAt = rs.getTimestamp("created_at").toInstant();
         Instant expiresAt = rs.getTimestamp("expires_at").toInstant();
 
-        return new RefreshTokenEntity(id, userId, token, createdAt, expiresAt);
+        return RefreshTokenEntity.of(id, userId, token, createdAt, expiresAt);
     }
 }
