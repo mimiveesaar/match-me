@@ -13,12 +13,18 @@ public class Homeplanet {
 
     private String name;
 
+    private Double latitude;
+
+    private Double longitude;
+
     public Homeplanet() {
     }
 
-    public Homeplanet(Integer id, String name) {
+    public Homeplanet(Integer id, String name, Double latitude, Double longitude) {
         this.id = id;
         this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public Integer getId() {
@@ -27,5 +33,13 @@ public class Homeplanet {
 
     public String getName() {
         return name;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
     }
 }

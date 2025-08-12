@@ -3,6 +3,8 @@ package tech.kood.match_me.matching.model;
 import jakarta.persistence.*;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "interests")
 public class Interest {
@@ -16,10 +18,8 @@ public class Interest {
     private String name;
 
     @ManyToMany(mappedBy = "interests")
+    @JsonBackReference
     private Set<User> users;
-
-    // @ManyToMany(mappedBy = "interests")
-    // private Set<User> users = new HashSet<>();
 
     public Interest() {
     }

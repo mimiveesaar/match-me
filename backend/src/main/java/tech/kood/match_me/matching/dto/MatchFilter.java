@@ -9,6 +9,9 @@ public class MatchFilter {
     private String bodyform;
     private List<String> interests;
     private String lookingFor;
+    private Double homeplanetLatitude;
+    private Double homeplanetLongitude;
+    private Double maxDistanceLy; 
 
     public Integer getMinAge() {
         return minAge;
@@ -31,5 +34,17 @@ public class MatchFilter {
  
     public String getLookingFor() {
         return lookingFor;
+    }
+
+    public Double getHomeplanetLatitude() {
+        return homeplanetLatitude;
+    }
+
+    public Double getHomeplanetLongitude() {
+        return homeplanetLongitude;
+    }
+
+    public Double getMaxDistanceLy() {
+        return maxDistanceLy;
     }
 }

@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -13,8 +15,10 @@ public class User {
     @Id
     private UUID id;
 
+    @Column(name = "username")
     private String username;
 
+    @Column(name = "age")
     private int age;
 
     @ManyToOne
@@ -29,14 +33,16 @@ public class User {
     @JoinColumn(name = "looking_for_id", referencedColumnName = "id")
     private LookingFor lookingFor;
 
+    @Column(name = "bio")
     private String bio;
 
     @ManyToMany
     @JoinTable(
-            name = "user_interests", 
-            joinColumns = @JoinColumn(name = "user_id"), 
+            name = "user_interests",
+            joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "interest_id")
     )
+    @JsonManagedReference
     private Set<Interest> interests = new HashSet<>();
 
     public User() {
@@ -68,7 +74,7 @@ public class User {
         return homeplanet;
     }
 
-    public Bodyform bodyform() {
+    public Bodyform getBodyform() {
         return bodyform;
     }
 
@@ -80,7 +86,7 @@ public class User {
         return lookingFor;
     }
 
-    public Set<Interest> interests() {
+    public Set<Interest> getInterests() {
         return interests;
     }
 }

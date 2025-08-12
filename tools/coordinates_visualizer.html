@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Alien Planets Visualizer</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+            background: #111;
+        }
+
+        canvas {
+            display: block;
+            background: #222;
+        }
+
+        #info {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-family: monospace;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #controls {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            color: white;
+            font-family: monospace;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #zoomControls {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            color: white;
+            font-family: monospace;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #zoomControls button {
+            background: #333;
+            color: white;
+            border: 1px solid #666;
+            padding: 5px 10px;
+            margin: 0 2px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        #zoomControls button:hover {
+            background: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="info">Click a planet to select it and see range</div>
+    <div id="controls">
+        Range: <input type="range" id="rangeSlider" min="10" max="100" value="10" step="0.5">
+        <span id="rangeValue">10</span> ly
+    </div>
+    <div id="zoomControls">
+        <button id="zoomIn">Zoom In</button>
+        <button id="zoomOut">Zoom Out</button>
+        <button id="resetView">Reset View</button>
+        <div>Use mouse/touch to pan around</div>
+    </div>
+    <script>
+        (() => {
+            const planets = [
+                { id: 1, name: "Xeron-5", lat: 45.2, lon: 130.5 },
+                { id: 2, name: "Draknor", lat: -33.1, lon: 102.9 },
+                { id: 3, name: "Vega Prime", lat: 12.5, lon: -45 },
+                { id: 4, name: "Bloop-X12", lat: 78.3, lon: 60.2 },
+                { id: 5, name: "Zal'Tek Major", lat: -82, lon: -135.7 },
+                { id: 6, name: "Nimbus-9", lat: 5.4, lon: 80.1 },
+                { id: 7, name: "Krylon Beta", lat: -25.6, lon: 145.3 },
+                { id: 8, name: "Nova Eden", lat: 33.3, lon: -73.2 },
+                { id: 9, name: "Tharnis", lat: -47.8, lon: 12 },
+                { id: 10, name: "Quarnyx Delta", lat: 66, lon: -88.8 },
+                { id: 11, name: "Glooporia", lat: 15.2, lon: 140 },
+                { id: 12, name: "Skarn", lat: -10.5, lon: -120.6 },
+                { id: 13, name: "Uvuul-4", lat: 58.9, lon: 170 },
+                { id: 14, name: "Oortania", lat: -60.4, lon: -40.1 },
+                { id: 15, name: "Vrexalon", lat: 0, lon: 0 },
+            ];
+
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+            const info = document.getElementById("info");
+            const rangeSlider = document.getElementById("rangeSlider");
+            const rangeValue = document.getElementById("rangeValue");
+            const zoomInBtn = document.getElementById("zoomIn");
+            const zoomOutBtn = document.getElementById("zoomOut");
+            const resetViewBtn = document.getElementById("resetView");
+
+            let width, height;
+            let centerX, centerY;
+
+            // Camera/viewport variables
+            let camera = { x: 0, y: 0 }; // Camera offset
+            let zoom = 1; // Zoom level
+            let isDragging = false;
+            let lastMousePos = { x: 0, y: 0 };
+
+            // Simplified distance calculation - treat lat/lon differences as lightyears directly
+            // This creates a fictional universe where 1 degree ≈ 1 lightyear for visualization
+            const BASE_PIXELS_PER_LY = 8; // Base scale factor for visualization
+
+            // Selected planet and range in lightyears
+            let selectedPlanet = planets[5]; // Nimbus-9 as default
+            let rangeLy = 10;
+
+            function resize() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+                centerX = width / 2;
+                centerY = height / 2;
+            }
+
+            // Convert lat/lon to radians
+            function toRad(deg) {
+                return (deg * Math.PI) / 180;
+            }
+
+            // Calculate distance in "lightyears" (treating degrees as lightyears for this fictional universe)
+            function calculateDistance(lat1, lon1, lat2, lon2) {
+                const dLat = lat2 - lat1;
+                const dLon = lon2 - lon1;
+                // Simple Euclidean distance treating degrees as lightyears
+                return Math.sqrt(dLat * dLat + dLon * dLon);
+            }
+
+            // Convert lat/lon to x,y coordinates for visualization
+            function coordsToXY(lat, lon) {
+                // Get current pixels per lightyear based on zoom
+                const pixelsPerLy = BASE_PIXELS_PER_LY * zoom;
+
+                // Convert lat/lon to world coordinates (treating degrees as lightyears)
+                const worldX = lon * pixelsPerLy;
+                const worldY = -lat * pixelsPerLy; // invert y to have north upwards
+
+                // Apply camera offset to get screen coordinates
+                const screenX = worldX - camera.x + centerX;
+                const screenY = worldY - camera.y + centerY;
+
+                return { x: screenX, y: screenY };
+            }
+
+            // Convert screen coordinates to world coordinates
+            function screenToWorld(screenX, screenY) {
+                const worldX = screenX - centerX + camera.x;
+                const worldY = screenY - centerY + camera.y;
+                return { x: worldX, y: worldY };
+            }
+
+            // Get planet position in world coordinates
+            function getPlanetWorldPos(planet) {
+                const pixelsPerLy = BASE_PIXELS_PER_LY * zoom;
+                return {
+                    x: planet.lon * pixelsPerLy,
+                    y: -planet.lat * pixelsPerLy
+                };
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, width, height);
+
+                // Background
+                ctx.fillStyle = "#111";
+                ctx.fillRect(0, 0, width, height);
+
+                const pixelsPerLy = BASE_PIXELS_PER_LY * zoom;
+
+                // Draw grid lines for reference
+                ctx.strokeStyle = "#333";
+                ctx.lineWidth = 0.5;
+                const gridSize = 10 * pixelsPerLy; // Grid every 10 lightyears
+                const startX = -camera.x % gridSize;
+                const startY = -camera.y % gridSize;
+
+                for (let x = startX; x < width; x += gridSize) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, height);
+                    ctx.stroke();
+                }
+
+                for (let y = startY; y < height; y += gridSize) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                    ctx.stroke();
+                }
+
+                // Draw concentric circles around selected planet for ranges
+                const selectedPos = coordsToXY(selectedPlanet.lat, selectedPlanet.lon);
+                ctx.strokeStyle = "#444";
+                ctx.lineWidth = 1;
+
+                for (let i = 1; i <= 5; i++) {
+                    const radius = (rangeLy / 5) * i * pixelsPerLy;
+                    ctx.beginPath();
+                    ctx.arc(selectedPos.x, selectedPos.y, radius, 0, 2 * Math.PI);
+                    ctx.stroke();
+                }
+
+                // Draw range circle for selected planet
+                ctx.strokeStyle = "rgba(0, 255, 255, 0.3)";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(selectedPos.x, selectedPos.y, rangeLy * pixelsPerLy, 0, 2 * Math.PI);
+                ctx.stroke();
+
+                // Draw all planets
+                let planetsInRange = 0;
+                planets.forEach((p) => {
+                    const pos = coordsToXY(p.lat, p.lon);
+                    const distance = calculateDistance(selectedPlanet.lat, selectedPlanet.lon, p.lat, p.lon);
+                    const insideRange = distance <= rangeLy && p.id !== selectedPlanet.id;
+                    const isSelected = p.id === selectedPlanet.id;
+
+                    if (insideRange) planetsInRange++;
+
+                    // Only draw planets that are visible on screen (with some margin)
+                    if (pos.x >= -100 && pos.x <= width + 100 && pos.y >= -100 && pos.y <= height + 100) {
+                        if (isSelected) {
+                            ctx.fillStyle = "cyan";
+                            ctx.beginPath();
+                            ctx.arc(pos.x, pos.y, 10, 0, 2 * Math.PI);
+                            ctx.fill();
+
+                            // Draw selection ring
+                            ctx.strokeStyle = "cyan";
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            ctx.arc(pos.x, pos.y, 15, 0, 2 * Math.PI);
+                            ctx.stroke();
+
+                            ctx.fillStyle = "white";
+                            ctx.font = "16px monospace";
+                            ctx.fillText(p.name + " (Selected)", pos.x + 20, pos.y + 5);
+                        } else {
+                            ctx.fillStyle = insideRange ? "#00ff00" : "#666666";
+                            ctx.beginPath();
+                            ctx.arc(pos.x, pos.y, 8, 0, 2 * Math.PI);
+                            ctx.fill();
+
+                            ctx.fillStyle = insideRange ? "#00ff00" : "#999999";
+                            ctx.font = "12px monospace";
+                            ctx.fillText(`${p.name} (${distance.toFixed(1)} ly)`, pos.x + 12, pos.y + 4);
+                        }
+                    }
+                });
+
+                // Update info
+                info.textContent = `Selected: ${selectedPlanet.name} | Range: ${rangeLy} ly | Planets in range: ${planetsInRange} | Zoom: ${zoom.toFixed(1)}x`;
+            }
+
+            // Handle clicks to select planets
+            function handleClick(event) {
+                if (hasDragged) {
+                    hasDragged = false;
+                    return; // Don't select if we just finished dragging
+                }
+
+                const rect = canvas.getBoundingClientRect();
+                const clickX = event.clientX - rect.left;
+                const clickY = event.clientY - rect.top;
+
+                // Check clicks on planets
+                let closestPlanet = null;
+                let closestDistance = Infinity;
+
+                planets.forEach((p) => {
+                    const pos = coordsToXY(p.lat, p.lon);
+                    const distance = Math.sqrt((clickX - pos.x) ** 2 + (clickY - pos.y) ** 2);
+
+                    const hitRadius = p.id === selectedPlanet.id ? 15 : 12;
+                    if (distance <= hitRadius && distance < closestDistance) {
+                        closestDistance = distance;
+                        closestPlanet = p;
+                    }
+                });
+
+                if (closestPlanet) {
+                    selectedPlanet = closestPlanet;
+                    draw();
+                }
+            }
+
+            // Mouse/touch handling for panning
+            let dragStartPos = null;
+            let hasDragged = false;
+
+            function handleMouseDown(event) {
+                const rect = canvas.getBoundingClientRect();
+                dragStartPos = {
+                    x: event.clientX - rect.left,
+                    y: event.clientY - rect.top
+                };
+                lastMousePos = dragStartPos;
+                hasDragged = false;
+            }
+
+            function handleMouseMove(event) {
+                if (!dragStartPos) return;
+
+                const rect = canvas.getBoundingClientRect();
+                const currentMousePos = {
+                    x: event.clientX - rect.left,
+                    y: event.clientY - rect.top
+                };
+
+                const dx = currentMousePos.x - lastMousePos.x;
+                const dy = currentMousePos.y - lastMousePos.y;
+
+                // Only start dragging if we've moved more than a few pixels
+                if (!isDragging && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) {
+                    isDragging = true;
+                }
+
+                if (isDragging) {
+                    hasDragged = true;
+                    camera.x -= dx;
+                    camera.y -= dy;
+                    draw();
+                }
+
+                lastMousePos = currentMousePos;
+            }
+
+            function handleMouseUp() {
+                dragStartPos = null;
+                isDragging = false;
+            }
+
+            // Touch handling
+            function handleTouchStart(event) {
+                event.preventDefault();
+                const touch = event.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                lastMousePos = {
+                    x: touch.clientX - rect.left,
+                    y: touch.clientY - rect.top
+                };
+                isDragging = true;
+            }
+
+            function handleTouchMove(event) {
+                event.preventDefault();
+                if (!isDragging) return;
+
+                const touch = event.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                const currentMousePos = {
+                    x: touch.clientX - rect.left,
+                    y: touch.clientY - rect.top
+                };
+
+                const dx = currentMousePos.x - lastMousePos.x;
+                const dy = currentMousePos.y - lastMousePos.y;
+
+                camera.x -= dx;
+                camera.y -= dy;
+
+                lastMousePos = currentMousePos;
+                draw();
+            }
+
+            function handleTouchEnd(event) {
+                event.preventDefault();
+                setTimeout(() => {
+                    isDragging = false;
+                }, 10);
+            }
+
+            // Zoom functions
+            function zoomIn() {
+                zoom = Math.min(zoom * 1.5, 10);
+                draw();
+            }
+
+            function zoomOut() {
+                zoom = Math.max(zoom / 1.5, 0.1);
+                draw();
+            }
+
+            function resetView() {
+                zoom = 1;
+                camera = { x: 0, y: 0 };
+                draw();
+            }
+
+            // Mouse wheel zoom
+            function handleWheel(event) {
+                event.preventDefault();
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = event.clientX - rect.left;
+                const mouseY = event.clientY - rect.top;
+
+                // Zoom towards mouse position
+                const worldPos = screenToWorld(mouseX, mouseY);
+
+                const zoomFactor = event.deltaY > 0 ? 0.9 : 1.1;
+                const newZoom = Math.max(0.1, Math.min(10, zoom * zoomFactor));
+
+                if (newZoom !== zoom) {
+                    zoom = newZoom;
+
+                    // Adjust camera to zoom towards mouse position
+                    const newWorldPos = screenToWorld(mouseX, mouseY);
+                    camera.x += (newWorldPos.x - worldPos.x);
+                    camera.y += (newWorldPos.y - worldPos.y);
+
+                    draw();
+                }
+            }
+
+            // Handle range slider
+            rangeSlider.addEventListener('input', (e) => {
+                rangeLy = parseFloat(e.target.value);
+                rangeValue.textContent = rangeLy;
+                draw();
+            });
+
+            function init() {
+                resize();
+
+                // Mouse events
+                canvas.addEventListener('click', handleClick);
+                canvas.addEventListener('mousedown', handleMouseDown);
+                canvas.addEventListener('mousemove', handleMouseMove);
+                canvas.addEventListener('mouseup', handleMouseUp);
+                canvas.addEventListener('mouseleave', handleMouseUp);
+                canvas.addEventListener('wheel', handleWheel);
+
+                // Touch events
+                canvas.addEventListener('touchstart', handleTouchStart);
+                canvas.addEventListener('touchmove', handleTouchMove);
+                canvas.addEventListener('touchend', handleTouchEnd);
+
+                // Button events
+                zoomInBtn.addEventListener('click', zoomIn);
+                zoomOutBtn.addEventListener('click', zoomOut);
+                resetViewBtn.addEventListener('click', resetView);
+
+                draw();
+            }
+
+            window.addEventListener("resize", () => {
+                resize();
+                draw();
+            });
+
+            init();
+        })();
+    </script>
+</body>
+
+</html>

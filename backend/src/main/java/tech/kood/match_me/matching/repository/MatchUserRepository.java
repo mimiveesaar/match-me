@@ -10,7 +10,7 @@ import tech.kood.match_me.matching.model.User;
 
 @Repository
 public interface MatchUserRepository extends JpaRepository<User, UUID>, MatchUserRepositoryCustom {
-    // Now supports findByFilter()
+    
     List<User> findByHomeplanetId(Integer homeplanetId);
     List<User> findByLookingForId(Integer lookingForId);
     List<User> findByHomeplanetIdAndLookingForIdAndBodyformId(Integer homeplanetId, Integer lookingForId, Integer bodyformId);

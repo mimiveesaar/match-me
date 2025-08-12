@@ -60,6 +60,38 @@ public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
             query.distinct(true); // Use DISTINCT because joins can produce duplicate rows
         }
 
+        if (filter.getHomeplanetLatitude() != null && filter.getHomeplanetLongitude() != null && filter.getMaxDistanceLy() != null) {
+            double homeLat = filter.getHomeplanetLatitude();
+            double homeLon = filter.getHomeplanetLongitude();
+
+            double earthRadiusLy = 6371.0 / 9.461e12; // km to ly
+            double radius = earthRadiusLy;
+
+            Expression<Double> userLat = root.get("latitude");
+            Expression<Double> userLon = root.get("longitude");
+
+            Expression<Double> lat1Rad = cb.function("radians", Double.class, cb.literal(homeLat));
+            Expression<Double> lat2Rad = cb.function("radians", Double.class, userLat);
+            Expression<Double> lon1Rad = cb.function("radians", Double.class, cb.literal(homeLon));
+            Expression<Double> lon2Rad = cb.function("radians", Double.class, userLon);
+
+            Expression<Double> deltaLon = cb.diff(lon2Rad, lon1Rad);
+            Expression<Double> cosLat1 = cb.function("cos", Double.class, lat1Rad);
+            Expression<Double> cosLat2 = cb.function("cos", Double.class, lat2Rad);
+            Expression<Double> cosDeltaLon = cb.function("cos", Double.class, deltaLon);
+            Expression<Double> sinLat1 = cb.function("sin", Double.class, lat1Rad);
+            Expression<Double> sinLat2 = cb.function("sin", Double.class, lat2Rad);
+
+            Expression<Double> acosInput = cb.sum(
+                    cb.prod(cb.prod(cosLat1, cosLat2), cosDeltaLon),
+                    cb.prod(sinLat1, sinLat2)
+            );
+
+            Expression<Double> distance = cb.prod(cb.literal(radius), cb.function("acos", Double.class, acosInput));
+
+            predicates.add(cb.lessThanOrEqualTo(distance, filter.getMaxDistanceLy()));
+        }
+
         query.where(cb.and(predicates.toArray(new Predicate[0])));
 
         return entityManager.createQuery(query).getResultList();
