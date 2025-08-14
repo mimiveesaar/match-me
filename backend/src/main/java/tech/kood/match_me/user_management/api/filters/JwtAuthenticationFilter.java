@@ -13,13 +13,13 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import tech.kood.match_me.user_management.internal.domain.features.getUser.handlers.GetUserByIdHandler;
-import tech.kood.match_me.user_management.internal.domain.features.getUser.requests.GetUserByIdQuery;
-import tech.kood.match_me.user_management.internal.domain.features.getUser.results.GetUserByIdQueryResults;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenHandler;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenResults;
 import tech.kood.match_me.user_management.internal.domain.models.AccessToken;
+import tech.kood.match_me.user_management.internal.features.getUser.handlers.GetUserByIdHandler;
+import tech.kood.match_me.user_management.internal.features.getUser.requests.GetUserByIdQuery;
+import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByIdQueryResults;
+import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenHandler;
+import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
+import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenResults;
 
 
 @Service

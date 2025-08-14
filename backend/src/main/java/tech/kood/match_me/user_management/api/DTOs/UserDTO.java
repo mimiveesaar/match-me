@@ -1,9 +1,10 @@
 package tech.kood.match_me.user_management.api.DTOs;
 
-public record UserDTO(
-        String id,
-        String username,
-        String email) {
+
+import jakarta.validation.constraints.*;
+import org.hibernate.validator.constraints.UUID;
+
+public record UserDTO(@NotEmpty @UUID String id, @NotEmpty String username, @Email String email) {
 
     public UserDTO withId(String id) {
         return new UserDTO(id, this.username, this.email);

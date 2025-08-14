@@ -12,17 +12,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenHandler;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenRequest;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenResults;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenHandler;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.validateAccessToken.ValidateAccessTokenResults;
-import tech.kood.match_me.user_management.internal.domain.features.refreshToken.createToken.CreateRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.domain.features.refreshToken.createToken.CreateRefreshTokenRequest;
-import tech.kood.match_me.user_management.internal.domain.features.refreshToken.createToken.CreateRefreshTokenResults;
-import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserHandler;
-import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserResults;
+import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenHandler;
+import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenRequest;
+import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenResults;
+import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenHandler;
+import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
+import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenResults;
+import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenRequest;
+import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenResults;
+import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
+import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
 
 @SpringBootTest

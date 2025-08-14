@@ -11,11 +11,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.GetAccessTokenRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.GetAccessTokenResultsDTO;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenHandler;
-import tech.kood.match_me.user_management.internal.domain.features.jwt.createAccessToken.CreateAccessTokenRequest;
+import tech.kood.match_me.user_management.api.DTOs.InputValidationErrorDTO;
+import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenHandler;
+import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.mappers.GetAccessTokenMapper;
 
 @RestController
@@ -41,9 +43,11 @@ public class GetAccessTokenEndpoint {
                                         implementation = GetAccessTokenResultsDTO.Success.class))),
                         @ApiResponse(responseCode = "400", description = "Invalid request.",
                                         content = @Content(mediaType = "application/json",
-                                                        schema = @Schema(
+                                                        schema = @Schema(oneOf = {
+                                                                        GetAccessTokenResultsDTO.InvalidToken.class,
+                                                                        InputValidationErrorDTO.class},
                                                                         discriminatorProperty = "kind",
-                                                                        implementation = GetAccessTokenResultsDTO.InvalidRequest.class))),
+                                                                        implementation = InputValidationErrorDTO.class))),
                         @ApiResponse(responseCode = "401", description = "Invalid refresh token.",
                                         content = @Content(mediaType = "application/json",
                                                         schema = @Schema(
@@ -54,7 +58,7 @@ public class GetAccessTokenEndpoint {
                                                                         implementation = GetAccessTokenResultsDTO.SystemError.class)))})
 
         public ResponseEntity<GetAccessTokenResultsDTO> getAccessToken(
-                        @RequestBody GetAccessTokenRequestDTO request) {
+                        @Valid @RequestBody GetAccessTokenRequestDTO request) {
 
                 var internalRequest = CreateAccessTokenRequest.of(UUID.randomUUID(),
                                 request.refreshToken(), UUID.randomUUID().toString());
@@ -67,8 +71,6 @@ public class GetAccessTokenEndpoint {
                         case GetAccessTokenResultsDTO.Success success -> ResponseEntity.ok(success);
                         case GetAccessTokenResultsDTO.InvalidToken invalidToken -> ResponseEntity
                                         .badRequest().body(invalidToken);
-                        case GetAccessTokenResultsDTO.InvalidRequest invalidRequest -> ResponseEntity
-                                        .badRequest().body(invalidRequest);
                         case GetAccessTokenResultsDTO.SystemError systemError -> ResponseEntity
                                         .status(500).body(systemError);
                 };

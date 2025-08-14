@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.InvalidateRefreshTokenRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.InvalidateRefreshTokenResultsDTO;
-import tech.kood.match_me.user_management.internal.domain.features.refreshToken.invalidateToken.InvalidateRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.domain.features.refreshToken.invalidateToken.InvalidateRefreshTokenRequest;
+import tech.kood.match_me.user_management.api.DTOs.InputValidationErrorDTO;
+import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.mappers.InvalidateRefreshTokenMapper;
 
 @RestController
@@ -48,7 +50,7 @@ public final class InvalidateRefreshTokenEndpoint {
                                         content = @io.swagger.v3.oas.annotations.media.Content(
                                                         mediaType = "application/json",
                                                         schema = @io.swagger.v3.oas.annotations.media.Schema(
-                                                                        implementation = InvalidateRefreshTokenResultsDTO.InvalidRequest.class))),
+                                                                        implementation = InputValidationErrorDTO.class))),
                         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
                                         description = "Internal server error.",
                                         content = @io.swagger.v3.oas.annotations.media.Content(
@@ -57,7 +59,7 @@ public final class InvalidateRefreshTokenEndpoint {
                                                                         implementation = InvalidateRefreshTokenResultsDTO.SystemError.class)))})
 
         public ResponseEntity<InvalidateRefreshTokenResultsDTO> invalidateRefreshToken(
-                        @RequestBody InvalidateRefreshTokenRequestDTO request) {
+                        @Valid @RequestBody InvalidateRefreshTokenRequestDTO request) {
 
                 var internalRequest = InvalidateRefreshTokenRequest.of(UUID.randomUUID(),
                                 request.refreshToken(), UUID.randomUUID().toString());
@@ -71,8 +73,6 @@ public final class InvalidateRefreshTokenEndpoint {
                                         .ok(success);
                         case InvalidateRefreshTokenResultsDTO.TokenNotFound tokenNotFound -> ResponseEntity
                                         .status(401).body(tokenNotFound);
-                        case InvalidateRefreshTokenResultsDTO.InvalidRequest invalidRequest -> ResponseEntity
-                                        .status(400).body(invalidRequest);
                         case InvalidateRefreshTokenResultsDTO.SystemError systemError -> ResponseEntity
                                         .status(500).body(systemError);
                 };

@@ -13,11 +13,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.RegisterUserRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.RegisterUserResultsDTO;
-import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserHandler;
-import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserRequest;
+import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
+import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserRequest;
 import tech.kood.match_me.user_management.internal.mappers.RegisterUserResultsMapper;
 
 @RestController

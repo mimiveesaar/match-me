@@ -1,4 +1,6 @@
 package tech.kood.match_me.user_management.api.DTOs;
 
-public record GetAccessTokenRequestDTO(String refreshToken) {
+import jakarta.validation.constraints.NotEmpty;
+
+public record GetAccessTokenRequestDTO(@NotEmpty String refreshToken) {
 }

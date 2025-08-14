@@ -1,5 +1,6 @@
 package tech.kood.match_me.user_management.api.DTOs;
 
-public record InvalidateRefreshTokenRequestDTO(String refreshToken) {
+import jakarta.validation.constraints.NotEmpty;
 
+public record InvalidateRefreshTokenRequestDTO(@NotEmpty String refreshToken) {
 }

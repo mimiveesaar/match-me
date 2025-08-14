@@ -17,17 +17,4 @@ public final class DeclineConnectionHandler {
         this.pendingConnectionsRepository = pendingConnectionsRepository;
         this.events = events;
     }
-
-    public DeclineConnectionResults handle(DeclineConnectionRequest request) {
-        if (request == null || request.connectionId() == null || request.requestId() == null) {
-            var result = new DeclineConnectionResults.InvalidRequest(request.requestId(),
-                    request.tracingId());
-            events.publishEvent(new DeclineConnectionEvent(request, result));
-            return result;
-        }
-
-
-    }
-
-
 }

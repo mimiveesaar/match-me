@@ -1,7 +1,7 @@
 package tech.kood.match_me.user_management.api.DTOs;
 
-public record RegisterUserRequestDTO(
-        String username,
-        String email,
-        String password) {
+import jakarta.validation.constraints.NotEmpty;
+
+public record RegisterUserRequestDTO(@NotEmpty String username, @NotEmpty String email,
+                @NotEmpty String password) {
 }

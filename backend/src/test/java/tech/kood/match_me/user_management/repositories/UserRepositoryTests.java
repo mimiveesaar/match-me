@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
-import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserHandler;
-import tech.kood.match_me.user_management.mocks.UserEntityMocker;
+import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
+import tech.kood.match_me.user_management.mocks.UserEntityMother;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,7 +25,7 @@ public class UserRepositoryTests extends UserManagementTestBase {
     Flyway userManagementFlyway;
 
     @Autowired
-    UserEntityMocker userEntityMocker;
+    UserEntityMother userEntityMocker;
 
     @Autowired
     RegisterUserHandler registerUserHandler;

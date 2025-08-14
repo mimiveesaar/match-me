@@ -3,7 +3,10 @@ package tech.kood.match_me.user_management.api.DTOs;
 
 import java.io.Serializable;
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Email;
 
 
 @Schema(name = "RegisterUserResultsDTO", oneOf = {RegisterUserResultsDTO.Success.class,
@@ -20,8 +23,8 @@ public sealed interface RegisterUserResultsDTO extends Serializable
 
 
         @Schema(name = "RegisterUserEmailExistsDTO")
-        public record EmailExists(String email, String kind, String tracingId)
-                        implements RegisterUserResultsDTO {
+        public record EmailExists(@Email String email, @NotEmpty String kind,
+                        @Nullable String tracingId) implements RegisterUserResultsDTO {
                 public EmailExists(String email, String tracingId) {
                         this(email, "email_exists", tracingId);
                 }
@@ -29,21 +32,16 @@ public sealed interface RegisterUserResultsDTO extends Serializable
         }
 
         @Schema(name = "RegisterUserInvalidEmailDTO")
-        public record InvalidEmail(String email, String kind, String tracingId)
-                        implements RegisterUserResultsDTO {
+        public record InvalidEmail(@Email String email, @NotEmpty String kind,
+                        @Nullable String tracingId) implements RegisterUserResultsDTO {
                 public InvalidEmail(String email, String tracingId) {
                         this(email, "invalid_email", tracingId);
                 }
         }
 
         @Schema(name = "RegisterUserInvalidPasswordDTO")
-        public record InvalidPassword(String password, InvalidPasswordType type, String kind,
-                        String tracingId) implements RegisterUserResultsDTO {
-
-                public InvalidPassword(String password, InvalidPasswordType type,
-                                String tracingId) {
-                        this(password, type, "invalid_password", tracingId);
-                }
+        public record InvalidPassword(@NotEmpty String password, @Nonnull InvalidPasswordType type,
+                        @Nullable String tracingId) implements RegisterUserResultsDTO {
         }
 
         @Schema(name = "RegisterUserInvalidUsernameTypeDTO")
@@ -57,8 +55,9 @@ public sealed interface RegisterUserResultsDTO extends Serializable
         }
 
         @Schema(name = "RegisterUserInvalidUsernameDTO")
-        public record InvalidUsername(String username, String kind, InvalidUsernameType type,
-                        String tracingId) implements RegisterUserResultsDTO {
+        public record InvalidUsername(@NotEmpty String username, @NotEmpty String kind,
+                        @Nonnull InvalidUsernameType type, @Nullable String tracingId)
+                        implements RegisterUserResultsDTO {
 
                 public InvalidUsername(String username, InvalidUsernameType type,
                                 String tracingId) {
@@ -67,24 +66,24 @@ public sealed interface RegisterUserResultsDTO extends Serializable
         }
 
         @Schema(name = "RegisterUserSuccessDTO")
-        public record Success(UserDTO user, String kind, String tracingId)
-                        implements RegisterUserResultsDTO {
+        public record Success(@Nonnull UserDTO user, @NotEmpty String kind,
+                        @Nullable String tracingId) implements RegisterUserResultsDTO {
                 public Success(UserDTO user, String tracingId) {
                         this(user, "success", tracingId);
                 }
         }
 
         @Schema(name = "RegisterUserSystemErrorDTO")
-        public record SystemError(String message, String kind, String tracingId)
-                        implements RegisterUserResultsDTO {
+        public record SystemError(@NotEmpty String message, @NotEmpty String kind,
+                        @Nullable String tracingId) implements RegisterUserResultsDTO {
                 public SystemError(String message, String tracingId) {
                         this(message, "system_error", tracingId);
                 }
         }
 
         @Schema(name = "RegisterUserUsernameExistsDTO")
-        public record UsernameExists(String username, String kind, String tracingId)
-                        implements RegisterUserResultsDTO {
+        public record UsernameExists(@NotEmpty String username, @NotEmpty String kind,
+                        @Nullable String tracingId) implements RegisterUserResultsDTO {
 
 
                 public UsernameExists(String username, String tracingId) {

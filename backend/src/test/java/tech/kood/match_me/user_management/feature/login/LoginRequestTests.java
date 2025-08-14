@@ -12,11 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
-import tech.kood.match_me.user_management.internal.domain.features.login.LoginHandler;
-import tech.kood.match_me.user_management.internal.domain.features.login.LoginRequest;
-import tech.kood.match_me.user_management.internal.domain.features.login.LoginResults;
-import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserHandler;
-import tech.kood.match_me.user_management.internal.domain.features.registerUser.RegisterUserResults;
+import tech.kood.match_me.user_management.internal.features.login.LoginHandler;
+import tech.kood.match_me.user_management.internal.features.login.LoginRequest;
+import tech.kood.match_me.user_management.internal.features.login.LoginResults;
+import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
+import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
 
 @SpringBootTest

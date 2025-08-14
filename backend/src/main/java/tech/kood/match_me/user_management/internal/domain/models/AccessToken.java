@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.NotBlank;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
+import tech.kood.match_me.user_management.internal.features.user.UserId;
 
 /**
  * Represents an access token (JWT) and its associated user ID.
