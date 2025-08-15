@@ -3,6 +3,7 @@ package tech.kood.match_me.user_management.internal.features.user.domain.model;
 
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
+import org.jmolecules.ddd.annotation.Factory;
 import org.springframework.stereotype.Component;
 import tech.kood.match_me.user_management.internal.features.user.domain.model.email.Email;
 import tech.kood.match_me.user_management.internal.features.user.domain.model.email.EmailFactory;
@@ -15,6 +16,7 @@ import tech.kood.match_me.user_management.internal.features.user.domain.model.us
 import java.time.Instant;
 
 @Component
+@Factory
 public final class UserFactory {
 
     private final Validator validator;

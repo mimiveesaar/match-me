@@ -21,8 +21,8 @@ import tech.kood.match_me.user_management.internal.features.jwt.validateAccessTo
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenHandler;
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenResults;
-import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
-import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserResults;
+import tech.kood.match_me.user_management.internal.features.user.registerUser.RegisterUserHandler;
+import tech.kood.match_me.user_management.internal.features.user.registerUser.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
 
 @SpringBootTest
@@ -58,7 +58,7 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
                 var registerResult = registerUserHandler.handle(registerRequest);
                 assert registerResult instanceof RegisterUserResults.Success;
 
-                var user = ((RegisterUserResults.Success) registerResult).getUser();
+                var user = ((RegisterUserResults.Success) registerResult).user();
                 var createTokenRequest =
                                 CreateRefreshTokenRequest.of(UUID.randomUUID(), user, null);
                 var createTokenResult = createRefreshTokenHandler.handle(createTokenRequest);

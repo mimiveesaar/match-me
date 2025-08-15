@@ -1,10 +1,8 @@
 package tech.kood.match_me.user_management.feature.refreshToken;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +19,8 @@ import tech.kood.match_me.user_management.internal.features.refreshToken.createT
 import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenHandler;
 import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenResults;
-import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
-import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserResults;
+import tech.kood.match_me.user_management.internal.features.user.registerUser.RegisterUserHandler;
+import tech.kood.match_me.user_management.internal.features.user.registerUser.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
 
 @SpringBootTest
@@ -58,7 +56,7 @@ public class GetRefreshTokenTests extends UserManagementTestBase {
         var registerResult = registerUserHandler.handle(registerRequest);
         assert registerResult instanceof RegisterUserResults.Success;
 
-        var user = ((RegisterUserResults.Success) registerResult).getUser();
+        var user = ((RegisterUserResults.Success) registerResult).user();
         var createTokenRequest = CreateRefreshTokenRequest.of(UUID.randomUUID(), user, null);
         var createTokenResult = createRefreshTokenHandler.handle(createTokenRequest);
 

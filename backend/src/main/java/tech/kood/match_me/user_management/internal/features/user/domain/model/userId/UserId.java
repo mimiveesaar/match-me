@@ -1,10 +1,11 @@
 package tech.kood.match_me.user_management.internal.features.user.domain.model.userId;
 
-import java.util.Objects;
 import java.util.UUID;
 import jakarta.validation.constraints.NotNull;
+import org.jmolecules.architecture.layered.DomainLayer;
 import org.jmolecules.ddd.types.Identifier;
 
+@DomainLayer
 public class UserId implements Identifier {
 
     @NotNull
@@ -14,6 +15,9 @@ public class UserId implements Identifier {
         this.value = value;
     }
 
+    public UUID getValue() {
+        return value;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -27,7 +31,7 @@ public class UserId implements Identifier {
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return value.hashCode();
     }
 
     @Override

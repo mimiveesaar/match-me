@@ -15,8 +15,8 @@ import tech.kood.match_me.user_management.internal.database.repostitories.UserRe
 import tech.kood.match_me.user_management.internal.features.login.LoginHandler;
 import tech.kood.match_me.user_management.internal.features.login.LoginRequest;
 import tech.kood.match_me.user_management.internal.features.login.LoginResults;
-import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserHandler;
-import tech.kood.match_me.user_management.internal.features.registerUser.RegisterUserResults;
+import tech.kood.match_me.user_management.internal.features.user.registerUser.RegisterUserHandler;
+import tech.kood.match_me.user_management.internal.features.user.registerUser.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
 
 @SpringBootTest
@@ -48,8 +48,8 @@ public class LoginRequestTests extends UserManagementTestBase {
         var registerResult = registerUserHandler.handle(registerUserRequest);
         assert registerResult instanceof RegisterUserResults.Success;
 
-        var loginRequest = LoginRequest.of(UUID.randomUUID(), registerUserRequest.getEmail(),
-                registerUserRequest.getPassword(), null);
+        var loginRequest = LoginRequest.of(UUID.randomUUID(), registerUserRequest.email(),
+                registerUserRequest.password(), null);
 
         var loginResult = loginRequestHandler.handle(loginRequest);
         assert loginResult instanceof LoginResults.Success;

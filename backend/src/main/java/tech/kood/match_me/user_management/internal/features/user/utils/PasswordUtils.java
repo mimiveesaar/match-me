@@ -2,21 +2,17 @@ package tech.kood.match_me.user_management.internal.features.user.utils;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import tech.kood.match_me.user_management.internal.features.user.domain.model.hashedPassword.HashedPassword;
+import tech.kood.match_me.user_management.internal.features.user.domain.model.password.Password;
 
 public final class PasswordUtils {
-    // Encodes a password, generating a salt using bcrypt and returning a
-    // HashedPassword
-    public static HashedPassword encode(String plainPassword) {
-        return HashedPassword.of(hash, salt);
-    }
 
     // Checks if the provided plain password matches the hash using the stored salt
-    public static boolean matches(String plainPassword, HashedPassword hashedPassword) {
+    public static boolean matches(Password plainPassword, HashedPassword hashedPassword) {
         if (plainPassword == null || hashedPassword == null) {
             return false;
         }
-        // BCrypt stores the salt in the hash, but for explicit salt usage:
-        String hashToCompare = BCrypt.hashpw(plainPassword, hashedPassword.getSalt());
+
+        String hashToCompare = BCrypt.hashpw(plainPassword.getValue(), hashedPassword.getSalt());
         return hashToCompare.equals(hashedPassword.getHash());
     }
 }

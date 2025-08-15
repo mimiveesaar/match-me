@@ -1,10 +1,10 @@
-package tech.kood.match_me.user_management.internal.features.registerUser;
+package tech.kood.match_me.user_management.internal.features.user.registerUser;
 
 
 /**
  * Event representing the registration of a new user.
  *
- * @param user      The registered user; 
+ * @param User      The registered user;
  * @throws IllegalArgumentException if {@code user} is {@code null}
  */
 public record RegisterUserEvent(

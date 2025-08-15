@@ -1,8 +1,10 @@
 package tech.kood.match_me.user_management.internal.features.user.domain.model.email;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.validation.constraints.NotBlank;
 import org.jmolecules.architecture.layered.DomainLayer;
 import org.jmolecules.ddd.types.ValueObject;
+import tech.kood.match_me.user_management.internal.features.user.domain.model.email.jackson.EmailSerializer;
 
 import java.util.Objects;
 

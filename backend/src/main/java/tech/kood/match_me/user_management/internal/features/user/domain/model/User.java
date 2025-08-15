@@ -72,7 +72,7 @@ public class User implements AggregateRoot<User, UserId> {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return this.id.getValue().hashCode();
     }
 
     @Override
