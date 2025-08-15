@@ -10,7 +10,7 @@ import tech.kood.match_me.user_management.internal.features.refreshToken.createT
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenResults;
 import tech.kood.match_me.user_management.internal.mappers.UserMapper;
-import tech.kood.match_me.user_management.internal.utils.PasswordUtils;
+import tech.kood.match_me.user_management.internal.features.user.utils.PasswordUtils;
 
 @Service
 public final class LoginHandler implements CommandHandler<LoginRequest, LoginResults> {

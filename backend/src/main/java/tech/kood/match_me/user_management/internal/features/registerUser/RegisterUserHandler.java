@@ -10,9 +10,9 @@ import tech.kood.match_me.user_management.UserManagementConfig;
 import tech.kood.match_me.user_management.internal.common.cqrs.QueryHandler;
 import tech.kood.match_me.user_management.internal.database.entities.UserEntity;
 import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
-import tech.kood.match_me.user_management.internal.domain.models.HashedPassword;
+import tech.kood.match_me.user_management.internal.features.user.domain.model.hashedPassword.HashedPassword;
 import tech.kood.match_me.user_management.internal.mappers.UserMapper;
-import tech.kood.match_me.user_management.internal.utils.PasswordUtils;
+import tech.kood.match_me.user_management.internal.features.user.utils.PasswordUtils;
 
 @Service
 public final class RegisterUserHandler

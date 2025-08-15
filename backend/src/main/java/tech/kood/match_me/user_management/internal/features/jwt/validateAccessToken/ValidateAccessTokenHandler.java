@@ -9,7 +9,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import tech.kood.match_me.user_management.internal.common.cqrs.QueryHandler;
 import tech.kood.match_me.user_management.internal.domain.models.AccessToken;
-import tech.kood.match_me.user_management.internal.features.user.UserId;
+import tech.kood.match_me.user_management.internal.features.user.domain.model.userId.UserId;
 
 @Service
 public class ValidateAccessTokenHandler

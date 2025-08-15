@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 
 import tech.kood.match_me.user_management.api.DTOs.UserDTO;
 import tech.kood.match_me.user_management.internal.database.entities.UserEntity;
-import tech.kood.match_me.user_management.internal.domain.models.HashedPassword;
-import tech.kood.match_me.user_management.internal.features.user.User;
-import tech.kood.match_me.user_management.internal.features.user.UserId;
+import tech.kood.match_me.user_management.internal.features.user.domain.model.hashedPassword.HashedPassword;
+import tech.kood.match_me.user_management.internal.features.user.domain.model.User;
+import tech.kood.match_me.user_management.internal.features.user.domain.model.userId.UserId;
 
 @Component
 @Primary

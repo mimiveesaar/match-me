@@ -7,7 +7,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.NotNull;
 import tech.kood.match_me.user_management.internal.common.cqrs.Command;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
-import tech.kood.match_me.user_management.internal.features.user.User;
+import tech.kood.match_me.user_management.internal.features.user.domain.model.User;
 
 /**
  * Represents a request to refresh a token, containing identifiers for the request, the user, and an

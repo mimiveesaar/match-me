@@ -4,9 +4,9 @@ import java.time.Instant;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 import com.github.javafaker.Faker;
-import tech.kood.match_me.user_management.internal.features.user.User;
-import tech.kood.match_me.user_management.internal.features.user.UserId;
-import tech.kood.match_me.user_management.internal.utils.PasswordUtils;
+import tech.kood.match_me.user_management.internal.features.user.domain.model.User;
+import tech.kood.match_me.user_management.internal.features.user.domain.model.userId.UserId;
+import tech.kood.match_me.user_management.internal.features.user.utils.PasswordUtils;
 
 @Component
 public class UserMother {

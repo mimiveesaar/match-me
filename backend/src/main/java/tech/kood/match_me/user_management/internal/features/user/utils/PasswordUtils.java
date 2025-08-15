@@ -1,17 +1,12 @@
-package tech.kood.match_me.user_management.internal.utils;
+package tech.kood.match_me.user_management.internal.features.user.utils;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import tech.kood.match_me.user_management.internal.domain.models.HashedPassword;
+import tech.kood.match_me.user_management.internal.features.user.domain.model.hashedPassword.HashedPassword;
 
 public final class PasswordUtils {
     // Encodes a password, generating a salt using bcrypt and returning a
     // HashedPassword
     public static HashedPassword encode(String plainPassword) {
-        if (plainPassword == null || plainPassword.isBlank()) {
-            throw new IllegalArgumentException("Password cannot be null or blank");
-        }
-        String salt = BCrypt.gensalt();
-        String hash = BCrypt.hashpw(plainPassword, salt);
         return HashedPassword.of(hash, salt);
     }
 
