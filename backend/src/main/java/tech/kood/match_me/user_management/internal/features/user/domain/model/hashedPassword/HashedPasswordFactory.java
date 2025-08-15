@@ -30,7 +30,7 @@ public final class HashedPasswordFactory {
         return hashedPassword;
     }
 
-    public HashedPassword of(Password password) {
+     public HashedPassword of(Password password) throws ConstraintViolationException {
         String salt = BCrypt.gensalt();
         String hash = BCrypt.hashpw(password.getValue(), salt);
 

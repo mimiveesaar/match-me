@@ -2,7 +2,6 @@ package tech.kood.match_me.user_management.internal.features.user.domain.model.e
 
 
 import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.ValidationException;
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.DomainLayer;
 import org.jmolecules.ddd.annotation.Factory;

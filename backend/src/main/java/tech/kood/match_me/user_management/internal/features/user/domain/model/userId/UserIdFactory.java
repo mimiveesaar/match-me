@@ -1,7 +1,6 @@
 package tech.kood.match_me.user_management.internal.features.user.domain.model.userId;
 
 import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.ValidationException;
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.DomainLayer;
 import org.jmolecules.ddd.annotation.Factory;
@@ -30,7 +29,11 @@ public final class UserIdFactory {
         return userId;
     }
 
-    public UserId of(String id) throws ValidationException {
+    public UserId of(String id) throws ConstraintViolationException {
         return this.of(UUID.fromString(id));
+    }
+
+    public UserId newId() {
+        return new UserId(UUID.randomUUID());
     }
 }
