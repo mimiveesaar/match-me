@@ -16,14 +16,12 @@ public sealed interface CreateRefreshTokenResults
         permits CreateRefreshTokenResults.Success, CreateRefreshTokenResults.UserNotFound,
         CreateRefreshTokenResults.SystemError {
 
-    record Success(@NotNull UUID requestId, RefreshToken refreshToken,
-                   @Nullable String tracingId) implements CreateRefreshTokenResults {
+    record Success(@NotNull UUID requestId, RefreshToken refreshToken, @Nullable String tracingId) implements CreateRefreshTokenResults {
     }
 
     record UserNotFound(@NotNull UUID requestId, @NotEmpty UserId userId, @Nullable String tracingId) implements CreateRefreshTokenResults {
     }
 
     record SystemError(@NotNull UUID requestId, @NotEmpty String message, @Nullable String tracingId) implements CreateRefreshTokenResults {
-
     }
 }

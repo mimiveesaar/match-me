@@ -12,7 +12,7 @@ import java.time.Instant;
 import java.util.Objects;
 
 @DomainLayer
-public class RefreshToken implements AggregateRoot<RefreshToken, RefreshTokenId> {
+public final class RefreshToken implements AggregateRoot<RefreshToken, RefreshTokenId> {
 
     @NotNull
     @Valid

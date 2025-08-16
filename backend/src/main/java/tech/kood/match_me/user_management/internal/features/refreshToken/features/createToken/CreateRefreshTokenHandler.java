@@ -3,15 +3,14 @@ package tech.kood.match_me.user_management.internal.features.refreshToken.featur
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import tech.kood.match_me.user_management.internal.common.cqrs.CommandHandler;
+import tech.kood.match_me.user_management.internal.features.refreshToken.domain.model.RefreshToken;
+import tech.kood.match_me.user_management.internal.features.refreshToken.domain.model.RefreshTokenFactory;
 import tech.kood.match_me.user_management.internal.features.refreshToken.persistance.RefreshTokenRepository;
-import tech.kood.match_me.user_management.internal.features.refreshToken.RefreshTokenFactory;
 import tech.kood.match_me.user_management.internal.mappers.RefreshTokenMapper;
 
 
 @Service
-public class CreateRefreshTokenHandler
-        implements CommandHandler<CreateRefreshTokenRequest, CreateRefreshTokenResults> {
+public class CreateRefreshTokenHandler {
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final RefreshTokenFactory refreshTokenFactory;
@@ -31,10 +30,8 @@ public class CreateRefreshTokenHandler
     public CreateRefreshTokenResults handle(CreateRefreshTokenRequest request) {
 
         try {
-            // We assume the user exists, as this is a refresh token operation.
-            // Create a new refresh token
-            RefreshToken refreshToken =
-                    this.refreshTokenFactory.create(request.user().getId().getValue());
+            RefreshToken refreshToken = refreshTokenFactory.makeNew(request.user().getId());
+
             var refreshTokenEntity = refreshTokenMapper.toEntity(refreshToken);
             refreshTokenRepository.save(refreshTokenEntity);
 

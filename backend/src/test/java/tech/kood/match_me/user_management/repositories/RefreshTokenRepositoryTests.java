@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.internal.features.refreshToken.persistance.RefreshTokenRepository;
 import tech.kood.match_me.user_management.internal.features.user.persistance.UserRepository;
-import tech.kood.match_me.user_management.internal.features.refreshToken.RefreshTokenFactory;
 import tech.kood.match_me.user_management.internal.mappers.RefreshTokenMapper;
 import tech.kood.match_me.user_management.mocks.UserEntityMother;
 
