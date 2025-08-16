@@ -50,6 +50,15 @@ public final class UserMapper {
         return userFactory.make(userId, email, hashedPassword, userDTO.createdAt(), userDTO.updatedAt());
     }
 
+    public UserEntity toEntity(User user) throws CheckedConstraintViolationException {
+        var userId = user.getId().getValue();
+        var email = user.getEmail().toString();
+        var hashedPassword = user.getHashedPassword().getHash();
+        var passwordSalt = user.getHashedPassword().getSalt();
+
+        return userEntityFactory.make(userId, email, hashedPassword, passwordSalt, user.getCreatedAt(), user.getUpdatedAt());
+    }
+
     public UserDTO toDTO(User user) {
         var userIdDTO = new UserIdDTO(user.getId().getValue());
         var hashedPasswordDTO = new HashedPasswordDTO(user.getHashedPassword().getHash(), user.getHashedPassword().getSalt());

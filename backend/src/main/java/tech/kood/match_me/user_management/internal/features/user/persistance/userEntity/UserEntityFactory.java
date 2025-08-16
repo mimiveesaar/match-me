@@ -31,8 +31,4 @@ public class UserEntityFactory {
         }
         return entity;
     }
-
-    public UserEntity makeNew(User user) throws CheckedConstraintViolationException {
-        return make(user.getId().getValue(), user.getEmail().toString(), user.getHashedPassword().getHash(), user.getHashedPassword().getSalt(), Instant.now(), Instant.now());
-    }
 }
