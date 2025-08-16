@@ -10,6 +10,8 @@
 	"initializeCommand": "bash .devcontainer/scripts/host/init.sh",
 	"postCreateCommand": "sudo chown root:docker /var/run/docker.sock",
 
+	"forwardPorts": [8080],
+
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 

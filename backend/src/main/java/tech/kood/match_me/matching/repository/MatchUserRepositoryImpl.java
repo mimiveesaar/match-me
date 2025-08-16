@@ -1,21 +1,25 @@
 package tech.kood.match_me.matching.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.*;
-
-import org.springframework.stereotype.Repository;
-
-import tech.kood.match_me.matching.dto.MatchFilter;
-import tech.kood.match_me.matching.model.Interest;
-import tech.kood.match_me.matching.model.User;
-import tech.kood.match_me.matching.model.Bodyform;
-import tech.kood.match_me.matching.model.Homeplanet;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import tech.kood.match_me.matching.dto.MatchFilter;
+import tech.kood.match_me.matching.model.Bodyform;
+import tech.kood.match_me.matching.model.Homeplanet;
+import tech.kood.match_me.matching.model.Interest;
 import tech.kood.match_me.matching.model.LookingFor;
+import tech.kood.match_me.matching.model.User;
 
 @Repository
 public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
@@ -31,11 +35,9 @@ public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        if (filter.getHomeplanet() != null) {
-            Join<User, Homeplanet> homeplanetJoin = root.join("homeplanet", JoinType.INNER);
-            predicates.add(cb.equal(homeplanetJoin.get("name"), filter.getHomeplanet()));
-        }
+        Join<User, Homeplanet> homeplanetJoin = root.join("homeplanet", JoinType.INNER);
 
+        // --- Optional: other filters ---
         if (filter.getLookingFor() != null) {
             Join<User, LookingFor> lookingForJoin = root.join("lookingFor", JoinType.INNER);
             predicates.add(cb.equal(lookingForJoin.get("name"), filter.getLookingFor()));
@@ -57,43 +59,42 @@ public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
         if (filter.getInterests() != null && !filter.getInterests().isEmpty()) {
             Join<User, Interest> interestJoin = root.join("interests", JoinType.INNER);
             predicates.add(interestJoin.get("name").in(filter.getInterests()));
-            query.distinct(true); // Use DISTINCT because joins can produce duplicate rows
+            query.distinct(true);
         }
 
-        if (filter.getHomeplanetLatitude() != null && filter.getHomeplanetLongitude() != null && filter.getMaxDistanceLy() != null) {
-            double homeLat = filter.getHomeplanetLatitude();
-            double homeLon = filter.getHomeplanetLongitude();
+        // --- Distance filter ---
+        if (filter.getHomeplanet() != null && filter.getMaxDistanceLy() != null) {
+            // lookup coordinates of the selected planet
+            CriteriaQuery<Homeplanet> hpQuery = cb.createQuery(Homeplanet.class);
+            Root<Homeplanet> hpRoot = hpQuery.from(Homeplanet.class);
+            hpQuery.select(hpRoot).where(cb.equal(hpRoot.get("name"), filter.getHomeplanet()));
+            Homeplanet selectedPlanet = entityManager.createQuery(hpQuery).getSingleResult();
 
-            double earthRadiusLy = 6371.0 / 9.461e12; // km to ly
-            double radius = earthRadiusLy;
+            double homeLat = selectedPlanet.getLatitude();
+            double homeLon = selectedPlanet.getLongitude();
+            double maxDistance = filter.getMaxDistanceLy();
 
-            Expression<Double> userLat = root.get("latitude");
-            Expression<Double> userLon = root.get("longitude");
+            // Get the user's planet coordinates (not filter by planet name!)
+            Expression<Double> userLat = homeplanetJoin.get("latitude");
+            Expression<Double> userLon = homeplanetJoin.get("longitude");
 
-            Expression<Double> lat1Rad = cb.function("radians", Double.class, cb.literal(homeLat));
-            Expression<Double> lat2Rad = cb.function("radians", Double.class, userLat);
-            Expression<Double> lon1Rad = cb.function("radians", Double.class, cb.literal(homeLon));
-            Expression<Double> lon2Rad = cb.function("radians", Double.class, userLon);
+            // Calculate distance between user's planet and selected planet
+            Expression<Double> latDiff = cb.diff(userLat, homeLat);
+            Expression<Double> lonDiff = cb.diff(userLon, homeLon);
 
-            Expression<Double> deltaLon = cb.diff(lon2Rad, lon1Rad);
-            Expression<Double> cosLat1 = cb.function("cos", Double.class, lat1Rad);
-            Expression<Double> cosLat2 = cb.function("cos", Double.class, lat2Rad);
-            Expression<Double> cosDeltaLon = cb.function("cos", Double.class, deltaLon);
-            Expression<Double> sinLat1 = cb.function("sin", Double.class, lat1Rad);
-            Expression<Double> sinLat2 = cb.function("sin", Double.class, lat2Rad);
+            Expression<Double> latDiffSq = cb.prod(latDiff, latDiff);
+            Expression<Double> lonDiffSq = cb.prod(lonDiff, lonDiff);
 
-            Expression<Double> acosInput = cb.sum(
-                    cb.prod(cb.prod(cosLat1, cosLat2), cosDeltaLon),
-                    cb.prod(sinLat1, sinLat2)
-            );
+            Expression<Double> sumSq = cb.sum(latDiffSq, lonDiffSq);
+            Expression<Double> distance = cb.function("SQRT", Double.class, sumSq);
 
-            Expression<Double> distance = cb.prod(cb.literal(radius), cb.function("acos", Double.class, acosInput));
-
-            predicates.add(cb.lessThanOrEqualTo(distance, filter.getMaxDistanceLy()));
+            // Only add the distance constraint - NOT the planet name constraint
+            predicates.add(cb.le(distance, maxDistance));
+        } else if (filter.getHomeplanet() != null) {
+            predicates.add(cb.equal(homeplanetJoin.get("name"), filter.getHomeplanet()));
         }
 
         query.where(cb.and(predicates.toArray(new Predicate[0])));
-
         return entityManager.createQuery(query).getResultList();
     }
 }
