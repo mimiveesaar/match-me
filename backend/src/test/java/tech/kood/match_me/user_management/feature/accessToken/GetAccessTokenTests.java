@@ -11,15 +11,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
-import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
+import tech.kood.match_me.user_management.internal.features.user.persistance.UserRepository;
 import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenHandler;
 import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenResults;
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenHandler;
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenResults;
-import tech.kood.match_me.user_management.internal.features.user.registerUser.RegisterUserHandler;
-import tech.kood.match_me.user_management.internal.features.user.registerUser.RegisterUserResults;
+import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserCommandHandler;
+import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
 
 @SpringBootTest
@@ -35,7 +35,7 @@ public class GetAccessTokenTests extends UserManagementTestBase {
     Flyway userManagementFlyway;
 
     @Autowired
-    RegisterUserHandler registerUserHandler;
+    RegisterUserCommandHandler registerUserHandler;
 
     @Autowired
     CreateRefreshTokenHandler createRefreshTokenHandler;

@@ -1,8 +1,8 @@
 package tech.kood.match_me.user_management.internal.mappers;
 
 import org.springframework.stereotype.Component;
-import tech.kood.match_me.user_management.api.DTOs.RegisterUserResultsDTO;
-import tech.kood.match_me.user_management.internal.features.user.registerUser.RegisterUserResults;
+import tech.kood.match_me.user_management.api.features.user.register.RegisterUserResultsDTO;
+import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserResults;
 
 @Component
 public final class RegisterUserResultsMapper {
@@ -29,8 +29,8 @@ public final class RegisterUserResultsMapper {
                                         userMapper.toUserDTO(success.user()),
                                         success.tracingId());
                         case RegisterUserResults.UsernameExists usernameExists -> new RegisterUserResultsDTO.UsernameExists(
-                                        usernameExists.getUsername(),
-                                        usernameExists.getTracingId());
+                                        usernameExists.username(),
+                                        usernameExists.tracingId());
                         case RegisterUserResults.EmailExists emailExists -> new RegisterUserResultsDTO.EmailExists(
                                         emailExists.getEmail(), emailExists.getTracingId());
                         case RegisterUserResults.InvalidPassword invalidPasswordLength -> new RegisterUserResultsDTO.InvalidPassword(

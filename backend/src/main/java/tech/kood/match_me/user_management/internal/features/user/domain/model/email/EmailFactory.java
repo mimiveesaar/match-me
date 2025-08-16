@@ -6,6 +6,7 @@ import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.DomainLayer;
 import org.jmolecules.ddd.annotation.Factory;
 import org.springframework.stereotype.Component;
+import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
 
 @Component
 @DomainLayer
@@ -17,12 +18,12 @@ public class EmailFactory {
         this.validator = validator;
     }
 
-    public Email of(String value) throws ConstraintViolationException {
+    public Email make(String value) throws  CheckedConstraintViolationException {
         var email = new Email(value);
         var validationResult = validator.validate(email);
 
         if (!validationResult.isEmpty()) {
-            throw new ConstraintViolationException(validationResult);
+            throw new CheckedConstraintViolationException(validationResult);
         }
 
         return email;

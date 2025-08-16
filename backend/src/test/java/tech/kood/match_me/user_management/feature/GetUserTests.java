@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.junit.jupiter.api.TestInstance;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
-import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
+import tech.kood.match_me.user_management.internal.features.user.persistance.UserRepository;
 import tech.kood.match_me.user_management.internal.features.getUser.handlers.GetUserByEmailHandler;
 import tech.kood.match_me.user_management.internal.features.getUser.handlers.GetUserByIdHandler;
 import tech.kood.match_me.user_management.internal.features.getUser.handlers.GetUserByUsernameHandler;
@@ -19,8 +19,8 @@ import tech.kood.match_me.user_management.internal.features.getUser.requests.Get
 import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByEmailQueryResults;
 import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByIdQueryResults;
 import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByUsernameQueryResults;
-import tech.kood.match_me.user_management.internal.features.user.registerUser.RegisterUserHandler;
-import tech.kood.match_me.user_management.internal.features.user.registerUser.RegisterUserResults;
+import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserCommandHandler;
+import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserResults;
 import tech.kood.match_me.user_management.internal.features.user.domain.model.userId.UserId;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
 import java.util.UUID;
@@ -38,7 +38,7 @@ public class GetUserTests extends UserManagementTestBase {
         Flyway userManagementFlyway;
 
         @Autowired
-        RegisterUserHandler registerUserHandler;
+        RegisterUserCommandHandler registerUserHandler;
 
         @Autowired
         GetUserByEmailHandler getUserByEmailHandler;

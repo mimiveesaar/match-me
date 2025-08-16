@@ -3,7 +3,7 @@ package tech.kood.match_me.user_management.internal.features.getUser.handlers;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import tech.kood.match_me.user_management.internal.common.cqrs.QueryHandler;
-import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
+import tech.kood.match_me.user_management.internal.features.user.persistance.UserRepository;
 import tech.kood.match_me.user_management.internal.features.getUser.events.GetUserByIdEvent;
 import tech.kood.match_me.user_management.internal.features.getUser.requests.GetUserByIdQuery;
 import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByIdQueryResults;

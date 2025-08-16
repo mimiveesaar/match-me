@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
-import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
-import tech.kood.match_me.user_management.internal.features.user.registerUser.RegisterUserHandler;
+import tech.kood.match_me.user_management.internal.features.user.persistance.UserRepository;
+import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserCommandHandler;
 import tech.kood.match_me.user_management.mocks.UserEntityMother;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +28,7 @@ public class UserRepositoryTests extends UserManagementTestBase {
     UserEntityMother userEntityMocker;
 
     @Autowired
-    RegisterUserHandler registerUserHandler;
+    RegisterUserCommandHandler registerUserHandler;
 
 
     @Test

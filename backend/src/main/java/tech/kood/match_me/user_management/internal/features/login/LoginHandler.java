@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import tech.kood.match_me.user_management.internal.common.cqrs.CommandHandler;
-import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
+import tech.kood.match_me.user_management.internal.features.user.persistance.UserRepository;
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenHandler;
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenResults;

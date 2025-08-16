@@ -12,7 +12,7 @@ import jakarta.validation.Valid;
 import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.InvalidateRefreshTokenRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.InvalidateRefreshTokenResultsDTO;
-import tech.kood.match_me.user_management.api.DTOs.InputValidationErrorDTO;
+import tech.kood.match_me.user_management.api.DTOs.InvalidInputDTO;
 import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenHandler;
 import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.mappers.InvalidateRefreshTokenMapper;
@@ -50,7 +50,7 @@ public final class InvalidateRefreshTokenEndpoint {
                                         content = @io.swagger.v3.oas.annotations.media.Content(
                                                         mediaType = "application/json",
                                                         schema = @io.swagger.v3.oas.annotations.media.Schema(
-                                                                        implementation = InputValidationErrorDTO.class))),
+                                                                        implementation = InvalidInputDTO.class))),
                         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500",
                                         description = "Internal server error.",
                                         content = @io.swagger.v3.oas.annotations.media.Content(

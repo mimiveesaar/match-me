@@ -12,12 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.internal.database.repostitories.RefreshTokenRepository;
-import tech.kood.match_me.user_management.internal.database.repostitories.UserRepository;
+import tech.kood.match_me.user_management.internal.features.user.persistance.UserRepository;
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenHandler;
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenResults;
-import tech.kood.match_me.user_management.internal.features.user.registerUser.RegisterUserHandler;
-import tech.kood.match_me.user_management.internal.features.user.registerUser.RegisterUserResults;
+import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserCommandHandler;
+import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
 
 @SpringBootTest
@@ -29,7 +29,7 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
         UserRepository userRepository;
 
         @Autowired
-        RegisterUserHandler registerUserHandler;
+        RegisterUserCommandHandler registerUserHandler;
 
         @Autowired
         RefreshTokenRepository refreshTokenRepository;

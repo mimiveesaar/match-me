@@ -6,6 +6,7 @@ import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.DomainLayer;
 import org.jmolecules.ddd.annotation.Factory;
 import org.springframework.stereotype.Component;
+import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
 
 @Component
 @DomainLayer
@@ -18,12 +19,12 @@ public final class PasswordFactory {
         this.validator = validator;
     }
 
-    public Password of(String value) throws ConstraintViolationException {
+    public Password make(String value) throws CheckedConstraintViolationException {
         var password = new Password(value);
         var validationResult = validator.validate(password);
 
         if (!validationResult.isEmpty()) {
-            throw new ConstraintViolationException(validationResult);
+            throw new CheckedConstraintViolationException(validationResult);
         }
 
         return password;

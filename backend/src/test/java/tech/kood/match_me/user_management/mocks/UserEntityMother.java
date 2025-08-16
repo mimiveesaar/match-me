@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 import com.github.javafaker.Faker;
-import tech.kood.match_me.user_management.internal.database.entities.UserEntity;
+import tech.kood.match_me.user_management.internal.features.user.persistance.userEntity.UserEntity;
 import tech.kood.match_me.user_management.internal.features.user.utils.PasswordUtils;
 
 @Component

@@ -6,6 +6,7 @@ import org.jmolecules.architecture.layered.DomainLayer;
 import org.jmolecules.ddd.annotation.Factory;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
+import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.internal.features.user.domain.model.password.Password;
 
 @Component
@@ -19,21 +20,21 @@ public final class HashedPasswordFactory {
         this.validator = validator;
     }
 
-    public HashedPassword of(String hash, String salt) throws ConstraintViolationException {
+    public HashedPassword make(String hash, String salt) throws CheckedConstraintViolationException {
         var hashedPassword = new HashedPassword(hash, salt);
         var validationResult = validator.validate(hashedPassword);
 
         if (!validationResult.isEmpty()) {
-            throw new ConstraintViolationException(validationResult);
+            throw new CheckedConstraintViolationException(validationResult);
         }
 
         return hashedPassword;
     }
 
-     public HashedPassword of(Password password) throws ConstraintViolationException {
+     public HashedPassword fromPassword(Password password) throws CheckedConstraintViolationException {
         String salt = BCrypt.gensalt();
         String hash = BCrypt.hashpw(password.getValue(), salt);
 
-        return this.of(hash, salt);
+        return this.make(hash, salt);
     }
 }

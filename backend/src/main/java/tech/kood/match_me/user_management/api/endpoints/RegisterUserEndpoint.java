@@ -14,10 +14,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import tech.kood.match_me.user_management.api.UserManagementPublisher;
-import tech.kood.match_me.user_management.api.DTOs.RegisterUserRequestDTO;
-import tech.kood.match_me.user_management.api.DTOs.RegisterUserResultsDTO;
-import tech.kood.match_me.user_management.internal.features.user.registerUser.RegisterUserHandler;
-import tech.kood.match_me.user_management.internal.features.user.registerUser.RegisterUserRequest;
+import tech.kood.match_me.user_management.api.features.user.register.RegisterUserRequestDTO;
+import tech.kood.match_me.user_management.api.features.user.register.RegisterUserResultsDTO;
+import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserCommandHandler;
+import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserRequest;
 import tech.kood.match_me.user_management.internal.mappers.RegisterUserResultsMapper;
 
 @RestController
@@ -28,9 +28,9 @@ public class RegisterUserEndpoint {
     private final RegisterUserResultsMapper registerUserResultsMapper;
     private final UserManagementPublisher userManagementPublisher;
 
-    public RegisterUserEndpoint(RegisterUserHandler registerUserHandler,
-            RegisterUserResultsMapper registerUserResultsMapper,
-            UserManagementPublisher userManagementPublisher) {
+    public RegisterUserEndpoint(RegisterUserCommandHandler registerUserHandler,
+                                RegisterUserResultsMapper registerUserResultsMapper,
+                                UserManagementPublisher userManagementPublisher) {
         this.registerUserResultsMapper = registerUserResultsMapper;
         this.userManagementPublisher = userManagementPublisher;
     }

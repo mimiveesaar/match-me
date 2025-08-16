@@ -5,6 +5,7 @@ import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.DomainLayer;
 import org.jmolecules.ddd.annotation.Factory;
 import org.springframework.stereotype.Component;
+import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
 
 import java.util.UUID;
 
@@ -19,18 +20,18 @@ public final class UserIdFactory {
         this.validator = validator;
     }
 
-    public UserId of(UUID id) throws ConstraintViolationException {
+    public UserId make(UUID id) throws CheckedConstraintViolationException {
         var userId =  new UserId(id);
         var validationResult = validator.validate(userId);
 
         if (!validationResult.isEmpty()) {
-            throw new ConstraintViolationException(validationResult);
+            throw new CheckedConstraintViolationException(validationResult);
         }
         return userId;
     }
 
-    public UserId of(String id) throws ConstraintViolationException {
-        return this.of(UUID.fromString(id));
+    public UserId make(String id) throws CheckedConstraintViolationException {
+        return this.make(UUID.fromString(id));
     }
 
     public UserId newId() {

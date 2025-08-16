@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.internal.features.user.registerUser;
+package tech.kood.match_me.user_management.internal.features.user.features.registerUser;
 
 
 /**
