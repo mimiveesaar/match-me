@@ -6,8 +6,6 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import tech.kood.match_me.user_management.UserManagementConfig;
-import tech.kood.match_me.user_management.internal.domain.models.RefreshToken;
-import tech.kood.match_me.user_management.internal.utils.RefreshTokenUtils;
 
 @Component
 public final class RefreshTokenFactory {

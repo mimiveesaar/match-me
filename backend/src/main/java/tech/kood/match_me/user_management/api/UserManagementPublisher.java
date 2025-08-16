@@ -8,8 +8,8 @@ import tech.kood.match_me.user_management.internal.features.jwt.createAccessToke
 import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenResults;
 import tech.kood.match_me.user_management.internal.features.login.LoginRequest;
 import tech.kood.match_me.user_management.internal.features.login.LoginResults;
-import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenRequest;
-import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenResults;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.invalidateToken.InvalidateRefreshTokenRequest;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.invalidateToken.InvalidateRefreshTokenResults;
 import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserRequest;
 import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserResults;
 

@@ -18,9 +18,9 @@ import tech.kood.match_me.user_management.internal.features.jwt.createAccessToke
 import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenHandler;
 import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenResults;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenRequest;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenResults;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.createToken.CreateRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.createToken.CreateRefreshTokenRequest;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.createToken.CreateRefreshTokenResults;
 import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserCommandHandler;
 import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
@@ -65,7 +65,7 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
                 assert createTokenResult instanceof CreateRefreshTokenResults.Success;
 
                 var refreshToken = ((CreateRefreshTokenResults.Success) createTokenResult)
-                                .getRefreshToken();
+                                .refreshToken();
                 var getAccessTokenRequest = CreateAccessTokenRequest.of(UUID.randomUUID(),
                                 refreshToken.getToken(), null);
                 var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);

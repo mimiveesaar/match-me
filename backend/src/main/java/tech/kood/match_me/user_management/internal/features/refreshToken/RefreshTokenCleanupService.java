@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
 import tech.kood.match_me.user_management.UserManagementConfig;
-import tech.kood.match_me.user_management.internal.database.repostitories.RefreshTokenRepository;
+import tech.kood.match_me.user_management.internal.features.refreshToken.persistance.RefreshTokenRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

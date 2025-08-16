@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.internal.features.user.persistance.userEntity;
+package tech.kood.match_me.user_management.internal.features.refreshToken.persistance.refreshTokenEntity;
 
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.InfrastructureLayer;
@@ -9,24 +9,25 @@ import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintVio
 import java.time.Instant;
 import java.util.UUID;
 
-
 @Component
 @Factory
 @InfrastructureLayer
-public class UserEntityFactory {
+public class RefreshTokenEntityFactory {
 
-    private final Validator  validator;
+    private final Validator validator;
 
-    public UserEntityFactory(Validator validator) {
+    public RefreshTokenEntityFactory(Validator validator) {
         this.validator = validator;
     }
 
-    public UserEntity make(UUID id, String email, String passwordHash, String passwordSalt, Instant createdAt, Instant updatedAt) throws CheckedConstraintViolationException {
-        var entity = new UserEntity(id, email, passwordHash, passwordSalt, createdAt, updatedAt);
+    public RefreshTokenEntity make(UUID id, UUID userId, String secret, Instant createdAt, Instant expiresAt) throws CheckedConstraintViolationException {
+        var entity = new RefreshTokenEntity(id, userId, secret, createdAt, expiresAt);
+
         var validationResult = validator.validate(entity);
         if (!validationResult.isEmpty()) {
             throw new CheckedConstraintViolationException(validationResult);
         }
+
         return entity;
     }
 }

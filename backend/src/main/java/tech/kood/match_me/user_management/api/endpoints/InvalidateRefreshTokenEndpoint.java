@@ -13,8 +13,8 @@ import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.InvalidateRefreshTokenRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.InvalidateRefreshTokenResultsDTO;
 import tech.kood.match_me.user_management.api.DTOs.InvalidInputDTO;
-import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenRequest;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.invalidateToken.InvalidateRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.invalidateToken.InvalidateRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.mappers.InvalidateRefreshTokenMapper;
 
 @RestController

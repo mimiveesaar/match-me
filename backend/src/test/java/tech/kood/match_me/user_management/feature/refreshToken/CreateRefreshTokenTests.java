@@ -11,11 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
-import tech.kood.match_me.user_management.internal.database.repostitories.RefreshTokenRepository;
+import tech.kood.match_me.user_management.internal.features.refreshToken.persistance.RefreshTokenRepository;
 import tech.kood.match_me.user_management.internal.features.user.persistance.UserRepository;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenRequest;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenResults;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.createToken.CreateRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.createToken.CreateRefreshTokenRequest;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.createToken.CreateRefreshTokenResults;
 import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserCommandHandler;
 import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
@@ -61,7 +61,7 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
                 var successResult = (CreateRefreshTokenResults.Success) createTokenResult;
 
                 var token = refreshTokenRepository
-                                .findToken(successResult.getRefreshToken().getToken());
+                                .findToken(successResult.refreshToken().getToken());
                 assert token.isPresent() : "The refresh token should be created and found in the repository";
                 assert token.get().getUserId().equals(user.getId()
                                 .getValue()) : "The refresh token should belong to the correct user";

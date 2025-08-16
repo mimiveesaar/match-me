@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import tech.kood.match_me.user_management.internal.common.cqrs.Result;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
-import tech.kood.match_me.user_management.internal.domain.models.RefreshToken;
 import tech.kood.match_me.user_management.internal.features.user.domain.model.User;
 
 public sealed interface LoginResults extends Result

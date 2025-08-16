@@ -1,26 +1,21 @@
-package tech.kood.match_me.user_management.internal.features.refreshToken.domain.model;
+package tech.kood.match_me.user_management.internal.features.refreshToken.persistance.refreshTokenEntity;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.jmolecules.architecture.layered.DomainLayer;
-import org.jmolecules.ddd.types.AggregateRoot;
-import tech.kood.match_me.user_management.internal.features.refreshToken.domain.model.refreshTokenId.RefreshTokenId;
-import tech.kood.match_me.user_management.internal.features.user.domain.model.userId.UserId;
+import org.jmolecules.architecture.layered.InfrastructureLayer;
 
 import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
 
-@DomainLayer
-public class RefreshToken implements AggregateRoot<RefreshToken, RefreshTokenId> {
+
+@InfrastructureLayer
+public final class RefreshTokenEntity {
+    @NotNull
+    private final UUID id;
 
     @NotNull
-    @Valid
-    private final RefreshTokenId id;
-
-    @NotNull
-    @Valid
-    private final UserId userId;
+    private final UUID userId;
 
     @NotBlank
     private final String secret;
@@ -31,12 +26,11 @@ public class RefreshToken implements AggregateRoot<RefreshToken, RefreshTokenId>
     @NotNull
     private final Instant expiresAt;
 
-    @Override
-    public RefreshTokenId getId() {
+    public UUID getId() {
         return id;
     }
 
-    public UserId getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
@@ -52,7 +46,7 @@ public class RefreshToken implements AggregateRoot<RefreshToken, RefreshTokenId>
         return expiresAt;
     }
 
-    RefreshToken(RefreshTokenId id, UserId userId, String secret, Instant createdAt, Instant expiresAt) {
+    public RefreshTokenEntity(UUID id, UUID userId, String secret, Instant createdAt, Instant expiresAt) {
         this.id = id;
         this.userId = userId;
         this.secret = secret;
@@ -63,7 +57,7 @@ public class RefreshToken implements AggregateRoot<RefreshToken, RefreshTokenId>
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        RefreshToken that = (RefreshToken) o;
+        RefreshTokenEntity that = (RefreshTokenEntity) o;
         return Objects.equals(id, that.id);
     }
 
@@ -74,7 +68,7 @@ public class RefreshToken implements AggregateRoot<RefreshToken, RefreshTokenId>
 
     @Override
     public String toString() {
-        return "RefreshToken{" +
+        return "RefreshTokenEntity{" +
                 "id=" + id +
                 ", userId=" + userId +
                 ", secret='" + secret + '\'' +

@@ -17,15 +17,15 @@ public sealed interface RegisterUserResults permits
         RegisterUserResults.EmailExists,
         RegisterUserResults.SystemError {
 
-    record Success(@NotNull UserId userId, @NotNull UUID requestId,
+    record Success(@NotNull UUID requestId, @NotNull UserId userId,
                    @Nullable String tracingId) implements RegisterUserResults {
     }
 
-    record EmailExists(@NotNull Email email, @NotNull UUID requestId,
+    record EmailExists(@NotNull UUID requestId, @NotNull Email email,
                        @Nullable String tracingId) implements RegisterUserResults {
     }
 
-    record SystemError(@NotEmpty String message, @NotNull UUID requestId,
+    record SystemError(@NotNull UUID requestId, @NotEmpty String message,
                        @Nullable String tracingId) implements RegisterUserResults {
     }
 }

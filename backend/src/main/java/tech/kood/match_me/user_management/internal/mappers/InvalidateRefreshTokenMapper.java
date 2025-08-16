@@ -2,7 +2,7 @@ package tech.kood.match_me.user_management.internal.mappers;
 
 import org.springframework.stereotype.Component;
 import tech.kood.match_me.user_management.api.DTOs.InvalidateRefreshTokenResultsDTO;
-import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenResults;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.invalidateToken.InvalidateRefreshTokenResults;
 
 @Component
 public final class InvalidateRefreshTokenMapper {

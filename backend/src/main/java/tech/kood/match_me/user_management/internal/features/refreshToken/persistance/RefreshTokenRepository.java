@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.internal.database.repostitories;
+package tech.kood.match_me.user_management.internal.features.refreshToken.persistance;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-import tech.kood.match_me.user_management.internal.database.entities.RefreshTokenEntity;
-import tech.kood.match_me.user_management.internal.database.mappers.RefreshTokenRowMapper;
+import tech.kood.match_me.user_management.internal.features.refreshToken.persistance.refreshTokenEntity.RefreshTokenEntity;
 
 @Repository
 public class RefreshTokenRepository {
@@ -38,15 +37,16 @@ public class RefreshTokenRepository {
         }
 
         public void save(RefreshTokenEntity refreshToken) {
-                String sql = "INSERT INTO user_management.refresh_tokens (id, user_id, token, created_at, expires_at) "
-                                + "VALUES (:id, :user_id, :token, :created_at, :expires_at) "
+                String sql = "INSERT INTO user_management.refresh_tokens (id, user_id, secret, created_at, expires_at) "
+                                + "VALUES (:id, :user_id, :secret, :created_at, :expires_at) "
                                 + "ON CONFLICT (id) DO UPDATE SET expires_at = :expires_at";
 
-                Map<String, Object> params = Map.of("id", refreshToken.getId().toString(),
-                                "user_id", refreshToken.getUserId().toString(), "token",
-                                refreshToken.getToken(), "created_at",
-                                Timestamp.from(refreshToken.getCreatedAt()), "expires_at",
-                                Timestamp.from(refreshToken.getExpiresAt()));
+                Map<String, Object> params = Map.of(
+                        "id", refreshToken.getId().toString(),
+                        "user_id", refreshToken.getUserId().toString(),
+                        "secret", refreshToken.getSecret(),
+                        "created_at", Timestamp.from(refreshToken.getCreatedAt()),
+                        "expires_at", Timestamp.from(refreshToken.getExpiresAt()));
 
                 jdbcTemplate.update(sql, params);
         }

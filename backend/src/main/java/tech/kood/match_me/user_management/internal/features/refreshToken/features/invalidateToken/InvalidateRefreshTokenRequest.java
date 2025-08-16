@@ -1,28 +1,27 @@
-package tech.kood.match_me.user_management.internal.features.refreshToken.getToken;
+package tech.kood.match_me.user_management.internal.features.refreshToken.features.invalidateToken;
 
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import tech.kood.match_me.user_management.internal.common.cqrs.Query;
+import tech.kood.match_me.user_management.internal.common.cqrs.Command;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
 
 /**
- * Represents a request to get a refresh token, containing identifiers for the request, the token,
- * and an optional tracing ID for tracking purposes.
+ * Represents a request to invalidate a refresh token, containing identifiers for the request, the
+ * token, and an optional tracing ID for tracking purposes.
  *
  * <ul>
  * <li>{@code requestId} - Unique identifier for the refresh token request (must not be null).</li>
- * <li>{@code token} - The refresh token to retrieve (must not be blank).</li>
+ * <li>{@code token} - The refresh token to invalidate (must not be blank).</li>
  * <li>{@code tracingId} - Optional tracing identifier for request tracking (nullable).</li>
  * </ul>
  *
  * <p>
- * Use the static factory method {@link #of(String, String, String)} to create instances, which
+ * Use the static factory method {@link #of(UUID, String, String)} to create instances, which
  * performs validation. If validation fails, a {@link ConstraintViolationException} is thrown.
  * </p>
  *
@@ -30,47 +29,46 @@ import tech.kood.match_me.user_management.internal.common.validation.DomainObjec
  * Provides "with" methods to create modified copies of the request with updated fields.
  * </p>
  */
-public final class GetRefreshTokenRequest implements Query {
+public final class InvalidateRefreshTokenRequest implements Command {
+
 
     @NotNull
     private final UUID requestId;
 
     @NotBlank
-    private final String token;
+    private final String refreshToken;
 
     @Nullable
     private final String tracingId;
 
     @JsonProperty("requestId")
-    @Nonnull
     public UUID getRequestId() {
         return requestId;
     }
 
-    @JsonProperty("token")
-    @Nonnull
-    public String getToken() {
-        return token;
+    @JsonProperty("refreshToken")
+    public String getRefreshToken() {
+        return refreshToken;
     }
 
     @JsonProperty("tracingId")
-    @Nullable
     public String getTracingId() {
         return tracingId;
     }
 
-    private GetRefreshTokenRequest(@NotNull UUID requestId, @NotBlank String token,
+    private InvalidateRefreshTokenRequest(@NotNull UUID requestId, @NotBlank String token,
             @Nullable String tracingId) {
         this.requestId = requestId;
-        this.token = token;
+        this.refreshToken = token;
         this.tracingId = tracingId;
     }
 
     @JsonCreator
-    public static GetRefreshTokenRequest of(@JsonProperty("requestId") @NotNull UUID requestId,
-            @JsonProperty("token") @NotBlank String token,
+    public static InvalidateRefreshTokenRequest of(
+            @JsonProperty("requestId") @NotNull UUID requestId,
+            @JsonProperty("refreshToken") @NotBlank String refreshToken,
             @JsonProperty("tracingId") @Nullable String tracingId) {
-        var request = new GetRefreshTokenRequest(requestId, token, tracingId);
+        var request = new InvalidateRefreshTokenRequest(requestId, refreshToken, tracingId);
         var violations = DomainObjectInputValidator.instance.validate(request);
 
         if (!violations.isEmpty()) {
@@ -79,15 +77,15 @@ public final class GetRefreshTokenRequest implements Query {
         return request;
     }
 
-    public GetRefreshTokenRequest withRequestId(UUID requestId) {
-        return GetRefreshTokenRequest.of(requestId, token, tracingId);
+    public InvalidateRefreshTokenRequest withRequestId(UUID requestId) {
+        return InvalidateRefreshTokenRequest.of(requestId, refreshToken, tracingId);
     }
 
-    public GetRefreshTokenRequest withToken(String token) {
-        return GetRefreshTokenRequest.of(requestId, token, tracingId);
+    public InvalidateRefreshTokenRequest withToken(String token) {
+        return InvalidateRefreshTokenRequest.of(requestId, token, tracingId);
     }
 
-    public GetRefreshTokenRequest withTracingId(String tracingId) {
-        return GetRefreshTokenRequest.of(requestId, token, tracingId);
+    public InvalidateRefreshTokenRequest withTracingId(String tracingId) {
+        return InvalidateRefreshTokenRequest.of(requestId, refreshToken, tracingId);
     }
 }

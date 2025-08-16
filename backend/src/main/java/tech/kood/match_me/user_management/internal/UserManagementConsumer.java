@@ -14,10 +14,10 @@ import tech.kood.match_me.user_management.internal.features.jwt.validateAccessTo
 import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.features.login.LoginHandler;
 import tech.kood.match_me.user_management.internal.features.login.LoginRequest;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.createToken.CreateRefreshTokenHandler;
 import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken.InvalidateRefreshTokenRequest;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.invalidateToken.InvalidateRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.invalidateToken.InvalidateRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserCommandHandler;
 import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserRequest;
 

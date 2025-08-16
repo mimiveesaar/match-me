@@ -1,6 +1,5 @@
 package tech.kood.match_me.user_management.internal.features.user.features.registerUser;
 
-
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.slf4j.Logger;
@@ -43,10 +42,10 @@ public final class RegisterUserCommandHandler {
         try {
             // Check for email uniqueness.
             if (userRepository.emailExists(request.email().toString())) {
-                var result = new RegisterUserResults.EmailExists(request.email(),
-                        request.requestId(), request.tracingId());
-                events.publishEvent(new RegisterUserEvent(request, result));
-                return result;
+                return new RegisterUserResults.EmailExists(
+                        request.requestId(),
+                        request.email(),
+                        request.tracingId());
             }
 
             var user = userFactory.newUser(request.email(), request.password());
@@ -56,17 +55,15 @@ public final class RegisterUserCommandHandler {
             userRepository.saveUser(userEntity);
 
             var result = new RegisterUserResults.Success(
-                    user.getId(),
                     request.requestId(),
+                    user.getId(),
                     request.tracingId()
             );
-            events.publishEvent(new RegisterUserEvent(request, result));
+            events.publishEvent(new UserRegisteredEvent(result.userId()));
             return result;
 
         } catch (Exception e) {
-            var result = new RegisterUserResults.SystemError(e.getMessage(), request.requestId(), request.tracingId());
-            events.publishEvent(new RegisterUserEvent(request, result));
-            return result;
+            return new RegisterUserResults.SystemError(request.requestId(), e.getMessage(), request.tracingId());
         }
     }
 }

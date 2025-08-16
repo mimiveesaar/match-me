@@ -1,12 +1,10 @@
-package tech.kood.match_me.user_management.internal.features.refreshToken.invalidateToken;
-
-import java.util.UUID;
+package tech.kood.match_me.user_management.internal.features.refreshToken.features.invalidateToken;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import tech.kood.match_me.user_management.internal.common.cqrs.CommandHandler;
-import tech.kood.match_me.user_management.internal.database.repostitories.RefreshTokenRepository;
+import tech.kood.match_me.user_management.internal.features.refreshToken.persistance.RefreshTokenRepository;
 import tech.kood.match_me.user_management.internal.mappers.RefreshTokenMapper;
 
 @Service

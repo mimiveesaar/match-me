@@ -11,11 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
-import tech.kood.match_me.user_management.internal.database.repostitories.RefreshTokenRepository;
+import tech.kood.match_me.user_management.internal.features.refreshToken.persistance.RefreshTokenRepository;
 import tech.kood.match_me.user_management.internal.features.user.persistance.UserRepository;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenRequest;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenResults;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.createToken.CreateRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.createToken.CreateRefreshTokenRequest;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.createToken.CreateRefreshTokenResults;
 import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenHandler;
 import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenRequest;
 import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenResults;
@@ -65,11 +65,11 @@ public class GetRefreshTokenTests extends UserManagementTestBase {
         var successResult = (CreateRefreshTokenResults.Success) createTokenResult;
 
         var getRefreshTokenRequest = GetRefreshTokenRequest.of(UUID.randomUUID(),
-                successResult.getRefreshToken().getToken(), null);
+                successResult.refreshToken().getToken(), null);
         var getRefreshTokenResult = getRefreshTokenRequestHandler.handle(getRefreshTokenRequest);
         assert getRefreshTokenResult instanceof GetRefreshTokenResults.Success;
 
         var tokenResult = (GetRefreshTokenResults.Success) getRefreshTokenResult;
-        assert tokenResult.getRefreshToken().equals(successResult.getRefreshToken().getToken());
+        assert tokenResult.getRefreshToken().equals(successResult.refreshToken().getToken());
     }
 }

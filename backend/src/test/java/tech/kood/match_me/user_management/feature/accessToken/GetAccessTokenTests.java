@@ -15,9 +15,9 @@ import tech.kood.match_me.user_management.internal.features.user.persistance.Use
 import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenHandler;
 import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenResults;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenRequest;
-import tech.kood.match_me.user_management.internal.features.refreshToken.createToken.CreateRefreshTokenResults;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.createToken.CreateRefreshTokenHandler;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.createToken.CreateRefreshTokenRequest;
+import tech.kood.match_me.user_management.internal.features.refreshToken.features.createToken.CreateRefreshTokenResults;
 import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserCommandHandler;
 import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
@@ -59,7 +59,7 @@ public class GetAccessTokenTests extends UserManagementTestBase {
         assert createTokenResult instanceof CreateRefreshTokenResults.Success;
 
         var refreshToken =
-                ((CreateRefreshTokenResults.Success) createTokenResult).getRefreshToken();
+                ((CreateRefreshTokenResults.Success) createTokenResult).refreshToken();
         var getAccessTokenRequest =
                 CreateAccessTokenRequest.of(UUID.randomUUID(), refreshToken.getToken(), null);
         var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
