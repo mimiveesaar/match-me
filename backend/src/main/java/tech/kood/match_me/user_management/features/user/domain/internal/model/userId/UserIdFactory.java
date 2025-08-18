@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.features.user.domain.internal.model.user;
+package tech.kood.match_me.user_management.features.user.domain.internal.model.userId;
 
 import jakarta.validation.Validator;
 import org.jmolecules.ddd.annotation.Factory;

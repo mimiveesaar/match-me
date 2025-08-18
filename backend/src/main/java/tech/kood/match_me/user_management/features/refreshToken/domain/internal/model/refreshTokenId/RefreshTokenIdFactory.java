@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.features.refreshToken.internal.model.refreshTokenId;
+package tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenId;
 
 
 import jakarta.validation.Validator;

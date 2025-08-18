@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import org.jmolecules.ddd.types.AggregateRoot;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.email.Email;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.hashedPassword.HashedPassword;
+import tech.kood.match_me.user_management.features.user.domain.internal.model.userId.UserId;
 
 public class User implements AggregateRoot<User, UserId> {
 

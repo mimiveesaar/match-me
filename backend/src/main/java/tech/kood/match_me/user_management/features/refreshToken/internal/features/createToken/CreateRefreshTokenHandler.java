@@ -3,8 +3,8 @@ package tech.kood.match_me.user_management.features.refreshToken.internal.featur
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import tech.kood.match_me.user_management.features.refreshToken.internal.model.RefreshToken;
-import tech.kood.match_me.user_management.features.refreshToken.internal.model.RefreshTokenFactory;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshToken.RefreshToken;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshToken.RefreshTokenFactory;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.RefreshTokenRepository;
 import tech.kood.match_me.user_management.internal.mappers.RefreshTokenMapper;
 

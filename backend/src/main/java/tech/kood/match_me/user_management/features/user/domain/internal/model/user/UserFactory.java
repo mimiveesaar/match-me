@@ -11,6 +11,7 @@ import tech.kood.match_me.user_management.features.user.domain.internal.model.ha
 import tech.kood.match_me.user_management.features.user.domain.internal.model.hashedPassword.HashedPasswordFactory;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.password.Password;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.password.PasswordFactory;
+import tech.kood.match_me.user_management.features.user.domain.internal.model.userId.UserId;
 
 import java.time.Instant;
 import java.util.UUID;

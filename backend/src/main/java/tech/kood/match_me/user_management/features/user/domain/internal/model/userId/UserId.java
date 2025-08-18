@@ -1,18 +1,17 @@
-package tech.kood.match_me.user_management.features.refreshToken.internal.model.refreshTokenId;
+package tech.kood.match_me.user_management.features.user.domain.internal.model.userId;
 
+import java.util.UUID;
 import jakarta.validation.constraints.NotNull;
 import org.jmolecules.architecture.layered.DomainLayer;
 import org.jmolecules.ddd.types.Identifier;
 
-import java.util.UUID;
-
 @DomainLayer
-public class RefreshTokenId implements Identifier {
+public class UserId implements Identifier {
 
     @NotNull
     private final UUID value;
 
-    RefreshTokenId(UUID value) {
+    UserId(UUID value) {
         this.value = value;
     }
 
@@ -24,9 +23,9 @@ public class RefreshTokenId implements Identifier {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof RefreshTokenId))
+        if (!(o instanceof UserId))
             return false;
-        RefreshTokenId that = (RefreshTokenId) o;
+        UserId that = (UserId) o;
         return this.hashCode() == that.hashCode();
     }
 

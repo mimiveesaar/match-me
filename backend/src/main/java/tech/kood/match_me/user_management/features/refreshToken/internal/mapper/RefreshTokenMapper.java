@@ -7,9 +7,9 @@ import tech.kood.match_me.user_management.api.features.refreshToken.domain.dto.R
 import tech.kood.match_me.user_management.api.features.refreshToken.domain.dto.RefreshTokenIdDTO;
 import tech.kood.match_me.user_management.features.user.domain.api.UserIdDTO;
 import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.user_management.features.refreshToken.internal.model.RefreshToken;
-import tech.kood.match_me.user_management.features.refreshToken.internal.model.RefreshTokenFactory;
-import tech.kood.match_me.user_management.features.refreshToken.internal.model.refreshTokenId.RefreshTokenIdFactory;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshToken.RefreshToken;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshToken.RefreshTokenFactory;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenId.RefreshTokenIdFactory;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.refreshTokenEntity.RefreshTokenEntity;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.refreshTokenEntity.RefreshTokenEntityFactory;
 

@@ -11,7 +11,7 @@ import tech.kood.match_me.user_management.features.user.domain.internal.model.em
 import tech.kood.match_me.user_management.features.user.domain.internal.model.hashedPassword.HashedPasswordFactory;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.user.User;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.user.UserFactory;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.user.UserIdFactory;
+import tech.kood.match_me.user_management.features.user.domain.internal.model.userId.UserIdFactory;
 import tech.kood.match_me.user_management.features.user.internal.persistance.userEntity.UserEntity;
 import tech.kood.match_me.user_management.features.user.internal.persistance.userEntity.UserEntityFactory;
 

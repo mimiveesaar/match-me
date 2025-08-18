@@ -7,8 +7,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.jmolecules.architecture.cqrs.QueryModel;
 import org.jmolecules.architecture.layered.ApplicationLayer;
-import tech.kood.match_me.user_management.features.refreshToken.internal.model.RefreshToken;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.user.UserId;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshToken.RefreshToken;
+import tech.kood.match_me.user_management.features.user.domain.internal.model.userId.UserId;
 
 @ApplicationLayer
 @QueryModel

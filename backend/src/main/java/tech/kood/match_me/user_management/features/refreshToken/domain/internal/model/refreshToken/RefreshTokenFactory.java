@@ -1,12 +1,12 @@
-package tech.kood.match_me.user_management.features.refreshToken.internal.model;
+package tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshToken;
 
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.DomainLayer;
 import org.jmolecules.ddd.annotation.Factory;
 import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.user_management.features.refreshToken.internal.model.refreshTokenId.RefreshTokenId;
-import tech.kood.match_me.user_management.features.refreshToken.internal.model.refreshTokenId.RefreshTokenIdFactory;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.user.UserId;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenId.RefreshTokenId;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenId.RefreshTokenIdFactory;
+import tech.kood.match_me.user_management.features.user.domain.internal.model.userId.UserId;
 
 import java.time.Instant;
 import java.util.UUID;
