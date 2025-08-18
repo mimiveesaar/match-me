@@ -1,6 +1,5 @@
 package tech.kood.match_me.user_management.features.user.internal.mapper;
 
-import jakarta.validation.ConstraintViolationException;
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.stereotype.Component;
 import tech.kood.match_me.user_management.features.user.domain.api.EmailDTO;
@@ -8,11 +7,11 @@ import tech.kood.match_me.user_management.features.user.domain.api.HashedPasswor
 import tech.kood.match_me.user_management.features.user.domain.api.UserDTO;
 import tech.kood.match_me.user_management.features.user.domain.api.UserIdDTO;
 import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
+import tech.kood.match_me.user_management.features.user.domain.internal.model.email.EmailFactory;
+import tech.kood.match_me.user_management.features.user.domain.internal.model.hashedPassword.HashedPasswordFactory;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.user.User;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.user.UserFactory;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.email.Email;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.hashedPassword.HashedPassword;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.user.UserId;
+import tech.kood.match_me.user_management.features.user.domain.internal.model.user.UserIdFactory;
 import tech.kood.match_me.user_management.features.user.internal.persistance.userEntity.UserEntity;
 import tech.kood.match_me.user_management.features.user.internal.persistance.userEntity.UserEntityFactory;
 
@@ -22,53 +21,35 @@ public final class UserMapper {
 
     private final UserFactory userFactory;
     private final UserEntityFactory userEntityFactory;
-    private final UserIdFactory userIdFactory;
     private final HashedPasswordFactory hashedPasswordFactory;
     private final EmailFactory emailFactory;
+    private final UserIdFactory userIdFactory;
 
 
-    public UserMapper(UserFactory userFactory, UserEntityFactory userEntityFactory, UserIdFactory userIdFactory, HashedPasswordFactory hashedPasswordFactory, EmailFactory emailFactory) {
+    public UserMapper(UserFactory userFactory, UserEntityFactory userEntityFactory, HashedPasswordFactory hashedPasswordFactory, EmailFactory emailFactory, UserIdFactory userIdFactory) {
         this.userFactory = userFactory;
         this.userEntityFactory = userEntityFactory;
-        this.userIdFactory = userIdFactory;
         this.hashedPasswordFactory = hashedPasswordFactory;
         this.emailFactory = emailFactory;
+        this.userIdFactory = userIdFactory;
     }
 
     public User toUser(UserEntity userEntity) throws CheckedConstraintViolationException {
 
-        UserId userId = null;
-        Email email = null;
-        HashedPassword hashedPassword = null;
+        var userId = userIdFactory.create(userEntity.getId());
+        var email = emailFactory.create(userEntity.getEmail());
+        var hashedPassword = hashedPasswordFactory.create(userEntity.getPasswordHash(), userEntity.getPasswordSalt());
 
-        try {
-            userId = userIdFactory.make(userEntity.getId());
-            email = emailFactory.make(userEntity.getEmail());
-            hashedPassword = hashedPasswordFactory.make(userEntity.getPasswordHash(), userEntity.getPasswordSalt());
-        } catch (ConstraintViolationException ignored) {
-            // We don't care about the validation result, we want to create the user anyway.
-            // Validation will take place at the aggregate level.
-        }
-
-        return userFactory.make(userId, email, hashedPassword, userEntity.getCreatedAt(), userEntity.getUpdatedAt());
+        return userFactory.create(userId, email, hashedPassword, userEntity.getCreatedAt(), userEntity.getUpdatedAt());
     }
 
     public User toUser(UserDTO userDTO) throws CheckedConstraintViolationException {
 
-        UserId userId = null;
-        Email email = null;
-        HashedPassword hashedPassword = null;
+        var userId = userIdFactory.create(userDTO.id().value());
+        var email = emailFactory.create(userDTO.email().value());
+        var hashedPassword = hashedPasswordFactory.create(userDTO.hashedPassword().hash(), userDTO.hashedPassword().salt());
 
-        try {
-            userId = userIdFactory.make(userDTO.id().getValue());
-            email = emailFactory.make(userDTO.email().getValue());
-            hashedPassword = hashedPasswordFactory.make(userDTO.hashedPassword().hash(), userDTO.hashedPassword().salt());
-        } catch (ConstraintViolationException ignored) {
-            // We don't care about the validation result, we want to create the user anyway.
-            // Validation will take place at the aggregate level.
-        }
-
-        return userFactory.make(userId, email, hashedPassword, userDTO.createdAt(), userDTO.updatedAt());
+        return userFactory.create(userId, email, hashedPassword, userDTO.createdAt(), userDTO.updatedAt());
     }
 
     public UserEntity toEntity(User user) throws CheckedConstraintViolationException {
@@ -94,4 +75,8 @@ public final class UserMapper {
         );
     }
 
+    public UserDTO toDTO(UserEntity userEntity) throws CheckedConstraintViolationException {
+        var user = toUser(userEntity);
+        return toDTO(user);
+    }
 }

@@ -32,7 +32,7 @@ public final class UserFactory {
         this.hashedPasswordFactory = hashedPasswordFactory;
     }
 
-    public User make(UserId userId, Email email, HashedPassword hashedPassword, Instant createdAt, Instant updatedAt) throws CheckedConstraintViolationException {
+    public User create(UserId userId, Email email, HashedPassword hashedPassword, Instant createdAt, Instant updatedAt) throws CheckedConstraintViolationException {
         var user = new User(userId, email, hashedPassword, createdAt, updatedAt);
         var validationResult = validator.validate(user);
         if (!validationResult.isEmpty()) {
@@ -58,6 +58,6 @@ public final class UserFactory {
         var userId = new UserId(UUID.randomUUID());
         var hashedPassword = hashedPasswordFactory.fromPlainText(password);
 
-        return make(userId, email, hashedPassword, Instant.now(), Instant.now());
+        return create(userId, email, hashedPassword, Instant.now(), Instant.now());
     }
 }

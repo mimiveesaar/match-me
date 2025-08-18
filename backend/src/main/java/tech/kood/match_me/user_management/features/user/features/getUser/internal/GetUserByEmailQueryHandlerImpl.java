@@ -1,10 +1,12 @@
 package tech.kood.match_me.user_management.features.user.features.getUser.internal;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.features.user.features.getUser.api.GetUserByEmailQueryHandler;
 import tech.kood.match_me.user_management.features.user.features.getUser.api.GetUserByEmailRequest;
 import tech.kood.match_me.user_management.features.user.features.getUser.api.GetUserByEmailResults;
@@ -17,34 +19,39 @@ public class GetUserByEmailQueryHandlerImpl implements GetUserByEmailQueryHandle
 
      private static final Logger logger = LoggerFactory.getLogger(GetUserByEmailQueryHandlerImpl.class);
 
+     private final Validator validator;
      private final UserRepository userRepository;
      private final UserMapper userMapper;
 
-     public GetUserByEmailQueryHandlerImpl(UserRepository userRepository, UserMapper userMapper) {
+     public GetUserByEmailQueryHandlerImpl(UserRepository userRepository, UserMapper userMapper, Validator validator) {
           this.userRepository = userRepository;
           this.userMapper = userMapper;
+          this.validator = validator;
      }
 
      @Transactional
      public GetUserByEmailResults handle(GetUserByEmailRequest request) {
 
+         var validationResults = validator.validate(request);
+
+         // Handle input validation.
+         if (!validationResults.isEmpty()) {
+             return new GetUserByEmailResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.from(validationResults), request.tracingId());
+         }
+
          try {
              var userEntity = userRepository.findUserByEmail(request.email().toString());
 
              if (userEntity.isEmpty()) {
-                 var result = new GetUserByEmailResults.UserNotFound(request.requestId(), request.email(), request.tracingId());
-                 return result;
+                 return new GetUserByEmailResults.UserNotFound(request.requestId(), request.email(), request.tracingId());
              }
 
-             var user = userMapper.toUser(userEntity.get());
-             var result = new GetUserByEmailResults.Success(request.requestId(), user, request.tracingId());
-
-             return result;
+             var userDTO = userMapper.toDTO(userEntity.get());
+             return new GetUserByEmailResults.Success(request.requestId(), userDTO, request.tracingId());
          } catch (Exception e) {
              logger.error("Failed to retrieve user by email: " + e.getMessage());
 
-             var result = new GetUserByEmailResults.SystemError(request.requestId(), e.getMessage(), request.tracingId());
-             return result;
+             return new GetUserByEmailResults.SystemError(request.requestId(), e.getMessage(), request.tracingId());
          }
      }
 }
