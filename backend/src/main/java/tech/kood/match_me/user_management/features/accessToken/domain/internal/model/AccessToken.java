@@ -1,28 +1,15 @@
-package tech.kood.match_me.user_management.internal.domain.models;
+package tech.kood.match_me.user_management.features.accessToken.domain.internal.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.NotBlank;
-import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
+import org.jmolecules.ddd.types.ValueObject;
 import tech.kood.match_me.user_management.common.domain.internal.userId.UserId;
 
-/**
- * Represents an access token (JWT) and its associated user ID.
- * <p>
- * This class is immutable and ensures that both the JWT and userId are non-null and non-blank.
- * </p>
- *
- * <p>
- * Example usage:
- * 
- * <pre>
- * AccessToken token = AccessToken.of("jwtValue", "userIdValue");
- * </pre>
- * </p>
- */
-public final class AccessToken {
+
+public class AccessToken implements ValueObject {
 
     @NotBlank
     private final String jwt;

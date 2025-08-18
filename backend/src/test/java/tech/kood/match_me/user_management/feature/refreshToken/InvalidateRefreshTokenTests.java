@@ -16,7 +16,7 @@ import tech.kood.match_me.user_management.features.user.internal.persistance.Use
 import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenCommandHandler;
 import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenRequest;
 import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenResults;
-import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenHandler;
+import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenCommandHandler;
 import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenRequest;
 import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenResults;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
@@ -45,7 +45,7 @@ public class InvalidateRefreshTokenTests extends UserManagementTestBase {
         CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler;
 
         @Autowired
-        InvalidateRefreshTokenHandler invalidateRefreshTokenHandler;
+        InvalidateRefreshTokenCommandHandler invalidateRefreshTokenHandler;
 
         @Autowired
         RegisterUserRequestMocker registerUserRequestMocker;

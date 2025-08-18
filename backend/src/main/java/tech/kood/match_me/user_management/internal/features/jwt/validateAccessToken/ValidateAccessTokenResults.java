@@ -8,7 +8,7 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import tech.kood.match_me.user_management.internal.common.cqrs.Result;
 import tech.kood.match_me.user_management.internal.common.validation.DomainObjectInputValidator;
-import tech.kood.match_me.user_management.internal.domain.models.AccessToken;
+import tech.kood.match_me.user_management.features.accessToken.domain.internal.model.AccessToken;
 
 public sealed interface ValidateAccessTokenResults extends Result permits
                 ValidateAccessTokenResults.Success, ValidateAccessTokenResults.InvalidToken {

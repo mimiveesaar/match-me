@@ -3,7 +3,7 @@ package tech.kood.match_me.user_management.features.refreshToken.features.getTok
 import jakarta.validation.Validator;
 import org.springframework.stereotype.Service;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
-import tech.kood.match_me.user_management.features.refreshToken.features.getToken.api.GetRefreshTokenHandler;
+import tech.kood.match_me.user_management.features.refreshToken.features.getToken.api.GetRefreshTokenQueryHandler;
 import tech.kood.match_me.user_management.features.refreshToken.features.getToken.api.GetRefreshTokenRequest;
 import tech.kood.match_me.user_management.features.refreshToken.features.getToken.api.GetRefreshTokenResults;
 import tech.kood.match_me.user_management.features.refreshToken.internal.mapper.RefreshTokenMapper;
@@ -12,14 +12,14 @@ import tech.kood.match_me.user_management.features.refreshToken.internal.persist
 import java.time.Instant;
 
 @Service
-public final class GetRefreshTokenQueryHandlerImpl implements GetRefreshTokenHandler {
+public final class GetRefreshTokenQueryQueryHandlerImpl implements GetRefreshTokenQueryHandler {
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final RefreshTokenMapper refreshTokenMapper;
     private final Validator validator;
 
-    public GetRefreshTokenQueryHandlerImpl(RefreshTokenRepository refreshTokenRepository,
-                                           RefreshTokenMapper refreshTokenMapper, Validator validator) {
+    public GetRefreshTokenQueryQueryHandlerImpl(RefreshTokenRepository refreshTokenRepository,
+                                                RefreshTokenMapper refreshTokenMapper, Validator validator) {
         this.refreshTokenRepository = refreshTokenRepository;
         this.refreshTokenMapper = refreshTokenMapper;
         this.validator = validator;

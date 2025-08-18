@@ -13,7 +13,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import tech.kood.match_me.user_management.internal.domain.models.AccessToken;
+import tech.kood.match_me.user_management.features.accessToken.domain.internal.model.AccessToken;
 import tech.kood.match_me.user_management.internal.features.getUser.handlers.GetUserByIdHandler;
 import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByIdQueryResults;
 import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenHandler;

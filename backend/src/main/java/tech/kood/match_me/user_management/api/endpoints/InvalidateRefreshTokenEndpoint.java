@@ -13,7 +13,7 @@ import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.InvalidateRefreshTokenRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.InvalidateRefreshTokenResultsDTO;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
-import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenHandler;
+import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenCommandHandler;
 import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenRequest;
 
 @RestController
@@ -25,7 +25,7 @@ public final class InvalidateRefreshTokenEndpoint {
         private final UserManagementPublisher userManagementPublisher;
 
         public InvalidateRefreshTokenEndpoint(
-                        InvalidateRefreshTokenHandler invalidateRefreshTokenHandler,
+                        InvalidateRefreshTokenCommandHandler invalidateRefreshTokenHandler,
                         UserManagementPublisher userManagementPublisher) {
                 this.userManagementPublisher = userManagementPublisher;
         }

@@ -8,7 +8,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import tech.kood.match_me.user_management.internal.common.cqrs.QueryHandler;
-import tech.kood.match_me.user_management.internal.domain.models.AccessToken;
+import tech.kood.match_me.user_management.features.accessToken.domain.internal.model.AccessToken;
 import tech.kood.match_me.user_management.common.domain.internal.userId.UserId;
 
 @Service

@@ -16,7 +16,7 @@ import tech.kood.match_me.user_management.internal.features.login.LoginHandler;
 import tech.kood.match_me.user_management.internal.features.login.LoginRequest;
 import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenCommandHandler;
 import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenHandler;
-import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenHandler;
+import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenCommandHandler;
 import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenRequest;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserRequest;
@@ -42,7 +42,7 @@ public class UserManagementConsumer {
 
     private final GetRefreshTokenHandler getRefreshTokenHandler;
 
-    private final InvalidateRefreshTokenHandler invalidateRefreshTokenHandler;
+    private final InvalidateRefreshTokenCommandHandler invalidateRefreshTokenHandler;
 
     private final RegisterUserCommandHandler registerUserHandler;
 
@@ -53,7 +53,7 @@ public class UserManagementConsumer {
                                   GetUserByEmailHandler getUserByEmailHandler, LoginHandler loginHandler,
                                   CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler,
                                   GetRefreshTokenHandler getRefreshTokenHandler,
-                                  InvalidateRefreshTokenHandler invalidateRefreshTokenHandler,
+                                  InvalidateRefreshTokenCommandHandler invalidateRefreshTokenHandler,
                                   RegisterUserCommandHandler registerUserHandler, ObjectMapper objectMapper) {
         this.getAccessTokenHandler = getAccessTokenHandler;
         this.validateAccessTokenHandler = validateAccessTokenHandler;

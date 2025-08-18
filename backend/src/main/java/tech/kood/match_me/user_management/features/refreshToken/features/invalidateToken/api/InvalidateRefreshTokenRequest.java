@@ -6,9 +6,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.jmolecules.architecture.cqrs.Command;
 import tech.kood.match_me.user_management.features.refreshToken.domain.api.SharedSecretDTO;
 
 
+@Command
 public record InvalidateRefreshTokenRequest(@NotNull @JsonProperty("request_id") UUID requestId,
                                             @NotNull @Valid @JsonProperty("secret") SharedSecretDTO secret,
                                             @Nullable @JsonProperty("tracing_id") String tracingId) {

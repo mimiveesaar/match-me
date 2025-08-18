@@ -1,11 +1,14 @@
 package tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.sharedSecret;
 
 import jakarta.validation.constraints.NotNull;
+import org.jmolecules.architecture.layered.DomainLayer;
+import org.jmolecules.ddd.types.ValueObject;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public class SharedSecret {
+@DomainLayer
+public class SharedSecret implements ValueObject {
 
     @NotNull
     private final UUID value;
