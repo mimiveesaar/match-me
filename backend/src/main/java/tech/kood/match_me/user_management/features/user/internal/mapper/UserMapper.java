@@ -2,16 +2,16 @@ package tech.kood.match_me.user_management.features.user.internal.mapper;
 
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.stereotype.Component;
-import tech.kood.match_me.user_management.features.user.domain.api.EmailDTO;
+import tech.kood.match_me.user_management.common.domain.api.EmailDTO;
 import tech.kood.match_me.user_management.features.user.domain.api.HashedPasswordDTO;
 import tech.kood.match_me.user_management.features.user.domain.api.UserDTO;
-import tech.kood.match_me.user_management.features.user.domain.api.UserIdDTO;
+import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
 import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.email.EmailFactory;
+import tech.kood.match_me.user_management.common.domain.internal.email.EmailFactory;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.hashedPassword.HashedPasswordFactory;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.user.User;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.user.UserFactory;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.userId.UserIdFactory;
+import tech.kood.match_me.user_management.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.user_management.features.user.internal.persistance.userEntity.UserEntity;
 import tech.kood.match_me.user_management.features.user.internal.persistance.userEntity.UserEntityFactory;
 

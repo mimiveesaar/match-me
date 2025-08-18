@@ -4,7 +4,7 @@ import jakarta.validation.Validator;
 import org.jmolecules.ddd.annotation.Factory;
 import org.springframework.stereotype.Component;
 import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.password.Password;
+import tech.kood.match_me.user_management.common.domain.internal.password.Password;
 import tech.kood.match_me.user_management.features.user.internal.infrastructure.auth.PasswordHasher;
 
 @Factory

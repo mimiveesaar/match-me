@@ -5,7 +5,7 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.jmolecules.architecture.layered.ApplicationLayer;
-import tech.kood.match_me.user_management.features.user.domain.api.EmailDTO;
+import tech.kood.match_me.user_management.common.domain.api.EmailDTO;
 
 import java.util.UUID;
 

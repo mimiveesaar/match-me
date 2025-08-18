@@ -17,7 +17,6 @@ import tech.kood.match_me.user_management.api.DTOs.LoginResultsDTO;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.internal.features.login.LoginHandler;
 import tech.kood.match_me.user_management.internal.features.login.LoginRequest;
-import tech.kood.match_me.user_management.internal.mappers.LoginResultsMapper;
 
 @RestController
 @RequestMapping("/api/v1/user-management/auth")

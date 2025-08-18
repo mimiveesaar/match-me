@@ -13,9 +13,8 @@ import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.InvalidateRefreshTokenRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.InvalidateRefreshTokenResultsDTO;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
-import tech.kood.match_me.user_management.features.refreshToken.internal.features.invalidateToken.InvalidateRefreshTokenHandler;
-import tech.kood.match_me.user_management.features.refreshToken.internal.features.invalidateToken.InvalidateRefreshTokenRequest;
-import tech.kood.match_me.user_management.internal.mappers.InvalidateRefreshTokenMapper;
+import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.InvalidateRefreshTokenHandler;
+import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.InvalidateRefreshTokenRequest;
 
 @RestController
 @RequestMapping("/api/v1/user-management/auth")

@@ -6,9 +6,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import tech.kood.match_me.user_management.internal.common.cqrs.CommandHandler;
 import tech.kood.match_me.user_management.features.user.internal.persistance.UserRepository;
-import tech.kood.match_me.user_management.features.refreshToken.internal.features.createToken.CreateRefreshTokenHandler;
-import tech.kood.match_me.user_management.features.refreshToken.internal.features.createToken.CreateRefreshTokenRequest;
-import tech.kood.match_me.user_management.features.refreshToken.internal.features.createToken.CreateRefreshTokenResults;
+import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenCommandHandler;
+import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenRequest;
+import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenResults;
 import tech.kood.match_me.user_management.internal.mappers.UserMapper;
 import tech.kood.match_me.user_management.features.user.internal.utils.PasswordUtils;
 
@@ -16,15 +16,15 @@ import tech.kood.match_me.user_management.features.user.internal.utils.PasswordU
 public final class LoginHandler implements CommandHandler<LoginRequest, LoginResults> {
 
     private final UserRepository userRepository;
-    private final CreateRefreshTokenHandler createRefreshTokenHandler;
+    private final CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler;
     private final UserMapper userMapper;
     private final ApplicationEventPublisher events;
 
     public LoginHandler(UserRepository userRepository,
-            CreateRefreshTokenHandler createRefreshTokenHandler, ApplicationEventPublisher events,
-            UserMapper userMapper) {
+                        CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler, ApplicationEventPublisher events,
+                        UserMapper userMapper) {
         this.userRepository = userRepository;
-        this.createRefreshTokenHandler = createRefreshTokenHandler;
+        this.createRefreshTokenCommandHandler = createRefreshTokenCommandHandler;
         this.userMapper = userMapper;
         this.events = events;
     }
@@ -52,7 +52,7 @@ public final class LoginHandler implements CommandHandler<LoginRequest, LoginRes
             var refreshTokenRequest = CreateRefreshTokenRequest.of(UUID.randomUUID(), foundUser,
                     request.getTracingId());
 
-            var tokenResult = createRefreshTokenHandler.handle(refreshTokenRequest);
+            var tokenResult = createRefreshTokenCommandHandler.handle(refreshTokenRequest);
 
             if (!(tokenResult instanceof CreateRefreshTokenResults.Success successResult)) {
                 var result = LoginResults.SystemError.of("Failed to create refresh token.",

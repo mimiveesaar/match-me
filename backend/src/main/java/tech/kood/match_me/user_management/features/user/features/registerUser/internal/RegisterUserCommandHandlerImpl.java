@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
-import tech.kood.match_me.user_management.features.user.domain.api.UserIdDTO;
+import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserRequest;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserResults;

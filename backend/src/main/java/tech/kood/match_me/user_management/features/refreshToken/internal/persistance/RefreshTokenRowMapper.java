@@ -28,12 +28,12 @@ public class RefreshTokenRowMapper implements RowMapper<RefreshTokenEntity> {
     public RefreshTokenEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
         UUID id = rs.getObject("id", UUID.class);
         UUID userId = rs.getObject("user_id", UUID.class);
-        String secret = rs.getString("secret");
+        String sharedSecret = rs.getString("shared_secret");
         Instant createdAt = rs.getTimestamp("created_at").toInstant();
         Instant expiresAt = rs.getTimestamp("expires_at").toInstant();
 
         try {
-            return refreshTokenEntityFactory.make(id, userId, secret, createdAt, expiresAt);
+            return refreshTokenEntityFactory.make(id, userId, sharedSecret, createdAt, expiresAt);
         } catch (CheckedConstraintViolationException e) {
             logger.error("Failed to map refresh token row to entity {}", e.getMessage());
             return null;

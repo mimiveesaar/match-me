@@ -18,7 +18,6 @@ import tech.kood.match_me.user_management.features.user.api.dto.register.Registe
 import tech.kood.match_me.user_management.features.user.api.dto.register.RegisterUserResultsDTO;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserRequest;
-import tech.kood.match_me.user_management.internal.mappers.RegisterUserResultsMapper;
 
 @RestController
 @RequestMapping("/api/v1/user-management/auth")

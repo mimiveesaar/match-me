@@ -2,7 +2,7 @@ package tech.kood.match_me.user_management.features.user.internal.utils;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.hashedPassword.HashedPassword;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.password.Password;
+import tech.kood.match_me.user_management.common.domain.internal.password.Password;
 
 public final class PasswordUtils {
 

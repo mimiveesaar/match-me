@@ -20,7 +20,7 @@ public class RefreshTokenEntityFactory {
         this.validator = validator;
     }
 
-    public RefreshTokenEntity make(UUID id, UUID userId, String secret, Instant createdAt, Instant expiresAt) throws CheckedConstraintViolationException {
+    public RefreshTokenEntity make(UUID id, UUID userId, UUID secret, Instant createdAt, Instant expiresAt) throws CheckedConstraintViolationException {
         var entity = new RefreshTokenEntity(id, userId, secret, createdAt, expiresAt);
 
         var validationResult = validator.validate(entity);

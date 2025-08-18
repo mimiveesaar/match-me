@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 import com.github.javafaker.Faker;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.user.User;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.userId.UserId;
+import tech.kood.match_me.user_management.common.domain.internal.userId.UserId;
 import tech.kood.match_me.user_management.features.user.internal.utils.PasswordUtils;
 
 @Component

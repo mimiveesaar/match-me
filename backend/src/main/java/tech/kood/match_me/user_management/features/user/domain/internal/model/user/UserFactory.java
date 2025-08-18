@@ -4,17 +4,17 @@ package tech.kood.match_me.user_management.features.user.domain.internal.model.u
 import jakarta.validation.Validator;
 import org.jmolecules.ddd.annotation.Factory;
 import org.springframework.stereotype.Component;
+import tech.kood.match_me.user_management.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.email.Email;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.email.EmailFactory;
+import tech.kood.match_me.user_management.common.domain.internal.email.Email;
+import tech.kood.match_me.user_management.common.domain.internal.email.EmailFactory;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.hashedPassword.HashedPassword;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.hashedPassword.HashedPasswordFactory;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.password.Password;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.password.PasswordFactory;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.userId.UserId;
+import tech.kood.match_me.user_management.common.domain.internal.password.Password;
+import tech.kood.match_me.user_management.common.domain.internal.password.PasswordFactory;
+import tech.kood.match_me.user_management.common.domain.internal.userId.UserId;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Component
 @Factory
@@ -25,12 +25,14 @@ public final class UserFactory {
     private final EmailFactory emailFactory;
     private final PasswordFactory passwordFactory;
     private final HashedPasswordFactory hashedPasswordFactory;
+    private final UserIdFactory userIdFactory;
 
-    public UserFactory(Validator validator, EmailFactory emailFactory, PasswordFactory passwordFactory, HashedPasswordFactory hashedPasswordFactory) {
+    public UserFactory(Validator validator, EmailFactory emailFactory, PasswordFactory passwordFactory, HashedPasswordFactory hashedPasswordFactory, UserIdFactory userIdFactory) {
         this.validator = validator;
         this.emailFactory = emailFactory;
         this.passwordFactory = passwordFactory;
         this.hashedPasswordFactory = hashedPasswordFactory;
+        this.userIdFactory = userIdFactory;
     }
 
     public User create(UserId userId, Email email, HashedPassword hashedPassword, Instant createdAt, Instant updatedAt) throws CheckedConstraintViolationException {
@@ -42,12 +44,6 @@ public final class UserFactory {
         return user;
     }
 
-    /**
-     * Creates a new {@link User} instance with the given email and password.
-     * @param email the email address of the new user.
-     * @param password clear-text password of the new user.
-     * @return a new {@link User} instance
-     */
     public User newUser(String email, String password) throws CheckedConstraintViolationException {
         Email validEmail = emailFactory.create(email);
         Password validPassword = passwordFactory.create(password);
@@ -56,7 +52,7 @@ public final class UserFactory {
     }
 
     public User newUser(Email email, Password password) throws CheckedConstraintViolationException {
-        var userId = new UserId(UUID.randomUUID());
+        var userId = userIdFactory.createNew();
         var hashedPassword = hashedPasswordFactory.fromPlainText(password);
 
         return create(userId, email, hashedPassword, Instant.now(), Instant.now());

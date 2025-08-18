@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.RefreshTokenRepository;
 import tech.kood.match_me.user_management.features.user.internal.persistance.UserRepository;
-import tech.kood.match_me.user_management.features.refreshToken.internal.features.createToken.CreateRefreshTokenHandler;
-import tech.kood.match_me.user_management.features.refreshToken.internal.features.createToken.CreateRefreshTokenRequest;
-import tech.kood.match_me.user_management.features.refreshToken.internal.features.createToken.CreateRefreshTokenResults;
+import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenCommandHandler;
+import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenRequest;
+import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenResults;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
@@ -35,7 +35,7 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
         RefreshTokenRepository refreshTokenRepository;
 
         @Autowired
-        CreateRefreshTokenHandler createRefreshTokenHandler;
+        CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler;
 
         @Autowired
         RegisterUserRequestMocker registerUserRequestMocker;
@@ -54,7 +54,7 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
                 var user = ((RegisterUserResults.Success) registerResult).user();
                 var createTokenRequest =
                                 CreateRefreshTokenRequest.of(UUID.randomUUID(), user, null);
-                var createTokenResult = createRefreshTokenHandler.handle(createTokenRequest);
+                var createTokenResult = createRefreshTokenCommandHandler.handle(createTokenRequest);
 
                 assert createTokenResult instanceof CreateRefreshTokenResults.Success;
 
@@ -77,7 +77,7 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
                 // Create a request with a non-existent user ID to simulate user not found
                 var createTokenRequest =
                                 CreateRefreshTokenRequest.of(UUID.randomUUID(), user, null);
-                var result = createRefreshTokenHandler.handle(createTokenRequest);
+                var result = createRefreshTokenCommandHandler.handle(createTokenRequest);
 
                 // In the current implementation, we assume the user exists, so this would
                 // actually succeed. To properly test UserNotFound, we would need to

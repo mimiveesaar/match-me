@@ -1,12 +1,12 @@
 package tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshToken;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.jmolecules.architecture.layered.DomainLayer;
 import org.jmolecules.ddd.types.AggregateRoot;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenId.RefreshTokenId;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.userId.UserId;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.sharedSecret.SharedSecret;
+import tech.kood.match_me.user_management.common.domain.internal.userId.UserId;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -22,8 +22,8 @@ public final class RefreshToken implements AggregateRoot<RefreshToken, RefreshTo
     @Valid
     private final UserId userId;
 
-    @NotBlank
-    private final String secret;
+    @NotNull
+    private final SharedSecret sharedSecret;
 
     @NotNull
     private final Instant createdAt;
@@ -40,8 +40,8 @@ public final class RefreshToken implements AggregateRoot<RefreshToken, RefreshTo
         return userId;
     }
 
-    public String getSecret() {
-        return secret;
+    public SharedSecret getSecret() {
+        return sharedSecret;
     }
 
     public Instant getCreatedAt() {
@@ -52,10 +52,10 @@ public final class RefreshToken implements AggregateRoot<RefreshToken, RefreshTo
         return expiresAt;
     }
 
-    RefreshToken(RefreshTokenId id, UserId userId, String secret, Instant createdAt, Instant expiresAt) {
+    RefreshToken(RefreshTokenId id, UserId userId, SharedSecret sharedSecret, Instant createdAt, Instant expiresAt) {
         this.id = id;
         this.userId = userId;
-        this.secret = secret;
+        this.sharedSecret = sharedSecret;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
     }
@@ -75,9 +75,9 @@ public final class RefreshToken implements AggregateRoot<RefreshToken, RefreshTo
     @Override
     public String toString() {
         return "RefreshToken{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", secret='" + secret + '\'' +
+                "id=" + id.toString() +
+                ", userId=" + userId.toString() +
+                ", sharedSecret='" + sharedSecret.toString() + '\'' +
                 ", createdAt=" + createdAt +
                 ", expiresAt=" + expiresAt +
                 '}';

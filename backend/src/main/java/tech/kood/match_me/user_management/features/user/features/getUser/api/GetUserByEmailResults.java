@@ -6,7 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
-import tech.kood.match_me.user_management.features.user.domain.api.EmailDTO;
+import tech.kood.match_me.user_management.common.domain.api.EmailDTO;
 import tech.kood.match_me.user_management.features.user.domain.api.UserDTO;
 
 import java.util.UUID;

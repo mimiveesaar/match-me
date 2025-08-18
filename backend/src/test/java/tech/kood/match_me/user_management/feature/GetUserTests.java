@@ -14,7 +14,7 @@ import tech.kood.match_me.user_management.internal.features.getUser.handlers.Get
 import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByIdQueryResults;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserResults;
-import tech.kood.match_me.user_management.features.user.domain.internal.model.userId.UserId;
+import tech.kood.match_me.user_management.common.domain.internal.userId.UserId;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
 import java.util.UUID;
 

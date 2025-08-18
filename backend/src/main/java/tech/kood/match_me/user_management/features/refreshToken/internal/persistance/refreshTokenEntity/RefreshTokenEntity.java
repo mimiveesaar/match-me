@@ -1,6 +1,5 @@
 package tech.kood.match_me.user_management.features.refreshToken.internal.persistance.refreshTokenEntity;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.jmolecules.architecture.layered.InfrastructureLayer;
 
@@ -17,8 +16,8 @@ public final class RefreshTokenEntity {
     @NotNull
     private final UUID userId;
 
-    @NotBlank
-    private final String secret;
+    @NotNull
+    private final UUID sharedSecret;
 
     @NotNull
     private final Instant createdAt;
@@ -34,8 +33,8 @@ public final class RefreshTokenEntity {
         return userId;
     }
 
-    public String getSecret() {
-        return secret;
+    public UUID getSharedSecret() {
+        return sharedSecret;
     }
 
     public Instant getCreatedAt() {
@@ -46,10 +45,10 @@ public final class RefreshTokenEntity {
         return expiresAt;
     }
 
-    public RefreshTokenEntity(UUID id, UUID userId, String secret, Instant createdAt, Instant expiresAt) {
+    public RefreshTokenEntity(UUID id, UUID userId, UUID sharedSecret, Instant createdAt, Instant expiresAt) {
         this.id = id;
         this.userId = userId;
-        this.secret = secret;
+        this.sharedSecret = sharedSecret;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
     }
@@ -69,9 +68,9 @@ public final class RefreshTokenEntity {
     @Override
     public String toString() {
         return "RefreshTokenEntity{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", secret='" + secret + '\'' +
+                "id=" + id.toString() +
+                ", userId=" + userId.toString() +
+                ", sharedSecret='" + sharedSecret.toString() + '\'' +
                 ", createdAt=" + createdAt +
                 ", expiresAt=" + expiresAt +
                 '}';

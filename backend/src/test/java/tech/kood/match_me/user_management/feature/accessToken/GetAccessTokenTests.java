@@ -15,9 +15,9 @@ import tech.kood.match_me.user_management.features.user.internal.persistance.Use
 import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenHandler;
 import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenResults;
-import tech.kood.match_me.user_management.features.refreshToken.internal.features.createToken.CreateRefreshTokenHandler;
-import tech.kood.match_me.user_management.features.refreshToken.internal.features.createToken.CreateRefreshTokenRequest;
-import tech.kood.match_me.user_management.features.refreshToken.internal.features.createToken.CreateRefreshTokenResults;
+import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenCommandHandler;
+import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenRequest;
+import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenResults;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
@@ -38,7 +38,7 @@ public class GetAccessTokenTests extends UserManagementTestBase {
     RegisterUserCommandHandler registerUserHandler;
 
     @Autowired
-    CreateRefreshTokenHandler createRefreshTokenHandler;
+    CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler;
 
     @Autowired
     CreateAccessTokenHandler getAccessTokenHandler;
@@ -55,7 +55,7 @@ public class GetAccessTokenTests extends UserManagementTestBase {
 
         var user = ((RegisterUserResults.Success) registerResult).user();
         var createTokenRequest = CreateRefreshTokenRequest.of(UUID.randomUUID(), user, null);
-        var createTokenResult = createRefreshTokenHandler.handle(createTokenRequest);
+        var createTokenResult = createRefreshTokenCommandHandler.handle(createTokenRequest);
         assert createTokenResult instanceof CreateRefreshTokenResults.Success;
 
         var refreshToken =
