@@ -17,3 +17,9 @@ services:
     volumes:
       - ../..:/workspace:cached
       - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  default:
+    external:
+      name: matchme-shared-net
+      
