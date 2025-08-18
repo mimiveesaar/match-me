@@ -14,12 +14,12 @@ import tech.kood.match_me.user_management.internal.features.jwt.validateAccessTo
 import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.features.login.LoginHandler;
 import tech.kood.match_me.user_management.internal.features.login.LoginRequest;
-import tech.kood.match_me.user_management.internal.features.refreshToken.features.createToken.CreateRefreshTokenHandler;
+import tech.kood.match_me.user_management.features.refreshToken.internal.features.createToken.CreateRefreshTokenHandler;
 import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.features.invalidateToken.InvalidateRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.features.invalidateToken.InvalidateRefreshTokenRequest;
-import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserCommandHandler;
-import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserRequest;
+import tech.kood.match_me.user_management.features.refreshToken.internal.features.invalidateToken.InvalidateRefreshTokenHandler;
+import tech.kood.match_me.user_management.features.refreshToken.internal.features.invalidateToken.InvalidateRefreshTokenRequest;
+import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
+import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserRequest;
 
 @Component
 public class UserManagementConsumer {

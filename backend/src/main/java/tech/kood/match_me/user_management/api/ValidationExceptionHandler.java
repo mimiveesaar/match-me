@@ -9,24 +9,24 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import tech.kood.match_me.user_management.api.DTOs.InvalidInputDTO;
+import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 
 @RestControllerAdvice
 public class ValidationExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<InvalidInputDTO> handleValidationExceptions(
+    public ResponseEntity<InvalidInputErrorDTO> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
-        List<InvalidInputDTO.FieldError> errors = new ArrayList<>();
+        List<InvalidInputErrorDTO.FieldError> errors = new ArrayList<>();
         ex.getBindingResult().getFieldErrors().forEach(error -> {
-            InvalidInputDTO.FieldError fieldError =
-                    new InvalidInputDTO.FieldError();
+            InvalidInputErrorDTO.FieldError fieldError =
+                    new InvalidInputErrorDTO.FieldError();
             fieldError.field = error.getField();
             fieldError.rejectedValue = error.getRejectedValue();
             fieldError.message = error.getDefaultMessage();
             errors.add(fieldError);
         });
 
-        return new ResponseEntity<>(new InvalidInputDTO(errors), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new InvalidInputErrorDTO(errors), HttpStatus.BAD_REQUEST);
     }
 }

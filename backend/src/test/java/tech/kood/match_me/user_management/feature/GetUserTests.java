@@ -9,12 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.junit.jupiter.api.TestInstance;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
-import tech.kood.match_me.user_management.internal.features.user.persistance.UserRepository;
+import tech.kood.match_me.user_management.features.user.internal.persistance.UserRepository;
 import tech.kood.match_me.user_management.internal.features.getUser.handlers.GetUserByIdHandler;
 import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByIdQueryResults;
-import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserCommandHandler;
-import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserResults;
-import tech.kood.match_me.user_management.internal.features.user.domain.model.userId.UserId;
+import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
+import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserResults;
+import tech.kood.match_me.user_management.features.user.domain.internal.model.user.UserId;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
 import java.util.UUID;
 

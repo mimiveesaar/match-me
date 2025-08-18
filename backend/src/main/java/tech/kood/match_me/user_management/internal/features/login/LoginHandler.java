@@ -5,12 +5,12 @@ import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import tech.kood.match_me.user_management.internal.common.cqrs.CommandHandler;
-import tech.kood.match_me.user_management.internal.features.user.persistance.UserRepository;
-import tech.kood.match_me.user_management.internal.features.refreshToken.features.createToken.CreateRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.features.createToken.CreateRefreshTokenRequest;
-import tech.kood.match_me.user_management.internal.features.refreshToken.features.createToken.CreateRefreshTokenResults;
+import tech.kood.match_me.user_management.features.user.internal.persistance.UserRepository;
+import tech.kood.match_me.user_management.features.refreshToken.internal.features.createToken.CreateRefreshTokenHandler;
+import tech.kood.match_me.user_management.features.refreshToken.internal.features.createToken.CreateRefreshTokenRequest;
+import tech.kood.match_me.user_management.features.refreshToken.internal.features.createToken.CreateRefreshTokenResults;
 import tech.kood.match_me.user_management.internal.mappers.UserMapper;
-import tech.kood.match_me.user_management.internal.features.user.utils.PasswordUtils;
+import tech.kood.match_me.user_management.features.user.internal.utils.PasswordUtils;
 
 @Service
 public final class LoginHandler implements CommandHandler<LoginRequest, LoginResults> {

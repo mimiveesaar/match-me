@@ -14,10 +14,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import tech.kood.match_me.user_management.api.UserManagementPublisher;
-import tech.kood.match_me.user_management.api.features.user.register.RegisterUserRequestDTO;
-import tech.kood.match_me.user_management.api.features.user.register.RegisterUserResultsDTO;
-import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserCommandHandler;
-import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserRequest;
+import tech.kood.match_me.user_management.features.user.api.dto.register.RegisterUserRequestDTO;
+import tech.kood.match_me.user_management.features.user.api.dto.register.RegisterUserResultsDTO;
+import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
+import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserRequest;
 import tech.kood.match_me.user_management.internal.mappers.RegisterUserResultsMapper;
 
 @RestController

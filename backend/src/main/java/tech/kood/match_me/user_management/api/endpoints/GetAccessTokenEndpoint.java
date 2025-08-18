@@ -15,7 +15,7 @@ import jakarta.validation.Valid;
 import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.GetAccessTokenRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.GetAccessTokenResultsDTO;
-import tech.kood.match_me.user_management.api.DTOs.InvalidInputDTO;
+import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenHandler;
 import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.mappers.GetAccessTokenMapper;
@@ -45,9 +45,9 @@ public class GetAccessTokenEndpoint {
                                         content = @Content(mediaType = "application/json",
                                                         schema = @Schema(oneOf = {
                                                                         GetAccessTokenResultsDTO.InvalidToken.class,
-                                                                        InvalidInputDTO.class},
+                                                                        InvalidInputErrorDTO.class},
                                                                         discriminatorProperty = "kind",
-                                                                        implementation = InvalidInputDTO.class))),
+                                                                        implementation = InvalidInputErrorDTO.class))),
                         @ApiResponse(responseCode = "401", description = "Invalid refresh token.",
                                         content = @Content(mediaType = "application/json",
                                                         schema = @Schema(

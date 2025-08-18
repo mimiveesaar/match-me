@@ -3,7 +3,7 @@ package tech.kood.match_me.user_management.api.features.refreshToken.domain.dto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import tech.kood.match_me.user_management.api.features.user.domain.dto.UserIdDTO;
+import tech.kood.match_me.user_management.features.user.domain.api.UserIdDTO;
 
 import java.time.Instant;
 

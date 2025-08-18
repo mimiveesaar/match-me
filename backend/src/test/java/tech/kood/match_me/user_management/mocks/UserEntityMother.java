@@ -4,8 +4,8 @@ import java.time.Instant;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 import com.github.javafaker.Faker;
-import tech.kood.match_me.user_management.internal.features.user.persistance.userEntity.UserEntity;
-import tech.kood.match_me.user_management.internal.features.user.utils.PasswordUtils;
+import tech.kood.match_me.user_management.features.user.internal.persistance.userEntity.UserEntity;
+import tech.kood.match_me.user_management.features.user.internal.utils.PasswordUtils;
 
 @Component
 public class UserEntityMother {

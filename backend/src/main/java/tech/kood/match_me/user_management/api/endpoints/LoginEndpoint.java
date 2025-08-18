@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.LoginRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.LoginResultsDTO;
-import tech.kood.match_me.user_management.api.DTOs.InvalidInputDTO;
+import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.internal.features.login.LoginHandler;
 import tech.kood.match_me.user_management.internal.features.login.LoginRequest;
 import tech.kood.match_me.user_management.internal.mappers.LoginResultsMapper;
@@ -44,7 +44,7 @@ public class LoginEndpoint {
             @ApiResponse(responseCode = "400", description = "Invalid request.",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(discriminatorProperty = "kind",
-                                    implementation = InvalidInputDTO.class))),
+                                    implementation = InvalidInputErrorDTO.class))),
 
             @ApiResponse(responseCode = "401", description = "Unauthorized.",
                     content = @Content(mediaType = "application/json",

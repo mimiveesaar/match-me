@@ -1,0 +1,50 @@
+package tech.kood.match_me.user_management.features.user.features.getUser.internal;
+
+import jakarta.transaction.Transactional;
+import org.jmolecules.architecture.layered.ApplicationLayer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import tech.kood.match_me.user_management.features.user.features.getUser.api.GetUserByEmailQueryHandler;
+import tech.kood.match_me.user_management.features.user.features.getUser.api.GetUserByEmailRequest;
+import tech.kood.match_me.user_management.features.user.features.getUser.api.GetUserByEmailResults;
+import tech.kood.match_me.user_management.features.user.internal.mapper.UserMapper;
+import tech.kood.match_me.user_management.features.user.internal.persistance.UserRepository;
+
+@Service
+@ApplicationLayer
+public class GetUserByEmailQueryHandlerImpl implements GetUserByEmailQueryHandler {
+
+     private static final Logger logger = LoggerFactory.getLogger(GetUserByEmailQueryHandlerImpl.class);
+
+     private final UserRepository userRepository;
+     private final UserMapper userMapper;
+
+     public GetUserByEmailQueryHandlerImpl(UserRepository userRepository, UserMapper userMapper) {
+          this.userRepository = userRepository;
+          this.userMapper = userMapper;
+     }
+
+     @Transactional
+     public GetUserByEmailResults handle(GetUserByEmailRequest request) {
+
+         try {
+             var userEntity = userRepository.findUserByEmail(request.email().toString());
+
+             if (userEntity.isEmpty()) {
+                 var result = new GetUserByEmailResults.UserNotFound(request.requestId(), request.email(), request.tracingId());
+                 return result;
+             }
+
+             var user = userMapper.toUser(userEntity.get());
+             var result = new GetUserByEmailResults.Success(request.requestId(), user, request.tracingId());
+
+             return result;
+         } catch (Exception e) {
+             logger.error("Failed to retrieve user by email: " + e.getMessage());
+
+             var result = new GetUserByEmailResults.SystemError(request.requestId(), e.getMessage(), request.tracingId());
+             return result;
+         }
+     }
+}

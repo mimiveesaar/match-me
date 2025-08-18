@@ -1,8 +1,8 @@
 package tech.kood.match_me.user_management.internal.mappers;
 
 import org.springframework.stereotype.Component;
-import tech.kood.match_me.user_management.api.features.user.register.RegisterUserResultsDTO;
-import tech.kood.match_me.user_management.internal.features.user.features.registerUser.RegisterUserResults;
+import tech.kood.match_me.user_management.features.user.api.dto.register.RegisterUserResultsDTO;
+import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserResults;
 
 @Component
 public final class RegisterUserResultsMapper {
