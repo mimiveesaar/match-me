@@ -31,9 +31,18 @@ public class RefreshTokenRepository {
         jdbcTemplate.update(sql, Map.of());
     }
 
-    public boolean deleteToken(String token) {
-        String sql = "DELETE FROM user_management.refresh_tokens WHERE token = :token";
-        return jdbcTemplate.update(sql, Map.of("token", token)) > 0;
+    public Optional<RefreshTokenEntity> deleteToken(String sharedSecret) {
+        String sql = "DELETE FROM user_management.refresh_tokens WHERE shared_secret = :sharedSecret RETURNING *";
+        try {
+            RefreshTokenEntity deletedToken = jdbcTemplate.queryForObject(
+                sql,
+                Map.of("sharedSecret", sharedSecret),
+                refreshTokenRowMapper
+            );
+            return Optional.ofNullable(deletedToken);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public void save(RefreshTokenEntity refreshToken) {

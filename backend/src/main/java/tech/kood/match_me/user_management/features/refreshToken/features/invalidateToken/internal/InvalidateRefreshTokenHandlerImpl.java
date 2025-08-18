@@ -1,0 +1,62 @@
+package tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.internal;
+
+import jakarta.transaction.Transactional;
+import jakarta.validation.Validator;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+
+import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
+import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.RefreshTokenInvalidatedEvent;
+import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenHandler;
+import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenRequest;
+import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenResults;
+import tech.kood.match_me.user_management.features.refreshToken.internal.mapper.RefreshTokenMapper;
+import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.RefreshTokenRepository;
+
+@Service
+public class InvalidateRefreshTokenHandlerImpl implements InvalidateRefreshTokenHandler {
+
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final Validator validator;
+    private final RefreshTokenMapper refreshTokenMapper;
+    private final ApplicationEventPublisher events;
+
+    public InvalidateRefreshTokenHandlerImpl(RefreshTokenRepository refreshTokenRepository, Validator validator,
+                                             RefreshTokenMapper refreshTokenMapper, ApplicationEventPublisher events) {
+        this.refreshTokenRepository = refreshTokenRepository;
+        this.validator = validator;
+        this.refreshTokenMapper = refreshTokenMapper;
+        this.events = events;
+    }
+
+    @Override
+    @Transactional
+    public InvalidateRefreshTokenResults handle(InvalidateRefreshTokenRequest request) {
+
+        var invalidationResults = validator.validate(request);
+
+        if (!invalidationResults.isEmpty()) {
+            return new InvalidateRefreshTokenResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.from(invalidationResults), request.tracingId());
+        }
+
+        try {
+            var deletedToken = refreshTokenRepository.deleteToken(request.secret().toString());
+
+            if (deletedToken.isEmpty()) {
+                return new InvalidateRefreshTokenResults.TokenNotFound(request.requestId(), request.tracingId());
+            }
+
+            var result = new InvalidateRefreshTokenResults.Success(request.requestId(), request.tracingId());
+
+            var deletedTokenDTO = refreshTokenMapper.toDTO(deletedToken.get());
+            events.publishEvent(new RefreshTokenInvalidatedEvent(deletedTokenDTO));
+            return result;
+        } catch (Exception e) {
+            return new InvalidateRefreshTokenResults.SystemError(
+                    request.requestId(),
+                    e.getMessage(),
+                    request.tracingId()
+            );
+        }
+    }
+}

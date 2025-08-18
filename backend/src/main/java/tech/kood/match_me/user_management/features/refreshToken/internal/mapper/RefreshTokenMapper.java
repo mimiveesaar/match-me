@@ -59,4 +59,9 @@ public final class RefreshTokenMapper {
                 refreshToken.getExpiresAt()
         );
     }
+
+    public RefreshTokenDTO toDTO(RefreshTokenEntity refreshTokenEntity) throws CheckedConstraintViolationException {
+       var domainObject = toRefreshToken(refreshTokenEntity);
+       return toDTO(domainObject);
+    }
 }
