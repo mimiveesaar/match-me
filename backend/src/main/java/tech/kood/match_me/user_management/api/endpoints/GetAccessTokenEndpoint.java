@@ -16,8 +16,8 @@ import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.GetAccessTokenRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.GetAccessTokenResultsDTO;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
-import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenHandler;
-import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenRequest;
+import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.CreateAccessTokenHandler;
+import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.CreateAccessTokenRequest;
 
 @RestController
 @RequestMapping("/api/v1/user-management/auth")

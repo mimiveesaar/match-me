@@ -5,12 +5,12 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import tech.kood.match_me.user_management.features.refreshToken.domain.api.SharedSecretDTO;
+import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenSecretDTO;
 
 import java.util.UUID;
 
 public record GetRefreshTokenRequest(@NotNull @JsonProperty("request_id") UUID requestId,
-                                     @NotBlank @Valid @JsonProperty("shared_secret") SharedSecretDTO secret,
+                                     @NotBlank @Valid @JsonProperty("shared_secret") RefreshTokenSecretDTO secret,
                                      @Nullable @JsonProperty("tracing_id") String tracingId) {
 
 
@@ -18,7 +18,7 @@ public record GetRefreshTokenRequest(@NotNull @JsonProperty("request_id") UUID r
         return new GetRefreshTokenRequest(requestId, secret, tracingId);
     }
 
-    public GetRefreshTokenRequest withToken(SharedSecretDTO secret) {
+    public GetRefreshTokenRequest withToken(RefreshTokenSecretDTO secret) {
         return new GetRefreshTokenRequest(requestId, secret, tracingId);
     }
 

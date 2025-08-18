@@ -7,7 +7,7 @@ import tech.kood.match_me.user_management.features.refreshToken.domain.api.Refre
 import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenIdDTO;
 import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
 import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.user_management.features.refreshToken.domain.api.SharedSecretDTO;
+import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenSecretDTO;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshToken.RefreshToken;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshToken.RefreshTokenFactory;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenId.RefreshTokenIdFactory;
@@ -49,7 +49,7 @@ public final class RefreshTokenMapper {
     public RefreshTokenDTO toDTO(RefreshToken refreshToken) {
         var refreshTokenIdDTO = new RefreshTokenIdDTO(refreshToken.getId().getValue());
         var userIdDTO = new UserIdDTO(refreshToken.getUserId().getValue());
-        var sharedSecretDTO = SharedSecretDTO.of(refreshToken.getSecret().toString());
+        var sharedSecretDTO = RefreshTokenSecretDTO.of(refreshToken.getSecret().toString());
 
         return new RefreshTokenDTO(
                 refreshTokenIdDTO,

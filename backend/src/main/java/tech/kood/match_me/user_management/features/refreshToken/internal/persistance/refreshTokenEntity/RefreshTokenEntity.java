@@ -70,7 +70,7 @@ public final class RefreshTokenEntity {
         return "RefreshTokenEntity{" +
                 "id=" + id.toString() +
                 ", userId=" + userId.toString() +
-                ", sharedSecret='" + sharedSecret.toString() + '\'' +
+                ", secret='" + sharedSecret.toString() + '\'' +
                 ", createdAt=" + createdAt +
                 ", expiresAt=" + expiresAt +
                 '}';

@@ -6,11 +6,11 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
-public record SharedSecretDTO(@NotNull UUID value) {
+public record RefreshTokenSecretDTO(@NotNull UUID value) {
 
     @JsonCreator
-    public static SharedSecretDTO of(String value) {
-        return new SharedSecretDTO(UUID.fromString(value));
+    public static RefreshTokenSecretDTO of(String value) {
+        return new RefreshTokenSecretDTO(UUID.fromString(value));
     }
 
     @Override

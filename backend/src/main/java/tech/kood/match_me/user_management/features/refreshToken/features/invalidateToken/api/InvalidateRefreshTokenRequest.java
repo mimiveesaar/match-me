@@ -7,19 +7,19 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.jmolecules.architecture.cqrs.Command;
-import tech.kood.match_me.user_management.features.refreshToken.domain.api.SharedSecretDTO;
+import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenSecretDTO;
 
 
 @Command
 public record InvalidateRefreshTokenRequest(@NotNull @JsonProperty("request_id") UUID requestId,
-                                            @NotNull @Valid @JsonProperty("secret") SharedSecretDTO secret,
+                                            @NotNull @Valid @JsonProperty("secret") RefreshTokenSecretDTO secret,
                                             @Nullable @JsonProperty("tracing_id") String tracingId) {
 
     public InvalidateRefreshTokenRequest withRequestId(UUID requestId) {
         return new InvalidateRefreshTokenRequest(requestId, secret, tracingId);
     }
 
-    public InvalidateRefreshTokenRequest withSecret(SharedSecretDTO secret) {
+    public InvalidateRefreshTokenRequest withSecret(RefreshTokenSecretDTO secret) {
         return new InvalidateRefreshTokenRequest(requestId, secret, tracingId);
     }
 

@@ -11,7 +11,7 @@ import java.time.Instant;
 public record RefreshTokenDTO(
         @NotNull @Valid @JsonProperty("id") RefreshTokenIdDTO id,
         @NotNull @Valid @JsonProperty("user_id") UserIdDTO userId,
-        @NotEmpty @Valid @JsonProperty("shared_secret") SharedSecretDTO sharedSecret,
+        @NotEmpty @Valid @JsonProperty("shared_secret") RefreshTokenSecretDTO secret,
         @NotNull Instant createdAt,
         @NotNull Instant expiresAt
 ) {

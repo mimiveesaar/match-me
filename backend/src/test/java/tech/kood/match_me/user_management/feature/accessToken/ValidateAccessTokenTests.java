@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.features.user.internal.persistance.UserRepository;
-import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenHandler;
-import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenRequest;
-import tech.kood.match_me.user_management.internal.features.jwt.createAccessToken.CreateAccessTokenResults;
+import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.CreateAccessTokenHandler;
+import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.CreateAccessTokenRequest;
+import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.CreateAccessTokenResults;
 import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenHandler;
 import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
 import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenResults;
@@ -72,7 +72,7 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
 
                 assert getAccessTokenResult instanceof CreateAccessTokenResults.Success;
 
-                var jwt = ((CreateAccessTokenResults.Success) getAccessTokenResult).getJwt();
+                var jwt = ((CreateAccessTokenResults.Success) getAccessTokenResult).jwt();
                 assert jwt != null;
 
                 var validateRequest = ValidateAccessTokenRequest.of(UUID.randomUUID(), jwt, null);

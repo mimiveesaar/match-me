@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.internal.features.jwt.createAccessToken;
+package tech.kood.match_me.user_management.features.accessToken.features.createAccessToken;
 
 import java.time.Instant;
 
@@ -40,23 +40,23 @@ public class CreateAccessTokenHandler
         public CreateAccessTokenResults handle(CreateAccessTokenRequest request) {
                 try {
                         var refreshTokenResult = getRefreshTokenHandler
-                                        .handle(GetRefreshTokenRequest.of(request.getRequestId(),
-                                                        request.getRefreshToken(),
-                                                        request.getTracingId()));
+                                        .handle(GetRefreshTokenRequest.of(request.requestId(),
+                                                        request.refreshToken(),
+                                                        request.tracingId()));
 
                         if (refreshTokenResult instanceof GetRefreshTokenResults.InvalidToken invalidToken) {
                                 var result = CreateAccessTokenResults.InvalidToken.of(
                                                 invalidToken.getRefreshToken(),
-                                                request.getRequestId(), request.getTracingId());
-                                events.publishEvent(new CreateAccessTokenEvent(request, result));
+                                                request.requestId(), request.tracingId());
+                                events.publishEvent(new AccessTokenCreatedEvent(request, result));
                                 return result;
                         }
 
                         if (refreshTokenResult instanceof GetRefreshTokenResults.SystemError systemError) {
                                 var result = CreateAccessTokenResults.SystemError.of(
-                                                systemError.getMessage(), request.getRequestId(),
-                                                request.getTracingId());
-                                events.publishEvent(new CreateAccessTokenEvent(request, result));
+                                                systemError.getMessage(), request.requestId(),
+                                                request.tracingId());
+                                events.publishEvent(new AccessTokenCreatedEvent(request, result));
                                 return result;
                         }
 
@@ -75,23 +75,23 @@ public class CreateAccessTokenHandler
                                                 .sign(jwtAlgo);
 
                                 var result = CreateAccessTokenResults.Success.of(jwt,
-                                                request.getRequestId(), request.getTracingId());
+                                                request.requestId(), request.tracingId());
 
-                                events.publishEvent(new CreateAccessTokenEvent(request, result));
+                                events.publishEvent(new AccessTokenCreatedEvent(request, result));
                                 return result;
                         }
 
                         var result = CreateAccessTokenResults.SystemError.of(
                                         "Unexpected result from refresh token handler",
-                                        request.getRequestId(), request.getTracingId());
-                        events.publishEvent(new CreateAccessTokenEvent(request, result));
+                                        request.requestId(), request.tracingId());
+                        events.publishEvent(new AccessTokenCreatedEvent(request, result));
                         return result;
 
                 } catch (Exception e) {
                         var result = CreateAccessTokenResults.SystemError.of(
                                         "An unexpected error occurred: " + e.getMessage(),
-                                        request.getRequestId(), request.getTracingId());
-                        events.publishEvent(new CreateAccessTokenEvent(request, result));
+                                        request.requestId(), request.tracingId());
+                        events.publishEvent(new AccessTokenCreatedEvent(request, result));
                         return result;
                 }
         }

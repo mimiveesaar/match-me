@@ -77,7 +77,7 @@ public final class RefreshToken implements AggregateRoot<RefreshToken, RefreshTo
         return "RefreshToken{" +
                 "id=" + id.toString() +
                 ", userId=" + userId.toString() +
-                ", sharedSecret='" + sharedSecret.toString() + '\'' +
+                ", secret='" + sharedSecret.toString() + '\'' +
                 ", createdAt=" + createdAt +
                 ", expiresAt=" + expiresAt +
                 '}';
