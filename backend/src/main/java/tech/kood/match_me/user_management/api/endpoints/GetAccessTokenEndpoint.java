@@ -13,8 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import tech.kood.match_me.user_management.api.UserManagementPublisher;
-import tech.kood.match_me.user_management.api.DTOs.GetAccessTokenRequestDTO;
-import tech.kood.match_me.user_management.api.DTOs.GetAccessTokenResultsDTO;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenHandler;
 import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenRequest;

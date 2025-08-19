@@ -12,8 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import tech.kood.match_me.user_management.api.UserManagementPublisher;
-import tech.kood.match_me.user_management.api.DTOs.LoginRequestDTO;
-import tech.kood.match_me.user_management.api.DTOs.LoginResultsDTO;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.features.user.features.login.api.LoginCommandHandler;
 import tech.kood.match_me.user_management.features.user.features.login.api.LoginRequest;

@@ -7,7 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import tech.kood.match_me.user_management.api.filters.JwtAuthenticationFilter;
+import tech.kood.match_me.user_management.features.accessToken.filters.JwtAuthenticationFilter;
 
 @EnableMethodSecurity
 @Configuration

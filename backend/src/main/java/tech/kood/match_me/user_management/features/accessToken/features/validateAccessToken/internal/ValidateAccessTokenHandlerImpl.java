@@ -10,6 +10,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
+import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
 import tech.kood.match_me.user_management.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.features.accessToken.domain.internal.model.AccessTokenFactory;
@@ -23,16 +24,20 @@ import java.util.UUID;
 @Service
 public class ValidateAccessTokenHandlerImpl implements ValidateAccessTokenHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(ValidateAccessTokenHandlerImpl.class);
     private final JWTVerifier jwtVerifier;
     private final AccessTokenFactory accessTokenFactory;
     private final AccessTokenMapper accessTokenMapper;
     private final UserIdFactory userIdFactory;
     private final Validator validator;
-    private static final Logger logger = LoggerFactory.getLogger(ValidateAccessTokenHandlerImpl.class);
 
 
-    public ValidateAccessTokenHandlerImpl(@Qualifier("userManagementJwtVerifier") JWTVerifier jwtVerifier,
-                                          AccessTokenFactory accessTokenFactory, AccessTokenMapper accessTokenMapper, UserIdFactory userIdFactory, Validator validator) {
+    public ValidateAccessTokenHandlerImpl(
+            @Qualifier("userManagementJwtVerifier") JWTVerifier jwtVerifier,
+            AccessTokenFactory accessTokenFactory,
+            AccessTokenMapper accessTokenMapper,
+            UserIdFactory userIdFactory,
+            Validator validator) {
         this.jwtVerifier = jwtVerifier;
         this.accessTokenFactory = accessTokenFactory;
         this.accessTokenMapper = accessTokenMapper;
@@ -58,10 +63,11 @@ public class ValidateAccessTokenHandlerImpl implements ValidateAccessTokenHandle
             }
 
             var userId = userIdFactory.create(UUID.fromString(userIdClaim.asString()));
+            var userIdDto = new UserIdDTO(userId.getValue());
             var accessToken = accessTokenFactory.create(request.jwtToken(), userId);
             var accessTokenDTO = accessTokenMapper.toDTO(accessToken);
 
-            return new ValidateAccessTokenResults.Success(request.requestId(), accessTokenDTO, request.tracingId());
+            return new ValidateAccessTokenResults.Success(request.requestId(), accessTokenDTO, userIdDto, request.tracingId());
 
         } catch (JWTVerificationException | IllegalArgumentException e) {
             logger.warn("Invalid JWT: {}", e.getMessage());

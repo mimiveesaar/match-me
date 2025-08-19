@@ -10,8 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import tech.kood.match_me.user_management.api.UserManagementPublisher;
-import tech.kood.match_me.user_management.api.DTOs.InvalidateRefreshTokenRequestDTO;
-import tech.kood.match_me.user_management.api.DTOs.InvalidateRefreshTokenResultsDTO;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenCommandHandler;
 import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenRequest;

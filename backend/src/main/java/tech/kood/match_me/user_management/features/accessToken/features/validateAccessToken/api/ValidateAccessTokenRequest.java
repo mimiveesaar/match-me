@@ -13,6 +13,10 @@ public record ValidateAccessTokenRequest(@NotNull @JsonProperty("request_id") UU
                                          @Nullable @JsonProperty("tracing_id") String tracingId) {
 
 
+    public ValidateAccessTokenRequest(String jwtToken, @Nullable String tracingId) {
+        this(UUID.randomUUID(), jwtToken, tracingId);
+    }
+
     public ValidateAccessTokenRequest withJwtToken(ValidateAccessTokenRequest request,
                                                    String jwtToken) {
         return new ValidateAccessTokenRequest(request.requestId(), jwtToken,

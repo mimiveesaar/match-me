@@ -19,6 +19,7 @@ public sealed interface ValidateAccessTokenResults permits
 
     record Success(@NotNull @JsonProperty("request_id") UUID requestId,
                    @NotNull @Valid @JsonProperty("access_token") AccessTokenDTO accessToken,
+                   @NotNull @Valid @JsonProperty("user_id") UserIdDTO userId,
                    @JsonProperty("tracing_id") @Nullable String tracingId) implements ValidateAccessTokenResults {
     }
 
