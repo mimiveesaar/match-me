@@ -16,6 +16,10 @@ public record GetUserByIdRequest(@NotNull @JsonProperty("request_id") UUID reque
                                  @NotNull @Valid @JsonProperty("user_id") UserIdDTO userId,
                                  @Nullable @JsonProperty("tracing_id") String tracingId) {
 
+    public GetUserByIdRequest(UserIdDTO userId, @Nullable String tracingId) {
+        this(UUID.randomUUID(), userId, tracingId);
+    }
+
     public GetUserByIdRequest withRequestId(UUID requestId) {
         return new GetUserByIdRequest(requestId, userId, tracingId);
     }

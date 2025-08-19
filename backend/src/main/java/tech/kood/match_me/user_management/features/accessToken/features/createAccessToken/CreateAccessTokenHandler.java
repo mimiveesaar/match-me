@@ -2,97 +2,129 @@ package tech.kood.match_me.user_management.features.accessToken.features.createA
 
 import java.time.Instant;
 
+import jakarta.validation.Validator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-
 import tech.kood.match_me.user_management.UserManagementConfig;
-import tech.kood.match_me.user_management.internal.common.cqrs.CommandHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenRequest;
-import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenResults;
+import tech.kood.match_me.user_management.common.api.InputFieldErrorDTO;
+import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
+import tech.kood.match_me.user_management.common.domain.internal.userId.UserIdFactory;
+import tech.kood.match_me.user_management.features.accessToken.domain.internal.model.AccessTokenFactory;
+import tech.kood.match_me.user_management.features.accessToken.internal.mapper.AccessTokenMapper;
+import tech.kood.match_me.user_management.features.refreshToken.features.getToken.api.GetRefreshTokenQueryHandler;
+import tech.kood.match_me.user_management.features.refreshToken.features.getToken.api.GetRefreshTokenRequest;
+import tech.kood.match_me.user_management.features.refreshToken.features.getToken.api.GetRefreshTokenResults;
 
 @Service
-public class CreateAccessTokenHandler
-                implements CommandHandler<CreateAccessTokenRequest, CreateAccessTokenResults> {
+public class CreateAccessTokenHandler {
 
-        private final ApplicationEventPublisher events;
+    private static final Logger logger = LoggerFactory.getLogger(CreateAccessTokenHandler.class);
+    private final ApplicationEventPublisher events;
+    private final GetRefreshTokenQueryHandler getRefreshTokenHandler;
+    private final UserManagementConfig userManagementConfig;
+    private final AccessTokenFactory accessTokenFactory;
+    private final AccessTokenMapper accessTokenMapper;
+    private final UserIdFactory userIdFactory;
+    private final Algorithm jwtAlgo;
+    private final Validator validator;
 
-        private final GetRefreshTokenHandler getRefreshTokenHandler;
+    public CreateAccessTokenHandler(ApplicationEventPublisher events,
+                                    GetRefreshTokenQueryHandler getRefreshTokenHandler,
+                                    UserManagementConfig userManagementConfig,
+                                    AccessTokenFactory accessTokenFactory,
+                                    AccessTokenMapper accessTokenMapper,
+                                    UserIdFactory userIdFactory,
+                                    @Qualifier("userManagementJwtAlgorithm") Algorithm jwtAlgo,
+                                    Validator validator) {
+        this.events = events;
+        this.getRefreshTokenHandler = getRefreshTokenHandler;
+        this.userManagementConfig = userManagementConfig;
+        this.accessTokenFactory = accessTokenFactory;
+        this.accessTokenMapper = accessTokenMapper;
+        this.userIdFactory = userIdFactory;
+        this.jwtAlgo = jwtAlgo;
+        this.validator = validator;
+    }
 
-        private final UserManagementConfig userManagementConfig;
+    public CreateAccessTokenResults handle(CreateAccessTokenRequest request) {
+        try {
 
-        private final Algorithm jwtAlgo;
+            var validationResults = validator.validate(request);
+            if (!validationResults.isEmpty()) {
+                return new CreateAccessTokenResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.from(validationResults), request.tracingId());
+            }
 
-        public CreateAccessTokenHandler(ApplicationEventPublisher events,
-                        GetRefreshTokenHandler getRefreshTokenHandler,
-                        UserManagementConfig userManagementConfig,
-                        @Qualifier("userManagementJwtAlgorithm") Algorithm jwtAlgo) {
-                this.events = events;
-                this.getRefreshTokenHandler = getRefreshTokenHandler;
-                this.userManagementConfig = userManagementConfig;
-                this.jwtAlgo = jwtAlgo;
+            var refreshTokenRequest = new GetRefreshTokenRequest(request.secret(), request.tracingId());
+            var refreshTokenResult = getRefreshTokenHandler.handle(refreshTokenRequest);
+
+            if (refreshTokenResult instanceof GetRefreshTokenResults.InvalidRequest invalidRequest) {
+                //This should never run. But for application correctness, we return an error.
+                var error = new CreateAccessTokenResults.SystemError(
+                        request.requestId(),
+                        "Unexpected result from refresh token handler",
+                        request.tracingId());
+
+                logger.error(error.message());
+                return error;
+            }
+
+            if (refreshTokenResult instanceof GetRefreshTokenResults.SystemError systemError) {
+                //Something went wrong with the refresh token handler.
+                //In a real-world application we should revert to retrying, but this is an alien dating website, so fuck that.
+                //Return an error.
+
+                logger.error(systemError.message());
+                return new CreateAccessTokenResults.SystemError(
+                        request.requestId(),
+                        systemError.message(),
+                        request.tracingId());
+
+            }
+
+            if (refreshTokenResult instanceof GetRefreshTokenResults.InvalidSecret invalidSecret) {
+                // Return an error if the refresh token is invalid.
+                return new CreateAccessTokenResults.InvalidToken(
+                        request.requestId(),
+                        request.tracingId());
+            }
+
+
+            if (refreshTokenResult instanceof GetRefreshTokenResults.Success refreshToken) {
+
+                // Generate JWT token using the refresh token's user ID.
+                var issuedAt = Instant.now();
+                var expiresAt = issuedAt.plusSeconds(userManagementConfig.getJwtExpiration());
+                var userId = userIdFactory.create(refreshToken.refreshToken().userId().value());
+
+                String jwt = JWT.create()
+                        .withIssuer(userManagementConfig.getJwtIssuer())
+                        .withIssuedAt(issuedAt)
+                        .withExpiresAt(expiresAt)
+                        .withClaim("userId", userId.toString())
+                        .sign(jwtAlgo);
+
+                var accessToken = accessTokenFactory.create(jwt, userId);
+                var accessTokenDTO = accessTokenMapper.toDTO(accessToken);
+
+                var result = new CreateAccessTokenResults.Success(request.requestId(), jwt, request.tracingId());
+
+                events.publishEvent(new AccessTokenCreatedEvent(accessTokenDTO));
+                return result;
+            }
+
+        } catch (Exception e) {
+            return new CreateAccessTokenResults.SystemError(
+                    request.requestId(),
+                    e.getMessage(),
+                    request.tracingId());
         }
 
-        public CreateAccessTokenResults handle(CreateAccessTokenRequest request) {
-                try {
-                        var refreshTokenResult = getRefreshTokenHandler
-                                        .handle(GetRefreshTokenRequest.of(request.requestId(),
-                                                        request.refreshToken(),
-                                                        request.tracingId()));
-
-                        if (refreshTokenResult instanceof GetRefreshTokenResults.InvalidToken invalidToken) {
-                                var result = CreateAccessTokenResults.InvalidToken.of(
-                                                invalidToken.getRefreshToken(),
-                                                request.requestId(), request.tracingId());
-                                events.publishEvent(new AccessTokenCreatedEvent(request, result));
-                                return result;
-                        }
-
-                        if (refreshTokenResult instanceof GetRefreshTokenResults.SystemError systemError) {
-                                var result = CreateAccessTokenResults.SystemError.of(
-                                                systemError.getMessage(), request.requestId(),
-                                                request.tracingId());
-                                events.publishEvent(new AccessTokenCreatedEvent(request, result));
-                                return result;
-                        }
-
-                        if (refreshTokenResult instanceof GetRefreshTokenResults.Success refreshToken) {
-
-                                // Generate JWT token using the refresh token's user ID.
-                                String jwt = JWT.create()
-                                                .withIssuer(userManagementConfig.getJwtIssuer())
-                                                .withIssuedAt(Instant.now())
-                                                .withExpiresAt(Instant.now()
-                                                                .plusSeconds(userManagementConfig
-                                                                                .getJwtExpiration()))
-                                                .withClaim("userId",
-                                                                refreshToken.getRefreshToken()
-                                                                                .toString())
-                                                .sign(jwtAlgo);
-
-                                var result = CreateAccessTokenResults.Success.of(jwt,
-                                                request.requestId(), request.tracingId());
-
-                                events.publishEvent(new AccessTokenCreatedEvent(request, result));
-                                return result;
-                        }
-
-                        var result = CreateAccessTokenResults.SystemError.of(
-                                        "Unexpected result from refresh token handler",
-                                        request.requestId(), request.tracingId());
-                        events.publishEvent(new AccessTokenCreatedEvent(request, result));
-                        return result;
-
-                } catch (Exception e) {
-                        var result = CreateAccessTokenResults.SystemError.of(
-                                        "An unexpected error occurred: " + e.getMessage(),
-                                        request.requestId(), request.tracingId());
-                        events.publishEvent(new AccessTokenCreatedEvent(request, result));
-                        return result;
-                }
-        }
+        //This should never run. But for application correctness, we return an error.
+        return new CreateAccessTokenResults.SystemError(request.requestId(), "Unexpected error", request.tracingId());
+    }
 }

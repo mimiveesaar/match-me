@@ -13,6 +13,9 @@ public record GetRefreshTokenRequest(@NotNull @JsonProperty("request_id") UUID r
                                      @NotBlank @Valid @JsonProperty("shared_secret") RefreshTokenSecretDTO secret,
                                      @Nullable @JsonProperty("tracing_id") String tracingId) {
 
+    public GetRefreshTokenRequest(RefreshTokenSecretDTO secret, String tracingId) {
+        this(UUID.randomUUID(), secret, tracingId);
+    }
 
     public GetRefreshTokenRequest withRequestId(UUID requestId) {
         return new GetRefreshTokenRequest(requestId, secret, tracingId);

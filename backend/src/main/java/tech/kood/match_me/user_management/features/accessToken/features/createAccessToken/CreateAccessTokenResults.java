@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 
 public sealed interface CreateAccessTokenResults
         permits CreateAccessTokenResults.Success,
@@ -19,6 +20,7 @@ public sealed interface CreateAccessTokenResults
     }
 
     record InvalidRequest(@NotNull @JsonProperty("request_id") UUID requestId,
+                          @NotNull @JsonProperty("error") InvalidInputErrorDTO error,
                           @Nullable String tracingId) implements CreateAccessTokenResults {
     }
 

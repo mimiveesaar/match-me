@@ -15,6 +15,10 @@ public record InvalidateRefreshTokenRequest(@NotNull @JsonProperty("request_id")
                                             @NotNull @Valid @JsonProperty("secret") RefreshTokenSecretDTO secret,
                                             @Nullable @JsonProperty("tracing_id") String tracingId) {
 
+    public InvalidateRefreshTokenRequest(RefreshTokenSecretDTO secret, @Nullable String tracingId) {
+        this(UUID.randomUUID(), secret, tracingId);
+    }
+
     public InvalidateRefreshTokenRequest withRequestId(UUID requestId) {
         return new InvalidateRefreshTokenRequest(requestId, secret, tracingId);
     }

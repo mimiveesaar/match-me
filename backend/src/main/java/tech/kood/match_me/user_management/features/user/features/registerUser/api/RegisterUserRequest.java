@@ -18,6 +18,10 @@ public record RegisterUserRequest(@NotNull @JsonProperty("request_id") UUID requ
                                   @Valid @NotNull @JsonProperty("email") EmailDTO email,
                                   @Nullable @JsonProperty("tracing_id") String tracingId) {
 
+    public RegisterUserRequest(PasswordDTO password, EmailDTO email, @Nullable String tracingId) {
+        this(UUID.randomUUID(), password, email, tracingId);
+    }
+
     public RegisterUserRequest withRequestId(UUID requestId) {
         return new RegisterUserRequest(requestId, password, email, tracingId);
     }

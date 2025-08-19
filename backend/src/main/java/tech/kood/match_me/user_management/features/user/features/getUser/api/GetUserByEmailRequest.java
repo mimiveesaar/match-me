@@ -14,6 +14,10 @@ public record GetUserByEmailRequest(@NotNull @JsonProperty("request_id") UUID re
                                     @NotNull @Valid @JsonProperty("email") EmailDTO email,
                                     @Nullable @JsonProperty("tracing_id") String tracingId) {
 
+    public GetUserByEmailRequest(@NotNull EmailDTO email, @Nullable String tracingId) {
+        this(UUID.randomUUID(), email, tracingId);
+    }
+
     public GetUserByEmailRequest withRequestId(UUID requestId) {
         return new GetUserByEmailRequest(requestId, email, tracingId);
     }

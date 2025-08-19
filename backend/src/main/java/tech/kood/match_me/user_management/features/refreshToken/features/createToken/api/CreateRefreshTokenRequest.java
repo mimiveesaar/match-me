@@ -13,4 +13,8 @@ import tech.kood.match_me.user_management.features.user.domain.api.UserDTO;
 public record CreateRefreshTokenRequest(@NotNull @JsonProperty("request_id") UUID requestId,
                                         @NotNull @Valid @JsonProperty("user") UserDTO user,
                                         @Nullable @JsonProperty("tracing_id") String tracingId) {
+
+    public CreateRefreshTokenRequest(UserDTO user, @Nullable String tracingId) {
+        this(UUID.randomUUID(), user, tracingId);
+    }
 }

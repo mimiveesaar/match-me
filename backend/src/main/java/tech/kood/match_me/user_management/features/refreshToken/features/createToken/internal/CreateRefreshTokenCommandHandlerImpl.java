@@ -19,7 +19,6 @@ import tech.kood.match_me.user_management.features.refreshToken.internal.persist
 @Service
 public class CreateRefreshTokenCommandHandlerImpl implements CreateRefreshTokenCommandHandler {
 
-
     private final Validator validator;
     private final RefreshTokenRepository refreshTokenRepository;
     private final RefreshTokenFactory refreshTokenFactory;
