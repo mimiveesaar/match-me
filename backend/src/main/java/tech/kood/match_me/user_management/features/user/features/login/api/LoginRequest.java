@@ -18,6 +18,9 @@ public record LoginRequest(@NotNull @JsonProperty("request_id") UUID requestId,
                            @NotEmpty @Valid @JsonProperty("password") PasswordDTO password,
                            @Nullable @JsonProperty("tracing_id") String tracingId) {
 
+    public LoginRequest(EmailDTO email, PasswordDTO password, @Nullable String tracingId) {
+        this(UUID.randomUUID(), email, password, tracingId);
+    }
 
     public LoginRequest withEmail(LoginRequest request, EmailDTO email) {
         return new LoginRequest(request.requestId, email, request.password, request.tracingId);

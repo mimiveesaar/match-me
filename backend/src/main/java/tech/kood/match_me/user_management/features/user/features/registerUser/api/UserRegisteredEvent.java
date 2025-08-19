@@ -9,5 +9,4 @@ import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
 @DomainEvent
 public record UserRegisteredEvent(
         @NotNull @Valid @JsonProperty("user_id") UserIdDTO userId
-) {
-}
+) {}

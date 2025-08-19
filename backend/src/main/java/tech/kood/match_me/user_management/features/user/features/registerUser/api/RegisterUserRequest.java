@@ -14,27 +14,27 @@ import tech.kood.match_me.user_management.common.domain.api.PasswordDTO;
 @Command
 @ApplicationLayer
 public record RegisterUserRequest(@NotNull @JsonProperty("request_id") UUID requestId,
-                                  @Valid @NotNull @JsonProperty("password") PasswordDTO password,
                                   @Valid @NotNull @JsonProperty("email") EmailDTO email,
+                                  @Valid @NotNull @JsonProperty("password") PasswordDTO password,
                                   @Nullable @JsonProperty("tracing_id") String tracingId) {
 
     public RegisterUserRequest(PasswordDTO password, EmailDTO email, @Nullable String tracingId) {
-        this(UUID.randomUUID(), password, email, tracingId);
+        this(UUID.randomUUID(), email, password, tracingId);
     }
 
     public RegisterUserRequest withRequestId(UUID requestId) {
-        return new RegisterUserRequest(requestId, password, email, tracingId);
+        return new RegisterUserRequest(requestId, email, password, tracingId);
     }
 
     public RegisterUserRequest withPassword(PasswordDTO password) {
-        return new RegisterUserRequest(requestId, password, email, tracingId);
+        return new RegisterUserRequest(requestId, email, password, tracingId);
     }
 
     public RegisterUserRequest withEmail(EmailDTO email) {
-        return new RegisterUserRequest(requestId, password, email, tracingId);
+        return new RegisterUserRequest(requestId, email, password, tracingId);
     }
 
     public RegisterUserRequest withTracingId(String tracingId) {
-        return new RegisterUserRequest(requestId, password, email, tracingId);
+        return new RegisterUserRequest(requestId, email, password, tracingId);
     }
 }
