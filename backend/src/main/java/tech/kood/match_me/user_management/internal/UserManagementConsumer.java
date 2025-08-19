@@ -12,8 +12,8 @@ import tech.kood.match_me.user_management.features.accessToken.features.createAc
 import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenRequest;
 import tech.kood.match_me.user_management.features.accessToken.features.validateAccessToken.api.ValidateAccessTokenHandler;
 import tech.kood.match_me.user_management.features.accessToken.features.validateAccessToken.api.ValidateAccessTokenRequest;
-import tech.kood.match_me.user_management.internal.features.login.LoginHandler;
-import tech.kood.match_me.user_management.internal.features.login.LoginRequest;
+import tech.kood.match_me.user_management.features.user.features.login.api.LoginCommandHandler;
+import tech.kood.match_me.user_management.features.user.features.login.api.LoginRequest;
 import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenCommandHandler;
 import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenHandler;
 import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenCommandHandler;
@@ -36,7 +36,7 @@ public class UserManagementConsumer {
 
     private final GetUserByEmailHandler getUserByEmailHandler;
 
-    private final LoginHandler loginHandler;
+    private final LoginCommandHandler loginCommandHandler;
 
     private final CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler;
 
@@ -50,7 +50,7 @@ public class UserManagementConsumer {
                                   ValidateAccessTokenHandler validateAccessTokenHandler,
                                   GetUserByIdHandler getUserByIdHandler,
                                   GetUserByUsernameHandler getUserByUsernameHandler,
-                                  GetUserByEmailHandler getUserByEmailHandler, LoginHandler loginHandler,
+                                  GetUserByEmailHandler getUserByEmailHandler, LoginCommandHandler loginCommandHandler,
                                   CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler,
                                   GetRefreshTokenHandler getRefreshTokenHandler,
                                   InvalidateRefreshTokenCommandHandler invalidateRefreshTokenHandler,
@@ -60,7 +60,7 @@ public class UserManagementConsumer {
         this.getUserByIdHandler = getUserByIdHandler;
         this.getUserByUsernameHandler = getUserByUsernameHandler;
         this.getUserByEmailHandler = getUserByEmailHandler;
-        this.loginHandler = loginHandler;
+        this.loginCommandHandler = loginCommandHandler;
         this.createRefreshTokenCommandHandler = createRefreshTokenCommandHandler;
         this.getRefreshTokenHandler = getRefreshTokenHandler;
         this.invalidateRefreshTokenHandler = invalidateRefreshTokenHandler;
@@ -108,7 +108,7 @@ public class UserManagementConsumer {
                 } else if (type.equals(LoginRequest.class.getName())) {
                     LoginRequest request = objectMapper.readValue(payload, LoginRequest.class);
 
-                    return loginHandler.handle(request);
+                    return loginCommandHandler.handle(request);
                 } else if (type.equals(InvalidateRefreshTokenRequest.class.getName())) {
                     InvalidateRefreshTokenRequest request =
                             objectMapper.readValue(payload, InvalidateRefreshTokenRequest.class);

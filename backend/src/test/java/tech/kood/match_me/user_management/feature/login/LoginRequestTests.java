@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.features.user.internal.persistance.UserRepository;
-import tech.kood.match_me.user_management.internal.features.login.LoginHandler;
-import tech.kood.match_me.user_management.internal.features.login.LoginRequest;
-import tech.kood.match_me.user_management.internal.features.login.LoginResults;
+import tech.kood.match_me.user_management.features.user.features.login.api.LoginCommandHandler;
+import tech.kood.match_me.user_management.features.user.features.login.api.LoginRequest;
+import tech.kood.match_me.user_management.features.user.features.login.api.LoginResults;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserResults;
 import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
@@ -35,7 +35,7 @@ public class LoginRequestTests extends UserManagementTestBase {
     RegisterUserCommandHandler registerUserHandler;
 
     @Autowired
-    LoginHandler loginRequestHandler;
+    LoginCommandHandler loginRequestHandler;
 
     @Autowired
     RegisterUserRequestMocker registerUserRequestMocker;

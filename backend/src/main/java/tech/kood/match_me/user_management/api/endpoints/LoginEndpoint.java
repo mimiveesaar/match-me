@@ -15,8 +15,8 @@ import tech.kood.match_me.user_management.api.UserManagementPublisher;
 import tech.kood.match_me.user_management.api.DTOs.LoginRequestDTO;
 import tech.kood.match_me.user_management.api.DTOs.LoginResultsDTO;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
-import tech.kood.match_me.user_management.internal.features.login.LoginHandler;
-import tech.kood.match_me.user_management.internal.features.login.LoginRequest;
+import tech.kood.match_me.user_management.features.user.features.login.api.LoginCommandHandler;
+import tech.kood.match_me.user_management.features.user.features.login.api.LoginRequest;
 
 @RestController
 @RequestMapping("/api/v1/user-management/auth")
@@ -28,8 +28,8 @@ public class LoginEndpoint {
 
     private final UserManagementPublisher userManagementPublisher;
 
-    public LoginEndpoint(LoginHandler loginHandler, LoginResultsMapper loginResultsMapper,
-            UserManagementPublisher userManagementPublisher) {
+    public LoginEndpoint(LoginCommandHandler loginCommandHandler, LoginResultsMapper loginResultsMapper,
+                         UserManagementPublisher userManagementPublisher) {
         this.loginResultsMapper = loginResultsMapper;
         this.userManagementPublisher = userManagementPublisher;
     }
