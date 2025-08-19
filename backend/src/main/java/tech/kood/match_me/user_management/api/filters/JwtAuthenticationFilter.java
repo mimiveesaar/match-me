@@ -16,9 +16,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import tech.kood.match_me.user_management.features.accessToken.domain.internal.model.AccessToken;
 import tech.kood.match_me.user_management.internal.features.getUser.handlers.GetUserByIdHandler;
 import tech.kood.match_me.user_management.internal.features.getUser.results.GetUserByIdQueryResults;
-import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenHandler;
-import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenRequest;
-import tech.kood.match_me.user_management.internal.features.jwt.validateAccessToken.ValidateAccessTokenResults;
+import tech.kood.match_me.user_management.features.accessToken.features.validateAccessToken.api.ValidateAccessTokenHandler;
+import tech.kood.match_me.user_management.features.accessToken.features.validateAccessToken.api.ValidateAccessTokenRequest;
+import tech.kood.match_me.user_management.features.accessToken.features.validateAccessToken.api.ValidateAccessTokenResults;
 
 
 @Service
@@ -61,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             var validationResult = validateAccessTokenHandler.handle(validationRequest);
 
             if (validationResult instanceof ValidateAccessTokenResults.Success successResult) {
-                AccessToken accessToken = successResult.getAccessToken();
+                AccessToken accessToken = successResult.accessToken();
                 var userId = accessToken.getUserId();
 
                 UUID getUserRequestId = UUID.randomUUID();

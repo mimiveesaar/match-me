@@ -10,7 +10,6 @@ import tech.kood.match_me.user_management.features.accessToken.domain.internal.m
 @ApplicationLayer
 public final class AccessTokenMapper {
 
-
     //It only makes sense to convert to DTO.
     public AccessTokenDTO toDTO(AccessToken accessToken) {
         return new AccessTokenDTO(accessToken.getJwt());

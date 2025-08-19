@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.features.accessToken.features.createAccessToken;
+package tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api;
 
 import java.util.UUID;
 

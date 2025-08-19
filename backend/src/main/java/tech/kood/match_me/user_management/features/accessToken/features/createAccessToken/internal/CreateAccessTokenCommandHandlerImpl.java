@@ -1,8 +1,10 @@
-package tech.kood.match_me.user_management.features.accessToken.features.createAccessToken;
+package tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.internal;
 
 import java.time.Instant;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Validator;
+import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,19 +13,23 @@ import org.springframework.stereotype.Service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import tech.kood.match_me.user_management.UserManagementConfig;
-import tech.kood.match_me.user_management.common.api.InputFieldErrorDTO;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.user_management.features.accessToken.domain.internal.model.AccessTokenFactory;
+import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.AccessTokenCreatedEvent;
+import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenHandler;
+import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenRequest;
+import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenResults;
 import tech.kood.match_me.user_management.features.accessToken.internal.mapper.AccessTokenMapper;
 import tech.kood.match_me.user_management.features.refreshToken.features.getToken.api.GetRefreshTokenQueryHandler;
 import tech.kood.match_me.user_management.features.refreshToken.features.getToken.api.GetRefreshTokenRequest;
 import tech.kood.match_me.user_management.features.refreshToken.features.getToken.api.GetRefreshTokenResults;
 
 @Service
-public class CreateAccessTokenHandler {
+@ApplicationLayer
+public class CreateAccessTokenCommandHandlerImpl implements CreateAccessTokenHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(CreateAccessTokenHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(CreateAccessTokenCommandHandlerImpl.class);
     private final ApplicationEventPublisher events;
     private final GetRefreshTokenQueryHandler getRefreshTokenHandler;
     private final UserManagementConfig userManagementConfig;
@@ -33,14 +39,14 @@ public class CreateAccessTokenHandler {
     private final Algorithm jwtAlgo;
     private final Validator validator;
 
-    public CreateAccessTokenHandler(ApplicationEventPublisher events,
-                                    GetRefreshTokenQueryHandler getRefreshTokenHandler,
-                                    UserManagementConfig userManagementConfig,
-                                    AccessTokenFactory accessTokenFactory,
-                                    AccessTokenMapper accessTokenMapper,
-                                    UserIdFactory userIdFactory,
-                                    @Qualifier("userManagementJwtAlgorithm") Algorithm jwtAlgo,
-                                    Validator validator) {
+    public CreateAccessTokenCommandHandlerImpl(ApplicationEventPublisher events,
+                                               GetRefreshTokenQueryHandler getRefreshTokenHandler,
+                                               UserManagementConfig userManagementConfig,
+                                               AccessTokenFactory accessTokenFactory,
+                                               AccessTokenMapper accessTokenMapper,
+                                               UserIdFactory userIdFactory,
+                                               @Qualifier("userManagementJwtAlgorithm") Algorithm jwtAlgo,
+                                               Validator validator) {
         this.events = events;
         this.getRefreshTokenHandler = getRefreshTokenHandler;
         this.userManagementConfig = userManagementConfig;
@@ -51,6 +57,8 @@ public class CreateAccessTokenHandler {
         this.validator = validator;
     }
 
+    @Transactional
+    @Override
     public CreateAccessTokenResults handle(CreateAccessTokenRequest request) {
         try {
 
