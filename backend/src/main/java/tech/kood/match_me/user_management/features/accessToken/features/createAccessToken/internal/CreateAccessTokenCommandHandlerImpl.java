@@ -17,7 +17,7 @@ import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.user_management.features.accessToken.domain.internal.model.AccessTokenFactory;
 import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.AccessTokenCreatedEvent;
-import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenHandler;
+import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenCommandHandler;
 import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenRequest;
 import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenResults;
 import tech.kood.match_me.user_management.features.accessToken.internal.mapper.AccessTokenMapper;
@@ -27,7 +27,7 @@ import tech.kood.match_me.user_management.features.refreshToken.features.getToke
 
 @Service
 @ApplicationLayer
-public class CreateAccessTokenCommandHandlerImpl implements CreateAccessTokenHandler {
+public class CreateAccessTokenCommandHandlerImpl implements CreateAccessTokenCommandHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(CreateAccessTokenCommandHandlerImpl.class);
     private final ApplicationEventPublisher events;

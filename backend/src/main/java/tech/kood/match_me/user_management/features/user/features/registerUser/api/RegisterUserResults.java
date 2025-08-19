@@ -17,7 +17,6 @@ import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
 
 @QueryModel
 @ApplicationLayer
-
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,

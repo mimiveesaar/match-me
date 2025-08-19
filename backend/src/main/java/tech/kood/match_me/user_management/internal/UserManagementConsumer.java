@@ -8,7 +8,7 @@ import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.TextMessage;
 import tech.kood.match_me.user_management.internal.features.getUser.handlers.GetUserByIdHandler;
-import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenHandler;
+import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenCommandHandler;
 import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenRequest;
 import tech.kood.match_me.user_management.features.accessToken.features.validateAccessToken.api.ValidateAccessTokenHandler;
 import tech.kood.match_me.user_management.features.accessToken.features.validateAccessToken.api.ValidateAccessTokenRequest;
@@ -26,7 +26,7 @@ public class UserManagementConsumer {
 
     private final ObjectMapper objectMapper;
 
-    private final CreateAccessTokenHandler getAccessTokenHandler;
+    private final CreateAccessTokenCommandHandler getAccessTokenHandler;
 
     private final ValidateAccessTokenHandler validateAccessTokenHandler;
 
@@ -46,7 +46,7 @@ public class UserManagementConsumer {
 
     private final RegisterUserCommandHandler registerUserHandler;
 
-    public UserManagementConsumer(CreateAccessTokenHandler getAccessTokenHandler,
+    public UserManagementConsumer(CreateAccessTokenCommandHandler getAccessTokenHandler,
                                   ValidateAccessTokenHandler validateAccessTokenHandler,
                                   GetUserByIdHandler getUserByIdHandler,
                                   GetUserByUsernameHandler getUserByUsernameHandler,

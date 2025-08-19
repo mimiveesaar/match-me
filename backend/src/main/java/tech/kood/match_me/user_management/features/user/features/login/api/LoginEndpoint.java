@@ -12,8 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import tech.kood.match_me.user_management.api.UserManagementPublisher;
-import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 
 @RestController
 @RequestMapping("/api/v1/user-management/auth")
@@ -50,8 +48,6 @@ public class LoginEndpoint {
 
     public ResponseEntity<LoginResults> loginUser(@RequestBody LoginRequest request) {
 
-
-
         String tracingId = UUID.randomUUID().toString();
         if (request.tracingId() != null && !request.tracingId().isEmpty()) {
             tracingId = request.tracingId();
@@ -75,8 +71,7 @@ public class LoginEndpoint {
         } else {
             // This should never happen, but just in case
             return ResponseEntity.status(500)
-                    .body(new LoginResults.SystemError(UUID.randomUUID(), "Unexpected error occurred", request.tracingId()));
+                    .body(new LoginResults.SystemError(request.requestId(), "Unexpected error occurred", request.tracingId()));
         }
-
     }
 }

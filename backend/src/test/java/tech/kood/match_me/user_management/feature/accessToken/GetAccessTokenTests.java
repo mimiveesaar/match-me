@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.features.user.internal.persistance.UserRepository;
-import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenHandler;
+import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenCommandHandler;
 import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenRequest;
 import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenResults;
 import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenCommandHandler;
@@ -41,7 +41,7 @@ public class GetAccessTokenTests extends UserManagementTestBase {
     CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler;
 
     @Autowired
-    CreateAccessTokenHandler getAccessTokenHandler;
+    CreateAccessTokenCommandHandler getAccessTokenHandler;
 
     @Autowired
     RegisterUserRequestMocker registerUserRequestMocker;

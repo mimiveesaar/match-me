@@ -43,25 +43,21 @@ public class RegisterUserEndpoint {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = RegisterUserResults.SystemError.class)))})
 
-    public ResponseEntity<RegisterUserResults> registerUser(
-            @RequestBody RegisterUserRequest request) {
+    public ResponseEntity<RegisterUserResults> registerUser(@RequestBody RegisterUserRequest request) {
 
-
-        String tracingId = UUID.randomUUID().toString();
-        if (request.tracingId() != null && !request.tracingId().isEmpty()) {
-            tracingId = request.tracingId();
+        if (request.tracingId() == null || request.tracingId().isEmpty()) {
+           request = request.withTracingId(UUID.randomUUID().toString());
         }
 
-        var internalRegisterRequest = new RegisterUserRequest(request.password(), request.email(), tracingId);
         try {
-            var result = registerUserHandler.handle(internalRegisterRequest);
+            var result = registerUserHandler.handle(request);
 
             if (result instanceof RegisterUserResults.Success success) {
                 return ResponseEntity.ok(success);
             } else if (result instanceof RegisterUserResults.InvalidRequest invalidRequest) {
-                return ResponseEntity.badRequest().body(invalidRequest);
+                return ResponseEntity.status(400).body(invalidRequest);
             } else if (result instanceof RegisterUserResults.EmailExists emailExists) {
-                return ResponseEntity.badRequest().body(emailExists);
+                return ResponseEntity.status(400).body(emailExists);
             } else if (result instanceof RegisterUserResults.SystemError systemError) {
                 return ResponseEntity.status(500).body(systemError);
             }
@@ -69,11 +65,11 @@ public class RegisterUserEndpoint {
         } catch (CheckedConstraintViolationException e) {
             //This should never happen.
             return ResponseEntity.internalServerError().body(new RegisterUserResults.SystemError(request.requestId(),
-                    e.getMessage(), tracingId));
+                    e.getMessage(), request.tracingId()));
         }
 
         //This should never happen.
         return ResponseEntity.internalServerError().body(new RegisterUserResults.SystemError(request.requestId(),
-                "Internal server error", tracingId));
+                "Internal server error", request.tracingId()));
     }
 }
