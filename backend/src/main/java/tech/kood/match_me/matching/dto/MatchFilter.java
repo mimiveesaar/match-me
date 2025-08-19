@@ -1,15 +1,21 @@
 package tech.kood.match_me.matching.dto;
 
 import java.util.List;
+import java.util.UUID;
 
 public class MatchFilter {
+    private UUID userId; // ID of the user making the request
     private Integer minAge;
     private Integer maxAge;
     private String homeplanet;
     private String bodyform;
     private List<String> interests;
     private String lookingFor;
-    private Double maxDistanceLy; 
+    private Double maxDistanceLy;
+
+    public UUID getUserId() {
+        return userId;
+    }
 
     public Integer getMinAge() {
         return minAge;

@@ -37,7 +37,6 @@ public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
 
         Join<User, Homeplanet> homeplanetJoin = root.join("homeplanet", JoinType.INNER);
 
-        // --- Optional: other filters ---
         if (filter.getLookingFor() != null) {
             Join<User, LookingFor> lookingForJoin = root.join("lookingFor", JoinType.INNER);
             predicates.add(cb.equal(lookingForJoin.get("name"), filter.getLookingFor()));
