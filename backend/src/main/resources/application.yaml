@@ -36,6 +36,15 @@ management:
         - jolokia
 
 spring:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        ddl-auto: update
   profiles:
     active: profile
   jmx:
@@ -51,6 +60,13 @@ spring:
       enabled: true
       persistent: false
   datasource:
+
+    profile:
+      jdbc-url: jdbc:postgresql://postgres:5432/profile
+      username: profile
+      password: profile
+      driver-class-name: org.postgresql.Driver
+
     user-management:
       jdbc-url: jdbc:postgresql://localhost:5432/user_management
       username: user_management
@@ -64,7 +80,7 @@ spring:
   application:
     name: match-me
   flyway:
-    enabled: true
+    enabled: false
 testcontainers:
   reuse:
     enabled: true
