@@ -1,25 +1,19 @@
 package tech.kood.match_me.profile.model;
 
-import jakarta.persistence.*;
-import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "interests")
 public class Interest {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "interest")
+    @Column(nullable = false, unique = true)
     private String name;
-
-    @ManyToMany(mappedBy = "interests")
-    @JsonBackReference
-    private Set<User> users;
 
     public Interest() {
     }
@@ -36,7 +30,4 @@ public class Interest {
         return name;
     }
 
-    public Set<User> getUsers() {
-        return users;
-    }
 }

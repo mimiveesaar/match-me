@@ -1,33 +1,33 @@
 package tech.kood.match_me.profile.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Embeddable
 public class Location {
 
-    private double lat;
-    private double lng;
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false, unique = true)
+    private String name;
 
-    public Location() {}
-
-    public Location(double lat, double lng) {
-        this.lat = lat;
-        this.lng = lng;
+    public Location() {
     }
 
-    public double getLat() {
-        return lat;
+    public Location(String name) {
+        this.name = name;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
+    public Long getId() {
+        return id;
     }
 
-    public double getLng() {
-        return lng;
+    public String getName() {
+        return name;
     }
 
-    public void setLng(double lng) {
-        this.lng = lng;
-    }
 }

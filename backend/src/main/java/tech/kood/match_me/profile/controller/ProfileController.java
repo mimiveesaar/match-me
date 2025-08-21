@@ -1,29 +1,46 @@
 package tech.kood.match_me.profile.controller;
 
-import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import tech.kood.match_me.profile.dto.ProfileFilter;
-import tech.kood.match_me.profile.model.User;
+import tech.kood.match_me.profile.dto.ProfileDTO;
+import tech.kood.match_me.profile.dto.ProfileViewDTO;
+import tech.kood.match_me.profile.model.Profile;
 import tech.kood.match_me.profile.service.ProfileService;
 
+import java.util.UUID;
+
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/profiles")
 public class ProfileController {
+    private final ProfileService service;
 
-    private final ProfileService matchService;
-
-    public ProfileController(ProfileService matchService) {
-        this.matchService = matchService;
+    public ProfileController(ProfileService service) {
+        this.service = service;
     }
 
-    @PostMapping("/profile")
-    public List<User> getMatches(@RequestBody ProfileFilter filter) {
-        System.out.println("got filter: " + filter);
-        return matchService.getMatches(filter);
+    @PostMapping
+    public ResponseEntity<ProfileViewDTO> createProfile(@RequestBody ProfileDTO dto) {
+        Profile profile = service.createProfile(dto);
+        return ResponseEntity.ok(toViewDTO(profile));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProfileViewDTO> getProfile(@PathVariable UUID id) {
+        return ResponseEntity.ok(toViewDTO(service.getProfile(id)));
+    }
+
+    private ProfileViewDTO toViewDTO(Profile profile) {
+        ProfileViewDTO dto = new ProfileViewDTO();
+        dto.setId(profile.getId());
+        dto.setUsername(profile.getUsername());
+        dto.setAge(profile.getAge());
+        dto.setHomeplanet(profile.getHomeplanet().getName());
+        dto.setBodyform(profile.getBodyform().getName());
+        dto.setLookingFor(profile.getLookingFor().getName());
+        dto.setBio(profile.getBio());
+        dto.setInterests(profile.getInterests().stream().map(i -> i.getName()).collect(java.util.stream.Collectors.toSet()));
+        dto.setProfilePic(profile.getProfilePic());
+        return dto;
     }
 }

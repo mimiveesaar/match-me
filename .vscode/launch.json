@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MatchMeApplication",
+            "request": "launch",
+            "mainClass": "tech.kood.match_me.MatchMeApplication",
+            "projectName": "match-me"
+        },
+        {
+            "type": "java",
             "name": "Application",
             "request": "launch",
             "mainClass": "tech.kood.match_me.Application",

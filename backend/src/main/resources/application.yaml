@@ -36,6 +36,8 @@ management:
         - jolokia
 
 spring:
+  profiles:
+    active: profile
   jmx:
     enabled: true
   jms: 
@@ -62,7 +64,7 @@ spring:
   application:
     name: match-me
   flyway:
-    enabled: false
+    enabled: true
 testcontainers:
   reuse:
     enabled: true
