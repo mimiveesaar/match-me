@@ -13,6 +13,7 @@ import tech.kood.match_me.user_management.features.refreshToken.domain.internal.
 import tech.kood.match_me.user_management.common.domain.internal.userId.UserId;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @DomainLayer
 @Factory
@@ -46,6 +47,6 @@ public final class RefreshTokenFactory {
         var refreshTokenId = refreshTokenIdFactory.newId();
         var secret = refreshTokenSecretFactory.createNew();
 
-        return this.create(refreshTokenId, userId, secret, Instant.now(), Instant.now().plusSeconds(refreshTokenExpiration));
+        return this.create(refreshTokenId, userId, secret, Instant.now().truncatedTo(ChronoUnit.SECONDS), Instant.now().truncatedTo(ChronoUnit.SECONDS).plusSeconds(refreshTokenExpiration));
     }
 }

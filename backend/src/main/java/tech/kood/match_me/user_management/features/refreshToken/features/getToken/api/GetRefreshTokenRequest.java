@@ -10,7 +10,7 @@ import tech.kood.match_me.user_management.features.refreshToken.domain.api.Refre
 import java.util.UUID;
 
 public record GetRefreshTokenRequest(@NotNull @JsonProperty("request_id") UUID requestId,
-                                     @NotBlank @Valid @JsonProperty("shared_secret") RefreshTokenSecretDTO secret,
+                                     @NotNull @Valid @JsonProperty("shared_secret") RefreshTokenSecretDTO secret,
                                      @Nullable @JsonProperty("tracing_id") String tracingId) {
 
     public GetRefreshTokenRequest(RefreshTokenSecretDTO secret, String tracingId) {

@@ -33,7 +33,7 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
     CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler;
 
     @Autowired
-    CreateAccessTokenCommandHandler getAccessTokenHandler;
+    CreateAccessTokenCommandHandler createAccessTokenHandler;
 
     @Autowired
     ValidateAccessTokenHandler validateAccessTokenHandler;
@@ -54,7 +54,7 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
 
         var refreshToken = ((CreateRefreshTokenResults.Success) createTokenResult).refreshToken();
         var getAccessTokenRequest = new CreateAccessTokenRequest(refreshToken.secret(), null);
-        var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
+        var getAccessTokenResult = createAccessTokenHandler.handle(getAccessTokenRequest);
 
         assert getAccessTokenResult instanceof CreateAccessTokenResults.Success;
 

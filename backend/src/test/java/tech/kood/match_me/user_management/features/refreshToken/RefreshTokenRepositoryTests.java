@@ -45,9 +45,6 @@ public class RefreshTokenRepositoryTests extends UserManagementTestBase {
     UserRepository userRepository;
 
     @Autowired
-    UserEntityMother userEntityMother;
-
-    @Autowired
     UserMother userMother;
 
     @Autowired

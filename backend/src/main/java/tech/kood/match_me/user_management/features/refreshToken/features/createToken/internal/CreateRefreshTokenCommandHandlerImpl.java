@@ -14,6 +14,9 @@ import tech.kood.match_me.user_management.features.refreshToken.features.createT
 import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenResults;
 import tech.kood.match_me.user_management.features.refreshToken.internal.mapper.RefreshTokenMapper;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.RefreshTokenRepository;
+import tech.kood.match_me.user_management.features.user.features.getUser.api.GetUserByIdQueryHandler;
+import tech.kood.match_me.user_management.features.user.features.getUser.api.GetUserByIdRequest;
+import tech.kood.match_me.user_management.features.user.features.getUser.api.GetUserByIdResults;
 
 
 @Service
@@ -23,16 +26,18 @@ public class CreateRefreshTokenCommandHandlerImpl implements CreateRefreshTokenC
     private final RefreshTokenRepository refreshTokenRepository;
     private final RefreshTokenFactory refreshTokenFactory;
     private final ApplicationEventPublisher events;
+    private final GetUserByIdQueryHandler getUserByIdQueryHandler;
     private final RefreshTokenMapper refreshTokenMapper;
     private final UserIdFactory userIdFactory;
 
     public CreateRefreshTokenCommandHandlerImpl(Validator validator, RefreshTokenRepository refreshTokenRepository,
-                                                ApplicationEventPublisher events, RefreshTokenFactory refreshTokenFactory,
+                                                ApplicationEventPublisher events, RefreshTokenFactory refreshTokenFactory, GetUserByIdQueryHandler getUserByIdQueryHandler,
                                                 RefreshTokenMapper refreshTokenMapper, UserIdFactory userIdFactory) {
         this.validator = validator;
         this.refreshTokenRepository = refreshTokenRepository;
         this.events = events;
         this.refreshTokenFactory = refreshTokenFactory;
+        this.getUserByIdQueryHandler = getUserByIdQueryHandler;
         this.refreshTokenMapper = refreshTokenMapper;
         this.userIdFactory = userIdFactory;
     }
@@ -48,6 +53,13 @@ public class CreateRefreshTokenCommandHandlerImpl implements CreateRefreshTokenC
 
         try {
             var userId = userIdFactory.from(request.userId());
+
+            var userQueryResult = getUserByIdQueryHandler.handle(new GetUserByIdRequest(request.userId(), request.tracingId()));
+
+            if (userQueryResult instanceof GetUserByIdResults.UserNotFound) {
+                return new CreateRefreshTokenResults.UserNotFound(request.requestId(), request.userId(), request.tracingId());
+            }
+
             RefreshToken refreshToken = refreshTokenFactory.createNew(userId);
 
             var refreshTokenEntity = refreshTokenMapper.toEntity(refreshToken);

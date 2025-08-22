@@ -75,10 +75,7 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
         var createTokenRequest = new CreateRefreshTokenRequest(new UserIdDTO(UUID.randomUUID()),null);
         var result = createRefreshTokenCommandHandler.handle(createTokenRequest);
 
-        // In the current implementation, we assume the userId exists, so this would
-        // actually succeed. To properly test UserNotFound, we would need to
-        // modify the handler to check if the userId exists in the database.
-        // For now, we'll just test that it returns a Success result.
-        assert result instanceof CreateRefreshTokenResults.Success : "The handler should return a Success result for valid userId";
+
+        assert result instanceof CreateRefreshTokenResults.UserNotFound : "The handler should return a Success result for valid userId";
     }
 }

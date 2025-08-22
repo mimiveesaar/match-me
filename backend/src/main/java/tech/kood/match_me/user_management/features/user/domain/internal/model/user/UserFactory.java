@@ -15,6 +15,7 @@ import tech.kood.match_me.user_management.common.domain.internal.password.Passwo
 import tech.kood.match_me.user_management.common.domain.internal.userId.UserId;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Component
 @Factory
@@ -55,6 +56,6 @@ public final class UserFactory {
         var userId = userIdFactory.createNew();
         var hashedPassword = hashedPasswordFactory.fromPlainText(password);
 
-        return create(userId, email, hashedPassword, Instant.now(), Instant.now());
+        return create(userId, email, hashedPassword, Instant.now().truncatedTo(ChronoUnit.SECONDS), Instant.now().truncatedTo(ChronoUnit.SECONDS));
     }
 }

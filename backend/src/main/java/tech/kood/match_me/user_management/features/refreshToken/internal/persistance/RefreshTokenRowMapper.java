@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import org.springframework.jdbc.core.RowMapper;
 import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
@@ -29,8 +30,8 @@ public class RefreshTokenRowMapper implements RowMapper<RefreshTokenEntity> {
         UUID id = rs.getObject("id", UUID.class);
         UUID userId = rs.getObject("user_id", UUID.class);
         String secret = rs.getString("secret");
-        Instant createdAt = rs.getTimestamp("created_at").toInstant();
-        Instant expiresAt = rs.getTimestamp("expires_at").toInstant();
+        Instant createdAt = rs.getTimestamp("created_at").toInstant().truncatedTo(ChronoUnit.SECONDS);
+        Instant expiresAt = rs.getTimestamp("expires_at").toInstant().truncatedTo(ChronoUnit.SECONDS);
 
         try {
             return refreshTokenEntityFactory.create(id, userId, secret, createdAt, expiresAt);
