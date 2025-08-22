@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenId.RefreshTokenId;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenId.RefreshTokenIdFactory;
-import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.sharedSecret.SharedSecret;
-import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.sharedSecret.SharedSecretFactory;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenSecret.RefreshTokenSecret;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenSecret.RefreshTokenSecretFactory;
 import tech.kood.match_me.user_management.common.domain.internal.userId.UserId;
 
 import java.time.Instant;
@@ -20,16 +20,16 @@ public final class RefreshTokenFactory {
 
     private final Validator validator;
     private final RefreshTokenIdFactory refreshTokenIdFactory;
-    private final SharedSecretFactory sharedSecretFactory;
+    private final RefreshTokenSecretFactory refreshTokenSecretFactory;
 
-    public RefreshTokenFactory(Validator validator, RefreshTokenIdFactory refreshTokenIdFactory, SharedSecretFactory sharedSecretFactory) {
+    public RefreshTokenFactory(Validator validator, RefreshTokenIdFactory refreshTokenIdFactory, RefreshTokenSecretFactory refreshTokenSecretFactory) {
         this.validator = validator;
         this.refreshTokenIdFactory = refreshTokenIdFactory;
-        this.sharedSecretFactory = sharedSecretFactory;
+        this.refreshTokenSecretFactory = refreshTokenSecretFactory;
     }
 
-    public RefreshToken make(RefreshTokenId refreshTokenId, UserId userId, SharedSecret sharedSecret, Instant createdAt, Instant expiresAt) throws CheckedConstraintViolationException {
-        var refreshToken = new RefreshToken(refreshTokenId, userId, sharedSecret, createdAt, expiresAt);
+    public RefreshToken create(RefreshTokenId refreshTokenId, UserId userId, RefreshTokenSecret refreshTokenSecret, Instant createdAt, Instant expiresAt) throws CheckedConstraintViolationException {
+        var refreshToken = new RefreshToken(refreshTokenId, userId, refreshTokenSecret, createdAt, expiresAt);
 
         var validationResult = validator.validate(refreshToken);
         if (!validationResult.isEmpty()) {
@@ -39,10 +39,10 @@ public final class RefreshTokenFactory {
         return refreshToken;
     }
 
-    public RefreshToken makeNew(UserId userId) throws CheckedConstraintViolationException {
+    public RefreshToken createNew(UserId userId) throws CheckedConstraintViolationException {
         var refreshTokenId = refreshTokenIdFactory.newId();
-        var secret = sharedSecretFactory.createNew();
+        var secret = refreshTokenSecretFactory.createNew();
 
-        return this.make(refreshTokenId, userId, secret, Instant.now(), Instant.now());
+        return this.create(refreshTokenId, userId, secret, Instant.now(), Instant.now());
     }
 }

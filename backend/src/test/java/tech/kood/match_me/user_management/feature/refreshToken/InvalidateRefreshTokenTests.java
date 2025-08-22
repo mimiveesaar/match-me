@@ -21,7 +21,7 @@ import tech.kood.match_me.user_management.features.refreshToken.features.invalid
 import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenResults;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserResults;
-import tech.kood.match_me.user_management.mocks.RegisterUserRequestMocker;
+import tech.kood.match_me.user_management.features.user.features.registerUser.RegisterUserRequestMocker;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

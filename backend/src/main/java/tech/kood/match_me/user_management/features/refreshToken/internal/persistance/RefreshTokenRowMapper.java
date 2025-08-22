@@ -33,7 +33,7 @@ public class RefreshTokenRowMapper implements RowMapper<RefreshTokenEntity> {
         Instant expiresAt = rs.getTimestamp("expires_at").toInstant();
 
         try {
-            return refreshTokenEntityFactory.make(id, userId, UUID.fromString(sharedSecret), createdAt, expiresAt);
+            return refreshTokenEntityFactory.create(id, userId, UUID.fromString(sharedSecret), createdAt, expiresAt);
         } catch (CheckedConstraintViolationException e) {
             logger.error("Failed to map refresh token row to entity {}", e.getMessage());
             return null;

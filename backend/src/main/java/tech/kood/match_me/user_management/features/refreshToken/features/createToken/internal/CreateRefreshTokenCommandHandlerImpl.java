@@ -48,7 +48,7 @@ public class CreateRefreshTokenCommandHandlerImpl implements CreateRefreshTokenC
 
         try {
             var userId = userIdFactory.create(request.requestId());
-            RefreshToken refreshToken = refreshTokenFactory.makeNew(userId);
+            RefreshToken refreshToken = refreshTokenFactory.createNew(userId);
 
             var refreshTokenEntity = refreshTokenMapper.toEntity(refreshToken);
             refreshTokenRepository.save(refreshTokenEntity);

@@ -11,7 +11,7 @@ import tech.kood.match_me.user_management.features.refreshToken.domain.api.Refre
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshToken.RefreshToken;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshToken.RefreshTokenFactory;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenId.RefreshTokenIdFactory;
-import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.sharedSecret.SharedSecretFactory;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenSecret.RefreshTokenSecretFactory;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.refreshTokenEntity.RefreshTokenEntity;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.refreshTokenEntity.RefreshTokenEntityFactory;
 
@@ -22,28 +22,28 @@ public final class RefreshTokenMapper {
     private final RefreshTokenEntityFactory refreshTokenEntityFactory;
     private final RefreshTokenIdFactory refreshTokenIdFactory;
     private final RefreshTokenFactory refreshTokenFactory;
-    private final SharedSecretFactory sharedSecretFactory;
+    private final RefreshTokenSecretFactory refreshTokenSecretFactory;
     private final UserIdFactory userIdFactory;
 
-    public RefreshTokenMapper(RefreshTokenEntityFactory refreshTokenEntityFactory, RefreshTokenIdFactory refreshTokenIdFactory, RefreshTokenFactory refreshTokenFactory, UserIdFactory userIdFactory, SharedSecretFactory sharedSecretFactory, UserIdFactory userIdFactory1) {
+    public RefreshTokenMapper(RefreshTokenEntityFactory refreshTokenEntityFactory, RefreshTokenIdFactory refreshTokenIdFactory, RefreshTokenFactory refreshTokenFactory, UserIdFactory userIdFactory, RefreshTokenSecretFactory refreshTokenSecretFactory, UserIdFactory userIdFactory1) {
         this.refreshTokenEntityFactory = refreshTokenEntityFactory;
         this.refreshTokenIdFactory = refreshTokenIdFactory;
         this.refreshTokenFactory = refreshTokenFactory;
-        this.sharedSecretFactory = sharedSecretFactory;
+        this.refreshTokenSecretFactory = refreshTokenSecretFactory;
         this.userIdFactory = userIdFactory1;
     }
 
     public RefreshToken toRefreshToken(RefreshTokenEntity refreshTokenEntity) throws CheckedConstraintViolationException {
 
-        var refreshTokenId = refreshTokenIdFactory.make(refreshTokenEntity.getId());
+        var refreshTokenId = refreshTokenIdFactory.create(refreshTokenEntity.getId());
         var userId = userIdFactory.create(refreshTokenEntity.getUserId());
-        var sharedSecret = sharedSecretFactory.create(refreshTokenEntity.getSharedSecret());
+        var sharedSecret = refreshTokenSecretFactory.create(refreshTokenEntity.getSecret());
 
-        return refreshTokenFactory.make(refreshTokenId, userId, sharedSecret, refreshTokenEntity.getCreatedAt(), refreshTokenEntity.getExpiresAt());
+        return refreshTokenFactory.create(refreshTokenId, userId, sharedSecret, refreshTokenEntity.getCreatedAt(), refreshTokenEntity.getExpiresAt());
     }
 
     public RefreshTokenEntity toEntity(RefreshToken refreshToken) throws CheckedConstraintViolationException {
-        return refreshTokenEntityFactory.make(refreshToken.getId().getValue(), refreshToken.getUserId().getValue(), refreshToken.getSecret().getValue(), refreshToken.getCreatedAt(), refreshToken.getExpiresAt());
+        return refreshTokenEntityFactory.create(refreshToken.getId().getValue(), refreshToken.getUserId().getValue(), refreshToken.getSecret().getValue(), refreshToken.getCreatedAt(), refreshToken.getExpiresAt());
     }
 
     public RefreshTokenDTO toDTO(RefreshToken refreshToken) {

@@ -17,7 +17,7 @@ public final class RefreshTokenEntity {
     private final UUID userId;
 
     @NotNull
-    private final UUID sharedSecret;
+    private final String secret;
 
     @NotNull
     private final Instant createdAt;
@@ -33,8 +33,8 @@ public final class RefreshTokenEntity {
         return userId;
     }
 
-    public UUID getSharedSecret() {
-        return sharedSecret;
+    public String getSecret() {
+        return secret;
     }
 
     public Instant getCreatedAt() {
@@ -45,10 +45,10 @@ public final class RefreshTokenEntity {
         return expiresAt;
     }
 
-    public RefreshTokenEntity(UUID id, UUID userId, UUID sharedSecret, Instant createdAt, Instant expiresAt) {
+    public RefreshTokenEntity(UUID id, UUID userId, String secret, Instant createdAt, Instant expiresAt) {
         this.id = id;
         this.userId = userId;
-        this.sharedSecret = sharedSecret;
+        this.secret = secret;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
     }
@@ -70,7 +70,7 @@ public final class RefreshTokenEntity {
         return "RefreshTokenEntity{" +
                 "id=" + id.toString() +
                 ", userId=" + userId.toString() +
-                ", secret='" + sharedSecret.toString() + '\'' +
+                ", secret='" + secret + '\'' +
                 ", createdAt=" + createdAt +
                 ", expiresAt=" + expiresAt +
                 '}';

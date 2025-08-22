@@ -20,7 +20,7 @@ public final class RefreshTokenIdFactory {
         this.validator = validator;
     }
 
-    public RefreshTokenId make(UUID id) throws CheckedConstraintViolationException {
+    public RefreshTokenId create(UUID id) throws CheckedConstraintViolationException {
         var refreshTokenId = new RefreshTokenId(id);
         var validationResult = validator.validate(refreshTokenId);
 
@@ -31,8 +31,8 @@ public final class RefreshTokenIdFactory {
         return refreshTokenId;
     }
 
-    public RefreshTokenId make(String id) throws CheckedConstraintViolationException {
-        return this.make(UUID.fromString(id));
+    public RefreshTokenId create(String id) throws CheckedConstraintViolationException {
+        return this.create(UUID.fromString(id));
     }
 
     public RefreshTokenId newId() {

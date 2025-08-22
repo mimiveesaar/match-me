@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.repositories;
+package tech.kood.match_me.user_management.features.user;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.Test;
@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
+import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.features.user.internal.persistance.UserRepository;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
-import tech.kood.match_me.user_management.mocks.UserEntityMother;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,36 +25,22 @@ public class UserRepositoryTests extends UserManagementTestBase {
     Flyway userManagementFlyway;
 
     @Autowired
-    UserEntityMother userEntityMocker;
-
-    @Autowired
-    RegisterUserCommandHandler registerUserHandler;
-
+    UserEntityMother userEntityMother;
 
     @Test
-    void shouldCreateValidUser() {
-        var userEntity = userEntityMocker.createValidUserEntity();
+    void shouldCreateValidUser() throws CheckedConstraintViolationException {
+        var userEntity = userEntityMother.createValidUserEntity();
         userRepository.saveUser(userEntity);
     }
 
     @Test
-    void shouldFindUserByUsername() {
-        var userEntity = userEntityMocker.createValidUserEntity();
-        userRepository.saveUser(userEntity);
-        var found = userRepository.findUserByUsername(userEntity.getUsername());
-        assertFalse(found.isEmpty(), "User should be found by username");
-        assertEquals(userEntity.getUsername(), found.get().getUsername());
-    }
-
-    @Test
-    void shouldFindUserByEmail() {
-        var userEntity = userEntityMocker.createValidUserEntity();
+    void shouldFindUserByEmail() throws CheckedConstraintViolationException {
+        var userEntity = userEntityMother.createValidUserEntity();
         userRepository.saveUser(userEntity);
         var found = userRepository.findUserByEmail(userEntity.getEmail());
         assertFalse(found.isEmpty(), "User should be found by email");
         assertEquals(userEntity.getEmail(), found.get().getEmail());
     }
-
 
     @Test
     void shouldNotFindUserByEmail() {
@@ -69,8 +55,8 @@ public class UserRepositoryTests extends UserManagementTestBase {
     }
 
     @Test
-    void shouldFindUserById() {
-        var userEntity = userEntityMocker.createValidUserEntity();
+    void shouldFindUserById() throws CheckedConstraintViolationException {
+        var userEntity = userEntityMother.createValidUserEntity();
         userRepository.saveUser(userEntity);
         var found = userRepository.findUserById(userEntity.getId());
         assertFalse(found.isEmpty(), "User should be found by ID");
@@ -78,25 +64,17 @@ public class UserRepositoryTests extends UserManagementTestBase {
     }
 
     @Test
-    void shouldReturnTrueIfUsernameExists() {
-        var userEntity = userEntityMocker.createValidUserEntity();
-        userRepository.saveUser(userEntity);
-        assertTrue(userRepository.usernameExists(userEntity.getUsername()));
-    }
-
-    @Test
-    void shouldReturnTrueIfEmailExists() {
-        var userEntity = userEntityMocker.createValidUserEntity();
+    void shouldReturnTrueIfEmailExists() throws CheckedConstraintViolationException {
+        var userEntity = userEntityMother.createValidUserEntity();
         userRepository.saveUser(userEntity);
         assertTrue(userRepository.emailExists(userEntity.getEmail()));
     }
 
     @Test
-    void shouldDeleteAllUsers() {
-        var userEntity = userEntityMocker.createValidUserEntity();
+    void shouldDeleteAllUsers() throws CheckedConstraintViolationException {
+        var userEntity = userEntityMother.createValidUserEntity();
         userRepository.saveUser(userEntity);
         userRepository.deleteAll();
-        assertFalse(userRepository.usernameExists(userEntity.getUsername()));
         assertFalse(userRepository.emailExists(userEntity.getEmail()));
     }
 }

@@ -53,7 +53,7 @@ public class RefreshTokenRepository {
         Map<String, Object> params = Map.of(
                 "id", refreshToken.getId().toString(),
                 "user_id", refreshToken.getUserId().toString(),
-                "secret", refreshToken.getSharedSecret(),
+                "secret", refreshToken.getSecret(),
                 "created_at", Timestamp.from(refreshToken.getCreatedAt()),
                 "expires_at", Timestamp.from(refreshToken.getExpiresAt()));
 

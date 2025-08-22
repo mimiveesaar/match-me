@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.sharedSecret;
+package tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenSecret;
 
 import jakarta.validation.constraints.NotNull;
 import org.jmolecules.architecture.layered.DomainLayer;
@@ -8,12 +8,12 @@ import java.util.Objects;
 import java.util.UUID;
 
 @DomainLayer
-public class SharedSecret implements ValueObject {
+public class RefreshTokenSecret implements ValueObject {
 
     @NotNull
     private final UUID value;
 
-    SharedSecret(UUID value) {
+    RefreshTokenSecret(UUID value) {
         this.value = value;
     }
 
@@ -24,7 +24,7 @@ public class SharedSecret implements ValueObject {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        SharedSecret that = (SharedSecret) o;
+        RefreshTokenSecret that = (RefreshTokenSecret) o;
         return Objects.equals(value, that.value);
     }
 

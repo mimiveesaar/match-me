@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.sharedSecret;
+package tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenSecret;
 
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.DomainLayer;
@@ -11,16 +11,16 @@ import java.util.UUID;
 @Component
 @DomainLayer
 @Factory
-public final class SharedSecretFactory {
+public final class RefreshTokenSecretFactory {
 
     private final Validator validator;
 
-    public SharedSecretFactory(Validator validator) {
+    public RefreshTokenSecretFactory(Validator validator) {
         this.validator = validator;
     }
 
-    public SharedSecret create(UUID value) throws CheckedConstraintViolationException {
-        var secret = new SharedSecret(value);
+    public RefreshTokenSecret create(UUID value) throws CheckedConstraintViolationException {
+        var secret = new RefreshTokenSecret(value);
         var validationResult = validator.validate(secret);
 
         if (!validationResult.isEmpty()) {
@@ -30,11 +30,11 @@ public final class SharedSecretFactory {
         return secret;
     }
 
-    public SharedSecret create(String value) throws CheckedConstraintViolationException {
+    public RefreshTokenSecret create(String value) throws CheckedConstraintViolationException {
         return create(UUID.fromString(value));
     }
 
-    public SharedSecret createNew() throws CheckedConstraintViolationException {
+    public RefreshTokenSecret createNew() throws CheckedConstraintViolationException {
         return create(UUID.randomUUID());
     }
 }
