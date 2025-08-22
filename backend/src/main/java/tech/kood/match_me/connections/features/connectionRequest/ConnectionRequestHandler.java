@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.internal.features.connectionRequest;
+package tech.kood.match_me.connections.features.connectionRequest;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -29,7 +29,7 @@ public class ConnectionRequestHandler {
         if (request.targetUserId() == null || request.senderId() == null) {
             var result = new ConnectionRequestResults.InvalidRequest(request.requestId(),
                     request.tracingId());
-            events.publishEvent(new ConnectionRequestEvent(request, result));
+            events.publishEvent(new ConnectionRequestCreatedEvent(request, result));
             return result;
         }
 
@@ -40,7 +40,7 @@ public class ConnectionRequestHandler {
             if (pendingConnection.isPresent()) {
                 var result = new ConnectionRequestResults.AlreadyExists(request.requestId(),
                         request.tracingId());
-                events.publishEvent(new ConnectionRequestEvent(request, result));
+                events.publishEvent(new ConnectionRequestCreatedEvent(request, result));
                 return result;
             }
 
@@ -53,13 +53,13 @@ public class ConnectionRequestHandler {
             var result = new ConnectionRequestResults.Success(request.requestId(),
                     pendingConnectionEntity.id().toString(), request.targetUserId(),
                     request.senderId(), request.tracingId());
-            events.publishEvent(new ConnectionRequestEvent(request, result));
+            events.publishEvent(new ConnectionRequestCreatedEvent(request, result));
             return result;
 
         } catch (Exception e) {
             var result = new ConnectionRequestResults.SystemError(request.requestId(),
                     e.getMessage(), request.tracingId());
-            events.publishEvent(new ConnectionRequestEvent(request, result));
+            events.publishEvent(new ConnectionRequestCreatedEvent(request, result));
             return result;
         }
     }

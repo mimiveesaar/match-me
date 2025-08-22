@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.internal.features.acceptConnection;
+package tech.kood.match_me.connections.features.acceptConnection;
 
 public record AcceptConnectionEvent(AcceptConnectionRequest request,
         AcceptConnectionResults results) {

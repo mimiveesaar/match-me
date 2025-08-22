@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.internal.features.acceptConnection;
+package tech.kood.match_me.connections.features.acceptConnection;
 
 import java.time.Instant;
 import java.util.UUID;

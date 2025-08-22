@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.internal.features.declineConnection;
+package tech.kood.match_me.connections.features.declineConnection;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

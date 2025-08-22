@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.internal.features.declineConnection;
+package tech.kood.match_me.connections.features.declineConnection;
 
 import org.springframework.context.ApplicationEventPublisher;
 import tech.kood.match_me.connections.internal.database.repositories.PendingConnectionsRepository;

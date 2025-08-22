@@ -1,4 +1,5 @@
-package tech.kood.match_me.user_management.common.domain.api;
+package tech.kood.match_me.connections.common.api;
+
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -10,15 +11,15 @@ import java.util.UUID;
 
 @NamedInterface
 @ApplicationLayer
-public record UserIdDTO(@NotNull UUID value) {
+public record ConnectionIdDTO(@NotNull UUID value) {
 
     @JsonCreator
-    public static UserIdDTO of(String value) {
-        return new UserIdDTO(UUID.fromString(value));
+    public static ConnectionIdDTO of(String value) {
+        return new ConnectionIdDTO(UUID.fromString(value));
     }
 
-    @Override
     @JsonValue
+    @Override
     public String toString() {
         return value.toString();
     }
