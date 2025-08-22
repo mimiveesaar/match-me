@@ -104,7 +104,7 @@ public class CreateAccessTokenCommandHandlerImpl implements CreateAccessTokenCom
 
             if (refreshTokenResult instanceof GetRefreshTokenResults.Success refreshToken) {
 
-                // Generate JWT token using the refresh token's user ID.
+                // Generate JWT token using the refresh token's userId ID.
                 var issuedAt = Instant.now();
                 var expiresAt = issuedAt.plusSeconds(userManagementConfig.getJwtExpiration());
                 var userId = userIdFactory.create(refreshToken.refreshToken().userId().value());

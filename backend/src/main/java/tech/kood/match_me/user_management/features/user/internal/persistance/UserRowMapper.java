@@ -36,7 +36,7 @@ public class UserRowMapper implements RowMapper<UserEntity> {
             return userEntityFactory.make(id, email, password_hash, password_salt, created_at,
                     updated_at);
         } catch (CheckedConstraintViolationException e) {
-            logger.error("Failed to map row to user entity: {}", e.getMessage());
+            logger.error("Failed to map row to userId entity: {}", e.getMessage());
             return null;
         }
     }

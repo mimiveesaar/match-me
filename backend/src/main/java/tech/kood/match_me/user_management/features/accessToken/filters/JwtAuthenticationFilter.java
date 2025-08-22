@@ -74,7 +74,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     logger.warn("User not found for ID: {} during JWT authentication", userId.toString());
 
                 } else if (userResult instanceof GetUserByIdResults.SystemError systemError) {
-                    logger.error("System error while fetching user by ID: {} during JWT authentication. Error: {}", userId.toString(), systemError.message());
+                    logger.error("System error while fetching userId by ID: {} during JWT authentication. Error: {}", userId.toString(), systemError.message());
                 }
                 } else if (validationResult instanceof ValidateAccessTokenResults.InvalidToken) {
                     logger.debug("Invalid JWT token provided for authentication");

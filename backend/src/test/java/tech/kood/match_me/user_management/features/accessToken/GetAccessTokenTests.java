@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.feature.accessToken;
+package tech.kood.match_me.user_management.features.accessToken;
 
 import java.util.UUID;
 
@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
+import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
+import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenSecretDTO;
 import tech.kood.match_me.user_management.features.user.internal.persistance.UserRepository;
 import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenCommandHandler;
 import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenRequest;
@@ -28,13 +30,6 @@ import tech.kood.match_me.user_management.features.user.features.registerUser.Re
 public class GetAccessTokenTests extends UserManagementTestBase {
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    @Qualifier("userManagementFlyway")
-    Flyway userManagementFlyway;
-
-    @Autowired
     RegisterUserCommandHandler registerUserHandler;
 
     @Autowired
@@ -48,20 +43,18 @@ public class GetAccessTokenTests extends UserManagementTestBase {
 
 
     @Test
-    public void shouldGetAccessTokenForValidRefreshToken() {
+    public void shouldGetAccessTokenForValidRefreshToken() throws CheckedConstraintViolationException {
         var registerRequest = registerUserRequestMocker.createValidRequest();
         var registerResult = registerUserHandler.handle(registerRequest);
         assert registerResult instanceof RegisterUserResults.Success;
 
-        var user = ((RegisterUserResults.Success) registerResult).user();
-        var createTokenRequest = CreateRefreshTokenRequest.of(UUID.randomUUID(), user, null);
+        var user = ((RegisterUserResults.Success) registerResult).userId();
+        var createTokenRequest = new CreateRefreshTokenRequest(user, null);
         var createTokenResult = createRefreshTokenCommandHandler.handle(createTokenRequest);
         assert createTokenResult instanceof CreateRefreshTokenResults.Success;
 
-        var refreshToken =
-                ((CreateRefreshTokenResults.Success) createTokenResult).refreshToken();
-        var getAccessTokenRequest =
-                CreateAccessTokenRequest.of(UUID.randomUUID(), refreshToken.getToken(), null);
+        var refreshToken = ((CreateRefreshTokenResults.Success) createTokenResult).refreshToken();
+        var getAccessTokenRequest = new CreateAccessTokenRequest(refreshToken.secret(), null);
         var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
 
         assert getAccessTokenResult instanceof CreateAccessTokenResults.Success;
@@ -72,8 +65,9 @@ public class GetAccessTokenTests extends UserManagementTestBase {
 
     @Test
     public void shouldHandleInvalidRefreshToken() {
-        var getAccessTokenRequest =
-                CreateAccessTokenRequest.of(UUID.randomUUID(), "invalid-token", null);
+
+        //Create a request with an invalid refresh token.
+        var getAccessTokenRequest = new CreateAccessTokenRequest(new RefreshTokenSecretDTO(UUID.randomUUID()), null);
         var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
 
         assert getAccessTokenResult instanceof CreateAccessTokenResults.InvalidToken : "The handler should return an InvalidToken result for an invalid refresh token";

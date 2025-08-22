@@ -27,15 +27,15 @@ public record RejectedConnectionEntity(UUID id, UUID senderUserId, UUID targetUs
             throw new IllegalArgumentException("Created At cannot be null");
         }
         if (senderUserId.equals(targetUserId)) {
-            throw new IllegalArgumentException("Sender and target user IDs cannot be the same");
+            throw new IllegalArgumentException("Sender and target userId IDs cannot be the same");
         }
         if (senderUserId.equals(rejectedByUserId)) {
             throw new IllegalArgumentException(
-                    "Sender and rejected by user IDs cannot be the same");
+                    "Sender and rejected by userId IDs cannot be the same");
         }
         if (targetUserId.equals(rejectedByUserId)) {
             throw new IllegalArgumentException(
-                    "Target and rejected by user IDs cannot be the same");
+                    "Target and rejected by userId IDs cannot be the same");
         }
     }
 

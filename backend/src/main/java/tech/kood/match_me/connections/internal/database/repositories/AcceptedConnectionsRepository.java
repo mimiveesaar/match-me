@@ -69,10 +69,10 @@ public final class AcceptedConnectionsRepository {
         }
 
         /**
-         * Finds all accepted connections sent by a specific user.
+         * Finds all accepted connections sent by a specific userId.
          *
-         * @param senderUserId The ID of the user who sent the connection requests
-         * @return List of accepted connections sent by the user
+         * @param senderUserId The ID of the userId who sent the connection requests
+         * @return List of accepted connections sent by the userId
          */
         public List<AcceptedConnectionEntity> findBySenderUserId(UUID senderUserId) {
                 String sql = "SELECT * FROM connections.accepted_connections WHERE sender_user_id = :sender_user_id ORDER BY created_at DESC";
@@ -81,10 +81,10 @@ public final class AcceptedConnectionsRepository {
         }
 
         /**
-         * Finds all accepted connections received by a specific user.
+         * Finds all accepted connections received by a specific userId.
          *
-         * @param targetUserId The ID of the user who received the connection requests
-         * @return List of accepted connections received by the user
+         * @param targetUserId The ID of the userId who received the connection requests
+         * @return List of accepted connections received by the userId
          */
         public List<AcceptedConnectionEntity> findByTargetUserId(UUID targetUserId) {
                 String sql = "SELECT * FROM connections.accepted_connections WHERE target_user_id = :target_user_id ORDER BY created_at DESC";
@@ -95,8 +95,8 @@ public final class AcceptedConnectionsRepository {
         /**
          * Finds all accepted connections between two users (bidirectional).
          *
-         * @param userId1 The ID of the first user
-         * @param userId2 The ID of the second user
+         * @param userId1 The ID of the first userId
+         * @param userId2 The ID of the second userId
          * @return List of accepted connections between the two users
          */
         public List<AcceptedConnectionEntity> findBetweenUsers(UUID userId1, UUID userId2) {
@@ -113,8 +113,8 @@ public final class AcceptedConnectionsRepository {
         /**
          * Checks if an accepted connection exists between two users (bidirectional).
          *
-         * @param userId1 The ID of the first user
-         * @param userId2 The ID of the second user
+         * @param userId1 The ID of the first userId
+         * @param userId2 The ID of the second userId
          * @return true if an accepted connection exists between the users, false otherwise
          */
         public boolean existsBetweenUsers(UUID userId1, UUID userId2) {
@@ -140,9 +140,9 @@ public final class AcceptedConnectionsRepository {
         }
 
         /**
-         * Deletes all accepted connections sent by a specific user.
+         * Deletes all accepted connections sent by a specific userId.
          *
-         * @param senderUserId The ID of the user whose sent connections should be deleted
+         * @param senderUserId The ID of the userId whose sent connections should be deleted
          * @return Number of connections deleted
          */
         public int deleteBySenderUserId(UUID senderUserId) {
@@ -151,9 +151,9 @@ public final class AcceptedConnectionsRepository {
         }
 
         /**
-         * Deletes all accepted connections received by a specific user.
+         * Deletes all accepted connections received by a specific userId.
          *
-         * @param targetUserId The ID of the user whose received connections should be deleted
+         * @param targetUserId The ID of the userId whose received connections should be deleted
          * @return Number of connections deleted
          */
         public int deleteByTargetUserId(UUID targetUserId) {
@@ -162,9 +162,9 @@ public final class AcceptedConnectionsRepository {
         }
 
         /**
-         * Deletes all accepted connections involving a specific user (as sender or target).
+         * Deletes all accepted connections involving a specific userId (as sender or target).
          *
-         * @param userId The ID of the user whose connections should be deleted
+         * @param userId The ID of the userId whose connections should be deleted
          * @return Number of connections deleted
          */
         public int deleteByUserId(UUID userId) {
@@ -198,11 +198,11 @@ public final class AcceptedConnectionsRepository {
         }
 
         /**
-         * Counts the total number of accepted connections for a specific user (both sent and
+         * Counts the total number of accepted connections for a specific userId (both sent and
          * received).
          *
-         * @param userId The ID of the user
-         * @return Total number of accepted connections for the user
+         * @param userId The ID of the userId
+         * @return Total number of accepted connections for the userId
          */
         public int countByUserId(UUID userId) {
                 String sql = """
@@ -215,10 +215,10 @@ public final class AcceptedConnectionsRepository {
         }
 
         /**
-         * Counts the number of accepted connections sent by a specific user.
+         * Counts the number of accepted connections sent by a specific userId.
          *
-         * @param senderUserId The ID of the user who sent the connections
-         * @return Number of accepted connections sent by the user
+         * @param senderUserId The ID of the userId who sent the connections
+         * @return Number of accepted connections sent by the userId
          */
         public int countBySenderUserId(UUID senderUserId) {
                 String sql = "SELECT COUNT(*) FROM connections.accepted_connections WHERE sender_user_id = :sender_user_id";
@@ -228,10 +228,10 @@ public final class AcceptedConnectionsRepository {
         }
 
         /**
-         * Counts the number of accepted connections received by a specific user.
+         * Counts the number of accepted connections received by a specific userId.
          *
-         * @param targetUserId The ID of the user who received the connections
-         * @return Number of accepted connections received by the user
+         * @param targetUserId The ID of the userId who received the connections
+         * @return Number of accepted connections received by the userId
          */
         public int countByTargetUserId(UUID targetUserId) {
                 String sql = "SELECT COUNT(*) FROM connections.accepted_connections WHERE target_user_id = :target_user_id";

@@ -3,6 +3,7 @@ package tech.kood.match_me.user_management.common.domain.internal.userId;
 import jakarta.validation.Validator;
 import org.jmolecules.ddd.annotation.Factory;
 import org.springframework.stereotype.Component;
+import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
 import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
 
 import java.util.UUID;
@@ -27,6 +28,10 @@ public final class UserIdFactory {
         }
 
         return userId;
+    }
+
+    public UserId from(UserIdDTO userId) throws CheckedConstraintViolationException {
+        return create(userId.value());
     }
 
     public UserId createNew() {

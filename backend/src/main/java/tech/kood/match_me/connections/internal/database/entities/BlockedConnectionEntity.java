@@ -24,7 +24,7 @@ public record BlockedConnectionEntity(UUID id, UUID blockerUserId, UUID blockedU
             throw new IllegalArgumentException("Created At cannot be null");
         }
         if (blockerUserId.equals(blockedUserId)) {
-            throw new IllegalArgumentException("Blocker and blocked user IDs cannot be the same");
+            throw new IllegalArgumentException("Blocker and blocked userId IDs cannot be the same");
         }
     }
 

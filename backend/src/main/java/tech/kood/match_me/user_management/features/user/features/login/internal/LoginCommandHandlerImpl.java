@@ -64,7 +64,7 @@ public final class LoginCommandHandlerImpl implements LoginCommandHandler {
             }
 
             var foundUserDTO = userMapper.toDTO(foundUser);
-            var refreshTokenRequest = new CreateRefreshTokenRequest(foundUserDTO, request.tracingId());
+            var refreshTokenRequest = new CreateRefreshTokenRequest(foundUserDTO.id(), request.tracingId());
             var tokenResult = createRefreshTokenCommandHandler.handle(refreshTokenRequest);
 
             if (tokenResult instanceof CreateRefreshTokenResults.SystemError systemError) {

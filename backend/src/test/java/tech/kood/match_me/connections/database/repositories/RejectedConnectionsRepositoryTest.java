@@ -182,7 +182,7 @@ public class RejectedConnectionsRepositoryTest extends ConnectionsTestBase {
         // Then
         assertEquals(3, count);
 
-        // Should return 0 for user with no connections
+        // Should return 0 for userId with no connections
         assertEquals(0, rejectedConnectionsRepository.countByUserId(UUID.randomUUID()));
     }
 }

@@ -50,7 +50,7 @@ public class GetUserByIdQueryHandlerImpl implements GetUserByIdQueryHandler {
             var userDTO = userMapper.toDTO(userEntity.get());
             return new GetUserByIdResults.Success(request.requestId(), userDTO, request.tracingId());
         } catch (Exception e) {
-            logger.error("Failed to retrieve user by ID: " + e.getMessage());
+            logger.error("Failed to retrieve userId by ID: " + e.getMessage());
             return new GetUserByIdResults.SystemError(request.requestId(), e.getMessage(), request.tracingId());
         }
     }

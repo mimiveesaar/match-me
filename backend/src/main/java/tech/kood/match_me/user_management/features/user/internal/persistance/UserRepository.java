@@ -51,7 +51,7 @@ public class UserRepository {
                     jdbcTemplate.queryForObject(sql, Map.of("email", email), this.userRowMapper);
             return Optional.ofNullable(result);
         } catch (EmptyResultDataAccessException e) {
-            // Handle the case where no user is found
+            // Handle the case where no userId is found
             return Optional.empty();
         }
     }
@@ -63,7 +63,7 @@ public class UserRepository {
             var result = jdbcTemplate.queryForObject(sql, Map.of("id", id), this.userRowMapper);
             return Optional.ofNullable(result);
         } catch (EmptyResultDataAccessException e) {
-            // Handle the case where no user is found
+            // Handle the case where no userId is found
             return Optional.empty();
         }
     }

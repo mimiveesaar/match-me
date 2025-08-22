@@ -49,7 +49,7 @@ public class GetUserByEmailQueryHandlerImpl implements GetUserByEmailQueryHandle
              var userDTO = userMapper.toDTO(userEntity.get());
              return new GetUserByEmailResults.Success(request.requestId(), userDTO, request.tracingId());
          } catch (Exception e) {
-             logger.error("Failed to retrieve user by email: " + e.getMessage());
+             logger.error("Failed to retrieve userId by email: " + e.getMessage());
 
              return new GetUserByEmailResults.SystemError(request.requestId(), e.getMessage(), request.tracingId());
          }

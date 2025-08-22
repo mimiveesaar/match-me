@@ -12,10 +12,10 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
     private int minLength;
     @Value("${user-management.user.password.max-length}")
     private int maxLength;
-    @Value("${user-management.user.password.require-digit}")
-    private boolean requireDigit;
-    @Value("${user-management.user.password.require-upper-case}")
+    @Value("${user-management.user.password.require-uppercase}")
     private boolean requireUpperCase;
+    @Value("${user-management.user.password.require-special}")
+    private boolean requireSpecial;
 
 
     @PostConstruct
@@ -39,7 +39,7 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
             return false;
         }
 
-        if (password.length() < minLength || password.length() > maxLength) {
+        if (password.length() <= minLength || password.length() >= maxLength) {
             return false;
         }
 
@@ -48,8 +48,8 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
             return false;
         }
 
-        boolean hasDigit = password.chars().anyMatch(Character::isDigit);
-        if (requireDigit && !hasDigit) {
+        boolean hasSpecial = password.chars().anyMatch(c -> !Character.isLetterOrDigit(c));
+        if (requireSpecial && !hasSpecial) {
             return false;
         }
 

@@ -7,7 +7,7 @@ import tech.kood.match_me.user_management.common.validation.password.ValidPasswo
 
 
 /**
- * Represents a user's password in plain-text form.
+ * Represents a userId's password in plain-text form.
  * <p>
  * This class encapsulates a plain-text password value, which is subject to validation
  * via the {@link ValidPassword} annotation.

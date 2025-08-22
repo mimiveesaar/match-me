@@ -72,10 +72,10 @@ public final class RejectedConnectionsRepository {
 
     /**
      * Checks if a connection has been rejected between two users (bidirectional). Uses the unique
-     * index efficiently by normalizing the user order.
+     * index efficiently by normalizing the userId order.
      *
-     * @param user1 The ID of the first user
-     * @param user2 The ID of the second user
+     * @param user1 The ID of the first userId
+     * @param user2 The ID of the second userId
      * @return true if a rejection exists between the users, false otherwise
      */
     public boolean existsBetweenUsers(UUID user1, UUID user2) {
@@ -93,10 +93,10 @@ public final class RejectedConnectionsRepository {
     }
 
     /**
-     * Finds all rejected connections sent by a specific user.
+     * Finds all rejected connections sent by a specific userId.
      *
-     * @param senderUserId The ID of the user who sent the connection requests
-     * @return List of rejected connections sent by the user
+     * @param senderUserId The ID of the userId who sent the connection requests
+     * @return List of rejected connections sent by the userId
      */
     public List<RejectedConnectionEntity> findBySenderId(UUID senderId) {
         String sql = """
@@ -109,10 +109,10 @@ public final class RejectedConnectionsRepository {
     }
 
     /**
-     * Finds all rejected connections received by a specific user.
+     * Finds all rejected connections received by a specific userId.
      *
-     * @param targetUserId The ID of the user who received the connection requests
-     * @return List of rejected connections received by the user
+     * @param targetUserId The ID of the userId who received the connection requests
+     * @return List of rejected connections received by the userId
      */
     public List<RejectedConnectionEntity> findByTargetUserId(UUID targetUserId) {
         String sql = """
@@ -125,10 +125,10 @@ public final class RejectedConnectionsRepository {
     }
 
     /**
-     * Finds all connections rejected by a specific user.
+     * Finds all connections rejected by a specific userId.
      *
-     * @param rejectedByUserId The ID of the user who performed the rejection
-     * @return List of connections rejected by the user
+     * @param rejectedByUserId The ID of the userId who performed the rejection
+     * @return List of connections rejected by the userId
      */
     public List<RejectedConnectionEntity> findByRejectedByUserId(UUID rejectedByUserId) {
         String sql = """
@@ -152,9 +152,9 @@ public final class RejectedConnectionsRepository {
     }
 
     /**
-     * Deletes all rejected connections involving a specific user (as sender, target, or rejector).
+     * Deletes all rejected connections involving a specific userId (as sender, target, or rejector).
      *
-     * @param userId The ID of the user whose rejected connections should be deleted
+     * @param userId The ID of the userId whose rejected connections should be deleted
      * @return Number of connections deleted
      */
     public int deleteByUserId(UUID userId) {
@@ -168,11 +168,11 @@ public final class RejectedConnectionsRepository {
     }
 
     /**
-     * Counts the total number of rejected connections for a specific user (sent, received, or
+     * Counts the total number of rejected connections for a specific userId (sent, received, or
      * performed rejection).
      *
-     * @param userId The ID of the user
-     * @return Total number of rejected connections involving the user
+     * @param userId The ID of the userId
+     * @return Total number of rejected connections involving the userId
      */
     public int countByUserId(UUID userId) {
         String sql = """

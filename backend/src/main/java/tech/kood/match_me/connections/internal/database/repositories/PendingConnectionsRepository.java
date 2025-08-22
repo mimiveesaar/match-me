@@ -70,10 +70,10 @@ public final class PendingConnectionsRepository {
     }
 
     /**
-     * Finds all pending connections sent by a specific user.
+     * Finds all pending connections sent by a specific userId.
      *
-     * @param senderUserId The ID of the user who sent the connection requests
-     * @return List of pending connections sent by the user
+     * @param senderUserId The ID of the userId who sent the connection requests
+     * @return List of pending connections sent by the userId
      */
     public List<PendingConnectionEntity> findBySenderUserId(UUID senderUserId) {
         String sql =
@@ -83,10 +83,10 @@ public final class PendingConnectionsRepository {
     }
 
     /**
-     * Finds all pending connections received by a specific user.
+     * Finds all pending connections received by a specific userId.
      *
-     * @param targetUserId The ID of the user who received the connection requests
-     * @return List of pending connections received by the user
+     * @param targetUserId The ID of the userId who received the connection requests
+     * @return List of pending connections received by the userId
      */
     public List<PendingConnectionEntity> findByTargetUserId(UUID targetUserId) {
         String sql =
@@ -98,8 +98,8 @@ public final class PendingConnectionsRepository {
     /**
      * Finds a pending connection between two specific users.
      *
-     * @param senderUserId The ID of the user who sent the connection request
-     * @param targetUserId The ID of the user who received the connection request
+     * @param senderUserId The ID of the userId who sent the connection request
+     * @param targetUserId The ID of the userId who received the connection request
      * @return Optional containing the pending connection if found, empty otherwise
      */
     public Optional<PendingConnectionEntity> findBySenderAndTarget(UUID senderUserId,
@@ -120,8 +120,8 @@ public final class PendingConnectionsRepository {
     /**
      * Checks if a pending connection exists between two users (in either direction).
      *
-     * @param userId1 The ID of the first user
-     * @param userId2 The ID of the second user
+     * @param userId1 The ID of the first userId
+     * @param userId2 The ID of the second userId
      * @return true if a pending connection exists between the users, false otherwise
      */
     public boolean existsBetweenUsers(UUID userId1, UUID userId2) {
@@ -150,8 +150,8 @@ public final class PendingConnectionsRepository {
     /**
      * Deletes a pending connection between specific users.
      *
-     * @param senderUserId The ID of the user who sent the connection request
-     * @param targetUserId The ID of the user who received the connection request
+     * @param senderUserId The ID of the userId who sent the connection request
+     * @param targetUserId The ID of the userId who received the connection request
      * @return true if the connection was deleted, false if it didn't exist
      */
     public boolean deleteBySenderAndTarget(UUID senderUserId, UUID targetUserId) {
@@ -162,9 +162,9 @@ public final class PendingConnectionsRepository {
     }
 
     /**
-     * Deletes all pending connections for a specific user (both sent and received).
+     * Deletes all pending connections for a specific userId (both sent and received).
      *
-     * @param userId The ID of the user
+     * @param userId The ID of the userId
      * @return The number of pending connections deleted
      */
     public int deleteAllForUser(UUID userId) {
@@ -185,10 +185,10 @@ public final class PendingConnectionsRepository {
     }
 
     /**
-     * Counts all pending connections sent by a specific user.
+     * Counts all pending connections sent by a specific userId.
      *
-     * @param senderUserId The ID of the user who sent the connection requests
-     * @return The count of pending connections sent by the user
+     * @param senderUserId The ID of the userId who sent the connection requests
+     * @return The count of pending connections sent by the userId
      */
     public long countBySenderUserId(UUID senderUserId) {
         String sql =
@@ -199,10 +199,10 @@ public final class PendingConnectionsRepository {
     }
 
     /**
-     * Counts all pending connections received by a specific user.
+     * Counts all pending connections received by a specific userId.
      *
-     * @param targetUserId The ID of the user who received the connection requests
-     * @return The count of pending connections received by the user
+     * @param targetUserId The ID of the userId who received the connection requests
+     * @return The count of pending connections received by the userId
      */
     public long countByTargetUserId(UUID targetUserId) {
         String sql =

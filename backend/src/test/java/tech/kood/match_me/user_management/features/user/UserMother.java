@@ -24,7 +24,7 @@ public class UserMother {
     }
 
     public User createValidUser() throws CheckedConstraintViolationException {
-      return userFactory.newUser(UUID.randomUUID().toString(), faker.internet().password(8, 16));
+      return userFactory.newUser(faker.internet().emailAddress(), faker.internet().password(8, 16, true, true));
     }
 
 }

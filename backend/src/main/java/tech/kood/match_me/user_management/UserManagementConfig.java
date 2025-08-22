@@ -24,15 +24,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 @Configuration
 public class UserManagementConfig {
 
-    @Value("${user-management.username.min-length:3}")
-    private int usernameMinLength;
-    @Value("${user-management.username.max-length:20}")
-    private int usernameMaxLength;
-    @Value("${user-management.password.min-length:8}")
-    private int passwordMinLength;
-    @Value("${user-management.password.max-length:64}")
-    private int passwordMaxLength;
-
     @Value("${user-management.jwt.secret}")
     private String jwtSecret;
 
@@ -45,7 +36,7 @@ public class UserManagementConfig {
     @Value("${user-management.refresh-token.expiration}")
     private int refreshTokenExpiration;
 
-    @Value("${user-management.refresh-token.cleanup-interval}")
+    @Value("${user-management.refresh-token.clean-up-interval}")
     private int refreshTokenCleanupInterval;
 
     public int getRefreshTokenCleanupInterval() {
@@ -68,21 +59,6 @@ public class UserManagementConfig {
         return refreshTokenExpiration;
     }
 
-    public int getUsernameMinLength() {
-        return usernameMinLength;
-    }
-
-    public int getUsernameMaxLength() {
-        return usernameMaxLength;
-    }
-
-    public int getPasswordMinLength() {
-        return passwordMinLength;
-    }
-
-    public int getPasswordMaxLength() {
-        return passwordMaxLength;
-    }
 
     @Bean
     @Qualifier("userManagementDataSource")

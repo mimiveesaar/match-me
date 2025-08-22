@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @RestController
 @RequestMapping("/api/v1/user-management/auth")
-@Tag(name = "User Management", description = "API for user management operations")
+@Tag(name = "User Management", description = "API for userId management operations")
 public class LoginEndpoint {
 
     private final LoginCommandHandler loginCommandHandler;

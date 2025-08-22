@@ -18,7 +18,7 @@ public sealed interface GetUserByEmailResults
         GetUserByEmailResults.InvalidRequest,
         GetUserByEmailResults.SystemError  {
 
-    record Success(@NotNull @JsonProperty("request_id") UUID requestId, @NotNull @Valid @JsonProperty("user") UserDTO user, @Nullable @JsonProperty("tracing_id") String tracingId) implements GetUserByEmailResults {}
+    record Success(@NotNull @JsonProperty("request_id") UUID requestId, @NotNull @Valid @JsonProperty("userId") UserDTO user, @Nullable @JsonProperty("tracing_id") String tracingId) implements GetUserByEmailResults {}
     record InvalidRequest(@NotNull @JsonProperty("request_id") UUID requestId, @NotNull @Valid @JsonProperty("error") InvalidInputErrorDTO error, @Nullable @JsonProperty("tracing_id") String tracingId) implements GetUserByEmailResults {}
     record UserNotFound(@NotNull @JsonProperty("request_id") UUID requestId, @NotNull @Valid @JsonProperty("email") EmailDTO email, @Nullable @JsonProperty("tracing_id") String tracingId) implements GetUserByEmailResults {}
     record SystemError(@NotNull @JsonProperty("request_id") UUID requestId, @NotEmpty @JsonProperty("message") String message, @Nullable @JsonProperty("tracing_id") String tracingId) implements GetUserByEmailResults {}

@@ -7,8 +7,8 @@ import java.util.UUID;
  * Represents a pending connection entity in the system.
  *
  * @param id Unique identifier for the pending connection.
- * @param senderUserId UUID of the user who sent the connection request.
- * @param targetUserId UUID of the user who received the connection request.
+ * @param senderUserId UUID of the userId who sent the connection request.
+ * @param targetUserId UUID of the userId who received the connection request.
  * @param createdAt Timestamp when the pending connection was created.
  */
 public record PendingConnectionEntity(UUID id, UUID senderUserId, UUID targetUserId,
@@ -19,16 +19,16 @@ public record PendingConnectionEntity(UUID id, UUID senderUserId, UUID targetUse
             throw new IllegalArgumentException("ID cannot be null");
         }
         if (senderUserId == null) {
-            throw new IllegalArgumentException("Sender user ID cannot be null");
+            throw new IllegalArgumentException("Sender userId ID cannot be null");
         }
         if (targetUserId == null) {
-            throw new IllegalArgumentException("Target user ID cannot be null");
+            throw new IllegalArgumentException("Target userId ID cannot be null");
         }
         if (createdAt == null) {
             throw new IllegalArgumentException("Created at timestamp cannot be null");
         }
         if (senderUserId.equals(targetUserId)) {
-            throw new IllegalArgumentException("Sender and target user IDs cannot be the same");
+            throw new IllegalArgumentException("Sender and target userId IDs cannot be the same");
         }
     }
 

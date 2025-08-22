@@ -43,7 +43,7 @@ public final class RefreshTokenMapper {
     }
 
     public RefreshTokenEntity toEntity(RefreshToken refreshToken) throws CheckedConstraintViolationException {
-        return refreshTokenEntityFactory.create(refreshToken.getId().getValue(), refreshToken.getUserId().getValue(), refreshToken.getSecret().getValue(), refreshToken.getCreatedAt(), refreshToken.getExpiresAt());
+        return refreshTokenEntityFactory.create(refreshToken.getId().getValue(), refreshToken.getUserId().getValue(), refreshToken.getSecret().getValue().toString(), refreshToken.getCreatedAt(), refreshToken.getExpiresAt());
     }
 
     public RefreshTokenDTO toDTO(RefreshToken refreshToken) {

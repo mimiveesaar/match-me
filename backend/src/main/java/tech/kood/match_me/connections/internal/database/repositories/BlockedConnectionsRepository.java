@@ -69,11 +69,11 @@ public final class BlockedConnectionsRepository {
     }
 
     /**
-     * Checks if a user has blocked another user.
+     * Checks if a userId has blocked another userId.
      *
-     * @param blockerUserId The ID of the user who might have blocked
-     * @param blockedUserId The ID of the user who might be blocked
-     * @return true if the first user has blocked the second user, false otherwise
+     * @param blockerUserId The ID of the userId who might have blocked
+     * @param blockedUserId The ID of the userId who might be blocked
+     * @return true if the first userId has blocked the second userId, false otherwise
      */
     public boolean isBlocked(UUID blockerUserId, UUID blockedUserId) {
         String sql = """
@@ -88,11 +88,11 @@ public final class BlockedConnectionsRepository {
 
     /**
      * Checks if there's any block between two users (bidirectional check). Uses the unique index
-     * efficiently by normalizing the user order.
+     * efficiently by normalizing the userId order.
      *
-     * @param userId1 The ID of the first user
-     * @param userId2 The ID of the second user
-     * @return true if either user has blocked the other, false otherwise
+     * @param userId1 The ID of the first userId
+     * @param userId2 The ID of the second userId
+     * @return true if either userId has blocked the other, false otherwise
      */
     public boolean existsBetweenUsers(UUID userId1, UUID userId2) {
         // Use the same normalization as the unique index for optimal performance
@@ -111,10 +111,10 @@ public final class BlockedConnectionsRepository {
     }
 
     /**
-     * Finds all users blocked by a specific user.
+     * Finds all users blocked by a specific userId.
      *
-     * @param blockerUserId The ID of the user who blocked others
-     * @return List of blocked connections where the user is the blocker
+     * @param blockerUserId The ID of the userId who blocked others
+     * @return List of blocked connections where the userId is the blocker
      */
     public List<BlockedConnectionEntity> findByBlockerUserId(UUID blockerUserId) {
         String sql = """
@@ -127,10 +127,10 @@ public final class BlockedConnectionsRepository {
     }
 
     /**
-     * Finds all blockers of a specific user.
+     * Finds all blockers of a specific userId.
      *
-     * @param blockedUserId The ID of the user who was blocked
-     * @return List of blocked connections where the user is blocked
+     * @param blockedUserId The ID of the userId who was blocked
+     * @return List of blocked connections where the userId is blocked
      */
     public List<BlockedConnectionEntity> findByBlockedUserId(UUID blockedUserId) {
         String sql = """
@@ -145,8 +145,8 @@ public final class BlockedConnectionsRepository {
     /**
      * Removes a block between two users.
      *
-     * @param blockerUserId The ID of the user who blocked
-     * @param blockedUserId The ID of the user who was blocked
+     * @param blockerUserId The ID of the userId who blocked
+     * @param blockedUserId The ID of the userId who was blocked
      * @return true if a block was removed, false if no block existed
      */
     public boolean removeBlock(UUID blockerUserId, UUID blockedUserId) {
@@ -170,9 +170,9 @@ public final class BlockedConnectionsRepository {
     }
 
     /**
-     * Deletes all blocked connections involving a specific user (as blocker or blocked).
+     * Deletes all blocked connections involving a specific userId (as blocker or blocked).
      *
-     * @param userId The ID of the user whose blocked connections should be deleted
+     * @param userId The ID of the userId whose blocked connections should be deleted
      * @return Number of connections deleted
      */
     public int deleteByUserId(UUID userId) {
@@ -184,10 +184,10 @@ public final class BlockedConnectionsRepository {
     }
 
     /**
-     * Counts the total number of blocked connections for a specific user (as blocker or blocked).
+     * Counts the total number of blocked connections for a specific userId (as blocker or blocked).
      *
-     * @param userId The ID of the user
-     * @return Total number of blocked connections involving the user
+     * @param userId The ID of the userId
+     * @return Total number of blocked connections involving the userId
      */
     public int countByUserId(UUID userId) {
         String sql = """

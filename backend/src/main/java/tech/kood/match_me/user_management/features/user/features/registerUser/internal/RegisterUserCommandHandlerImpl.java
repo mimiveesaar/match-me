@@ -57,7 +57,7 @@ public final class RegisterUserCommandHandlerImpl implements RegisterUserCommand
             var user = userFactory.newUser(request.email().value(), request.password().value());
             var userEntity = userMapper.toEntity(user);
 
-            // Save the user entity to the database.
+            // Save the userId entity to the database.
             userRepository.saveUser(userEntity);
 
             var result = new RegisterUserResults.Success(

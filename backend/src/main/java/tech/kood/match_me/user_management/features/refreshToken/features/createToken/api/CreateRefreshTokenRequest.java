@@ -7,14 +7,14 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.jmolecules.architecture.cqrs.Command;
-import tech.kood.match_me.user_management.features.user.domain.api.UserDTO;
+import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
 
 @Command
 public record CreateRefreshTokenRequest(@NotNull @JsonProperty("request_id") UUID requestId,
-                                        @NotNull @Valid @JsonProperty("user") UserDTO user,
+                                        @NotNull @Valid @JsonProperty("userId") UserIdDTO userId,
                                         @Nullable @JsonProperty("tracing_id") String tracingId) {
 
-    public CreateRefreshTokenRequest(UserDTO user, @Nullable String tracingId) {
-        this(UUID.randomUUID(), user, tracingId);
+    public CreateRefreshTokenRequest(UserIdDTO userId, @Nullable String tracingId) {
+        this(UUID.randomUUID(), userId, tracingId);
     }
 }

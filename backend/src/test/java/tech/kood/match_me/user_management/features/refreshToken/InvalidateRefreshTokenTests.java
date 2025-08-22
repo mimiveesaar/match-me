@@ -1,24 +1,22 @@
-package tech.kood.match_me.user_management.feature.refreshToken;
+package tech.kood.match_me.user_management.features.refreshToken;
 
 import java.util.UUID;
 
-import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
+import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.RefreshTokenRepository;
-import tech.kood.match_me.user_management.features.user.internal.persistance.UserRepository;
 import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenCommandHandler;
 import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenRequest;
 import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenResults;
-import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenHandler;
-import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenRequest;
-import tech.kood.match_me.user_management.internal.features.refreshToken.getToken.GetRefreshTokenResults;
+import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenCommandHandler;
+import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenRequest;
+import tech.kood.match_me.user_management.features.refreshToken.features.invalidateToken.api.InvalidateRefreshTokenResults;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserResults;
 import tech.kood.match_me.user_management.features.user.features.registerUser.RegisterUserRequestMocker;
@@ -26,50 +24,45 @@ import tech.kood.match_me.user_management.features.user.features.registerUser.Re
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
-public class GetRefreshTokenTests extends UserManagementTestBase {
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    RegisterUserCommandHandler registerUserHandler;
+public class InvalidateRefreshTokenTests extends UserManagementTestBase {
 
     @Autowired
     RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
+    RegisterUserCommandHandler registerUserHandler;
+
+    @Autowired
     CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler;
 
     @Autowired
-    GetRefreshTokenHandler getRefreshTokenRequestHandler;
-
-    @Autowired
-    @Qualifier("userManagementFlyway")
-    Flyway userManagementFlyway;
+    InvalidateRefreshTokenCommandHandler invalidateRefreshTokenHandler;
 
     @Autowired
     RegisterUserRequestMocker registerUserRequestMocker;
 
     @Test
-    void shouldGetRefreshTokenForValidUser() {
+    void shouldInvalidateRefreshToken() throws CheckedConstraintViolationException {
         var registerRequest = registerUserRequestMocker.createValidRequest();
         var registerResult = registerUserHandler.handle(registerRequest);
         assert registerResult instanceof RegisterUserResults.Success;
 
-        var user = ((RegisterUserResults.Success) registerResult).user();
-        var createTokenRequest = CreateRefreshTokenRequest.of(UUID.randomUUID(), user, null);
+        var userId = ((RegisterUserResults.Success) registerResult).userId();
+        var createTokenRequest = new CreateRefreshTokenRequest(UUID.randomUUID(), userId, null);
         var createTokenResult = createRefreshTokenCommandHandler.handle(createTokenRequest);
 
         assert createTokenResult instanceof CreateRefreshTokenResults.Success;
 
         var successResult = (CreateRefreshTokenResults.Success) createTokenResult;
 
-        var getRefreshTokenRequest = GetRefreshTokenRequest.of(UUID.randomUUID(),
-                successResult.refreshToken().getToken(), null);
-        var getRefreshTokenResult = getRefreshTokenRequestHandler.handle(getRefreshTokenRequest);
-        assert getRefreshTokenResult instanceof GetRefreshTokenResults.Success;
+        // Act: Invalidate the refresh token
+        var invalidateRequest = new InvalidateRefreshTokenRequest(successResult.refreshToken().secret(), null);
+        var invalidateResult = invalidateRefreshTokenHandler.handle(invalidateRequest);
 
-        var tokenResult = (GetRefreshTokenResults.Success) getRefreshTokenResult;
-        assert tokenResult.getRefreshToken().equals(successResult.refreshToken().getToken());
+        // Assert: Check if the token was invalidated successfully
+        assert invalidateResult instanceof InvalidateRefreshTokenResults.Success;
+
+        var tokenCheck = refreshTokenRepository.findToken(successResult.refreshToken().secret().toString());
+        assert tokenCheck.isEmpty() : "The refresh token should be invalidated and not found in the repository";
     }
 }
