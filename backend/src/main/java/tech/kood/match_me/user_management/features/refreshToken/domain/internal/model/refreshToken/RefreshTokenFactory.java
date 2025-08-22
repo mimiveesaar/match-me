@@ -3,6 +3,7 @@ package tech.kood.match_me.user_management.features.refreshToken.domain.internal
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.DomainLayer;
 import org.jmolecules.ddd.annotation.Factory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenId.RefreshTokenId;
@@ -18,6 +19,8 @@ import java.time.Instant;
 @Component
 public final class RefreshTokenFactory {
 
+    @Value("${match-me.refresh-token.expiration:2592000}") // Default to 30 days in seconds
+    private int refreshTokenExpiration;
     private final Validator validator;
     private final RefreshTokenIdFactory refreshTokenIdFactory;
     private final RefreshTokenSecretFactory refreshTokenSecretFactory;
@@ -43,6 +46,6 @@ public final class RefreshTokenFactory {
         var refreshTokenId = refreshTokenIdFactory.newId();
         var secret = refreshTokenSecretFactory.createNew();
 
-        return this.create(refreshTokenId, userId, secret, Instant.now(), Instant.now());
+        return this.create(refreshTokenId, userId, secret, Instant.now(), Instant.now().plusSeconds(refreshTokenExpiration));
     }
 }

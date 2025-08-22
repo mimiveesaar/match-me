@@ -4,7 +4,6 @@ import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +27,7 @@ public class RegisterUserTests extends UserManagementTestBase {
     void shouldCreateValidUser() throws CheckedConstraintViolationException {
         var request = registerUserRequestMocker.createValidRequest();
         var result = registerUserHandler.handle(request);
+        System.out.println(result);
         assert result instanceof RegisterUserResults.Success;
     }
 
@@ -38,6 +38,7 @@ public class RegisterUserTests extends UserManagementTestBase {
         request2 = request2.withEmail(request.email());
         registerUserHandler.handle(request);
         var result = registerUserHandler.handle(request2);
+        System.out.println(result);
         assert result instanceof RegisterUserResults.EmailExists;
     }
 

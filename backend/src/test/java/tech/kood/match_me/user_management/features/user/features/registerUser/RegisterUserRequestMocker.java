@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import com.github.javafaker.Faker;
 import tech.kood.match_me.user_management.common.domain.api.EmailDTO;
 import tech.kood.match_me.user_management.common.domain.api.PasswordDTO;
+import tech.kood.match_me.user_management.features.user.utils.passwordFaker.PasswordFaker;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserRequest;
 
 @Component
@@ -16,7 +17,7 @@ public class RegisterUserRequestMocker {
     public RegisterUserRequest createValidRequest() {
         var requestId = UUID.randomUUID();
         var emailDto = new EmailDTO(faker.internet().emailAddress());
-        var passwordDto = new PasswordDTO(faker.internet().password());
+        var passwordDto = new PasswordDTO(PasswordFaker.generatePassword(8,16,true,true));
         return new RegisterUserRequest(requestId, emailDto, passwordDto, null);
     }
 

@@ -11,13 +11,12 @@ public class PasswordHasherBCryptImpl implements PasswordHasher {
     @Override
     public HashingResult hash(String plaintext) {
         String salt = BCrypt.gensalt();
-        String hashedPassword = BCrypt.hashpw(plaintext, salt);
-        return new HashingResult(hashedPassword, salt);
+        return hash(plaintext, salt);
     }
 
     @Override
-    public boolean verify(String plaintext, String hashedPassword, String salt) {
-        var hashedPasswordWithSalt = BCrypt.hashpw(plaintext, salt);
-        return hashedPasswordWithSalt.equals(hashedPassword);
+    public HashingResult hash(String plaintext, String salt) {
+        String hashedPassword = BCrypt.hashpw(plaintext, salt);
+        return new HashingResult(hashedPassword, salt);
     }
 }

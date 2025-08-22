@@ -42,7 +42,12 @@ public class HashedPasswordFactory {
      * @return a new {@link HashedPassword} containing the hash and salt
      */
     public HashedPassword fromPlainText(Password password) {
-        var hashedPassword = passwordHasher.hash(password.getValue());
+        var hashedPassword = passwordHasher.hash(password.toString());
+        return new HashedPassword(hashedPassword.hash(), hashedPassword.salt());
+    }
+
+    public HashedPassword fromPlainText(Password password, String salt) {
+        var hashedPassword = passwordHasher.hash(password.toString(), salt);
         return new HashedPassword(hashedPassword.hash(), hashedPassword.salt());
     }
 }

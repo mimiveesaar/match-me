@@ -8,11 +8,17 @@ import org.jmolecules.architecture.layered.ApplicationLayer;
 
 @ApplicationLayer
 public record EmailDTO (
-        @Email @NotNull @JsonValue String value
+        @Email @NotNull String value
 ) {
 
     @JsonCreator
     public static EmailDTO of(String value) {
         return new EmailDTO(value);
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+        return value;
     }
 }

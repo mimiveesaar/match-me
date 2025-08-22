@@ -57,7 +57,7 @@ public final class LoginCommandHandlerImpl implements LoginCommandHandler {
             var foundUser = userMapper.toUser(userEntity.get());
 
             var password = passwordFactory.create(request.password().value());
-            var hashedPassword = hashedPasswordFactory.fromPlainText(password);
+            var hashedPassword = hashedPasswordFactory.fromPlainText(password, foundUser.getHashedPassword().getSalt());
 
             if (!foundUser.getHashedPassword().equals(hashedPassword)) {
                 return new LoginResults.InvalidCredentials(request.requestId(), request.tracingId());

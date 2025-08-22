@@ -51,8 +51,8 @@ public class RefreshTokenRepository {
                 + "ON CONFLICT (id) DO UPDATE SET expires_at = :expires_at";
 
         Map<String, Object> params = Map.of(
-                "id", refreshToken.getId().toString(),
-                "user_id", refreshToken.getUserId().toString(),
+                "id", refreshToken.getId(),
+                "user_id", refreshToken.getUserId(),
                 "secret", refreshToken.getSecret(),
                 "created_at", Timestamp.from(refreshToken.getCreatedAt()),
                 "expires_at", Timestamp.from(refreshToken.getExpiresAt()));

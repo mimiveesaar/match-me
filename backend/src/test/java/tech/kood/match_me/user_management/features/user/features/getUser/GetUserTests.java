@@ -57,7 +57,7 @@ public class GetUserTests extends UserManagementTestBase {
 
         var email = registerRequest.email();
 
-        var getRequest = new GetUserByEmailRequest(UUID.randomUUID(), email,
+        var getRequest = new GetUserByEmailRequest(email,
                 UUID.randomUUID().toString());
 
         var getResult = getUserByEmailHandler.handle(getRequest);
