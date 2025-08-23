@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.jmolecules.architecture.cqrs.QueryModel;
 import org.jmolecules.architecture.layered.ApplicationLayer;
-import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
+import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.common.domain.api.EmailDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 

@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.common.api;
+package tech.kood.match_me.common.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.ConstraintViolation;

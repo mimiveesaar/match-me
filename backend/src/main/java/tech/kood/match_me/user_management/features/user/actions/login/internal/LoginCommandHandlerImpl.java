@@ -3,7 +3,7 @@ package tech.kood.match_me.user_management.features.user.actions.login.internal;
 import jakarta.validation.Validator;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
+import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.common.domain.internal.password.PasswordFactory;
 import tech.kood.match_me.user_management.features.user.domain.internal.hashedPassword.HashedPasswordFactory;
 import tech.kood.match_me.user_management.features.user.actions.login.api.LoginCommandHandler;

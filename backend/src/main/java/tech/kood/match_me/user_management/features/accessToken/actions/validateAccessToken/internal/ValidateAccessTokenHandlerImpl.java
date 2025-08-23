@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
-import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
+import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;

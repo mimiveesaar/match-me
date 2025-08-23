@@ -7,7 +7,7 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
+import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.user_management.features.accessToken.domain.api.AccessTokenDTO;
 

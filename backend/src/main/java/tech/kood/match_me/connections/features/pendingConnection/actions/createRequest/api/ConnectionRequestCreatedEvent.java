@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.features.pendingConnection.actions.sendRequest.api;
+package tech.kood.match_me.connections.features.pendingConnection.actions.createRequest.api;
 
 import jakarta.validation.constraints.NotNull;
 

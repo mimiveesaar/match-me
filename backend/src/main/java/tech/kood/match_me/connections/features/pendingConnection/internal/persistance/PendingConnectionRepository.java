@@ -65,12 +65,11 @@ public class PendingConnectionRepository {
         return jdbcTemplate.query(sql, Map.of("target_id", targetId), pendingConnectionRowMapper);
     }
 
-    public Optional<PendingConnectionEntity> findBySenderAndTarget(UUID senderId, UUID targetId)
+    public Optional<PendingConnectionEntity> findBetweenUsers(UUID userId1, UUID userId2)
     {
-        String sql = "SELECT * FROM connections.pending_connections WHERE sender_user_id = :sender_id AND target_user_id = :target_id";
-
+        String sql = "SELECT * FROM connections.pending_connections WHERE (sender_user_id = :user1 AND target_user_id = :user2) OR (sender_user_id = :user2 AND target_user_id = :user1)";
         try {
-            var result = jdbcTemplate.queryForObject(sql, Map.of("sender_id", senderId, "target_id", targetId), pendingConnectionRowMapper);
+            var result = jdbcTemplate.queryForObject(sql, Map.of("user1", userId1, "user2", userId2), pendingConnectionRowMapper);
             return Optional.ofNullable(result);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();

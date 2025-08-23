@@ -62,7 +62,7 @@ public class RegisterUserEndpoint {
                 return ResponseEntity.status(500).body(systemError);
             }
 
-        } catch (CheckedConstraintViolationException e) {
+        } catch (Exception e) {
             //This should never happen.
             return ResponseEntity.internalServerError().body(new RegisterUserResults.SystemError(request.requestId(),
                     e.getMessage(), request.tracingId()));

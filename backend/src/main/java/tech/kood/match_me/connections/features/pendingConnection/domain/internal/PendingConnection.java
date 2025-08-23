@@ -41,7 +41,7 @@ public class PendingConnection implements AggregateRoot<PendingConnection, Conne
 
     @Override
     public ConnectionId getId() {
-        return null;
+        return connectionId;
     }
 
     PendingConnection(ConnectionId connectionId, UserId senderId, UserId targetId, Instant createdAt) {

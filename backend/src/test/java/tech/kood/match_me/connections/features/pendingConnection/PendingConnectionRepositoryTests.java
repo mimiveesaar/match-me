@@ -56,10 +56,10 @@ public class PendingConnectionRepositoryTests extends ConnectionsTestBase {
     }
 
     @Test
-    void testFindBySenderAndTarget() {
+    void testFindBetweenUsers() {
         PendingConnectionEntity entity = pendingConnectionEntityMother.createPendingConnectionEntity();
         repository.save(entity);
-        Optional<PendingConnectionEntity> found = repository.findBySenderAndTarget(entity.getSenderId(), entity.getTargetId());
+        Optional<PendingConnectionEntity> found = repository.findBetweenUsers(entity.getSenderId(), entity.getTargetId());
         assertTrue(found.isPresent());
         assertEquals(entity.getSenderId(), found.get().getSenderId());
         assertEquals(entity.getTargetId(), found.get().getTargetId());

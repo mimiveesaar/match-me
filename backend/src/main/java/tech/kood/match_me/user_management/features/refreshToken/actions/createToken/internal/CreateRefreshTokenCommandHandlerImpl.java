@@ -4,7 +4,7 @@ import jakarta.validation.Validator;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
+import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshToken.RefreshToken;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshToken.RefreshTokenFactory;

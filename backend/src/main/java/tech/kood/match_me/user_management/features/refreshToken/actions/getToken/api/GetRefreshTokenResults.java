@@ -6,7 +6,7 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.jmolecules.architecture.cqrs.QueryModel;
-import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
+import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenDTO;
 
 import java.util.UUID;

@@ -2,7 +2,7 @@ package tech.kood.match_me.user_management.features.refreshToken.actions.getToke
 
 import jakarta.validation.Validator;
 import org.springframework.stereotype.Service;
-import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
+import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.features.refreshToken.actions.getToken.api.GetRefreshTokenQueryHandler;
 import tech.kood.match_me.user_management.features.refreshToken.actions.getToken.api.GetRefreshTokenRequest;
 import tech.kood.match_me.user_management.features.refreshToken.actions.getToken.api.GetRefreshTokenResults;

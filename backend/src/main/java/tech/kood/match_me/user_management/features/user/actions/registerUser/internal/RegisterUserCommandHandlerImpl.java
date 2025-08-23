@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
+import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserCommandHandler;
 import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserRequest;

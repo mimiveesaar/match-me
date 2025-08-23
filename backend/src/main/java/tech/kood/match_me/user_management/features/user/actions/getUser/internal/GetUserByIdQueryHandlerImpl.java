@@ -6,7 +6,7 @@ import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
-import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
+import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdQueryHandler;
 import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdRequest;
 import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdResults;
