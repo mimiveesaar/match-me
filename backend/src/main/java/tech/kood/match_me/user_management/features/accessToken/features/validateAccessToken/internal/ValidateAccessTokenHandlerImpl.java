@@ -12,7 +12,7 @@ import com.auth0.jwt.interfaces.Claim;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
 import tech.kood.match_me.user_management.common.domain.internal.userId.UserIdFactory;
-import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
+import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.features.accessToken.domain.internal.model.AccessTokenFactory;
 import tech.kood.match_me.user_management.features.accessToken.features.validateAccessToken.api.ValidateAccessTokenHandler;
 import tech.kood.match_me.user_management.features.accessToken.features.validateAccessToken.api.ValidateAccessTokenRequest;

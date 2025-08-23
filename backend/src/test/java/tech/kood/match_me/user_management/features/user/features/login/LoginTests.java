@@ -1,16 +1,13 @@
 package tech.kood.match_me.user_management.features.user.features.login;
 
-import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
-import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.user_management.features.user.internal.persistance.UserRepository;
+import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.features.user.features.login.api.LoginCommandHandler;
 import tech.kood.match_me.user_management.features.user.features.login.api.LoginRequest;
 import tech.kood.match_me.user_management.features.user.features.login.api.LoginResults;

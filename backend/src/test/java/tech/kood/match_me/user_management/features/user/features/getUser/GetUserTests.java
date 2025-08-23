@@ -9,7 +9,7 @@ import org.junit.jupiter.api.TestInstance;
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.common.domain.api.EmailDTO;
 import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
-import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
+import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.features.user.features.getUser.api.*;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
 import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserResults;

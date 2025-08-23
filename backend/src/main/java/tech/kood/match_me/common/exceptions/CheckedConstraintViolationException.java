@@ -1,6 +1,7 @@
-package tech.kood.match_me.user_management.common.exceptions;
+package tech.kood.match_me.common.exceptions;
 
 import jakarta.validation.ConstraintViolation;
+import org.springframework.modulith.NamedInterface;
 
 import java.util.HashSet;
 import java.util.Set;

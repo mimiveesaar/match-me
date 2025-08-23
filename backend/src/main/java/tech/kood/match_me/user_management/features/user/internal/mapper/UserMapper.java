@@ -6,7 +6,7 @@ import tech.kood.match_me.user_management.common.domain.api.EmailDTO;
 import tech.kood.match_me.user_management.features.user.domain.api.HashedPasswordDTO;
 import tech.kood.match_me.user_management.features.user.domain.api.UserDTO;
 import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
-import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
+import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.common.domain.internal.email.EmailFactory;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.hashedPassword.HashedPasswordFactory;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.user.User;

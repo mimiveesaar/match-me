@@ -5,7 +5,7 @@ import jakarta.validation.Validator;
 import org.jmolecules.ddd.annotation.Factory;
 import org.springframework.stereotype.Component;
 import tech.kood.match_me.user_management.common.domain.internal.userId.UserIdFactory;
-import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
+import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.common.domain.internal.email.Email;
 import tech.kood.match_me.user_management.common.domain.internal.email.EmailFactory;
 import tech.kood.match_me.user_management.features.user.domain.internal.model.hashedPassword.HashedPassword;

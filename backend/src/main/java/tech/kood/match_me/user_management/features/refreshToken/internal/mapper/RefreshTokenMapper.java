@@ -6,7 +6,7 @@ import tech.kood.match_me.user_management.common.domain.internal.userId.UserIdFa
 import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenDTO;
 import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenIdDTO;
 import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
-import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
+import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenSecretDTO;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshToken.RefreshToken;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshToken.RefreshTokenFactory;
