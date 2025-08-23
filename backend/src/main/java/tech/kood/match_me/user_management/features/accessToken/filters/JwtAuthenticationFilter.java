@@ -15,12 +15,12 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import tech.kood.match_me.user_management.features.user.features.getUser.api.GetUserByIdQueryHandler;
-import tech.kood.match_me.user_management.features.user.features.getUser.api.GetUserByIdRequest;
-import tech.kood.match_me.user_management.features.user.features.getUser.api.GetUserByIdResults;
-import tech.kood.match_me.user_management.features.accessToken.features.validateAccessToken.api.ValidateAccessTokenHandler;
-import tech.kood.match_me.user_management.features.accessToken.features.validateAccessToken.api.ValidateAccessTokenRequest;
-import tech.kood.match_me.user_management.features.accessToken.features.validateAccessToken.api.ValidateAccessTokenResults;
+import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdQueryHandler;
+import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdRequest;
+import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdResults;
+import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenHandler;
+import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenRequest;
+import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenResults;
 
 @ApplicationLayer
 @Service

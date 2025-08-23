@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import org.springframework.jdbc.core.RowMapper;
-import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
+import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.refreshTokenEntity.RefreshTokenEntity;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.refreshTokenEntity.RefreshTokenEntityFactory;
 

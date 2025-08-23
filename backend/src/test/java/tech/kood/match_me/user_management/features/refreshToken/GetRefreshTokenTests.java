@@ -7,16 +7,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
-import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.user_management.features.refreshToken.features.getToken.api.GetRefreshTokenQueryHandler;
-import tech.kood.match_me.user_management.features.refreshToken.features.getToken.api.GetRefreshTokenRequest;
-import tech.kood.match_me.user_management.features.refreshToken.features.getToken.api.GetRefreshTokenResults;
-import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenCommandHandler;
-import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenRequest;
-import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenResults;
-import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
-import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserResults;
-import tech.kood.match_me.user_management.features.user.features.registerUser.RegisterUserRequestMocker;
+import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
+import tech.kood.match_me.user_management.features.refreshToken.actions.getToken.api.GetRefreshTokenQueryHandler;
+import tech.kood.match_me.user_management.features.refreshToken.actions.getToken.api.GetRefreshTokenRequest;
+import tech.kood.match_me.user_management.features.refreshToken.actions.getToken.api.GetRefreshTokenResults;
+import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenCommandHandler;
+import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenRequest;
+import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenResults;
+import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserCommandHandler;
+import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserResults;
+import tech.kood.match_me.user_management.features.user.actions.registerUser.RegisterUserRequestMocker;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

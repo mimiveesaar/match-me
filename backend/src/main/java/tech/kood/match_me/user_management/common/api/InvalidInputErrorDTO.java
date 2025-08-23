@@ -2,7 +2,6 @@ package tech.kood.match_me.user_management.common.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.ConstraintViolation;
-import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserRequest;
 
 import java.util.List;
 import java.util.Set;

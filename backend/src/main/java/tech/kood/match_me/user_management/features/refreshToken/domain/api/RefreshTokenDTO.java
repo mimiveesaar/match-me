@@ -3,7 +3,7 @@ package tech.kood.match_me.user_management.features.refreshToken.domain.api;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
+import tech.kood.match_me.common.domain.api.UserIdDTO;
 
 import java.time.Instant;
 
