@@ -7,7 +7,7 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
-import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
+import tech.kood.match_me.common.domain.api.UserIdDTO;
 
 public sealed interface ConnectionRequestResults extends Serializable
         permits ConnectionRequestResults.Success, ConnectionRequestResults.AlreadyExists,

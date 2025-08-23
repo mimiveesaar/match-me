@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.jmolecules.ddd.types.ValueObject;
-import tech.kood.match_me.user_management.common.domain.internal.userId.UserId;
+import tech.kood.match_me.common.domain.internal.userId.UserId;
 
 
 public class AccessToken implements ValueObject {

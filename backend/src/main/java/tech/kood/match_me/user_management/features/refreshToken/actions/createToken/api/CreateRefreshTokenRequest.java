@@ -7,7 +7,7 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.jmolecules.architecture.cqrs.Command;
-import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
+import tech.kood.match_me.common.domain.api.UserIdDTO;
 
 @Command
 public record CreateRefreshTokenRequest(@NotNull @JsonProperty("request_id") UUID requestId,

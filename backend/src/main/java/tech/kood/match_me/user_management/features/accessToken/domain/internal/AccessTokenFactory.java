@@ -3,7 +3,7 @@ package tech.kood.match_me.user_management.features.accessToken.domain.internal;
 import jakarta.validation.Validator;
 import org.jmolecules.ddd.annotation.Factory;
 import org.springframework.stereotype.Component;
-import tech.kood.match_me.user_management.common.domain.internal.userId.UserId;
+import tech.kood.match_me.common.domain.internal.userId.UserId;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 
 

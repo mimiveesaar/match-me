@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.connections.common.domain.connectionId.ConnectionId;
 import tech.kood.match_me.connections.common.domain.connectionId.ConnectionIdFactory;
-import tech.kood.match_me.user_management.common.domain.internal.userId.UserId;
+import tech.kood.match_me.common.domain.internal.userId.UserId;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

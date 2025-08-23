@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
-import tech.kood.match_me.user_management.common.domain.internal.userId.UserIdFactory;
+import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshToken.RefreshToken;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshToken.RefreshTokenFactory;
 import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.RefreshTokenCreated;

@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.common.domain.api;
+package tech.kood.match_me.common.domain.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

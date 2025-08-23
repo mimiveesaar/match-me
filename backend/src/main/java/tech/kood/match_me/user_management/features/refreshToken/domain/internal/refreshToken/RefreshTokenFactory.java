@@ -10,7 +10,7 @@ import tech.kood.match_me.user_management.features.refreshToken.domain.internal.
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshTokenId.RefreshTokenIdFactory;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshTokenSecret.RefreshTokenSecret;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshTokenSecret.RefreshTokenSecretFactory;
-import tech.kood.match_me.user_management.common.domain.internal.userId.UserId;
+import tech.kood.match_me.common.domain.internal.userId.UserId;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

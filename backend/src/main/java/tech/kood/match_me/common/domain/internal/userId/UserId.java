@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.common.domain.internal.userId;
+package tech.kood.match_me.common.domain.internal.userId;
 
 import java.util.UUID;
 import jakarta.validation.constraints.NotNull;

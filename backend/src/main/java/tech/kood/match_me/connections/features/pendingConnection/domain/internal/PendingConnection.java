@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.jmolecules.ddd.types.AggregateRoot;
 import tech.kood.match_me.connections.common.domain.connectionId.ConnectionId;
-import tech.kood.match_me.user_management.common.domain.internal.userId.UserId;
+import tech.kood.match_me.common.domain.internal.userId.UserId;
 
 import java.time.Instant;
 import java.util.Objects;

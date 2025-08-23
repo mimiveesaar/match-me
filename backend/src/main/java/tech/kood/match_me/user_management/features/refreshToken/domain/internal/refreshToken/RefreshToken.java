@@ -6,7 +6,7 @@ import org.jmolecules.architecture.layered.DomainLayer;
 import org.jmolecules.ddd.types.AggregateRoot;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshTokenId.RefreshTokenId;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshTokenSecret.RefreshTokenSecret;
-import tech.kood.match_me.user_management.common.domain.internal.userId.UserId;
+import tech.kood.match_me.common.domain.internal.userId.UserId;
 
 import java.time.Instant;
 import java.util.Objects;

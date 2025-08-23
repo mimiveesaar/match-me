@@ -2,10 +2,10 @@ package tech.kood.match_me.user_management.features.refreshToken.internal.mapper
 
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.stereotype.Component;
-import tech.kood.match_me.user_management.common.domain.internal.userId.UserIdFactory;
+import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenDTO;
 import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenIdDTO;
-import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
+import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenSecretDTO;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshToken.RefreshToken;

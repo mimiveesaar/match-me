@@ -4,7 +4,7 @@ package tech.kood.match_me.user_management.features.user.domain.internal.user;
 import jakarta.validation.Validator;
 import org.jmolecules.ddd.annotation.Factory;
 import org.springframework.stereotype.Component;
-import tech.kood.match_me.user_management.common.domain.internal.userId.UserIdFactory;
+import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.common.domain.internal.email.Email;
 import tech.kood.match_me.user_management.common.domain.internal.email.EmailFactory;
@@ -12,7 +12,7 @@ import tech.kood.match_me.user_management.features.user.domain.internal.hashedPa
 import tech.kood.match_me.user_management.features.user.domain.internal.hashedPassword.HashedPasswordFactory;
 import tech.kood.match_me.user_management.common.domain.internal.password.Password;
 import tech.kood.match_me.user_management.common.domain.internal.password.PasswordFactory;
-import tech.kood.match_me.user_management.common.domain.internal.userId.UserId;
+import tech.kood.match_me.common.domain.internal.userId.UserId;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

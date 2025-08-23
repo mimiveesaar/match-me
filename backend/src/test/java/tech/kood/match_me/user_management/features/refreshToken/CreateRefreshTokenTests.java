@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
-import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
+import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.RefreshTokenRepository;
 import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdQueryHandler;

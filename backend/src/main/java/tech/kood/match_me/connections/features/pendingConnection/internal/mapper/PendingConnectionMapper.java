@@ -10,8 +10,8 @@ import tech.kood.match_me.connections.features.pendingConnection.domain.internal
 import tech.kood.match_me.connections.features.pendingConnection.domain.internal.PendingConnectionFactory;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.pendingConnectionEntity.PendingConnectionEntity;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.pendingConnectionEntity.PendingConnectionEntityFactory;
-import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
-import tech.kood.match_me.user_management.common.domain.internal.userId.UserIdFactory;
+import tech.kood.match_me.common.domain.api.UserIdDTO;
+import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 
 @Component
 @ApplicationLayer

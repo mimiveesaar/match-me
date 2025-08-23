@@ -2,10 +2,10 @@ package tech.kood.match_me.connections.features.pendingConnection.internal.persi
 
 
 import org.jmolecules.architecture.layered.InfrastructureLayer;
-import org.jmolecules.ddd.annotation.Repository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.pendingConnectionEntity.PendingConnectionEntity;
 
 import java.sql.Timestamp;
@@ -30,7 +30,7 @@ public class PendingConnectionRepository {
     public void save(PendingConnectionEntity pendingConnectionEntity)
     {
         String sql = """    
-                INSERT INTO connections.pending_connections (id, sender_id, target_id, created_at)
+                INSERT INTO connections.pending_connections (id, sender_user_id, target_user_id, created_at)
                     VALUES (:id, :sender_id, :target_id, :created_at)
                 """;
 
