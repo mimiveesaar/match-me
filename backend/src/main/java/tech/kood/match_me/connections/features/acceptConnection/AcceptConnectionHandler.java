@@ -6,7 +6,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import jakarta.transaction.Transactional;
 import tech.kood.match_me.connections.internal.database.entities.AcceptedConnectionEntity;
 import tech.kood.match_me.connections.internal.database.repositories.AcceptedConnectionsRepository;
-import tech.kood.match_me.connections.internal.database.repositories.PendingConnectionsRepository;
 
 public final class AcceptConnectionHandler {
 

@@ -10,9 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshToken.RefreshTokenFactory;
-import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenId.RefreshTokenIdFactory;
-import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenSecret.RefreshTokenSecretFactory;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshToken.RefreshTokenFactory;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshTokenId.RefreshTokenIdFactory;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshTokenSecret.RefreshTokenSecretFactory;
 import tech.kood.match_me.user_management.features.refreshToken.internal.mapper.RefreshTokenMapper;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.RefreshTokenRepository;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.refreshTokenEntity.RefreshTokenEntity;

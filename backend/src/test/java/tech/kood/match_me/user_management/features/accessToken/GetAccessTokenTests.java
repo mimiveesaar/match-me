@@ -11,15 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenSecretDTO;
-import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenCommandHandler;
-import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenRequest;
-import tech.kood.match_me.user_management.features.accessToken.features.createAccessToken.api.CreateAccessTokenResults;
-import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenCommandHandler;
-import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenRequest;
-import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenResults;
-import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
-import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserResults;
-import tech.kood.match_me.user_management.features.user.features.registerUser.RegisterUserRequestMocker;
+import tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api.CreateAccessTokenCommandHandler;
+import tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api.CreateAccessTokenRequest;
+import tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api.CreateAccessTokenResults;
+import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenCommandHandler;
+import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenRequest;
+import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenResults;
+import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserCommandHandler;
+import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserResults;
+import tech.kood.match_me.user_management.features.user.actions.registerUser.RegisterUserRequestMocker;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

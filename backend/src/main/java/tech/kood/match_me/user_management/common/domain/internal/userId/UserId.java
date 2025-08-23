@@ -4,7 +4,9 @@ import java.util.UUID;
 import jakarta.validation.constraints.NotNull;
 import org.jmolecules.architecture.layered.DomainLayer;
 import org.jmolecules.ddd.types.Identifier;
+import org.springframework.modulith.NamedInterface;
 
+@NamedInterface
 @DomainLayer
 public class UserId implements Identifier {
 

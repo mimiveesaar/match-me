@@ -8,10 +8,10 @@ import tech.kood.match_me.user_management.features.refreshToken.domain.api.Refre
 import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenSecretDTO;
-import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshToken.RefreshToken;
-import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshToken.RefreshTokenFactory;
-import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenId.RefreshTokenIdFactory;
-import tech.kood.match_me.user_management.features.refreshToken.domain.internal.model.refreshTokenSecret.RefreshTokenSecretFactory;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshToken.RefreshToken;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshToken.RefreshTokenFactory;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshTokenId.RefreshTokenIdFactory;
+import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshTokenSecret.RefreshTokenSecretFactory;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.refreshTokenEntity.RefreshTokenEntity;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.refreshTokenEntity.RefreshTokenEntityFactory;
 

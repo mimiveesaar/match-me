@@ -1,7 +1,6 @@
 package tech.kood.match_me.connections.features.declineConnection;
 
 import org.springframework.context.ApplicationEventPublisher;
-import tech.kood.match_me.connections.internal.database.repositories.PendingConnectionsRepository;
 import tech.kood.match_me.connections.internal.database.repositories.RejectedConnectionsRepository;
 
 public final class DeclineConnectionHandler {

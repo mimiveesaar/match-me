@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/aad244a6-3e32-43ff-878f-c3fa8574f6e5/console.sql" value="aad244a6-3e32-43ff-878f-c3fa8574f6e5" />
+    <file url="file://$PROJECT_DIR$/backend/src/main/resources/connections/database/flyway/V1__init_connections_schema.sql" value="aad244a6-3e32-43ff-878f-c3fa8574f6e5" />
+  </component>
+</project>
