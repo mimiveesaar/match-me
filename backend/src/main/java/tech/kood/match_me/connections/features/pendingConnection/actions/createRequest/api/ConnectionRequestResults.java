@@ -1,6 +1,5 @@
 package tech.kood.match_me.connections.features.pendingConnection.actions.createRequest.api;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 
-public sealed interface ConnectionRequestResults extends Serializable
+public sealed interface ConnectionRequestResults
         permits ConnectionRequestResults.Success, ConnectionRequestResults.AlreadyExists,
         ConnectionRequestResults.SystemError, ConnectionRequestResults.InvalidRequest {
 

@@ -2,12 +2,14 @@ package tech.kood.match_me.connections.features.pendingConnection.actions.create
 
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 import tech.kood.match_me.connections.features.pendingConnection.actions.createRequest.api.ConnectionRequest;
 import tech.kood.match_me.connections.features.pendingConnection.actions.createRequest.api.ConnectionRequestCommandHandler;
+import tech.kood.match_me.connections.features.pendingConnection.actions.createRequest.api.ConnectionRequestCreatedEvent;
 import tech.kood.match_me.connections.features.pendingConnection.actions.createRequest.api.ConnectionRequestResults;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.connections.features.pendingConnection.domain.internal.PendingConnectionFactory;
@@ -23,13 +25,15 @@ public class ConnectionRequestCommandHandlerImpl implements ConnectionRequestCom
     private final PendingConnectionFactory pendingConnectionFactory;
     private final PendingConnectionMapper pendingConnectionMapper;
     private final UserIdFactory userIdFactory;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public ConnectionRequestCommandHandlerImpl(Validator validator, PendingConnectionRepository pendingConnectionRepository, PendingConnectionFactory pendingConnectionFactory, PendingConnectionMapper pendingConnectionMapper, UserIdFactory userIdFactory) {
+    public ConnectionRequestCommandHandlerImpl(Validator validator, PendingConnectionRepository pendingConnectionRepository, PendingConnectionFactory pendingConnectionFactory, PendingConnectionMapper pendingConnectionMapper, UserIdFactory userIdFactory, ApplicationEventPublisher eventPublisher) {
         this.validator = validator;
         this.pendingConnectionRepository = pendingConnectionRepository;
         this.pendingConnectionFactory = pendingConnectionFactory;
         this.pendingConnectionMapper = pendingConnectionMapper;
         this.userIdFactory = userIdFactory;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -55,7 +59,10 @@ public class ConnectionRequestCommandHandlerImpl implements ConnectionRequestCom
 
             pendingConnectionRepository.save(pendingConnectionEntity);
 
-            return new ConnectionRequestResults.Success(request.requestId(), new ConnectionIdDTO(pendingConnection.getId().getValue()), request.tracingId());
+            var connectionId = new ConnectionIdDTO(pendingConnection.getId().getValue());
+            eventPublisher.publishEvent(new ConnectionRequestCreatedEvent(connectionId));
+
+            return new ConnectionRequestResults.Success(request.requestId(), connectionId, request.tracingId());
         } catch (Exception ex) {
             return new ConnectionRequestResults.SystemError(request.requestId(), ex.getMessage(), request.tracingId());
         }

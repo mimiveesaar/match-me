@@ -47,19 +47,3 @@ CREATE UNIQUE INDEX unique_rejected_pair_any_direction
         LEAST(sender_user_id, target_user_id),
         GREATEST(sender_user_id, target_user_id)
     );
-
-CREATE TABLE IF NOT EXISTS connections.blocked_connections (
-    id UUID PRIMARY KEY,
-    blocker_user_id UUID NOT NULL,
-    blocked_user_id UUID NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL
-);
-
-CREATE INDEX idx_blocked_connection_blocker_id ON connections.blocked_connections(blocker_user_id);
-CREATE INDEX idx_blocked_connection_blocked_id ON connections.blocked_connections(blocked_user_id);
-
-CREATE UNIQUE INDEX unique_blocked_pair_any_direction
-    ON connections.blocked_connections (
-        LEAST(blocker_user_id, blocked_user_id),
-        GREATEST(blocker_user_id, blocked_user_id)
-    );
