@@ -50,7 +50,7 @@ public class RejectedConnectionMapper {
             throws CheckedConstraintViolationException {
 
         var connectionId =
-                connectionIdFactory.create(rejectedConnectionDTO.connectionIdDTO().value());
+                connectionIdFactory.create(rejectedConnectionDTO.connectionId().value());
         var rejectedByUserId = userIdFactory.create(rejectedConnectionDTO.rejectedByUser().value());
         var rejectedUserId = userIdFactory.create(rejectedConnectionDTO.rejectedUser().value());
         var reason = RejectedConnectionReason.valueOf(rejectedConnectionDTO.reason().name());

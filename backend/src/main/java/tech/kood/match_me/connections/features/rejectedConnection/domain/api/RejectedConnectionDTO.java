@@ -9,7 +9,7 @@ import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 import java.time.Instant;
 
 public record RejectedConnectionDTO(
-        @NotNull @Valid @JsonProperty("connection_id") ConnectionIdDTO connectionIdDTO,
+        @NotNull @Valid @JsonProperty("connection_id") ConnectionIdDTO connectionId,
         @NotNull @Valid @JsonProperty("rejected_by_user") UserIdDTO rejectedByUser,
         @NotNull @Valid @JsonProperty("rejectedUser") UserIdDTO rejectedUser,
         @NotNull @Valid @JsonProperty("reason") RejectedConnectionReasonDTO reason,
@@ -21,18 +21,18 @@ public record RejectedConnectionDTO(
     }
 
     public RejectedConnectionDTO withRejectedBy(UserIdDTO rejectedBy) {
-        return new RejectedConnectionDTO(connectionIdDTO, rejectedBy, rejectedUser, reason, createdAt);
+        return new RejectedConnectionDTO(connectionId, rejectedBy, rejectedUser, reason, createdAt);
     }
 
     public RejectedConnectionDTO withRejected(UserIdDTO rejected) {
-        return new RejectedConnectionDTO(connectionIdDTO, rejectedByUser, rejected, reason, createdAt);
+        return new RejectedConnectionDTO(connectionId, rejectedByUser, rejected, reason, createdAt);
     }
 
     public RejectedConnectionDTO withReason(RejectedConnectionReasonDTO reason) {
-        return new RejectedConnectionDTO(connectionIdDTO, rejectedByUser, rejectedUser, reason, createdAt);
+        return new RejectedConnectionDTO(connectionId, rejectedByUser, rejectedUser, reason, createdAt);
     }
 
     public RejectedConnectionDTO withCreatedAt(Instant createdAt) {
-        return new RejectedConnectionDTO(connectionIdDTO, rejectedByUser, rejectedUser, reason, createdAt);
+        return new RejectedConnectionDTO(connectionId, rejectedByUser, rejectedUser, reason, createdAt);
     }
 }
