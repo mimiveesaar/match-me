@@ -1,8 +1,10 @@
 package tech.kood.match_me.connections.features.rejectedConnection.actions.deleteRejectedConnection.internal;
 
+import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.deleteRejectedConnection.api.DeleteRejectedConnection;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.deleteRejectedConnection.api.DeleteRejectedConnectionCommandHandler;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.deleteRejectedConnection.api.DeleteRejectedConnectionResults;
@@ -16,15 +18,23 @@ public class DeleteRejectedConnectionCommandHandlerImpl
         implements DeleteRejectedConnectionCommandHandler {
 
     private final RejectedConnectionRepository rejectedConnectionRepository;
+    private final Validator validator;
 
     public DeleteRejectedConnectionCommandHandlerImpl(
-            RejectedConnectionRepository rejectedConnectionRepository) {
+            RejectedConnectionRepository rejectedConnectionRepository, Validator validator) {
         this.rejectedConnectionRepository = rejectedConnectionRepository;
+        this.validator = validator;
     }
 
     @Override
     @Transactional
     public DeleteRejectedConnectionResults handle(DeleteRejectedConnection request) {
+
+        var validationResults = validator.validate(request);
+        if (!validationResults.isEmpty()) {
+            return new DeleteRejectedConnectionResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.from(validationResults), request.tracingId());
+        }
+
         try {
             UUID connectionId = request.connectionId().value();
 
@@ -37,7 +47,7 @@ public class DeleteRejectedConnectionCommandHandlerImpl
             }
 
             // Delete the rejected connection
-            boolean deleted = rejectedConnectionRepository.deleteById(connectionId);
+            rejectedConnectionRepository.deleteById(connectionId);
 
             return new DeleteRejectedConnectionResults.Success(request.requestId(),
                     request.tracingId());

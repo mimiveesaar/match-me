@@ -13,6 +13,7 @@ import java.util.UUID;
 public record DeleteRejectedConnection(@NotNull @JsonProperty("request_id") UUID requestId,
         @NotNull @Valid @JsonProperty("connection_id") ConnectionIdDTO connectionId,
         @Nullable @JsonProperty("tracing_id") String tracingId) {
+
     public DeleteRejectedConnection withRequestId(UUID requestId) {
         return new DeleteRejectedConnection(requestId, connectionId, tracingId);
     }
