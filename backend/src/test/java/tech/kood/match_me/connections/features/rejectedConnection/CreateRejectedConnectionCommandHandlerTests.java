@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.connections.common.ConnectionsTestBase;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnection;
+import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionRequest;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionCommandHandler;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionResults;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.api.RejectedConnectionReasonDTO;
@@ -36,7 +36,7 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var requestId = UUID.randomUUID();
         var tracingId = "test-tracing-id";
 
-        var request = new CreateRejectedConnection(requestId, rejectedByUserId, rejectedUserId,
+        var request = new CreateRejectedConnectionRequest(requestId, rejectedByUserId, rejectedUserId,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED, tracingId);
         var result = createRejectedConnectionHandler.handle(request);
 
@@ -60,7 +60,7 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedUserId = new UserIdDTO(UUID.randomUUID());
         var requestId = UUID.randomUUID();
 
-        var request = new CreateRejectedConnection(requestId, rejectedByUserId, rejectedUserId,
+        var request = new CreateRejectedConnectionRequest(requestId, rejectedByUserId, rejectedUserId,
                 RejectedConnectionReasonDTO.CONNECTION_REMOVED, null);
         var result = createRejectedConnectionHandler.handle(request);
 
@@ -82,7 +82,7 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var requestId = UUID.randomUUID();
         var tracingId = "test-tracing-id";
 
-        var request = new CreateRejectedConnection(requestId, rejectedByUserId, rejectedUserId,
+        var request = new CreateRejectedConnectionRequest(requestId, rejectedByUserId, rejectedUserId,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED, tracingId);
         var result = createRejectedConnectionHandler.handle(request);
 
@@ -103,7 +103,7 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedUserId = new UserIdDTO(UUID.randomUUID());
         var tracingId = "test-tracing-id";
 
-        var request = new CreateRejectedConnection(null, rejectedByUserId, rejectedUserId,
+        var request = new CreateRejectedConnectionRequest(null, rejectedByUserId, rejectedUserId,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED, tracingId);
         var result = createRejectedConnectionHandler.handle(request);
 
@@ -116,7 +116,7 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var requestId = UUID.randomUUID();
         var tracingId = "test-tracing-id";
 
-        var request = new CreateRejectedConnection(requestId, null, rejectedUserId,
+        var request = new CreateRejectedConnectionRequest(requestId, null, rejectedUserId,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED, tracingId);
         var result = createRejectedConnectionHandler.handle(request);
 
@@ -129,7 +129,7 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var requestId = UUID.randomUUID();
         var tracingId = "test-tracing-id";
 
-        var request = new CreateRejectedConnection(requestId, rejectedByUserId, null,
+        var request = new CreateRejectedConnectionRequest(requestId, rejectedByUserId, null,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED, tracingId);
         var result = createRejectedConnectionHandler.handle(request);
 
@@ -143,7 +143,7 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var requestId = UUID.randomUUID();
         var tracingId = "test-tracing-id";
 
-        var request = new CreateRejectedConnection(requestId, rejectedByUserId, rejectedUserId,
+        var request = new CreateRejectedConnectionRequest(requestId, rejectedByUserId, rejectedUserId,
                 null, tracingId);
         var result = createRejectedConnectionHandler.handle(request);
 
@@ -157,7 +157,7 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var requestId = UUID.randomUUID();
         var tracingId = "test-tracing-id";
 
-        var request = new CreateRejectedConnection(requestId, rejectedByUserId, rejectedUserId,
+        var request = new CreateRejectedConnectionRequest(requestId, rejectedByUserId, rejectedUserId,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED, tracingId);
         var result = createRejectedConnectionHandler.handle(request);
 
@@ -170,7 +170,7 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var requestId = UUID.randomUUID();
         var tracingId = "test-tracing-id";
 
-        var request = new CreateRejectedConnection(requestId, userId, userId,
+        var request = new CreateRejectedConnectionRequest(requestId, userId, userId,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED, tracingId);
         var result = createRejectedConnectionHandler.handle(request);
 
@@ -184,14 +184,14 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var userB = new UserIdDTO(UUID.randomUUID());
         var requestId1 = UUID.randomUUID();
 
-        var request1 = new CreateRejectedConnection(requestId1, userA, userB,
+        var request1 = new CreateRejectedConnectionRequest(requestId1, userA, userB,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED, "trace-1");
         var result1 = createRejectedConnectionHandler.handle(request1);
         assertInstanceOf(CreateRejectedConnectionResults.Success.class, result1);
 
         // Try to create a rejection from B to A
         var requestId2 = UUID.randomUUID();
-        var request2 = new CreateRejectedConnection(requestId2, userB, userA,
+        var request2 = new CreateRejectedConnectionRequest(requestId2, userB, userA,
                 RejectedConnectionReasonDTO.CONNECTION_REMOVED, "trace-2");
         var result2 = createRejectedConnectionHandler.handle(request2);
 
@@ -207,13 +207,13 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedUserId2 = new UserIdDTO(UUID.randomUUID());
 
         // Test CONNECTION_DECLINED reason
-        var request1 = new CreateRejectedConnection(UUID.randomUUID(), rejectedByUserId1, rejectedUserId1,
+        var request1 = new CreateRejectedConnectionRequest(UUID.randomUUID(), rejectedByUserId1, rejectedUserId1,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED, "trace-1");
         var result1 = createRejectedConnectionHandler.handle(request1);
         assertInstanceOf(CreateRejectedConnectionResults.Success.class, result1);
 
         // Test CONNECTION_REMOVED reason
-        var request2 = new CreateRejectedConnection(UUID.randomUUID(), rejectedByUserId2, rejectedUserId2,
+        var request2 = new CreateRejectedConnectionRequest(UUID.randomUUID(), rejectedByUserId2, rejectedUserId2,
                 RejectedConnectionReasonDTO.CONNECTION_REMOVED, "trace-2");
         var result2 = createRejectedConnectionHandler.handle(request2);
         assertInstanceOf(CreateRejectedConnectionResults.Success.class, result2);
@@ -233,7 +233,7 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedUserId = new UserIdDTO(UUID.randomUUID());
         var requestId = UUID.randomUUID();
 
-        var request = new CreateRejectedConnection(requestId, rejectedByUserId, rejectedUserId,
+        var request = new CreateRejectedConnectionRequest(requestId, rejectedByUserId, rejectedUserId,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED, "test-trace");
 
         // Count rejections before
@@ -253,9 +253,9 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedUserId1 = new UserIdDTO(UUID.randomUUID());
         var rejectedUserId2 = new UserIdDTO(UUID.randomUUID());
 
-        var request1 = new CreateRejectedConnection(UUID.randomUUID(), rejectedByUserId, rejectedUserId1,
+        var request1 = new CreateRejectedConnectionRequest(UUID.randomUUID(), rejectedByUserId, rejectedUserId1,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED, "trace-1");
-        var request2 = new CreateRejectedConnection(UUID.randomUUID(), rejectedByUserId, rejectedUserId2,
+        var request2 = new CreateRejectedConnectionRequest(UUID.randomUUID(), rejectedByUserId, rejectedUserId2,
                 RejectedConnectionReasonDTO.CONNECTION_REMOVED, "trace-2");
 
         var result1 = createRejectedConnectionHandler.handle(request1);
@@ -274,9 +274,9 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedByUserId2 = new UserIdDTO(UUID.randomUUID());
         var rejectedUserId = new UserIdDTO(UUID.randomUUID());
 
-        var request1 = new CreateRejectedConnection(UUID.randomUUID(), rejectedByUserId1, rejectedUserId,
+        var request1 = new CreateRejectedConnectionRequest(UUID.randomUUID(), rejectedByUserId1, rejectedUserId,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED, "trace-1");
-        var request2 = new CreateRejectedConnection(UUID.randomUUID(), rejectedByUserId2, rejectedUserId,
+        var request2 = new CreateRejectedConnectionRequest(UUID.randomUUID(), rejectedByUserId2, rejectedUserId,
                 RejectedConnectionReasonDTO.CONNECTION_REMOVED, "trace-2");
 
         var result1 = createRejectedConnectionHandler.handle(request1);

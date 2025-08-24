@@ -4,5 +4,5 @@ import org.jmolecules.architecture.layered.ApplicationLayer;
 
 @ApplicationLayer
 public interface GetRejectionsByUserQueryHandler {
-    GetRejectionsByUserResults handle(GetRejectionsByUser request);
+    GetRejectionsByUserResults handle(GetRejectionsByUserRequest request);
 }

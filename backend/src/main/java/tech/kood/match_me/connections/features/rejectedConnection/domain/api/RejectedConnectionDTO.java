@@ -4,19 +4,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
-import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
+import tech.kood.match_me.connections.common.api.ConnectionId;
 
 import java.time.Instant;
 
 public record RejectedConnectionDTO(
-        @NotNull @Valid @JsonProperty("connection_id") ConnectionIdDTO connectionId,
+        @NotNull @Valid @JsonProperty("connection_id") ConnectionId connectionId,
         @NotNull @Valid @JsonProperty("rejected_by_user") UserIdDTO rejectedByUser,
         @NotNull @Valid @JsonProperty("rejectedUser") UserIdDTO rejectedUser,
         @NotNull @Valid @JsonProperty("reason") RejectedConnectionReasonDTO reason,
         @NotNull@JsonProperty("created_at")Instant createdAt
 ) {
 
-    public RejectedConnectionDTO withConnectionIdDTO(ConnectionIdDTO connectionIdDTO) {
+    public RejectedConnectionDTO withConnectionIdDTO(ConnectionId connectionIdDTO) {
         return new RejectedConnectionDTO(connectionIdDTO, rejectedByUser, rejectedUser, reason, createdAt);
     }
 

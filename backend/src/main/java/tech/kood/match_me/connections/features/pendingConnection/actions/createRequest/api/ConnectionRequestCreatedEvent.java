@@ -2,7 +2,7 @@ package tech.kood.match_me.connections.features.pendingConnection.actions.create
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
-import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
+import tech.kood.match_me.connections.common.api.ConnectionId;
 
-public record ConnectionRequestCreatedEvent(@NotNull @JsonProperty("connection_id") ConnectionIdDTO connectionId) {
+public record ConnectionRequestCreatedEvent(@NotNull @JsonProperty("connection_id") ConnectionId connectionId) {
 }

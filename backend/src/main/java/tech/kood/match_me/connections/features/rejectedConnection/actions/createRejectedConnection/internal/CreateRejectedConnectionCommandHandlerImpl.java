@@ -4,9 +4,8 @@ import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import tech.kood.match_me.common.api.InputFieldErrorDTO;
-import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnection;
+import tech.kood.match_me.connections.common.api.ConnectionId;
+import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionRequest;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionCommandHandler;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionResults;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.internal.RejectedConnection;
@@ -18,10 +17,7 @@ import tech.kood.match_me.connections.features.rejectedConnection.internal.persi
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 @ApplicationLayer
@@ -47,7 +43,7 @@ public class CreateRejectedConnectionCommandHandlerImpl
 
     @Override
     @Transactional
-    public CreateRejectedConnectionResults handle(CreateRejectedConnection request) {
+    public CreateRejectedConnectionResults handle(CreateRejectedConnectionRequest request) {
 
 
         var validationErrors = validator.validate(request);
@@ -77,7 +73,7 @@ public class CreateRejectedConnectionCommandHandlerImpl
             rejectedConnectionRepository.save(entity);
 
             return new CreateRejectedConnectionResults.Success(request.requestId(),
-                    new tech.kood.match_me.connections.common.api.ConnectionIdDTO(
+                    new ConnectionId(
                             rejectedConnection.getId().getValue()),
                     request.tracingId());
 

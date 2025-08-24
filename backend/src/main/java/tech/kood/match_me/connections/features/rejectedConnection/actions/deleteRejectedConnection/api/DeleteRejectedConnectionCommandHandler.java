@@ -4,5 +4,5 @@ import org.jmolecules.architecture.layered.ApplicationLayer;
 
 @ApplicationLayer
 public interface DeleteRejectedConnectionCommandHandler {
-    DeleteRejectedConnectionResults handle(DeleteRejectedConnection request);
+    DeleteRejectedConnectionResults handle(DeleteRejectedConnectionRequest request);
 }

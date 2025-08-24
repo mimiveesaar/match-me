@@ -4,5 +4,5 @@ import org.jmolecules.architecture.layered.ApplicationLayer;
 
 @ApplicationLayer
 public interface CreateRejectedConnectionCommandHandler {
-    CreateRejectedConnectionResults handle(CreateRejectedConnection request);
+    CreateRejectedConnectionResults handle(CreateRejectedConnectionRequest request);
 }

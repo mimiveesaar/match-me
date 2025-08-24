@@ -11,11 +11,11 @@ import java.util.UUID;
 
 @NamedInterface
 @ApplicationLayer
-public record ConnectionIdDTO(@NotNull UUID value) {
+public record ConnectionId(@NotNull UUID value) {
 
     @JsonCreator
-    public static ConnectionIdDTO of(String value) {
-        return new ConnectionIdDTO(UUID.fromString(value));
+    public static ConnectionId of(String value) {
+        return new ConnectionId(UUID.fromString(value));
     }
 
     @JsonValue

@@ -3,7 +3,7 @@ package tech.kood.match_me.connections.features.rejectedConnection.internal.mapp
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.stereotype.Component;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
+import tech.kood.match_me.connections.common.api.ConnectionId;
 import tech.kood.match_me.connections.common.domain.connectionId.ConnectionIdFactory;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.api.RejectedConnectionDTO;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.api.RejectedConnectionReasonDTO;
@@ -71,7 +71,7 @@ public class RejectedConnectionMapper {
     }
 
     public RejectedConnectionDTO toDTO(RejectedConnection rejectedConnection) {
-        var connectionIdDTO = new ConnectionIdDTO(rejectedConnection.getId().getValue());
+        var connectionIdDTO = new ConnectionId(rejectedConnection.getId().getValue());
         var rejectedByUserDTO = new UserIdDTO(rejectedConnection.getRejectedByUser().getValue());
         var rejectedUserDTO = new UserIdDTO(rejectedConnection.getRejectedUser().getValue());
         var reasonDTO = RejectedConnectionReasonDTO.valueOf(rejectedConnection.getReason().name());

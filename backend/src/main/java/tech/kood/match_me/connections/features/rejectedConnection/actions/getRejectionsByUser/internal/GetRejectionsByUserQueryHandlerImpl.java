@@ -5,7 +5,7 @@ import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.stereotype.Component;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectionsByUser.api.GetRejectionsByUser;
+import tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectionsByUser.api.GetRejectionsByUserRequest;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectionsByUser.api.GetRejectionsByUserQueryHandler;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectionsByUser.api.GetRejectionsByUserResults;
 import tech.kood.match_me.connections.features.rejectedConnection.internal.mapper.RejectedConnectionMapper;
@@ -35,7 +35,7 @@ public class GetRejectionsByUserQueryHandlerImpl implements GetRejectionsByUserQ
     }
 
     @Override
-    public GetRejectionsByUserResults handle(GetRejectionsByUser request) {
+    public GetRejectionsByUserResults handle(GetRejectionsByUserRequest request) {
 
         var validationErrors = validator.validate(request);
         if (!validationErrors.isEmpty()) {
