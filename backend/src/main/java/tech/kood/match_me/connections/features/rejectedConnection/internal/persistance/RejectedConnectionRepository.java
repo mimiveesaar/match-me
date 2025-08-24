@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import tech.kood.match_me.connections.features.rejectedConnection.internal.persistance.rejectedConnectionEntity.RejectedConnectionEntity;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,11 +35,11 @@ public class RejectedConnectionRepository {
                         """;
 
         jdbcTemplate.update(sql,
-                Map.of("id", rejectedConnectionEntity.getId(), "rejected_by_user_id",
-                        rejectedConnectionEntity.getRejectedByUserId(), "rejected_user_id",
-                        rejectedConnectionEntity.getRejectedUserId(), "reason",
-                        rejectedConnectionEntity.getReason().toString(), "created_at",
-                        Timestamp.from(rejectedConnectionEntity.getCreatedAt())));
+                Map.of("id", rejectedConnectionEntity.getId(),
+                        "rejected_by_user_id", rejectedConnectionEntity.getRejectedByUserId(),
+                        "rejected_user_id", rejectedConnectionEntity.getRejectedUserId(),
+                        "reason", rejectedConnectionEntity.getReason().toString(),
+                        "created_at", Timestamp.from(rejectedConnectionEntity.getCreatedAt())));
     }
 
     public Optional<RejectedConnectionEntity> findById(UUID id) {
@@ -84,12 +83,6 @@ public class RejectedConnectionRepository {
     public boolean deleteById(UUID id) {
         String sql = "DELETE FROM connections.rejected_connections WHERE id = :id";
         int rowsAffected = jdbcTemplate.update(sql, Map.of("id", id));
-        return rowsAffected > 0;
-    }
-
-    public boolean deleteOlderThan(Instant timestamp) {
-        String sql = "DELETE FROM connections.rejected_connections WHERE created_at < :timestamp";
-        int rowsAffected = jdbcTemplate.update(sql, Map.of("timestamp", Timestamp.from(timestamp)));
         return rowsAffected > 0;
     }
 

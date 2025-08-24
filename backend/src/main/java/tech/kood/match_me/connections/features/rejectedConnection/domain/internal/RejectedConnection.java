@@ -5,10 +5,12 @@ import jakarta.validation.constraints.NotNull;
 import org.jmolecules.ddd.types.AggregateRoot;
 import tech.kood.match_me.connections.common.domain.connectionId.ConnectionId;
 import tech.kood.match_me.common.domain.internal.userId.UserId;
+import tech.kood.match_me.connections.features.rejectedConnection.domain.internal.validation.ValidRejectedConnection;
 
 import java.time.Instant;
 import java.util.Objects;
 
+@ValidRejectedConnection
 public class RejectedConnection implements AggregateRoot<RejectedConnection, ConnectionId> {
 
     @Valid
@@ -59,6 +61,11 @@ public class RejectedConnection implements AggregateRoot<RejectedConnection, Con
         this.rejectedUser = rejectedUser;
         this.reason = reason;
         this.createdAt = createdAt;
+
+        //User should not be able to reject themselves.
+        if (this.rejectedByUser.equals(this.rejectedUser)) {
+            throw new IllegalArgumentException("Rejected user cannot be the same as rejected by user");
+        }
     }
 
     @Override

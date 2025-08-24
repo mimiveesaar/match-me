@@ -39,13 +39,8 @@ public class DeleteRejectedConnectionCommandHandlerImpl
             // Delete the rejected connection
             boolean deleted = rejectedConnectionRepository.deleteById(connectionId);
 
-            if (deleted) {
-                return new DeleteRejectedConnectionResults.Success(request.requestId(),
-                        request.tracingId());
-            } else {
-                return new DeleteRejectedConnectionResults.AlreadyDeleted(request.requestId(),
-                        request.tracingId());
-            }
+            return new DeleteRejectedConnectionResults.Success(request.requestId(),
+                    request.tracingId());
 
         } catch (Exception e) {
             return new DeleteRejectedConnectionResults.SystemError(request.requestId(),

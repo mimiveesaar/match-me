@@ -4,6 +4,7 @@ import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import tech.kood.match_me.common.api.InputFieldErrorDTO;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnection;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionCommandHandler;
@@ -17,6 +18,7 @@ import tech.kood.match_me.connections.features.rejectedConnection.internal.persi
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -67,12 +69,10 @@ public class CreateRejectedConnectionCommandHandlerImpl
                         request.tracingId());
             }
 
-            // Create a new rejection.
             RejectedConnection rejectedConnection = rejectedConnectionFactory.createNew(
                     rejectedByUserId, rejectedUserId, RejectedConnectionReason
                             .valueOf(request.reason().name()));
 
-            // Save
             RejectedConnectionEntity entity = rejectedConnectionMapper.toEntity(rejectedConnection);
             rejectedConnectionRepository.save(entity);
 

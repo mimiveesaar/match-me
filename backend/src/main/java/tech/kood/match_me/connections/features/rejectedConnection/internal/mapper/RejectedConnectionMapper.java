@@ -6,6 +6,7 @@ import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 import tech.kood.match_me.connections.common.domain.connectionId.ConnectionIdFactory;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.api.RejectedConnectionDTO;
+import tech.kood.match_me.connections.features.rejectedConnection.domain.api.RejectedConnectionReasonDTO;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.internal.RejectedConnection;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.internal.RejectedConnectionFactory;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.internal.RejectedConnectionReason;
@@ -53,9 +54,10 @@ public class RejectedConnectionMapper {
         var rejectedByUserId = userIdFactory.create(rejectedConnectionDTO.rejectedByUser().value());
         var rejectedUserId = userIdFactory.create(rejectedConnectionDTO.rejectedUser().value());
         var reason = RejectedConnectionReason.valueOf(rejectedConnectionDTO.reason().name());
+        var createdAt = rejectedConnectionDTO.createdAt();
 
         return rejectedConnectionFactory.create(connectionId, rejectedByUserId, rejectedUserId,
-                reason, null); // createdAt is not in DTO, might need to handle separately
+                reason, createdAt); // createdAt is not in DTO, might need to handle separately
     }
 
     public RejectedConnectionEntity toEntity(RejectedConnection rejectedConnection)
@@ -72,12 +74,10 @@ public class RejectedConnectionMapper {
         var connectionIdDTO = new ConnectionIdDTO(rejectedConnection.getId().getValue());
         var rejectedByUserDTO = new UserIdDTO(rejectedConnection.getRejectedByUser().getValue());
         var rejectedUserDTO = new UserIdDTO(rejectedConnection.getRejectedUser().getValue());
-        var reasonDTO =
-                tech.kood.match_me.connections.features.rejectedConnection.domain.api.RejectedConnectionReasonDTO
-                        .valueOf(rejectedConnection.getReason().name());
+        var reasonDTO = RejectedConnectionReasonDTO.valueOf(rejectedConnection.getReason().name());
 
         return new RejectedConnectionDTO(connectionIdDTO, rejectedByUserDTO, rejectedUserDTO,
-                reasonDTO);
+                reasonDTO, rejectedConnection.getCreatedAt());
     }
 
     public RejectedConnectionDTO toDTO(RejectedConnectionEntity rejectedConnectionEntity)

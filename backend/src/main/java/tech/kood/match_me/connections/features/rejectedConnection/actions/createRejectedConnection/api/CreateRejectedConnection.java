@@ -9,9 +9,11 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.jmolecules.architecture.cqrs.Command;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
+import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.validation.ValidCreateRejectedConnection;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.api.RejectedConnectionReasonDTO;
 
 @Command
+@ValidCreateRejectedConnection
 public record CreateRejectedConnection(@NotNull @JsonProperty("request_id") UUID requestId,
         @NotNull @Valid @JsonProperty("rejected_by_user") UserIdDTO rejectedByUser,
         @NotNull @Valid @JsonProperty("rejected_user") UserIdDTO rejectedUser,
