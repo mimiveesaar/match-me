@@ -1,11 +1,13 @@
 package tech.kood.match_me.matching.repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -67,7 +69,13 @@ public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
             CriteriaQuery<Homeplanet> hpQuery = cb.createQuery(Homeplanet.class);
             Root<Homeplanet> hpRoot = hpQuery.from(Homeplanet.class);
             hpQuery.select(hpRoot).where(cb.equal(hpRoot.get("name"), filter.getHomeplanet()));
-            Homeplanet selectedPlanet = entityManager.createQuery(hpQuery).getSingleResult();
+
+            Homeplanet selectedPlanet;
+            try {
+                selectedPlanet = entityManager.createQuery(hpQuery).getSingleResult();
+            } catch (NoResultException e) {
+                return Collections.emptyList();
+            }
 
             double homeLat = selectedPlanet.getLatitude();
             double homeLon = selectedPlanet.getLongitude();
@@ -93,7 +101,7 @@ public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
             predicates.add(cb.equal(homeplanetJoin.get("name"), filter.getHomeplanet()));
         }
 
-        query.where(cb.and(predicates.toArray(new Predicate[0])));
+        query.where(cb.and(predicates.toArray(Predicate[]::new)));
         return entityManager.createQuery(query).getResultList();
     }
 }

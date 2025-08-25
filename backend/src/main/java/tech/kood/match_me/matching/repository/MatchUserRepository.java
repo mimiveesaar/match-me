@@ -13,7 +13,6 @@ public interface MatchUserRepository extends JpaRepository<User, UUID>, MatchUse
     
     List<User> findByHomeplanetId(Integer homeplanetId);
     List<User> findByLookingForId(Integer lookingForId);
-    List<User> findByHomeplanetIdAndLookingForIdAndBodyformId(Integer homeplanetId, Integer lookingForId, Integer bodyformId);
-
     List<User> findByBodyformId(Integer bodyformId);
+    List<User> findByHomeplanetIdAndLookingForIdAndBodyformId(Integer homeplanetId, Integer lookingForId, Integer bodyformId);
 }

@@ -11,6 +11,7 @@ interface RangeSliderProps {
   gap?: number;
   selectedRange: [number, number];
   onChange: (range: [number, number]) => void;
+  maxOnly?: boolean;
 }
 
 export const RangeSlider: React.FC<RangeSliderProps> = ({
@@ -21,37 +22,40 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
   gap = 50,
   selectedRange,
   onChange,
+  maxOnly = false, 
 }) => {
   const [minVal, maxVal] = selectedRange;
 
   const handleMinChange = (val: number) => {
+    if (maxOnly) return; // Disable min changes if maxOnly mode
     const clamped = Math.min(val, maxVal - gap);
     onChange([clamped, maxVal]);
   };
 
   const handleMaxChange = (val: number) => {
-    const clamped = Math.max(val, minVal + gap);
-    onChange([minVal, clamped]);
+    const clamped = maxOnly ? Math.max(val, min) : Math.max(val, minVal + gap);
+    const newMin = maxOnly ? min : minVal;
+    onChange([newMin, clamped]);
   };
 
   return (
     <div className="range-wrapper">
-
       <header>
         <h2 className="font-serif text-sm">{header}</h2>
       </header>
 
       <div className="range-input mb-3">
-
-        <input
-          type="range"
-          min={min}
-          max={max}
-          step={step}
-          value={minVal}
-          onChange={(e) => handleMinChange(Number(e.target.value))}
-        />
-
+        {!maxOnly && (
+          <input
+            type="range"
+            min={min}
+            max={max}
+            step={step}
+            value={minVal}
+            onChange={(e) => handleMinChange(Number(e.target.value))}
+          />
+        )}
+        
         <input
           type="range"
           min={min}
@@ -60,34 +64,30 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
           value={maxVal}
           onChange={(e) => handleMaxChange(Number(e.target.value))}
         />
-
-        <div className="slider " />
+        <div className="slider" />
       </div>
 
       <div className="age-distance-input font-serif">
-        <div className="field">
-          <input
-            type="number"
-            value={minVal}
-            // min={min}
-            // max={maxVal - gap}
-            readOnly
-            className="text-left ml-0.5"
-          />
-        </div>
+        {!maxOnly && (
+          <div className="field">
+            <input
+              type="number"
+              value={minVal}
+              readOnly
+              className="text-left ml-0.5"
+            />
+          </div>
+        )}
+        
         <div className="field">
           <input
             type="number"
             value={maxVal}
-            // min={minVal + gap}
-            // max={max}
             readOnly
-            className="text-right"
+            className={maxOnly ? "text-left ml-0.5" : "text-right"}
           />
         </div>
       </div>
     </div>
   );
 };
-
-

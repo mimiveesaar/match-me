@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import tech.kood.match_me.matching.dto.MatchFilter;
 import tech.kood.match_me.matching.dto.MatchResultDto;
 import tech.kood.match_me.matching.model.User;
@@ -22,6 +24,7 @@ public class MatchController {
 
     private final MatchService matchService;
     private final MatchUserRepository userRepository; // to load current user
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public MatchController(MatchService matchService,
                            MatchUserRepository userRepository) {
@@ -30,33 +33,27 @@ public class MatchController {
     }
 
     @PostMapping("/matches/{userId}")
-    public List<MatchResultDto> getMatches(@PathVariable UUID userId,
-                                           @RequestBody MatchFilter filter) {
-        System.out.println("got filter: " + filter);
+    public List<MatchResultDto> getMatches(
+            @PathVariable UUID userId,
+            @RequestBody String rawBody) {   // accept raw body first
 
-        // Load current user from DB
-        User currentUser = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        // Log the raw JSON
+        System.out.println("RAW JSON BODY: " + rawBody);
 
-        // Call service with both filter + current user
-        return matchService.getMatches(filter, currentUser);
+        try {
+            // Deserialize manually into your DTO
+            MatchFilter filter = objectMapper.readValue(rawBody, MatchFilter.class);
+            System.out.println("DESERIALIZED FILTER: " + filter);
+
+            // Load current user from DB
+            User currentUser = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            // Call service with both filter + current user
+            return matchService.getMatches(filter, currentUser);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse JSON", e);
+        }
     }
 }
-
-
-// @RestController
-// @RequestMapping("/api")
-// public class MatchController {
-
-//     private final MatchService matchService;
-
-//     public MatchController(MatchService matchService) {
-//         this.matchService = matchService;
-//     }
-
-//     @PostMapping("/matches")
-//     public List<User> getMatches(@RequestBody MatchFilter filter) {
-//         System.out.println("got filter: " + filter);
-//         return matchService.getMatches(filter);
-//     }
-// }

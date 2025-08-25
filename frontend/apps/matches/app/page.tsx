@@ -7,32 +7,24 @@ import { MatchCardFront } from "/workspace/frontend/packages/components/src/orga
 import { MatchCardBack } from "/workspace/frontend/packages/components/src/organisms/MatchCard/MatchCardBack";
 import { AlienMeetLogo } from "/workspace/frontend/packages/components/src/atoms/Alien.meet logo/alien_meet";
 import { useUserSearch } from "/workspace/frontend/apps/matches/app/hooks/useUserSearch";
-import { Filters } from "/workspace/frontend/apps/matches/app/hooks/useUserSearch";
+import { MatchUser, Filters } from "../types";
 
-interface MatchUser {
-  id: string;
-  username?: string;
-  age?: number;
-  location: string;
-  lookingFor: string;
-  bodyform: string;
-  bio?: string;
-  interests?: string[];
-}
 
 export default function Matches() {
 
   const [filters, setFilters] = useState<Filters>({
-    ageRange: [18, 150],
-    distanceRange: [0, 9300],
-    bodyform: [],
+    minAge: 18,       
+    maxAge: 150,
+    maxDistanceLy: 150,
+    bodyform: "",
     interests: [],
-    lookingFor: [],
-    location: [],
-  }   as Filters);
+    lookingFor: "",
+    homeplanet: "",
+  } as Filters);
 
   // Custom hook to fetch filtered users
-  const { users: fetchedUsers, isLoading } = useUserSearch(filters);
+  const userId = "3fa85f64-5717-4562-b3fc-2c963f66afa1"; // replace with real logged-in user later
+  const { users: fetchedUsers, isLoading } = useUserSearch(userId, filters);
 
   // Local UI state (e.g., for hiding cards)
   const [users, setUsers] = useState<MatchUser[]>([]);
@@ -71,7 +63,7 @@ export default function Matches() {
                   <MatchCardFront
                     username={user.username}
                     age={user.age}
-                    location={user.location}
+                    location={user.homeplanet}
                     lookingFor={user.lookingFor}
                     bio={user.bio ?? "..."}
                   />
@@ -80,7 +72,7 @@ export default function Matches() {
                   <MatchCardBack
                     username={user.username}
                     age={user.age}
-                    location={user.location}
+                    location={user.homeplanet}
                     lookingFor={user.lookingFor}
                     bodyform={user.bodyform}
                     bio={user.bio ?? "..."}
