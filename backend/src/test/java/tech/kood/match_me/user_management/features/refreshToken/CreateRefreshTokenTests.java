@@ -9,21 +9,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
-import tech.kood.match_me.user_management.common.domain.api.UserIdDTO;
-import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.user_management.features.refreshToken.features.getToken.api.GetRefreshTokenQueryHandler;
+import tech.kood.match_me.common.domain.api.UserIdDTO;
+import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.RefreshTokenRepository;
-import tech.kood.match_me.user_management.features.user.domain.api.UserDTO;
-import tech.kood.match_me.user_management.features.user.features.getUser.api.GetUserByIdQueryHandler;
-import tech.kood.match_me.user_management.features.user.features.getUser.api.GetUserByIdRequest;
-import tech.kood.match_me.user_management.features.user.features.getUser.api.GetUserByIdResults;
-import tech.kood.match_me.user_management.features.user.internal.persistance.UserRepository;
-import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenCommandHandler;
-import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenRequest;
-import tech.kood.match_me.user_management.features.refreshToken.features.createToken.api.CreateRefreshTokenResults;
-import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserCommandHandler;
-import tech.kood.match_me.user_management.features.user.features.registerUser.api.RegisterUserResults;
-import tech.kood.match_me.user_management.features.user.features.registerUser.RegisterUserRequestMocker;
+import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdQueryHandler;
+import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdRequest;
+import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdResults;
+import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenCommandHandler;
+import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenRequest;
+import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenResults;
+import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserCommandHandler;
+import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserResults;
+import tech.kood.match_me.user_management.features.user.actions.registerUser.RegisterUserRequestMocker;
 
 @SpringBootTest
 @Transactional

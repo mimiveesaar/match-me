@@ -9,7 +9,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import tech.kood.match_me.user_management.common.exceptions.CheckedConstraintViolationException;
+import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.features.user.internal.persistance.userEntity.UserEntity;
 import tech.kood.match_me.user_management.features.user.internal.persistance.userEntity.UserEntityFactory;
 
