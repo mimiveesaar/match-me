@@ -1,33 +1,36 @@
 package tech.kood.match_me.profile.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import tech.kood.match_me.profile.dto.ProfileDTO;
 import tech.kood.match_me.profile.dto.ProfileViewDTO;
 import tech.kood.match_me.profile.model.Profile;
 import tech.kood.match_me.profile.service.ProfileService;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/api/profiles")
 public class ProfileController {
+
     private final ProfileService service;
 
     public ProfileController(ProfileService service) {
         this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<ProfileViewDTO> createProfile(@RequestBody ProfileDTO dto) {
-        Profile profile = service.createProfile(dto);
-        return ResponseEntity.ok(toViewDTO(profile));
-    }
+@PostMapping("/me")
+public ResponseEntity<ProfileViewDTO> saveMyProfile(@RequestBody ProfileDTO dto) {
+    return ResponseEntity.ok(toViewDTO(service.saveOrUpdateProfile(dto)));
+}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProfileViewDTO> getProfile(@PathVariable UUID id) {
-        return ResponseEntity.ok(toViewDTO(service.getProfile(id)));
+    @GetMapping("/me")
+    public ResponseEntity<ProfileViewDTO> getMyProfile() {
+        Profile profile = service.getMyProfile(); // no ID needed
+        return ResponseEntity.ok(toViewDTO(profile));
     }
 
     private ProfileViewDTO toViewDTO(Profile profile) {
