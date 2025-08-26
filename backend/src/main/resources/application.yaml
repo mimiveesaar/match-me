@@ -11,7 +11,7 @@ user-management:
       min-length: 8
       max-length: 60
       require-uppercase: true
-      require-special: true
+      require-digit: true
 
 logging:
   level:
@@ -36,6 +36,17 @@ management:
         - jolokia
 
 spring:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        ddl-auto: update
+  profiles:
+    active: profile
   jmx:
     enabled: true
   jms: 
@@ -49,6 +60,12 @@ spring:
       enabled: true
       persistent: false
   datasource:
+    profile:
+      jdbc-url: jdbc:postgresql://localhost:5432/profile
+      username: profile
+      password: profile
+      driver-class-name: org.postgresql.Driver
+
     user-management:
       jdbc-url: jdbc:postgresql://localhost:5432/user_management
       username: user_management

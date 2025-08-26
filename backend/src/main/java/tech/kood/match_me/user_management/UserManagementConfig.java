@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -116,6 +117,12 @@ public class UserManagementConfig {
 
     @Bean(initMethod = "migrate")
     @Qualifier("userManagementFlyway")
+    @ConditionalOnProperty(
+    prefix = "user-management.flyway",
+    name = "enabled",
+    havingValue = "true",
+    matchIfMissing = false
+)
     public Flyway userManagementFlyway(
             @Qualifier("userManagementDataSource") DataSource dataSource) {
         var flyway = Flyway.configure().dataSource(dataSource)
