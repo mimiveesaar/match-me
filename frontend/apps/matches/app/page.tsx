@@ -23,7 +23,7 @@ export default function Matches() {
   } as Filters);
 
   // Custom hook to fetch filtered users
-  const userId = "3fa85f64-5717-4562-b3fc-2c963f66afa1"; // replace with real logged-in user later
+  const userId = "c9a6463d-5e4b-43ef-924e-25d7a9e8e6c2"; // replace with real logged-in user later
   const { users: fetchedUsers, isLoading } = useUserSearch(userId, filters);
 
   // Local UI state (e.g., for hiding cards)

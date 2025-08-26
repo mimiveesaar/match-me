@@ -37,15 +37,15 @@ public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        Join<User, Homeplanet> homeplanetJoin = root.join("homeplanet", JoinType.INNER);
+        Join<User, Homeplanet> homeplanetJoin = root.join("homeplanet", JoinType.LEFT);
 
         if (filter.getLookingFor() != null) {
-            Join<User, LookingFor> lookingForJoin = root.join("lookingFor", JoinType.INNER);
+            Join<User, LookingFor> lookingForJoin = root.join("lookingFor", JoinType.LEFT);
             predicates.add(cb.equal(lookingForJoin.get("name"), filter.getLookingFor()));
         }
 
         if (filter.getBodyform() != null) {
-            Join<User, Bodyform> bodyformJoin = root.join("bodyform", JoinType.INNER);
+            Join<User, Bodyform> bodyformJoin = root.join("bodyform", JoinType.LEFT);
             predicates.add(cb.equal(cb.lower(bodyformJoin.get("name")), filter.getBodyform().toLowerCase()));
         }
 
@@ -58,7 +58,7 @@ public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
         }
 
         if (filter.getInterests() != null && !filter.getInterests().isEmpty()) {
-            Join<User, Interest> interestJoin = root.join("interests", JoinType.INNER);
+            Join<User, Interest> interestJoin = root.join("interests", JoinType.LEFT);
             predicates.add(interestJoin.get("name").in(filter.getInterests()));
             query.distinct(true);
         }
@@ -102,6 +102,8 @@ public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
         }
 
         query.where(cb.and(predicates.toArray(Predicate[]::new)));
-        return entityManager.createQuery(query).getResultList();
+        List<User> results = entityManager.createQuery(query).getResultList();
+        System.out.println("Matched users: " + results.size()); // log number of users returned
+        return results;
     }
 }

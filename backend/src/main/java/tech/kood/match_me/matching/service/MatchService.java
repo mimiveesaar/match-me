@@ -37,13 +37,3 @@ public class MatchService {
     }
 }
 
-// @Service
-// public class MatchService {
-//     private final MatchUserRepository userRepository;
-//     public MatchService(MatchUserRepository userRepository) {
-//         this.userRepository = userRepository;
-//     }
-//     public List<User> getMatches(MatchFilter filter) {
-//         return userRepository.findByFilter(filter);
-//     }
-// }

@@ -12,26 +12,22 @@ export function useUserSearch(userId: string, filters: Filters) {
         const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
         // Send filters to backend
+        const normalize = (val: string | string[] | undefined | null) => {
+            if (!val) return null; // catches null/undefined/""
+            if (Array.isArray(val)) {
+                return val.length > 0 && val[0].trim() !== "" ? val[0] : null;
+            }
+            return val.trim() !== "" ? val : null;
+        };
+
         const requestBody = {
-            lookingFor: Array.isArray(filters.lookingFor)
-                ? filters.lookingFor[0] || "" // take first, or empty string, why is ana aaray at all?
-                : filters.lookingFor,
-
-            maxDistanceLy: filters.maxDistanceLy,
-
-            bodyform: Array.isArray(filters.bodyform)
-                ? filters.bodyform[0] || ""
-                : filters.bodyform,
-
-            interests: filters.interests,
-
-            homeplanet: Array.isArray(filters.homeplanet)
-                ? filters.homeplanet[0] || ""
-                : filters.homeplanet,
-
+            lookingFor: normalize(filters.lookingFor),
+            bodyform: normalize(filters.bodyform),
+            homeplanet: normalize(filters.homeplanet),
+            interests: Array.isArray(filters.interests) ? filters.interests : [],
             minAge: filters.minAge,
-
             maxAge: filters.maxAge,
+            maxDistanceLy: filters.maxDistanceLy,
         };
 
         fetch(`${API_URL}/api/matches/${userId}`, {
@@ -43,7 +39,10 @@ export function useUserSearch(userId: string, filters: Filters) {
                 if (!res.ok) throw new Error("Failed request");
                 return res.json();
             })
-            .then((data) => setUsers(data))
+            .then((data) => {
+                console.log("Raw response from backend:", data); // 👈 add here
+                setUsers(data);
+            })
             .catch((err) => console.error("Search failed", err))
             .finally(() => setLoading(false));
     }, [userId, filters]);
