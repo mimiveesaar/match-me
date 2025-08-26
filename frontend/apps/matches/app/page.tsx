@@ -58,50 +58,60 @@ export default function Matches() {
   };
 
   return (
-    <div className="flex flex-col items-center pt-4 px-4">
+    <div className="flex flex-col items-center pt-4 px-4 min-h-screen">
+      {/* Logo */}
       <div>
         <AlienMeetLogo />
       </div>
 
+      {/* Content row: always has Menu on left */}
       <div className="flex w-full max-w-7xl gap-2">
         {/* Left: Filter menu */}
         <div className="max-h-screen md:max-h-[80vh]">
           <Menu filters={filters} setFilters={setFilters} />
         </div>
 
-        {/* Right: Match cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full pt-28 justify-items-center">
+        {/* Right: dynamic content */}
+        <div className="flex-1 flex items-center justify-center">
           {isLoading ? (
-            <div>Loading...</div>
+            <div className="text-center text-lg text-gray-400 font-serif">
+              Loading...
+            </div>
+          ) : visibleUsers.length === 0 ? (
+            <div className="text-center text-lg text-gray-400 font-serif">
+              No matches found.
+            </div>
           ) : (
-            visibleUsers.map((user) => (
-              <FlipCard
-                key={user.id}
-                front={
-                  <MatchCardFront
-                    username={user.username}
-                    age={user.age}
-                    location={user.homeplanet}
-                    lookingFor={user.lookingFor}
-                    bio={user.bio ?? "..."}
-                    cardColor={lookingForColors[user.lookingFor] || "olive"}
-                  />
-                }
-                back={
-                  <MatchCardBack
-                    username={user.username}
-                    age={user.age}
-                    location={user.homeplanet}
-                    lookingFor={user.lookingFor}
-                    bodyform={user.bodyform}
-                    bio={user.bio ?? "..."}
-                    interests={user.interests ?? []}
-                    onHide={() => handleHideUser(user.id)}
-                    cardColor={lookingForColors[user.lookingFor] || "olive"}
-                  />
-                }
-              />
-            ))
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full pt-28 justify-items-center">
+              {visibleUsers.map((user) => (
+                <FlipCard
+                  key={user.id}
+                  front={
+                    <MatchCardFront
+                      username={user.username}
+                      age={user.age}
+                      location={user.homeplanet}
+                      lookingFor={user.lookingFor}
+                      bio={user.bio ?? "..."}
+                      cardColor={lookingForColors[user.lookingFor] || "olive"}
+                    />
+                  }
+                  back={
+                    <MatchCardBack
+                      username={user.username}
+                      age={user.age}
+                      location={user.homeplanet}
+                      lookingFor={user.lookingFor}
+                      bodyform={user.bodyform}
+                      bio={user.bio ?? "..."}
+                      interests={user.interests ?? []}
+                      onHide={() => handleHideUser(user.id)}
+                      cardColor={lookingForColors[user.lookingFor] || "olive"}
+                    />
+                  }
+                />
+              ))}
+            </div>
           )}
         </div>
       </div>

@@ -35,7 +35,7 @@ export const FilteringDropdown: React.FC<FilteringDropdownProps> = ({ filters, s
 
           <DropdownSelector
             header="looking for"
-            options={["Intergalactic Romance", "Friendship", "Travel Buddy"]}
+            options={["Romance", "Friendship", "Strategic Alliance", "Co-parenting Hatchlings", "Host Symbiosis", "Chtulhu"]}
             selectedOptions={filters.lookingFor}
             onSelect={(val) => setFilters(f => ({ ...f, lookingFor: val }))}
             mode='single'
@@ -43,7 +43,7 @@ export const FilteringDropdown: React.FC<FilteringDropdownProps> = ({ filters, s
 
           <DropdownSelector
             header="bodyform"
-            options={["Gelatinous", "Vaporous", "Dexaspherical", "Phospopede"]}
+            options={["Gelatinous", "Tentacled", "Humanoid", "Energy-Based", "Mechanical", "Reptilian", "Gas Cloud", "Insectoid", "Crystalline", "Mimetic Blob"]}
             selectedOptions={filters.bodyform}
             onSelect={(val) => setFilters(f => ({ ...f, bodyform: val }))}
             mode='single'
@@ -51,7 +51,48 @@ export const FilteringDropdown: React.FC<FilteringDropdownProps> = ({ filters, s
 
           <DropdownSelector
             header="interests"
-            options={["hiking", "binary poetry", "yoga", "foraging mushrooms", "movies", "cooking", "counting sheep"]}
+            options={[
+              "Telepathic Chess",
+              "Black Hole Karaoke",
+              "Baking",
+              "Binary Poetry",
+              "Painting",
+              "Parallel Parking",
+              "Reading",
+              "Collecting Rocks",
+              "Butterfly watching",
+              "Plasma Sculpting",
+              "Terraforming",
+              "Zero-G Yoga",
+              "Fishing",
+              "Galactic Geocaching",
+              "Nebula Photography",
+              "Starship Racing",
+              "Archaeology",
+              "Cooking",
+              "Light-speed Surfing",
+              "Wormhole Navigation",
+              "Cryo-sleep",
+              "Martian Mining",
+              "Solar Wind Sailing",
+              "Meditation",
+              "Opera Singing",
+              "Ballet",
+              "Fashion Design",
+              "Black Market Trading",
+              "Cosmic Comics",
+              "Meteorite Hunting",
+              "Exoplanet Exploration",
+              "Star Map Reading",
+              "Galactic Diplomacy",
+              "Gardening",
+              "Interstellar DJing",
+              "Teleportation Tricks",
+              "Brewing",
+              "Droid Repair",
+              "Cryptography",
+              "Wormhole Jumping",
+            ]}
             selectedOptions={filters.interests}
             onSelect={(val) => setFilters(f => ({ ...f, interests: val }))}
             mode='multiple'
@@ -59,7 +100,23 @@ export const FilteringDropdown: React.FC<FilteringDropdownProps> = ({ filters, s
 
           <DropdownSelector
             header="location"
-            options={["Mars", "Venus", "Juno"]}
+            options={[
+              "Xeron-5",
+              "Draknor",
+              "Vega Prime",
+              "Bloop-X12",
+              "Zal'Tek Major",
+              "Nimbus-9",
+              "Krylon Beta",
+              "Nova Eden",
+              "Tharnis",
+              "Quarnyx Delta",
+              "Glooporia",
+              "Skarn",
+              "Uvuul-4",
+              "Oortania",
+              "Vrexalon",
+            ]}
             selectedOptions={filters.homeplanet}
             onSelect={(val) => setFilters(f => ({ ...f, homeplanet: val }))}
             mode='single'
