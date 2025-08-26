@@ -12,7 +12,7 @@ import { Username } from "../../atoms/Match_Cards/UserName/username";
 import { ButtonTriangle } from "../../molecules/Match Cards/MatchCardButtons/match_card_buttons";
 
 
-interface MatchCardFrontProps {
+export interface MatchCardFrontProps {
   profilePicSrc?: string;
   alt?: string;
   username?: string;
