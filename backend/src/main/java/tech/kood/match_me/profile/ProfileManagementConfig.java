@@ -8,7 +8,6 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -16,16 +15,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.transaction.PlatformTransactionManager;
 
-@EnableJpaRepositories(
-    basePackages = "tech.kood.match_me.profile.repository",
-    entityManagerFactoryRef = "profileManagementEmf",
-    transactionManagerRef = "profileManagementTransactionManager"
-)
-
+@EnableJpaRepositories(basePackages = "tech.kood.match_me.profile.repository",
+        entityManagerFactoryRef = "profileManagementEmf",
+        transactionManagerRef = "profileManagementTransactionManager")
 @Configuration
 public class ProfileManagementConfig {
 
@@ -43,22 +40,26 @@ public class ProfileManagementConfig {
         return new JdbcTemplate(dataSource);
     }
 
-    @Bean
-    @Qualifier("profileManagementScheduledExecutorService")
-    public ScheduledExecutorService scheduledExecutorService() {
-        return Executors.newScheduledThreadPool(2); // Define 2 threads to run in parallel.
+    @Bean("profileManagementScheduledExecutorService")
+    public ScheduledExecutorService profileManagementScheduledExecutorService() {
+        return Executors.newScheduledThreadPool(2);
     }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean profileManagementEmf(
-            EntityManagerFactoryBuilder builder,
-            @Qualifier("profileManagementDataSource") DataSource ds) {
+            @Qualifier("profileManagementDataSource") DataSource dataSource) {
 
-        return builder
-                .dataSource(ds)
-                .packages("tech.kood.match_me.profile.model")
-                .persistenceUnit("profilePU")
-                .build();
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        vendorAdapter.setGenerateDdl(true);
+        vendorAdapter.setShowSql(true);
+
+        LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
+        emf.setDataSource(dataSource);
+        emf.setPackagesToScan("tech.kood.match_me.profile.model");
+        emf.setPersistenceUnitName("profilePU");
+        emf.setJpaVendorAdapter(vendorAdapter);
+
+        return emf;
     }
 
     @Bean
@@ -68,9 +69,8 @@ public class ProfileManagementConfig {
         return new DataSourceTransactionManager(dataSource);
     }
 
-    @Bean
-    @Qualifier("profileManagementTaskScheduler")
-    public TaskScheduler taskScheduler(
+    @Bean("profileManagementTaskScheduler")
+    public TaskScheduler profileManagementTaskScheduler(
             @Qualifier("profileManagementScheduledExecutorService") ScheduledExecutorService scheduledExecutorService) {
         return new ConcurrentTaskScheduler(scheduledExecutorService);
     }
@@ -81,5 +81,4 @@ public class ProfileManagementConfig {
             @Qualifier("profileManagementDataSource") DataSource dataSource) {
         return new NamedParameterJdbcTemplate(dataSource);
     }
-    
 }
