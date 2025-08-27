@@ -121,7 +121,6 @@ export const FilteringDropdown: React.FC<FilteringDropdownProps> = ({ filters, s
             onSelect={(val) => setFilters(f => ({ ...f, homeplanet: val }))}
             mode='single'
           />
-
         </div>
 
         <RangeSlider

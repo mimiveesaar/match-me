@@ -7,7 +7,7 @@ import { PageLink } from "@atoms/Menu/PageLink/pagelink";
 import { SignOutButton } from "@atoms/Menu/SignOut/signout";
 import { FilteringDropdown } from "@molecules/Menu/filtering_dropdown";
 
-// 👇 Accept filters + setFilters as props
+
 export const Menu = ({ filters, setFilters }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -26,7 +26,6 @@ export const Menu = ({ filters, setFilters }) => {
 
         {showDropdown && (
           <div className="w-full">
-            {/* 👇 Pass filters + setFilters down */}
             <FilteringDropdown filters={filters} setFilters={setFilters} />
           </div>
         )}

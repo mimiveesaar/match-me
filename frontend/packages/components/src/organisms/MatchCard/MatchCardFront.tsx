@@ -21,6 +21,8 @@ export interface MatchCardFrontProps {
   location: string;
   lookingFor: string;
   bio?: string;
+  userId: string;
+  onReject: (userId: string) => void;
 };
 
 export const MatchCardFront = ({
@@ -32,6 +34,8 @@ export const MatchCardFront = ({
   location = "Mars",
   lookingFor = "Astral companion",
   bio = "Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry.",
+  userId,
+  onReject,
 }: MatchCardFrontProps) => {
   return (
 
@@ -59,7 +63,10 @@ export const MatchCardFront = ({
           </div>
 
           <div className="flex justify-end">
-            <ButtonTriangle />
+            <ButtonTriangle
+              rejectedId={userId}
+              onReject={onReject}
+            />
           </div>
         </div>
 

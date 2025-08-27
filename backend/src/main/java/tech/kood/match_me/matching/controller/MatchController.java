@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import tech.kood.match_me.matching.dto.MatchFilter;
@@ -41,7 +42,7 @@ public class MatchController {
         System.out.println("RAW JSON BODY: " + rawBody);
 
         try {
-            // Deserialize manually into your DTO
+            // Deserialize manually into my DTO
             MatchFilter filter = objectMapper.readValue(rawBody, MatchFilter.class);
             System.out.println("DESERIALIZED FILTER: " + filter);
 
@@ -52,7 +53,7 @@ public class MatchController {
             // Call service with both filter + current user
             return matchService.getMatches(filter, currentUser);
 
-        } catch (Exception e) {
+        } catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to parse JSON", e);
         }
     }

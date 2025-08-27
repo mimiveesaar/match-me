@@ -18,7 +18,29 @@ const lookingForColors: Record<string, MatchCardFrontProps["cardColor"]> = {
   "Chtulhu": "olive",
 };
 
+
 export default function Matches() {
+
+  const handleReject = async (rejectedId: string) => {
+    try {
+      const res = await fetch(
+        `http://localhost:8080/api/rejections/${userId}`, // userId from page.tsx
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ rejected_id: rejectedId }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to reject user");
+
+      console.log("User rejected:", rejectedId);
+      setVisibleUsers(prev => prev.filter(u => u.id !== rejectedId));
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong. Try again.");
+    }
+  };
 
   const [filters, setFilters] = useState<Filters>({
     minAge: 18,
@@ -94,6 +116,8 @@ export default function Matches() {
                       lookingFor={user.lookingFor}
                       bio={user.bio ?? "..."}
                       cardColor={lookingForColors[user.lookingFor] || "olive"}
+                      userId={user.id}
+                      onReject={handleReject}
                     />
                   }
                   back={
