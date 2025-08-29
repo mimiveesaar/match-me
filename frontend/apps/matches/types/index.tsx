@@ -7,6 +7,7 @@ export interface MatchUser {
   bodyform: string;
   bio?: string;
   interests?: string[];
+  supermatch?: boolean;
 }
 
 export interface Filters {

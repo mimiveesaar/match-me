@@ -24,6 +24,7 @@ export interface MatchCardFrontProps {
   userId: string;
   onReject: (userId: string) => void;
   onConnectionRequest: (userId: string) => void;
+  supermatch?: boolean;
 };
 
 export const MatchCardFront = ({
@@ -38,6 +39,7 @@ export const MatchCardFront = ({
   userId,
   onReject,
   onConnectionRequest,
+  supermatch = false,
 }: MatchCardFrontProps) => {
   return (
 
@@ -47,9 +49,11 @@ export const MatchCardFront = ({
         <div className="relative w-265 h-196">
           <MatchCardProfilePic src={profilePicSrc} alt={alt} />
 
-          <div className="w-full pl-3 pt-1 absolute top-1 right-1 flex gap-1">
-            <StarIcon />
-          </div>
+          {supermatch && (   // only render if true
+            <div className="w-full pl-3 pt-1 absolute top-1 right-1 flex gap-1">
+              <StarIcon />
+            </div>
+          )}
 
           <div className="w-full pl-3 absolute bottom-1 left-1 flex gap-1">
             <Username username={username} />

@@ -75,7 +75,7 @@ export default function Matches() {
   } as Filters);
 
   // Custom hook to fetch filtered users
-  const userId = "c9a6463d-5e4b-43ef-924e-25d7a9e8e6c2"; // replace with real logged-in user later
+  const userId = "f2d45e1c-4d9c-4a5a-b2fa-1f55e720347a"; // replace with real logged-in user later
   const { users: fetchedUsers, isLoading } = useUserSearch(userId, filters);
   const [visibleUsers, setVisibleUsers] = useState<MatchUser[]>([]);
   const [remainingUsers, setRemainingUsers] = useState<MatchUser[]>([]);
@@ -141,6 +141,7 @@ export default function Matches() {
                       userId={user.id}
                       onReject={handleReject}
                       onConnectionRequest={handleConnectionRequest}
+                      supermatch={user.supermatch}
                     />
                   }
                   back={
@@ -154,6 +155,7 @@ export default function Matches() {
                       interests={user.interests ?? []}
                       onHide={() => handleHideUser(user.id)}
                       cardColor={lookingForColors[user.lookingFor] || "olive"}
+                      supermatch={user.supermatch}
                     />
                   }
                 />

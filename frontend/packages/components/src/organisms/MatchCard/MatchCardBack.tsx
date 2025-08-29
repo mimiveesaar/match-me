@@ -23,6 +23,7 @@ interface MatchCardBackProps {
     bio: string;
     interests?: string[];
     onHide: () => void;
+    supermatch?: boolean;
 };
 
 export const MatchCardBack = ({
@@ -34,6 +35,7 @@ export const MatchCardBack = ({
     bodyform = "Polymorphontes",
     bio = "Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry.",
     interests = ["Quantum Origami", "Dancing", "Cooking"],
+    supermatch = false,
 
 }: MatchCardBackProps) => {
     return (
@@ -47,10 +49,11 @@ export const MatchCardBack = ({
                         <Username username={username} />
                         <Age age={age} />
                     </div>
-
-                    <div className="w-full pr-3 pt-1 absolute top-1 right-0 flex justify-end gap-1">
-                        <StarIcon />
-                    </div>
+                    {supermatch && ( 
+                        <div className="w-full pr-3 pt-1 absolute top-1 right-0 flex justify-end gap-1">
+                            <StarIcon />
+                        </div>
+                    )}
                 </div>
 
                 <div className="w-full h-20 pt-3 px-3">
