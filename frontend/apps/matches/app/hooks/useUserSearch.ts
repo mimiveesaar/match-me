@@ -40,7 +40,7 @@ export function useUserSearch(userId: string, filters: Filters) {
                 return res.json();
             })
             .then((data) => {
-                console.log("Raw response from backend:", data); // 👈 add here
+                console.log("Raw response from backend:", data);
                 setUsers(data);
             })
             .catch((err) => console.error("Search failed", err))

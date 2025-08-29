@@ -3,11 +3,16 @@
 import React, { ReactNode } from "react";
 import { Zap, Circle } from 'lucide-react';
 
-export const LightningButton = () => (
+
+type LightningButtonProps = {
+  onClick?: () => void;
+};
+
+export const LightningButton = ({onClick}: LightningButtonProps) => (
     <button
       type='button'
       className="no-flip group relative inline-flex items-center justify-center w-9 h-9 hover:scale-110 transition-transform cursor-pointer bg-transparent border-none p-0 appearance-none focus:outline-none"
-      onClick={() => alert(`Connection request sent!`)}
+      onClick={onClick}
     >
       <Circle
         color="#FFFCF7"

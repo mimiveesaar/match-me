@@ -23,6 +23,7 @@ export interface MatchCardFrontProps {
   bio?: string;
   userId: string;
   onReject: (userId: string) => void;
+  onConnectionRequest: (userId: string) => void;
 };
 
 export const MatchCardFront = ({
@@ -36,6 +37,7 @@ export const MatchCardFront = ({
   bio = "Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry.",
   userId,
   onReject,
+  onConnectionRequest,
 }: MatchCardFrontProps) => {
   return (
 
@@ -64,8 +66,10 @@ export const MatchCardFront = ({
 
           <div className="flex justify-end">
             <ButtonTriangle
-              rejectedId={userId}
+              rejectedId={userId} // Could I make them both use the same id? Like TargetId?
               onReject={onReject}
+              requestedId={userId}
+              onConnectionRequest={onConnectionRequest}
             />
           </div>
         </div>

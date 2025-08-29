@@ -21,6 +21,7 @@ const lookingForColors: Record<string, MatchCardFrontProps["cardColor"]> = {
 
 export default function Matches() {
 
+  // Should these handlers actually be in a separate file?
   const handleReject = async (rejectedId: string) => {
     try {
       const res = await fetch(
@@ -36,6 +37,27 @@ export default function Matches() {
 
       console.log("User rejected:", rejectedId);
       setVisibleUsers(prev => prev.filter(u => u.id !== rejectedId));
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong. Try again.");
+    }
+  };
+
+  const handleConnectionRequest = async (requestedId: string) => {
+    try {
+      const res = await fetch(
+        `http://localhost:8080/api/connections/${userId}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ requested_id: requestedId }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to send connection request");
+
+      console.log("Connection request sent to:", requestedId);
+      setVisibleUsers(prev => prev.filter(u => u.id !== requestedId));
     } catch (err) {
       console.error(err);
       alert("Something went wrong. Try again.");
@@ -118,6 +140,7 @@ export default function Matches() {
                       cardColor={lookingForColors[user.lookingFor] || "olive"}
                       userId={user.id}
                       onReject={handleReject}
+                      onConnectionRequest={handleConnectionRequest}
                     />
                   }
                   back={
