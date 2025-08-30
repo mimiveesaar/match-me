@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-public class PendingConnectionCommandHandlerTests extends ConnectionsTestBase {
+public class CreatePendingConnectionCommandHandlerTests extends ConnectionsTestBase {
 
     @Autowired
     private ConnectionRequestCommandHandler connectionRequestHandler;
@@ -46,8 +46,8 @@ public class PendingConnectionCommandHandlerTests extends ConnectionsTestBase {
         var successResult = (ConnectionRequestResults.Success) result;
         assertEquals(requestId, successResult.requestId());
         assertEquals(tracingId, successResult.tracingId());
-        assertNotNull(successResult.connectionId());
-        assertNotNull(successResult.connectionId().value());
+        assertNotNull(successResult.connectionIdDTO());
+        assertNotNull(successResult.connectionIdDTO().value());
 
         // Verify the pending connection was saved to the repository
         var savedConnections = repository.findBySender(senderId.value());
@@ -69,7 +69,7 @@ public class PendingConnectionCommandHandlerTests extends ConnectionsTestBase {
         var successResult = (ConnectionRequestResults.Success) result;
         assertEquals(requestId, successResult.requestId());
         assertNull(successResult.tracingId());
-        assertNotNull(successResult.connectionId());
+        assertNotNull(successResult.connectionIdDTO());
     }
 
     @Test

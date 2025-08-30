@@ -41,7 +41,7 @@ public class DeclineConnectionCommandHandlerImpl implements DeclineConnectionCom
             return new DeclineConnectionResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.from(validationResults), request.tracingId());
         }
 
-        var pendingConnectionEntityQueryResult = pendingConnectionRepository.findById(request.connectionId().value());
+        var pendingConnectionEntityQueryResult = pendingConnectionRepository.findById(request.connectionIdDTO().value());
 
         if (pendingConnectionEntityQueryResult.isEmpty()) {
             return new DeclineConnectionResults.NotFound(request.requestId(), request.tracingId());
@@ -57,7 +57,7 @@ public class DeclineConnectionCommandHandlerImpl implements DeclineConnectionCom
                 return new DeclineConnectionResults.AlreadyDeclined(request.requestId(), request.tracingId());
             }
 
-            eventPublisher.publishEvent(new ConnectionRequestUndoEvent(request.connectionId(), new UserIdDTO(pendingConnectionEntity.getSenderId()), new UserIdDTO(pendingConnectionEntity.getTargetId())));
+            eventPublisher.publishEvent(new ConnectionRequestUndoEvent(request.connectionIdDTO(), new UserIdDTO(pendingConnectionEntity.getSenderId()), new UserIdDTO(pendingConnectionEntity.getTargetId())));
             return new DeclineConnectionResults.Success(request.requestId(), request.tracingId());
         } else {
             var createRejectedConnectionRequest = new CreateRejectedConnectionRequest(request.declinedByUser(), new UserIdDTO(pendingConnectionEntity.getSenderId()), RejectedConnectionReasonDTO.CONNECTION_DECLINED, request.tracingId());
@@ -75,7 +75,7 @@ public class DeclineConnectionCommandHandlerImpl implements DeclineConnectionCom
                 return new DeclineConnectionResults.AlreadyDeclined(request.requestId(), request.tracingId());
             }
 
-            eventPublisher.publishEvent(new ConnectionRequestUndoEvent(request.connectionId(), new UserIdDTO(pendingConnectionEntity.getSenderId()), new UserIdDTO(pendingConnectionEntity.getTargetId())));
+            eventPublisher.publishEvent(new ConnectionRequestUndoEvent(request.connectionIdDTO(), new UserIdDTO(pendingConnectionEntity.getSenderId()), new UserIdDTO(pendingConnectionEntity.getTargetId())));
             return new DeclineConnectionResults.Success(request.requestId(), request.tracingId());
         }
     }

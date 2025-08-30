@@ -3,7 +3,7 @@ package tech.kood.match_me.connections.features.pendingConnection.internal.mappe
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.stereotype.Component;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.connections.common.api.ConnectionId;
+import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 import tech.kood.match_me.connections.common.domain.connectionId.ConnectionIdFactory;
 import tech.kood.match_me.connections.features.pendingConnection.domain.api.PendingConnectionDTO;
 import tech.kood.match_me.connections.features.pendingConnection.domain.internal.PendingConnection;
@@ -70,7 +70,7 @@ public class PendingConnectionMapper {
     }
 
     public PendingConnectionDTO toDTO(PendingConnection pendingConnection) {
-        var connectionIdDTO = new ConnectionId(pendingConnection.getId().getValue());
+        var connectionIdDTO = new ConnectionIdDTO(pendingConnection.getId().getValue());
         var senderIdDTO = new UserIdDTO(pendingConnection.getSenderId().getValue());
         var targetIdDTO = new UserIdDTO(pendingConnection.getTargetId().getValue());
 

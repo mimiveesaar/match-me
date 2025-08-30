@@ -44,8 +44,8 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var successResult = (CreateRejectedConnectionResults.Success) result;
         assertEquals(requestId, successResult.requestId());
         assertEquals(tracingId, successResult.tracingId());
-        assertNotNull(successResult.connectionId());
-        assertNotNull(successResult.connectionId().value());
+        assertNotNull(successResult.connectionIdDTO());
+        assertNotNull(successResult.connectionIdDTO().value());
 
         // Verify the rejected connection was saved to the repository
         var savedConnections = repository.findByRejectedByUser(rejectedByUserId.value());
@@ -68,7 +68,7 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var successResult = (CreateRejectedConnectionResults.Success) result;
         assertEquals(requestId, successResult.requestId());
         assertNull(successResult.tracingId());
-        assertNotNull(successResult.connectionId());
+        assertNotNull(successResult.connectionIdDTO());
     }
 
     @Test

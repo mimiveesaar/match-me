@@ -4,7 +4,7 @@ import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import tech.kood.match_me.connections.common.api.ConnectionId;
+import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionRequest;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionCommandHandler;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionResults;
@@ -73,7 +73,7 @@ public class CreateRejectedConnectionCommandHandlerImpl
             rejectedConnectionRepository.save(entity);
 
             return new CreateRejectedConnectionResults.Success(request.requestId(),
-                    new ConnectionId(
+                    new ConnectionIdDTO(
                             rejectedConnection.getId().getValue()),
                     request.tracingId());
 

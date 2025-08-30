@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
-import tech.kood.match_me.connections.common.api.ConnectionId;
+import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 import tech.kood.match_me.connections.features.pendingConnection.actions.createRequest.api.ConnectionRequest;
 import tech.kood.match_me.connections.features.pendingConnection.actions.createRequest.api.ConnectionRequestCommandHandler;
 import tech.kood.match_me.connections.features.pendingConnection.actions.createRequest.api.ConnectionRequestCreatedEvent;
@@ -59,7 +59,7 @@ public class ConnectionRequestCommandHandlerImpl implements ConnectionRequestCom
 
             pendingConnectionRepository.save(pendingConnectionEntity);
 
-            var connectionId = new ConnectionId(pendingConnection.getId().getValue());
+            var connectionId = new ConnectionIdDTO(pendingConnection.getId().getValue());
             eventPublisher.publishEvent(new ConnectionRequestCreatedEvent(connectionId));
 
             return new ConnectionRequestResults.Success(request.requestId(), connectionId, request.tracingId());

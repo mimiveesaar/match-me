@@ -297,7 +297,7 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         var successResult = (GetRejectionBetweenUsersResults.Success) result;
 
         var rejection = successResult.rejection();
-        assertNotNull(rejection.connectionId());
+        assertNotNull(rejection.connectionIdDTO());
         assertNotNull(rejection.rejectedByUser());
         assertNotNull(rejection.rejectedUser());
         assertNotNull(rejection.reason());
@@ -422,7 +422,7 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         var successResult2 = (GetRejectionBetweenUsersResults.Success) result2;
 
         // Both should return the same rejection data regardless of search order
-        assertEquals(successResult1.rejection().connectionId(), successResult2.rejection().connectionId());
+        assertEquals(successResult1.rejection().connectionIdDTO(), successResult2.rejection().connectionIdDTO());
         assertEquals(successResult1.rejection().rejectedByUser().value(), successResult2.rejection().rejectedByUser().value());
         assertEquals(successResult1.rejection().rejectedUser().value(), successResult2.rejection().rejectedUser().value());
         assertEquals(successResult1.rejection().reason().name(), successResult2.rejection().reason().name());

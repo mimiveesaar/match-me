@@ -36,7 +36,7 @@ public class DeleteRejectedConnectionCommandHandlerImpl
         }
 
         try {
-            UUID connectionId = request.connectionId().value();
+            UUID connectionId = request.connectionIdDTO().value();
 
             // Check if the rejected connection exists
             var existingRejection = rejectedConnectionRepository.findById(connectionId);

@@ -335,7 +335,7 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
         assertEquals(1, successResult.rejections().size());
 
         var rejection = successResult.rejections().get(0);
-        assertNotNull(rejection.connectionId());
+        assertNotNull(rejection.connectionIdDTO());
         assertNotNull(rejection.rejectedByUser());
         assertNotNull(rejection.rejectedUser());
         assertNotNull(rejection.reason());

@@ -21,8 +21,7 @@ public sealed interface DeclineConnectionResults permits
     record InvalidRequest(
             @NotNull @JsonProperty("request_id") UUID requestId,
             @NotNull @JsonProperty("error") InvalidInputErrorDTO error,
-            @Nullable @JsonProperty("tracing_id") String tracingId
-    ) implements DeclineConnectionResults {
+            @Nullable @JsonProperty("tracing_id") String tracingId) implements DeclineConnectionResults {
     }
 
     record NotFound(

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.connections.common.ConnectionsTestBase;
-import tech.kood.match_me.connections.common.api.ConnectionId;
+import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.deleteRejectedConnection.api.DeleteRejectedConnectionRequest;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.deleteRejectedConnection.api.DeleteRejectedConnectionCommandHandler;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.deleteRejectedConnection.api.DeleteRejectedConnectionResults;
@@ -34,7 +34,7 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedConnectionEntity = rejectedConnectionEntityMother.createRejectedConnectionEntity();
         repository.save(rejectedConnectionEntity);
 
-        var connectionId = new ConnectionId(rejectedConnectionEntity.getId());
+        var connectionId = new ConnectionIdDTO(rejectedConnectionEntity.getId());
         var requestId = UUID.randomUUID();
         var tracingId = "test-tracing-id";
 
@@ -57,7 +57,7 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
     @Test
     void testHandleRequest_NotFound() {
         // Arrange: Use a non-existent connection ID
-        var nonExistentConnectionId = new ConnectionId(UUID.randomUUID());
+        var nonExistentConnectionId = new ConnectionIdDTO(UUID.randomUUID());
         var requestId = UUID.randomUUID();
         var tracingId = "test-tracing-id";
 
@@ -78,7 +78,7 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var tracingId = "test-tracing-id";
 
         // Using null for connectionId should trigger a system error due to validation
-        var request = new DeleteRejectedConnectionRequest(requestId, new ConnectionId(null), tracingId);
+        var request = new DeleteRejectedConnectionRequest(requestId, new ConnectionIdDTO(null), tracingId);
 
         // Act
         var result = deleteRejectedConnectionHandler.handle(request);
@@ -94,7 +94,7 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedConnectionEntity = rejectedConnectionEntityMother.createRejectedConnectionEntity();
         repository.save(rejectedConnectionEntity);
 
-        var connectionId = new ConnectionId(rejectedConnectionEntity.getId());
+        var connectionId = new ConnectionIdDTO(rejectedConnectionEntity.getId());
         var requestId1 = UUID.randomUUID();
         var requestId2 = UUID.randomUUID();
         var tracingId = "test-tracing-id";
@@ -129,7 +129,7 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var initialCount = repository.findAll().size();
         assertTrue(initialCount >= 2); // At least our two entities
 
-        var connectionId1 = new ConnectionId(entity1.getId());
+        var connectionId1 = new ConnectionIdDTO(entity1.getId());
         var requestId = UUID.randomUUID();
 
         var request = new DeleteRejectedConnectionRequest(requestId, connectionId1, "test-trace");
@@ -155,7 +155,7 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedConnectionEntity = rejectedConnectionEntityMother.createRejectedConnectionEntity();
         repository.save(rejectedConnectionEntity);
 
-        var connectionId = new ConnectionId(rejectedConnectionEntity.getId());
+        var connectionId = new ConnectionIdDTO(rejectedConnectionEntity.getId());
         var requestId = UUID.randomUUID();
         var tracingId = "test-tracing-id";
 
@@ -183,8 +183,8 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         repository.save(entity1);
         repository.save(entity2);
 
-        var connectionId1 = new ConnectionId(entity1.getId());
-        var connectionId2 = new ConnectionId(entity2.getId());
+        var connectionId1 = new ConnectionIdDTO(entity1.getId());
+        var connectionId2 = new ConnectionIdDTO(entity2.getId());
 
         var request1 = new DeleteRejectedConnectionRequest(UUID.randomUUID(), connectionId1, "trace-1");
         var request2 = new DeleteRejectedConnectionRequest(UUID.randomUUID(), connectionId2, "trace-2");
@@ -208,7 +208,7 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedConnectionEntity = rejectedConnectionEntityMother.createRejectedConnectionEntity();
         repository.save(rejectedConnectionEntity);
 
-        var connectionId = new ConnectionId(rejectedConnectionEntity.getId());
+        var connectionId = new ConnectionIdDTO(rejectedConnectionEntity.getId());
 
         // Simulate concurrent deletion requests
         var request1 = new DeleteRejectedConnectionRequest(UUID.randomUUID(), connectionId, "trace-1");
