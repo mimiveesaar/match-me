@@ -28,8 +28,8 @@ public class ProfileManagementConfig {
 
     @Bean
     @Qualifier("profileManagementDataSource")
-    @ConfigurationProperties("spring.datasource.profile")
-    public DataSource profileDataManagementDataSource() {
+    @ConfigurationProperties(prefix = "spring.datasource.profile")
+    public DataSource profileManagementDataSource() {
         return DataSourceBuilder.create().build();
     }
 
