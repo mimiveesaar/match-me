@@ -124,7 +124,7 @@ export const FilteringDropdown: React.FC<FilteringDropdownProps> = ({ filters, s
         </div>
 
         <RangeSlider
-          header="max distance (light years)"
+          header="range (light years)"
           min={0}
           max={340}
           step={10}

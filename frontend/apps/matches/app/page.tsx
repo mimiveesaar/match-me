@@ -8,25 +8,78 @@ import { MatchCardBack } from "/workspace/frontend/packages/components/src/organ
 import { AlienMeetLogo } from "/workspace/frontend/packages/components/src/atoms/Alien.meet logo/alien_meet";
 import { useUserSearch } from "/workspace/frontend/apps/matches/app/hooks/useUserSearch";
 import { MatchUser, Filters } from "../types";
-import { useUserProfile } from "./hooks/useUserProfile";
+
 
 const lookingForColors: Record<string, MatchCardFrontProps["cardColor"]> = {
-  "Friendship": "amberglow",
-  "Romance": "coral",
+  Friendship: "amberglow",
+  Romance: "coral",
   "Strategic Alliance": "peony",
   "Co-parenting Hatchlings": "minty",
   "Host Symbiosis": "moss",
-  "Chtulhu": "olive",
+  Chtulhu: "olive",
 };
 
-
 export default function Matches() {
+  const userId = "f2d45e1c-4d9c-4a5a-b2fa-1f55e720347a"; // replace with real logged-in user later
 
-  // Should these handlers actually be in a separate file?
+  const [filters, setFilters] = useState<Filters>({
+    minAge: 18,
+    maxAge: 150,
+    maxDistanceLy: 340,
+    bodyform: "",
+    interests: [],
+    lookingFor: "",
+    homeplanet: "",
+  } as Filters);
+
+  // Fetch matches + currentUser in one hook
+  const { users: fetchedUsers, currentUser, isLoading } = useUserSearch(
+    userId,
+    filters
+  );
+
+  // Initialize homeplanet once currentUser is available
+  useEffect(() => {
+    if (currentUser?.homeplanet && !filters.homeplanet) {
+      setFilters((f) => ({ ...f, homeplanet: currentUser.homeplanet }));
+    }
+  }, [currentUser, filters.homeplanet]);
+
+  const [visibleUsers, setVisibleUsers] = useState<MatchUser[]>([]);
+  const [remainingUsers, setRemainingUsers] = useState<MatchUser[]>([]);
+
+  // When filters change → update local state
+  useEffect(() => {
+    if (fetchedUsers.length > 0) {
+      const initial = fetchedUsers.slice(0, 6);
+      const rest = fetchedUsers.slice(6);
+      setVisibleUsers(initial);
+      setRemainingUsers(rest);
+    } else {
+      setVisibleUsers([]);
+      setRemainingUsers([]);
+    }
+  }, [fetchedUsers]);
+
+  // ✅ Helper to remove a user and refill from remaining
+  const removeUserAndRefill = (userId: string) => {
+    setVisibleUsers((prev) => {
+      const updated = prev.filter((u) => u.id !== userId);
+
+      if (remainingUsers.length > 0) {
+        const [next, ...rest] = remainingUsers;
+        setRemainingUsers(rest);
+        return [...updated, next];
+      }
+
+      return updated;
+    });
+  };
+
   const handleReject = async (rejectedId: string) => {
     try {
       const res = await fetch(
-        `http://localhost:8080/api/rejections/${userId}`, // userId from page.tsx
+        `http://localhost:8080/api/rejections/${userId}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -37,7 +90,7 @@ export default function Matches() {
       if (!res.ok) throw new Error("Failed to reject user");
 
       console.log("User rejected:", rejectedId);
-      setVisibleUsers(prev => prev.filter(u => u.id !== rejectedId));
+      removeUserAndRefill(rejectedId);
     } catch (err) {
       console.error(err);
       alert("Something went wrong. Try again.");
@@ -58,7 +111,7 @@ export default function Matches() {
       if (!res.ok) throw new Error("Failed to send connection request");
 
       console.log("Connection request sent to:", requestedId);
-      setVisibleUsers(prev => prev.filter(u => u.id !== requestedId));
+      removeUserAndRefill(requestedId);
     } catch (err) {
       console.error(err);
       alert("Something went wrong. Try again.");
@@ -66,51 +119,8 @@ export default function Matches() {
   };
 
   const handleHideUser = (id: string) => {
-    setUsers(prev => prev.filter(user => user.id !== id));
+    removeUserAndRefill(id);
   };
-
-  const userId = "f2d45e1c-4d9c-4a5a-b2fa-1f55e720347a"; // replace with real logged-in user later
-
-  const [filters, setFilters] = useState<Filters>({
-    minAge: 18,
-    maxAge: 150,
-    maxDistanceLy: 340,
-    bodyform: "",
-    interests: [],
-    lookingFor: "",
-    homeplanet: "",
-  } as Filters);
-
-  // Fetch matches + currentUser in one hook
-  const { users: fetchedUsers, currentUser, isLoading } = useUserSearch(userId, filters);
-
-  // Initialize homeplanet once currentUser is available
-  useEffect(() => {
-    if (currentUser?.homeplanet && !filters.homeplanet) {
-      setFilters(f => ({ ...f, homeplanet: currentUser.homeplanet }));
-    }
-  }, [currentUser, filters.homeplanet]);
-
-  const [visibleUsers, setVisibleUsers] = useState<MatchUser[]>([]);
-  const [remainingUsers, setRemainingUsers] = useState<MatchUser[]>([]);
-
-  // Local UI state (e.g., for hiding cards)
-  const [users, setUsers] = useState<MatchUser[]>([]);
-
-  // When filters change → update local state
-  useEffect(() => {
-    if (fetchedUsers.length > 0) {
-      const initial = fetchedUsers.slice(0, 6);
-      const rest = fetchedUsers.slice(6);
-      setVisibleUsers(initial);
-      setRemainingUsers(rest);
-    } else {
-      setVisibleUsers([]);
-      setRemainingUsers([]);
-    }
-  }, [fetchedUsers]);
-
-
 
   return (
     <div className="flex flex-col items-center pt-4 px-4 min-h-screen">
@@ -148,7 +158,9 @@ export default function Matches() {
                       location={user.homeplanet}
                       lookingFor={user.lookingFor}
                       bio={user.bio ?? "..."}
-                      cardColor={lookingForColors[user.lookingFor] || "olive"}
+                      cardColor={
+                        lookingForColors[user.lookingFor] || "olive"
+                      }
                       userId={user.id}
                       onReject={handleReject}
                       onConnectionRequest={handleConnectionRequest}
@@ -165,7 +177,9 @@ export default function Matches() {
                       bio={user.bio ?? "..."}
                       interests={user.interests ?? []}
                       onHide={() => handleHideUser(user.id)}
-                      cardColor={lookingForColors[user.lookingFor] || "olive"}
+                      cardColor={
+                        lookingForColors[user.lookingFor] || "olive"
+                      }
                       supermatch={user.supermatch}
                     />
                   }

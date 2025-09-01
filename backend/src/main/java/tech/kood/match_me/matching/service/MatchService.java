@@ -50,10 +50,11 @@ public class MatchService {
                                                                      .map(ConnectionRequest::getRequestedId)
                                                                      .collect(Collectors.toSet());
 
-        // Step 3: Filter out rejected users & users that have already been sent a connection request
+        // Step 3: Filter out rejected users & users that have already been sent a connection request and the current user themselves
         List<User> filteredCandidates = candidates.stream()
                                                   .filter(candidate -> !rejectedIds.contains(candidate.getId()))
                                                   .filter(candidate -> !connectionRequestedIds.contains(candidate.getId()))
+                                                  .filter(candidate -> !candidate.getId().equals(currentUser.getId()))
                                                   .collect(Collectors.toList());
 
         // Step 4: Score & tag each candidate
@@ -63,6 +64,7 @@ public class MatchService {
                                      boolean supermatch = scoringService.isSupermatch(score);
                                      return new MatchResultsDto(candidate, score, supermatch);
                                  })
+                                 .sorted((a, b) -> Double.compare(b.getScore(), a.getScore())) // highest score first
                                  .collect(Collectors.toList());
     }
 }
