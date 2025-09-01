@@ -1,0 +1,206 @@
+
+CREATE TABLE IF NOT EXISTS users (
+    id UUID PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    age INT,
+    profilepic_src VARCHAR(255),
+    homeplanet_id INT,
+    looking_for_id INT,
+    bodyform_id INT,
+    bio TEXT
+);
+
+INSERT INTO users (id, username, age, profilepic_src, homeplanet_id, looking_for_id, bodyform_id, bio) VALUES
+('3fa85f64-5717-4562-b3fc-2c963f66afa1', 'starhopper42', 27, 'https://example.com/pics/starhopper.jpg', 1, 1, 1, 'Explorer of galaxies and maker of maps.'),
+('c9a6463d-5e4b-43ef-924e-25d7a9e8e6c2', 'nebular_nikki', 31, 'https://example.com/pics/nikki.jpg', 2, 2, 2, 'Dreaming beyond the stars.'),
+('f2d45e1c-4d9c-4a5a-b2fa-1f55e720347a', 'cosmicjoe', 35, NULL, 1, 1, 1, 'Looking for a co-pilot in life.'),
+('23dc80aa-01ae-4cf3-93c0-60b3846ef1e5', 'gravitygal', 29, 'https://example.com/pics/gravity.jpg', 3, 3, 3, 'I never fall... unless it’s for someone.'),
+('d87e7304-7bfb-4bfb-9318-52c58f3c1036', 'andromedaboy', 22, NULL, 2, 3, 3, 'Just a guy with a telescope and big dreams.'),
+('aaab9e4b-7a3a-45cf-9408-c89e0d032871', 'orionquest', 40, 'https://example.com/pics/orion.jpg', 4, 4, 4, 'Long-time traveler, short-time sleeper.'),
+('1db4562e-93a3-4cc5-b2ff-b3cf95fd3a45', 'venusian_vibe', 26, 'https://example.com/pics/venus.jpg', 5, 5, 5, 'Bringing sunshine wherever I go.'),
+('c6ee9999-8371-46cf-9302-45f1ddee6a6d', 'marsmaven', 33, NULL, 2, 1, 2, 'Martian-born, Earth-raised, curiosity-fueled.'),
+('4b07cd42-d78f-4fa5-bf91-f3ad3cf8db99', 'astrochick', 28, 'https://example.com/pics/astro.jpg', 6, 6, 6, 'Rockets, robots, and romance.'),
+('e85e2b12-01dc-4564-b78c-d6d4c77002b9', 'quantumquinn', 38, NULL, 3, 3, 2, 'Entangled in all the right ways.'),
+('41b5a984-9822-4bc2-9c3c-93b1d4238e6f', 'lunar_luke', 24, 'https://example.com/pics/luke.jpg', 7, 1, 7, 'Moon-walker in search of a dance partner.'),
+('dcf48c31-d8e1-4e90-8599-1e4f4c5c0977', 'plutonianpixie', 30, NULL, 3, 3, 3, 'Cold hands, warm heart, outer orbit dreams.'),
+('8fc909b7-cbc1-41ce-bc70-4b41ea4a2326', 'galaxygazer', 36, 'https://example.com/pics/gazer.jpg', 8, 2, 8, 'My telescope sees far, but I’m looking for someone near.'),
+('51d00c53-7714-41cb-8cf1-8e620155f3ec', 'astro_ari', 27, NULL, 2, 2, 2, 'Martinis and meteor showers.'),
+('19f54fd2-84ec-4213-a4ab-d81cf865fbc7', 'jupiterjazz', 42, 'https://example.com/pics/jazz.jpg', 9, 3, 9, 'Rhythms of the cosmos, melodies of love.'),
+('3d47007e-96e0-4d37-8663-02a6e1e23d84', 'zenzara', 21, NULL, 10, 3, 3, 'Meditating in zero gravity.'),
+('7c9e4e62-7e32-4ce3-872b-78370839d0f2', 'nova_nate', 34, 'https://example.com/pics/nate.jpg', 11, 4, 10, 'Burn bright, love brighter.'),
+('e4e7a4e1-4ab0-406c-b6c4-7c6cbd28f671', 'solarys', 29, 'https://example.com/pics/solarys.jpg', 12, 5, 1, 'Daylight dreamer, starlight lover.'),
+('bfd6b738-6c58-4b77-8aa2-dce297fa23b5', 'wormholewendy', 26, NULL, 13, 6, 2, 'Faster than light, slower to trust.'),
+('0b2e39ea-d1ef-4b6c-93b6-1d0ff861197e', 'kepler_kai', 37, 'https://example.com/pics/kai.jpg', 14, 1, 3, 'Mapping hearts like exoplanets.');
+
+
+CREATE TABLE IF NOT EXISTS user_rejections (
+    id UUID PRIMARY KEY,
+    rejecter_id UUID NOT NULL,
+    rejected_id UUID NOT NULL,
+    CONSTRAINT fk_rejecter FOREIGN KEY (rejecter_id) REFERENCES users(id),
+    CONSTRAINT fk_rejected FOREIGN KEY (rejected_id) REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS user_interests (
+    user_id UUID NOT NULL,
+    interest_id INT NOT NULL,
+    PRIMARY KEY (user_id, interest_id),
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT fk_interest FOREIGN KEY (interest_id) REFERENCES interests(id)
+);
+
+INSERT INTO user_interests (user_id, interest_id) VALUES
+('3fa85f64-5717-4562-b3fc-2c963f66afa1', 1),
+('3fa85f64-5717-4562-b3fc-2c963f66afa1', 5),
+('c9a6463d-5e4b-43ef-924e-25d7a9e8e6c2', 3),
+('c9a6463d-5e4b-43ef-924e-25d7a9e8e6c2', 6),
+('c9a6463d-5e4b-43ef-924e-25d7a9e8e6c2', 10),
+('f2d45e1c-4d9c-4a5a-b2fa-1f55e720347a', 2),
+('23dc80aa-01ae-4cf3-93c0-60b3846ef1e5', 4),
+('23dc80aa-01ae-4cf3-93c0-60b3846ef1e5', 8),
+('d87e7304-7bfb-4bfb-9318-52c58f3c1036', 9),
+('d87e7304-7bfb-4bfb-9318-52c58f3c1036', 12),
+('aaab9e4b-7a3a-45cf-9408-c89e0d032871', 7),
+('1db4562e-93a3-4cc5-b2ff-b3cf95fd3a45', 3),
+('1db4562e-93a3-4cc5-b2ff-b3cf95fd3a45', 11),
+('c6ee9999-8371-46cf-9302-45f1ddee6a6d', 6),
+('c6ee9999-8371-46cf-9302-45f1ddee6a6d', 13),
+('4b07cd42-d78f-4fa5-bf91-f3ad3cf8db99', 1),
+('4b07cd42-d78f-4fa5-bf91-f3ad3cf8db99', 14),
+('e85e2b12-01dc-4564-b78c-d6d4c77002b9', 2),
+('e85e2b12-01dc-4564-b78c-d6d4c77002b9', 5),
+('41b5a984-9822-4bc2-9c3c-93b1d4238e6f', 4),
+('41b5a984-9822-4bc2-9c3c-93b1d4238e6f', 10),
+('dcf48c31-d8e1-4e90-8599-1e4f4c5c0977', 9),
+('8fc909b7-cbc1-41ce-bc70-4b41ea4a2326', 8),
+('8fc909b7-cbc1-41ce-bc70-4b41ea4a2326', 11),
+('51d00c53-7714-41cb-8cf1-8e620155f3ec', 7),
+('51d00c53-7714-41cb-8cf1-8e620155f3ec', 13),
+('19f54fd2-84ec-4213-a4ab-d81cf865fbc7', 3),
+('3d47007e-96e0-4d37-8663-02a6e1e23d84', 6),
+('3d47007e-96e0-4d37-8663-02a6e1e23d84', 14),
+('7c9e4e62-7e32-4ce3-872b-78370839d0f2', 1),
+('7c9e4e62-7e32-4ce3-872b-78370839d0f2', 4),
+('e4e7a4e1-4ab0-406c-b6c4-7c6cbd28f671', 10),
+('e4e7a4e1-4ab0-406c-b6c4-7c6cbd28f671', 11),
+('bfd6b738-6c58-4b77-8aa2-dce297fa23b5', 2),
+('bfd6b738-6c58-4b77-8aa2-dce297fa23b5', 5),
+('bfd6b738-6c58-4b77-8aa2-dce297fa23b5', 8),
+('0b2e39ea-d1ef-4b6c-93b6-1d0ff861197e', 12);
+
+CREATE TABLE IF NOT EXISTS looking_for (
+    id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+INSERT INTO looking_for (id, name) VALUES
+(1, 'Friendship'),
+(2, 'Romance'),
+(3, 'Strategic Alliance'),
+(4, 'Co-parenting Hatchlings'),
+(5, 'Host Symbiosis'),
+(6, 'Chtulhu');
+
+CREATE TABLE IF NOT EXISTS interests (
+    id INT PRIMARY KEY,
+    interest VARCHAR(100) NOT NULL UNIQUE
+);
+
+INSERT INTO interests (id, interest) VALUES
+(1, 'Telepathic Chess'),
+(2, 'Black Hole Karaoke'),
+(3, 'Baking'),
+(4, 'Binary Poetry'),
+(5, 'Painting'),
+(6, 'Parallel Parking'),
+(7, 'Reading'),
+(8, 'Collecting Rocks'),
+(9, 'Butterfly watching'),
+(10, 'Plasma Sculpting'),
+(11, 'Terraforming'),
+(12, 'Zero-G Yoga'),
+(13, 'Fishing'),
+(14, 'Galactic Geocaching'),
+(15, 'Nebula Photography'),
+(16, 'Starship Racing'),
+(17, 'Archaeology'),
+(18, 'Cooking'),
+(19, 'Light-speed Surfing'),
+(20, 'Wormhole Navigation'),
+(21, 'Cryo-sleep'),
+(22, 'Martian Mining'),
+(23, 'Solar Wind Sailing'),
+(24, 'Meditation'),
+(25, 'Opera Singing'),
+(26, 'Ballet'),
+(27, 'Fashion Design'),
+(28, 'Black Market Trading'),
+(29, 'Cosmic Comics'),
+(30, 'Meteorite Hunting'),
+(31, 'Exoplanet Exploration'),
+(32, 'Star Map Reading'),
+(33, 'Galactic Diplomacy'),
+(34, 'Gardening'),
+(35, 'Interstellar DJing'),
+(36, 'Teleportation Tricks'),
+(37, 'Brewing'),
+(38, 'Droid Repair'),
+(39, 'Cryptography'),
+(40, 'Wormhole Jumping');
+
+CREATE TABLE IF NOT EXISTS homeplanets (
+    id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL
+);
+
+INSERT INTO homeplanets (id, name, latitude, longitude) VALUES
+(1, 'Xeron-5', 45.2, 130.5),
+(2, 'Draknor', -33.1, 102.9),
+(3, 'Vega Prime', 12.5, -45),
+(4, 'Bloop-X12', 78.3, 60.2),
+(5, 'Zal''Tek Major', -82, -135.7),
+(6, 'Nimbus-9', 5.4, 80.1),
+(7, 'Krylon Beta', -25.6, 145.3),
+(8, 'Nova Eden', 33.3, -73.2),
+(9, 'Tharnis', -47.8, 12),
+(10, 'Quarnyx Delta', 66, -88.8),
+(11, 'Glooporia', 15.2, 140),
+(12, 'Skarn', -10.5, -120.6),
+(13, 'Uvuul-4', 58.9, 170),
+(14, 'Oortania', -60.4, -40.1),
+(15, 'Vrexalon', 0, 0);
+
+-- Create connection_requests table
+CREATE TABLE IF NOT EXISTS connection_requests (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    requester_id UUID NOT NULL,
+    requested_id UUID NOT NULL,
+    CONSTRAINT fk_requester FOREIGN KEY (requester_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_requested FOREIGN KEY (requested_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT unique_request UNIQUE (requester_id, requested_id)
+);
+
+CREATE TABLE IF NOT EXISTS bodyforms (
+    id INTEGER PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+INSERT INTO bodyforms (id, name) VALUES
+(1, 'Gelatinous'),
+(2, 'Tentacled'),
+(3, 'Humanoid'),
+(4, 'Energy-Based'),
+(5, 'Mechanical'),
+(6, 'Insectoid'),
+(7, 'Reptilian'),
+(8, 'Gas Cloud'),
+(9, 'Crystalline'),
+(10, 'Mimetic Blob')
+ON CONFLICT (id) DO NOTHING;
+
+
+
+
+

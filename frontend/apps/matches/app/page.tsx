@@ -61,7 +61,6 @@ export default function Matches() {
     }
   }, [fetchedUsers]);
 
-  // ✅ Helper to remove a user and refill from remaining
   const removeUserAndRefill = (userId: string) => {
     setVisibleUsers((prev) => {
       const updated = prev.filter((u) => u.id !== userId);

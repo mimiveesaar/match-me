@@ -64,6 +64,7 @@ public class MatchService {
                                      boolean supermatch = scoringService.isSupermatch(score);
                                      return new MatchResultsDto(candidate, score, supermatch);
                                  })
+                                 .filter(dto -> dto.getScore() > 0) // users with score 0 will not be recommended
                                  .sorted((a, b) -> Double.compare(b.getScore(), a.getScore())) // highest score first
                                  .collect(Collectors.toList());
     }
