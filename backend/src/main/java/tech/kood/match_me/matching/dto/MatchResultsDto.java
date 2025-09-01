@@ -6,7 +6,7 @@ import tech.kood.match_me.matching.model.Interest;
 import tech.kood.match_me.matching.model.User;
 
 // DTO for outgoing match results
-public class MatchResultDto {
+public class MatchResultsDto {
     private final String id;
     private final String username;
     private final Integer age;
@@ -18,7 +18,7 @@ public class MatchResultDto {
     private final double score;
     private final boolean supermatch;
 
-    public MatchResultDto(User user, double score, boolean supermatch) {
+    public MatchResultsDto(User user, double score, boolean supermatch) {
         this.id = user.getId().toString();
         this.username = user.getUsername();
         this.age = user.getAge();

@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import tech.kood.match_me.matching.dto.MatchFilter;
-import tech.kood.match_me.matching.dto.MatchResultDto;
+import tech.kood.match_me.matching.dto.MatchFilterDto;
+import tech.kood.match_me.matching.dto.MatchResultsDto;
 import tech.kood.match_me.matching.model.ConnectionRequest;
 import tech.kood.match_me.matching.model.User;
 import tech.kood.match_me.matching.model.UserRejection;
@@ -34,7 +34,7 @@ public class MatchService {
         this.connectionRequestRepository = connectionRequestRepository;
     }
 
-    public List<MatchResultDto> getMatches(MatchFilter filter, User currentUser) {
+    public List<MatchResultsDto> getMatches(MatchFilterDto filter, User currentUser) {
         // Step 1: Fetch candidates from repository
         List<User> candidates = userRepository.findByFilter(filter);
 
@@ -61,7 +61,7 @@ public class MatchService {
                                  .map(candidate -> {
                                      double score = scoringService.calculateScore(currentUser, candidate);
                                      boolean supermatch = scoringService.isSupermatch(score);
-                                     return new MatchResultDto(candidate, score, supermatch);
+                                     return new MatchResultsDto(candidate, score, supermatch);
                                  })
                                  .collect(Collectors.toList());
     }

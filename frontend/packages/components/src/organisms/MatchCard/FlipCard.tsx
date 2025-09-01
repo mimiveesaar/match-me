@@ -17,7 +17,7 @@ export const FlipCard = ({ front, back }: FlipCardProps) => {
   };
 
   return (
-    <div className="flip-card relative w-[265px] h-[360px] perspective hover:scale-105 transition-transform duration-200" onClick={handleFlip}>
+    <div className="flip-card relative w-full sm:w-[200px] md:w-[240px] lg:w-[280px] aspect-[265/360] min-h-[240px] perspective hover:scale-105 transition-transform duration-200" onClick={handleFlip}>
       <div className={`flip-card-inner ${flipped ? "flipped" : ""}`}>
         <div className="flip-card-front">{front}</div>
         <div className="flip-card-back">{back}</div>

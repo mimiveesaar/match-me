@@ -36,16 +36,16 @@ export const FilteringDropdown: React.FC<FilteringDropdownProps> = ({ filters, s
           <DropdownSelector
             header="looking for"
             options={["Romance", "Friendship", "Strategic Alliance", "Co-parenting Hatchlings", "Host Symbiosis", "Chtulhu"]}
-            selectedOptions={filters.lookingFor}
-            onSelect={(val) => setFilters(f => ({ ...f, lookingFor: val }))}
+            selectedOptions={filters.lookingFor ? [filters.lookingFor] : []}
+            onSelect={(val) => setFilters(f => ({ ...f, lookingFor: val[0] || "" }))}
             mode='single'
           />
 
           <DropdownSelector
             header="bodyform"
             options={["Gelatinous", "Tentacled", "Humanoid", "Energy-Based", "Mechanical", "Reptilian", "Gas Cloud", "Insectoid", "Crystalline", "Mimetic Blob"]}
-            selectedOptions={filters.bodyform}
-            onSelect={(val) => setFilters(f => ({ ...f, bodyform: val }))}
+            selectedOptions={filters.bodyform ? [filters.bodyform] : []}
+            onSelect={(val) => setFilters(f => ({ ...f, bodyform: val[0] || "" }))}
             mode='single'
           />
 
@@ -117,8 +117,8 @@ export const FilteringDropdown: React.FC<FilteringDropdownProps> = ({ filters, s
               "Oortania",
               "Vrexalon",
             ]}
-            selectedOptions={filters.homeplanet}
-            onSelect={(val) => setFilters(f => ({ ...f, homeplanet: val }))}
+            selectedOptions={filters.homeplanet ? [filters.homeplanet] : []}
+            onSelect={(val) => setFilters(f => ({ ...f, homeplanet: val[0] || "" }))}
             mode='single'
           />
         </div>
@@ -126,7 +126,7 @@ export const FilteringDropdown: React.FC<FilteringDropdownProps> = ({ filters, s
         <RangeSlider
           header="max distance (light years)"
           min={0}
-          max={150}
+          max={340}
           step={10}
           gap={20}
           maxOnly={true}

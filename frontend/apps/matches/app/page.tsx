@@ -8,6 +8,7 @@ import { MatchCardBack } from "/workspace/frontend/packages/components/src/organ
 import { AlienMeetLogo } from "/workspace/frontend/packages/components/src/atoms/Alien.meet logo/alien_meet";
 import { useUserSearch } from "/workspace/frontend/apps/matches/app/hooks/useUserSearch";
 import { MatchUser, Filters } from "../types";
+import { useUserProfile } from "./hooks/useUserProfile";
 
 const lookingForColors: Record<string, MatchCardFrontProps["cardColor"]> = {
   "Friendship": "amberglow",
@@ -64,19 +65,32 @@ export default function Matches() {
     }
   };
 
+  const handleHideUser = (id: string) => {
+    setUsers(prev => prev.filter(user => user.id !== id));
+  };
+
+  const userId = "f2d45e1c-4d9c-4a5a-b2fa-1f55e720347a"; // replace with real logged-in user later
+
   const [filters, setFilters] = useState<Filters>({
     minAge: 18,
     maxAge: 150,
-    maxDistanceLy: 150,
+    maxDistanceLy: 340,
     bodyform: "",
     interests: [],
     lookingFor: "",
     homeplanet: "",
   } as Filters);
 
-  // Custom hook to fetch filtered users
-  const userId = "f2d45e1c-4d9c-4a5a-b2fa-1f55e720347a"; // replace with real logged-in user later
-  const { users: fetchedUsers, isLoading } = useUserSearch(userId, filters);
+  // Fetch matches + currentUser in one hook
+  const { users: fetchedUsers, currentUser, isLoading } = useUserSearch(userId, filters);
+
+  // Initialize homeplanet once currentUser is available
+  useEffect(() => {
+    if (currentUser?.homeplanet && !filters.homeplanet) {
+      setFilters(f => ({ ...f, homeplanet: currentUser.homeplanet }));
+    }
+  }, [currentUser, filters.homeplanet]);
+
   const [visibleUsers, setVisibleUsers] = useState<MatchUser[]>([]);
   const [remainingUsers, setRemainingUsers] = useState<MatchUser[]>([]);
 
@@ -96,10 +110,7 @@ export default function Matches() {
     }
   }, [fetchedUsers]);
 
-  // Hide user handler
-  const handleHideUser = (id: string) => {
-    setUsers(prev => prev.filter(user => user.id !== id));
-  };
+
 
   return (
     <div className="flex flex-col items-center pt-4 px-4 min-h-screen">
@@ -126,7 +137,7 @@ export default function Matches() {
               No matches found.
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full pt-28 justify-items-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-17 w-full pt-28 pl-10 justify-items-center">
               {visibleUsers.map((user) => (
                 <FlipCard
                   key={user.id}

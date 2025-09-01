@@ -12,12 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import tech.kood.match_me.matching.dto.MatchFilter;
-import tech.kood.match_me.matching.dto.MatchResultDto;
+import tech.kood.match_me.matching.dto.CurrentUserDto;
+import tech.kood.match_me.matching.dto.MatchFilterDto;
+import tech.kood.match_me.matching.dto.MatchResponseDto;
+import tech.kood.match_me.matching.dto.MatchResultsDto;
 import tech.kood.match_me.matching.model.User;
 import tech.kood.match_me.matching.repository.MatchUserRepository;
 import tech.kood.match_me.matching.service.MatchService;
-
 
 @RestController
 @RequestMapping("/api")
@@ -28,13 +29,13 @@ public class MatchController {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public MatchController(MatchService matchService,
-                           MatchUserRepository userRepository) {
+            MatchUserRepository userRepository) {
         this.matchService = matchService;
         this.userRepository = userRepository;
     }
 
     @PostMapping("/matches/{userId}")
-    public List<MatchResultDto> getMatches(
+    public MatchResponseDto getMatches(
             @PathVariable UUID userId,
             @RequestBody String rawBody) {   // accept raw body first
 
@@ -42,16 +43,14 @@ public class MatchController {
         System.out.println("RAW JSON BODY: " + rawBody);
 
         try {
-            // Deserialize manually into my DTO
-            MatchFilter filter = objectMapper.readValue(rawBody, MatchFilter.class);
-            System.out.println("DESERIALIZED FILTER: " + filter);
+            MatchFilterDto filter = objectMapper.readValue(rawBody, MatchFilterDto.class);
 
-            // Load current user from DB
             User currentUser = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
-            // Call service with both filter + current user
-            return matchService.getMatches(filter, currentUser);
+            List<MatchResultsDto> matches = matchService.getMatches(filter, currentUser);
+
+            return new MatchResponseDto(new CurrentUserDto(currentUser), matches);
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to parse JSON", e);

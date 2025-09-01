@@ -16,7 +16,7 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import tech.kood.match_me.matching.dto.MatchFilter;
+import tech.kood.match_me.matching.dto.MatchFilterDto;
 import tech.kood.match_me.matching.model.Bodyform;
 import tech.kood.match_me.matching.model.Homeplanet;
 import tech.kood.match_me.matching.model.Interest;
@@ -30,7 +30,7 @@ public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public List<User> findByFilter(MatchFilter filter) {
+    public List<User> findByFilter(MatchFilterDto filter) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = cb.createQuery(User.class);
         Root<User> root = query.from(User.class);

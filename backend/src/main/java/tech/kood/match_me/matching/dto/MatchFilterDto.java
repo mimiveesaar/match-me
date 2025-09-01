@@ -4,7 +4,7 @@ import java.util.List;
 
 // DTO for incoming filter criteria
 
-public class MatchFilter {
+public class MatchFilterDto {
     private Integer minAge;
     private Integer maxAge;
     private String homeplanet;

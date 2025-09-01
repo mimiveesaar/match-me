@@ -12,7 +12,7 @@ public class MatchScoringService {
         int score = 0;
 
         if (user.getHomeplanet().equals(candidate.getHomeplanet())) score += 1;
-        // if (candidate.getDistance() <= 50) score += 1; // Where do i get this distance from? Cause it's not a field in any of my models.
+        // if (candidate.getDistance() <= 50) score += 1;
         if (user.getBodyform().equals(candidate.getBodyform())) score += 1;
 
         int sharedInterests = (int) user.getInterests().stream()
@@ -32,6 +32,6 @@ public class MatchScoringService {
     }
 
     public boolean isSupermatch(double score) {
-        return score >= 4; // your rule: 4–6 points = supermatch
+        return score >= 4; // Supermatch rule: 4–6 points = supermatch, the rest are just meehhh...
     }
 }
