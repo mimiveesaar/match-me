@@ -22,10 +22,21 @@ public class ProfileController {
         this.service = service;
     }
 
-@PostMapping("/me")
-public ResponseEntity<ProfileViewDTO> saveMyProfile(@RequestBody ProfileDTO dto) {
-    return ResponseEntity.ok(toViewDTO(service.saveOrUpdateProfile(dto)));
-}
+    @PostMapping("/me")
+    public ResponseEntity<ProfileViewDTO> saveMyProfile(@RequestBody ProfileDTO dto) {
+        System.out.println("=== POST /api/profiles/me called ===");
+        System.out.println("Received DTO: " + dto);
+
+        try {
+            Profile savedProfile = service.saveOrUpdateProfile(dto);
+            System.out.println("Profile saved with ID: " + savedProfile.getId());
+            return ResponseEntity.ok(toViewDTO(savedProfile));
+        } catch (Exception e) {
+            System.out.println("Error saving profile: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+    }
 
     @GetMapping("/me")
     public ResponseEntity<ProfileViewDTO> getMyProfile() {
@@ -42,7 +53,8 @@ public ResponseEntity<ProfileViewDTO> saveMyProfile(@RequestBody ProfileDTO dto)
         dto.setBodyform(profile.getBodyform().getName());
         dto.setLookingFor(profile.getLookingFor().getName());
         dto.setBio(profile.getBio());
-        dto.setInterests(profile.getInterests().stream().map(i -> i.getName()).collect(java.util.stream.Collectors.toSet()));
+        dto.setInterests(profile.getInterests().stream().map(i -> i.getName())
+                .collect(java.util.stream.Collectors.toSet()));
         dto.setProfilePic(profile.getProfilePic());
         return dto;
     }

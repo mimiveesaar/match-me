@@ -15,13 +15,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.transaction.PlatformTransactionManager;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+
+@EnableJpaRepositories(basePackages = "tech.kood.match_me.user_management.repository",
+        entityManagerFactoryRef = "userManagementEmf",
+        transactionManagerRef = "userManagementTransactionManager")
 @Configuration
 public class UserManagementConfig {
 
@@ -95,11 +102,29 @@ public class UserManagementConfig {
     }
 
     @Bean
-    @Qualifier("userManagementTransactionManager")
-    public PlatformTransactionManager userManagementTransactionManager(
+    public LocalContainerEntityManagerFactoryBean userManagementEmf(
             @Qualifier("userManagementDataSource") DataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
+
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        vendorAdapter.setGenerateDdl(true);
+        vendorAdapter.setShowSql(true);
+
+        LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
+        emf.setDataSource(dataSource);
+        emf.setPackagesToScan("tech.kood.match_me.user_management.model");
+        emf.setPersistenceUnitName("userManagementPU");
+        emf.setJpaVendorAdapter(vendorAdapter);
+
+        return emf;
     }
+
+    @Bean(name = "userManagementTransactionManager")
+    public PlatformTransactionManager userManagementTransactionManager(
+            @Qualifier("userManagementEmf") LocalContainerEntityManagerFactoryBean userManagementEmf) {
+        return new JpaTransactionManager(java.util.Objects.requireNonNull(
+                userManagementEmf.getObject(), "EntityManagerFactory must not be null"));
+    }
+
 
     @Bean
     @Qualifier("userManagementTaskScheduler")
@@ -117,12 +142,8 @@ public class UserManagementConfig {
 
     @Bean(initMethod = "migrate")
     @Qualifier("userManagementFlyway")
-    @ConditionalOnProperty(
-    prefix = "user-management.flyway",
-    name = "enabled",
-    havingValue = "true",
-    matchIfMissing = false
-)
+    @ConditionalOnProperty(prefix = "user-management.flyway", name = "enabled",
+            havingValue = "true", matchIfMissing = false)
     public Flyway userManagementFlyway(
             @Qualifier("userManagementDataSource") DataSource dataSource) {
         var flyway = Flyway.configure().dataSource(dataSource)

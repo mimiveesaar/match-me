@@ -10,10 +10,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.TaskScheduler;
@@ -62,12 +62,15 @@ public class ProfileManagementConfig {
         return emf;
     }
 
-    @Bean
-    @Qualifier("profileManagementTransactionManager")
-    public PlatformTransactionManager profileManagementTransactionManager(
-            @Qualifier("profileManagementDataSource") DataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
-    }
+@Bean(name = "profileManagementTransactionManager")
+@Primary
+public PlatformTransactionManager profileManagementTransactionManager(
+        @Qualifier("profileManagementEmf") LocalContainerEntityManagerFactoryBean profileManagementEmf) {
+    return new org.springframework.orm.jpa.JpaTransactionManager(
+            java.util.Objects.requireNonNull(profileManagementEmf.getObject(),
+                    "EntityManagerFactory must not be null"));
+}
+
 
     @Bean("profileManagementTaskScheduler")
     public TaskScheduler profileManagementTaskScheduler(

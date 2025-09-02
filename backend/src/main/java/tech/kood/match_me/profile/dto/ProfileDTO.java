@@ -6,7 +6,7 @@ import java.util.UUID;
 public class ProfileDTO {
     private UUID id;
     private String username;
-    private int age;
+    private Integer age;
     private Long homeplanetId;
     private Long bodyformId;
     private Long lookingForId;
@@ -31,11 +31,11 @@ public class ProfileDTO {
         this.username = username;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

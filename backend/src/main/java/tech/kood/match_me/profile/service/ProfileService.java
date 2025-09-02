@@ -1,7 +1,7 @@
 package tech.kood.match_me.profile.service;
 
 import java.util.HashSet;
-
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,50 +16,67 @@ import tech.kood.match_me.profile.repository.ProfileRepository;
 @Service
 public class ProfileService {
 
-        private final ProfileRepository profileRepo;
-        private final HomeplanetRepository homeplanetRepo;
-        private final BodyformRepository bodyformRepo;
-        private final LookingForRepository lookingForRepo;
-        private final InterestRepository interestRepo;
+    private final ProfileRepository profileRepo;
+    private final HomeplanetRepository homeplanetRepo;
+    private final BodyformRepository bodyformRepo;
+    private final LookingForRepository lookingForRepo;
+    private final InterestRepository interestRepo;
 
-        public ProfileService(ProfileRepository profileRepo, HomeplanetRepository homeplanetRepo,
-                        BodyformRepository bodyformRepo, LookingForRepository lookingForRepo,
-                        InterestRepository interestRepo) {
-                this.profileRepo = profileRepo;
-                this.homeplanetRepo = homeplanetRepo;
-                this.bodyformRepo = bodyformRepo;
-                this.lookingForRepo = lookingForRepo;
-                this.interestRepo = interestRepo;
+    public ProfileService(ProfileRepository profileRepo, HomeplanetRepository homeplanetRepo,
+            BodyformRepository bodyformRepo, LookingForRepository lookingForRepo,
+            InterestRepository interestRepo) {
+        this.profileRepo = profileRepo;
+        this.homeplanetRepo = homeplanetRepo;
+        this.bodyformRepo = bodyformRepo;
+        this.lookingForRepo = lookingForRepo;
+        this.interestRepo = interestRepo;
+    }
+
+    @Transactional
+    public Profile saveOrUpdateProfile(ProfileDTO dto) {
+        Profile profile = getMyProfile(); // fetch existing profile
+
+        if (dto.getUsername() != null) {
+            profile.setUsername(dto.getUsername());
+        }
+        if (dto.getAge() != null) {
+            profile.setAge(dto.getAge());
+        }
+        if (dto.getHomeplanetId() != null) {
+            profile.setHomeplanet(homeplanetRepo.findById(dto.getHomeplanetId())
+                    .orElseThrow(() -> new RuntimeException("Homeplanet not found")));
+        }
+        if (dto.getBodyformId() != null) {
+            profile.setBodyform(bodyformRepo.findById(dto.getBodyformId())
+                    .orElseThrow(() -> new RuntimeException("Bodyform not found")));
+        }
+        if (dto.getLookingForId() != null) {
+            profile.setLookingFor(lookingForRepo.findById(dto.getLookingForId())
+                    .orElseThrow(() -> new RuntimeException("LookingFor not found")));
+        }
+        if (dto.getBio() != null) {
+            profile.setBio(dto.getBio());
+        }
+        if (dto.getInterestIds() != null && !dto.getInterestIds().isEmpty()) {
+            profile.setInterests(dto.getInterestIds().stream()
+                    .map(id -> interestRepo.findById(id)
+                            .orElseThrow(() -> new RuntimeException("Interest not found")))
+                    .collect(Collectors.toSet()));
+        }
+        if (dto.getProfilePic() != null) {
+            profile.setProfilePic(dto.getProfilePic());
         }
 
-        @Transactional
-        public Profile saveOrUpdateProfile(ProfileDTO dto) {
-                Profile profile = profileRepo.findAll().stream().findFirst()
-                                .orElseGet(() -> new Profile());
+        return profileRepo.save(profile);
+    }
 
+    @Transactional(readOnly = true)
+    public Profile getMyProfile() {
+        System.out.println("=== Getting profile ===");
+        long profileCount = profileRepo.count();
+        System.out.println("Total profiles in database: " + profileCount);
 
-                profile.setUsername(dto.getUsername());
-                profile.setAge(dto.getAge());
-                profile.setBio(dto.getBio());
-                profile.setProfilePic(dto.getProfilePic());
-
-                profile.setHomeplanet(homeplanetRepo.findById(dto.getHomeplanetId())
-                                .orElseThrow(() -> new RuntimeException("Homeplanet with ID "
-                                                + dto.getHomeplanetId() + " not found")));
-                profile.setBodyform(bodyformRepo.findById(dto.getBodyformId())
-                                .orElseThrow(() -> new RuntimeException("Bodyform with ID "
-                                                + dto.getBodyformId() + " not found")));
-                profile.setLookingFor(lookingForRepo.findById(dto.getLookingForId())
-                                .orElseThrow(() -> new RuntimeException("LookingFor with ID "
-                                                + dto.getLookingForId() + " not found")));
-
-                profile.setInterests(new HashSet<>(interestRepo.findAllById(dto.getInterestIds())));
-
-                return profileRepo.save(profile);
-        }
-
-        public Profile getMyProfile() {
-                return profileRepo.findAll().stream().findFirst()
-                                .orElseThrow(() -> new RuntimeException("No profile found"));
-        }
+        return profileRepo.findAllWithRelations().stream().findFirst()
+                .orElseThrow(() -> new RuntimeException("No profile found"));
+    }
 }

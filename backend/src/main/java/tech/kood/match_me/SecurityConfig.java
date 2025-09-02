@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -11,6 +12,7 @@ import tech.kood.match_me.user_management.features.accessToken.filters.JwtAuthen
 
 @EnableMethodSecurity
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
 
@@ -36,6 +38,11 @@ public class SecurityConfig {
                                                         "/api/*/user-management/auth/access-token",
                                                         "/api/*/user-management/auth/invalidate")
                                                         .permitAll();
+
+                                        // TEMPORARY: Allow unauthenticated access to profile
+                                        // endpoints for development
+                                        requests.requestMatchers("/api/profiles/**").permitAll();
+
                                         // Allow unauthenticated access to health checks and
                                         // actuator endpoints.
                                         requests.requestMatchers("/actuator/**", "/hawtio/**")
