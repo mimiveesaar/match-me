@@ -47,6 +47,7 @@ export default function Matches() {
 
   const [visibleUsers, setVisibleUsers] = useState<MatchUser[]>([]);
   const [remainingUsers, setRemainingUsers] = useState<MatchUser[]>([]);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   // When filters change → update local state
   useEffect(() => {
@@ -146,45 +147,93 @@ export default function Matches() {
               No matches found.
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-17 w-full pt-28 pl-10 justify-items-center">
-              {visibleUsers.map((user) => (
-                <FlipCard
-                  key={user.id}
-                  front={
-                    <MatchCardFront
-                      profilepicSrc={user.profilepicSrc}
-                      username={user.username}
-                      age={user.age}
-                      location={user.homeplanet}
-                      lookingFor={user.lookingFor}
-                      bio={user.bio ?? "..."}
-                      cardColor={
-                        lookingForColors[user.lookingFor] || "olive"
-                      }
-                      userId={user.id}
-                      onReject={handleReject}
-                      onConnectionRequest={handleConnectionRequest}
-                      supermatch={user.supermatch}
-                    />
-                  }
-                  back={
-                    <MatchCardBack
-                      username={user.username}
-                      age={user.age}
-                      location={user.homeplanet}
-                      lookingFor={user.lookingFor}
-                      bodyform={user.bodyform}
-                      bio={user.bio ?? "..."}
-                      interests={user.interests ?? []}
-                      onHide={() => handleHideUser(user.id)}
-                      cardColor={
-                        lookingForColors[user.lookingFor] || "olive"
-                      }
-                      supermatch={user.supermatch}
-                    />
-                  }
-                />
-              ))}
+            <div className="w-full pt-28 pl-4 md:pl-10">
+              {/* Mobile: Horizontal scrolling */}
+              <div className="md:hidden overflow-x-auto pb-4">
+                <div className="flex gap-4 w-max">
+                  {visibleUsers.map((user) => (
+                    <div key={user.id} className="flex-shrink-0 w-80">
+                      <FlipCard
+                        front={
+                          <MatchCardFront
+                            profilepicSrc={user.profilepicSrc}
+                            username={user.username}
+                            age={user.age}
+                            location={user.homeplanet}
+                            lookingFor={user.lookingFor}
+                            bio={user.bio ?? "..."}
+                            cardColor={
+                              lookingForColors[user.lookingFor] || "olive"
+                            }
+                            userId={user.id}
+                            onReject={handleReject}
+                            onConnectionRequest={handleConnectionRequest}
+                            supermatch={user.supermatch}
+                          />
+                        }
+                        back={
+                          <MatchCardBack
+                            username={user.username}
+                            age={user.age}
+                            location={user.homeplanet}
+                            lookingFor={user.lookingFor}
+                            bodyform={user.bodyform}
+                            bio={user.bio ?? "..."}
+                            interests={user.interests ?? []}
+                            onHide={() => handleHideUser(user.id)}
+                            cardColor={
+                              lookingForColors[user.lookingFor] || "olive"
+                            }
+                            supermatch={user.supermatch}
+                          />
+                        }
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Desktop: Grid layout */}
+              <div className="hidden md:grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 justify-items-center">
+                {visibleUsers.map((user) => (
+                  <FlipCard
+                    key={user.id}
+                    front={
+                      <MatchCardFront
+                        profilepicSrc={user.profilepicSrc}
+                        username={user.username}
+                        age={user.age}
+                        location={user.homeplanet}
+                        lookingFor={user.lookingFor}
+                        bio={user.bio ?? "..."}
+                        cardColor={
+                          lookingForColors[user.lookingFor] || "olive"
+                        }
+                        userId={user.id}
+                        onReject={handleReject}
+                        onConnectionRequest={handleConnectionRequest}
+                        supermatch={user.supermatch}
+                      />
+                    }
+                    back={
+                      <MatchCardBack
+                        username={user.username}
+                        age={user.age}
+                        location={user.homeplanet}
+                        lookingFor={user.lookingFor}
+                        bodyform={user.bodyform}
+                        bio={user.bio ?? "..."}
+                        interests={user.interests ?? []}
+                        onHide={() => handleHideUser(user.id)}
+                        cardColor={
+                          lookingForColors[user.lookingFor] || "olive"
+                        }
+                        supermatch={user.supermatch}
+                      />
+                    }
+                  />
+                ))}
+              </div>
             </div>
           )}
         </div>
