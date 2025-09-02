@@ -20,7 +20,7 @@ const lookingForColors: Record<string, MatchCardFrontProps["cardColor"]> = {
 };
 
 export default function Matches() {
-  const userId = "f2d45e1c-4d9c-4a5a-b2fa-1f55e720347a"; // replace with real logged-in user later
+  const userId = "d87e7304-7bfb-4bfb-9318-52c58f3c1034"; // replace with real logged-in user later
 
   const [filters, setFilters] = useState<Filters>({
     minAge: 18,
@@ -152,6 +152,7 @@ export default function Matches() {
                   key={user.id}
                   front={
                     <MatchCardFront
+                      profilepicSrc={user.profilepicSrc}
                       username={user.username}
                       age={user.age}
                       location={user.homeplanet}

@@ -1,5 +1,6 @@
 export interface MatchUser {
   id: string;
+  profilepicSrc?: string;
   username?: string;
   age?: number;
   homeplanet: string;

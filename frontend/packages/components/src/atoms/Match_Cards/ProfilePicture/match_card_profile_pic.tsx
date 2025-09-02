@@ -8,21 +8,23 @@ interface PicProps {
   className?: string;
 }
 
-const DEFAULT_AVATAR = "default-avatar.png";
+const BACKEND_URL = "http://localhost:8080";
+const DEFAULT_AVATAR = `${BACKEND_URL}/images/profiles/default-avatar.png`;
 
-export const MatchCardProfilePic = ({
-  src,
-  alt = "Profile picture",
-  className = "",
-}: PicProps) => {
+export const MatchCardProfilePic = ({ src, alt, className }: PicProps) => {
+  
   const handleError = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
     event.currentTarget.src = DEFAULT_AVATAR;
   };
 
+  const imageUrl = src 
+    ? (src.startsWith('http') ? src : `${BACKEND_URL}${src}`)
+    : DEFAULT_AVATAR;
+
   return (
     <div className={`w-265 h-196 rounded-custom-16 overflow-hidden ${className}`}>
       <img
-        src={src || DEFAULT_AVATAR}
+        src={imageUrl}
         alt={alt}
         onError={handleError}
         className="object-cover w-full h-full"

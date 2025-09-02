@@ -1,12 +1,19 @@
 package tech.kood.match_me.matching.model;
 
-import jakarta.persistence.*;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
@@ -36,6 +43,9 @@ public class User {
     @Column(name = "bio")
     private String bio;
 
+    @Column(name = "profilepic_src")  
+    private String profilepicSrc;
+
     @ManyToMany
     @JoinTable(
             name = "user_interests",
@@ -48,7 +58,7 @@ public class User {
     public User() {
     }
 
-    public User(String username, int age, Homeplanet homeplanet, Bodyform bodyform, String bio, LookingFor lookingFor, Set<Interest> interests) {
+    public User(String username, int age, Homeplanet homeplanet, Bodyform bodyform, String bio, LookingFor lookingFor, Set<Interest> interests,  String profilepicSrc) {
         this.username = username;
         this.age = age;
         this.homeplanet = homeplanet;
@@ -56,6 +66,7 @@ public class User {
         this.bio = bio;
         this.lookingFor = lookingFor;
         this.interests = interests;
+        this.profilepicSrc = profilepicSrc;
     }
 
     public UUID getId() {
@@ -88,5 +99,9 @@ public class User {
 
     public Set<Interest> getInterests() {
         return interests;
+    }
+
+    public String getProfilepicSrc() {
+        return profilepicSrc;
     }
 }

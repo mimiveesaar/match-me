@@ -10,27 +10,28 @@ CREATE TABLE IF NOT EXISTS users (
     bio TEXT
 );
 
-INSERT INTO users (id, username, age, profilepic_src, homeplanet_id, looking_for_id, bodyform_id, bio) VALUES
-('3fa85f64-5717-4562-b3fc-2c963f66afa1', 'starhopper42', 27, 'https://example.com/pics/starhopper.jpg', 1, 1, 1, 'Explorer of galaxies and maker of maps.'),
-('c9a6463d-5e4b-43ef-924e-25d7a9e8e6c2', 'nebular_nikki', 31, 'https://example.com/pics/nikki.jpg', 2, 2, 2, 'Dreaming beyond the stars.'),
-('f2d45e1c-4d9c-4a5a-b2fa-1f55e720347a', 'cosmicjoe', 35, NULL, 1, 1, 1, 'Looking for a co-pilot in life.'),
-('23dc80aa-01ae-4cf3-93c0-60b3846ef1e5', 'gravitygal', 29, 'https://example.com/pics/gravity.jpg', 3, 3, 3, 'I never fall... unless it’s for someone.'),
-('d87e7304-7bfb-4bfb-9318-52c58f3c1036', 'andromedaboy', 22, NULL, 2, 3, 3, 'Just a guy with a telescope and big dreams.'),
-('aaab9e4b-7a3a-45cf-9408-c89e0d032871', 'orionquest', 40, 'https://example.com/pics/orion.jpg', 4, 4, 4, 'Long-time traveler, short-time sleeper.'),
-('1db4562e-93a3-4cc5-b2ff-b3cf95fd3a45', 'venusian_vibe', 26, 'https://example.com/pics/venus.jpg', 5, 5, 5, 'Bringing sunshine wherever I go.'),
-('c6ee9999-8371-46cf-9302-45f1ddee6a6d', 'marsmaven', 33, NULL, 2, 1, 2, 'Martian-born, Earth-raised, curiosity-fueled.'),
-('4b07cd42-d78f-4fa5-bf91-f3ad3cf8db99', 'astrochick', 28, 'https://example.com/pics/astro.jpg', 6, 6, 6, 'Rockets, robots, and romance.'),
-('e85e2b12-01dc-4564-b78c-d6d4c77002b9', 'quantumquinn', 38, NULL, 3, 3, 2, 'Entangled in all the right ways.'),
-('41b5a984-9822-4bc2-9c3c-93b1d4238e6f', 'lunar_luke', 24, 'https://example.com/pics/luke.jpg', 7, 1, 7, 'Moon-walker in search of a dance partner.'),
-('dcf48c31-d8e1-4e90-8599-1e4f4c5c0977', 'plutonianpixie', 30, NULL, 3, 3, 3, 'Cold hands, warm heart, outer orbit dreams.'),
-('8fc909b7-cbc1-41ce-bc70-4b41ea4a2326', 'galaxygazer', 36, 'https://example.com/pics/gazer.jpg', 8, 2, 8, 'My telescope sees far, but I’m looking for someone near.'),
-('51d00c53-7714-41cb-8cf1-8e620155f3ec', 'astro_ari', 27, NULL, 2, 2, 2, 'Martinis and meteor showers.'),
-('19f54fd2-84ec-4213-a4ab-d81cf865fbc7', 'jupiterjazz', 42, 'https://example.com/pics/jazz.jpg', 9, 3, 9, 'Rhythms of the cosmos, melodies of love.'),
-('3d47007e-96e0-4d37-8663-02a6e1e23d84', 'zenzara', 21, NULL, 10, 3, 3, 'Meditating in zero gravity.'),
-('7c9e4e62-7e32-4ce3-872b-78370839d0f2', 'nova_nate', 34, 'https://example.com/pics/nate.jpg', 11, 4, 10, 'Burn bright, love brighter.'),
-('e4e7a4e1-4ab0-406c-b6c4-7c6cbd28f671', 'solarys', 29, 'https://example.com/pics/solarys.jpg', 12, 5, 1, 'Daylight dreamer, starlight lover.'),
-('bfd6b738-6c58-4b77-8aa2-dce297fa23b5', 'wormholewendy', 26, NULL, 13, 6, 2, 'Faster than light, slower to trust.'),
-('0b2e39ea-d1ef-4b6c-93b6-1d0ff861197e', 'kepler_kai', 37, 'https://example.com/pics/kai.jpg', 14, 1, 3, 'Mapping hearts like exoplanets.');
+INSERT INTO users (id, username, age, profilepic_src, homeplanet_id, bodyform_id, looking_for_id, bio) VALUES
+('3fa85f64-5717-4562-b3fc-2c963f66afa1', 'starhopper42', 27, '/images/profiles/starhopper.png', 1, 1, 1, 'Explorer of galaxies and maker of maps.'),
+('c9a6463d-5e4b-43ef-924e-25d7a9e8e6c2', 'nebular_nikki', 31, '/images/profiles/nebular_nikki.png', 2, 2, 2, 'Dreaming beyond the stars.'),
+('f2d45e1c-4d9c-4a5a-b2fa-1f55e720347a', 'cosmicjoe', 35, '/images/profiles/cosmic-joe.png', 1, 1, 1, 'Looking for a co-pilot in life.'),
+('23dc80aa-01ae-4cf3-93c0-60b3846ef1e5', 'gravitygal', 29, '/images/profiles/gravitygal.png', 3, 3, 3, 'I never fall... unless it''s for someone.'),
+('d87e7304-7bfb-4bfb-9318-52c58f3c1036', 'andromedaboy', 22, '/images/profiles/andromedaboy.png', 2, 3, 3, 'Just a guy with a telescope and big dreams.'),
+('aaab9e4b-7a3a-45cf-9408-c89e0d032871', 'orionquest', 40, '/images/profiles/orionquest.png', 4, 4, 4, 'Long-time traveler, short-time sleeper.'),
+('1db4562e-93a3-4cc5-b2ff-b3cf95fd3a45', 'venusian_vibe', 26, '/images/profiles/venusian_vibe.png', 5, 5, 5, 'Bringing sunshine wherever I go.'),
+('c6ee9999-8371-46cf-9302-45f1ddee6a6d', 'marsmaven', 33, '/images/profiles/marsmaven.png', 2, 1, 2, 'Martian-born, Earth-raised, curiosity-fueled.'),
+('4b07cd42-d78f-4fa5-bf91-f3ad3cf8db99', 'astrochick', 28, '/images/profiles/astrochick.png', 6, 6, 6, 'Rockets, robots, and romance.'),
+('e85e2b12-01dc-4564-b78c-d6d4c77002b9', 'quantumquinn', 38, '/images/profiles/quantumquinn.png', 3, 3, 2, 'Entangled in all the right ways.'),
+('41b5a984-9822-4bc2-9c3c-93b1d4238e6f', 'lunar_luke', 24, '/images/profiles/lunar_luke.png', 7, 1, 7, 'Moon-walker in search of a dance partner.'),
+('dcf48c31-d8e1-4e90-8599-1e4f4c5c0977', 'plutonianpixie', 30, '/images/profiles/plutonianpixie.png', 3, 3, 3, 'Cold hands, warm heart, outer orbit dreams.'),
+('8fc909b7-cbc1-41ce-bc70-4b41ea4a2326', 'galaxygazer', 36, '/images/profiles/galaxygazer.png', 8, 2, 8, 'My telescope sees far, but I''m looking for someone near.'),
+('51d00c53-7714-41cb-8cf1-8e620155f3ec', 'astro_ari', 27, '/images/profiles/astro-ari.png', 2, 2, 2, 'Martinis and meteor showers.'),
+('19f54fd2-84ec-4213-a4ab-d81cf865fbc7', 'jupiterjazz', 42, '/images/profiles/jupiterjazz.png', 9, 3, 9, 'Rhythms of the cosmos, melodies of love.'),
+('3d47007e-96e0-4d37-8663-02a6e1e23d84', 'zenzara', 21, '/images/profiles/zenzara.png', 10, 3, 3, 'Meditating in zero gravity.'),
+('7c9e4e62-7e32-4ce3-872b-78370839d0f2', 'nova_nate', 34, '/images/profiles/nova-nate.png', 11, 4, 10, 'Burn bright, love brighter.'),
+('e4e7a4e1-4ab0-406c-b6c4-7c6cbd28f671', 'solarys', 29, '/images/profiles/solarys.png', 12, 5, 1, 'Daylight dreamer, starlight lover.'),
+('bfd6b738-6c58-4b77-8aa2-dce297fa23b5', 'wormholewendy', 26, '/images/profiles/wormholewendy.png', 13, 6, 2, 'Faster than light, slower to trust.'),
+('0b2e39ea-d1ef-4b6c-93b6-1d0ff861197e', 'kepler_kai', 37, '/images/profiles/kepler-kai.png', 14, 1, 3, 'Mapping hearts like exoplanets.'),
+('d87e7304-7bfb-4bfb-9318-52c58f3c1034', '1', 35, NULL, 1, 1, 1, 'Supermatch');
 
 
 CREATE TABLE IF NOT EXISTS user_rejections (

@@ -7,6 +7,7 @@ import tech.kood.match_me.matching.model.User;
 
 // DTO for outgoing match results
 public class MatchResultsDto {
+
     private final String id;
     private final String username;
     private final Integer age;
@@ -15,6 +16,7 @@ public class MatchResultsDto {
     private final String bodyform;
     private final String bio;
     private final List<String> interests;
+    private final String profilepicSrc;
     private final double score;
     private final boolean supermatch;
 
@@ -31,6 +33,10 @@ public class MatchResultsDto {
               .map(Interest::getName)
               .toList()
         : List.of();
+
+        this.profilepicSrc = (user.getProfilepicSrc() != null && !user.getProfilepicSrc().isBlank())
+            ? user.getProfilepicSrc()
+            : "/images/profiles/default-avatar.png";
         this.score = score;
         this.supermatch = supermatch;
     }
@@ -58,6 +64,9 @@ public class MatchResultsDto {
     }
     public List<String> getInterests() {
         return interests;
+    }
+    public String getProfilepicSrc() { 
+        return profilepicSrc;
     }
     public double getScore() {
         return score;

@@ -13,7 +13,7 @@ import { ButtonTriangle } from "../../molecules/Match Cards/MatchCardButtons/mat
 
 
 export interface MatchCardFrontProps {
-  profilePicSrc?: string;
+  profilepicSrc?: string;
   alt?: string;
   username?: string;
   age?: number;
@@ -28,18 +28,18 @@ export interface MatchCardFrontProps {
 };
 
 export const MatchCardFront = ({
-  profilePicSrc = "default-profile.png",
+  profilepicSrc,
   alt,
-  username = "Shelly",
-  age = 64,
-  cardColor = "olive",
-  location = "Mars",
-  lookingFor = "Astral companion",
-  bio = "Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry.",
+  username,
+  age,
+  cardColor,
+  location,
+  lookingFor,
+  bio,
   userId,
   onReject,
   onConnectionRequest,
-  supermatch = false,
+  supermatch,
 }: MatchCardFrontProps) => {
   return (
 
@@ -47,7 +47,7 @@ export const MatchCardFront = ({
       <div className="flex flex-col items-center h-full relative">
 
         <div className="relative w-265 h-196">
-          <MatchCardProfilePic src={profilePicSrc} alt={alt} />
+          <MatchCardProfilePic src={profilepicSrc} alt={alt} />
 
           {supermatch && (   // only render if true
             <div className="w-full pl-3 pt-1 absolute top-1 right-1 flex gap-1">
@@ -70,7 +70,7 @@ export const MatchCardFront = ({
 
           <div className="flex justify-end">
             <ButtonTriangle
-              rejectedId={userId} // Could I make them both use the same id? Like TargetId?
+              rejectedId={userId}
               onReject={onReject}
               requestedId={userId}
               onConnectionRequest={onConnectionRequest}
