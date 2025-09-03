@@ -15,8 +15,11 @@ export const MessageHeader = ({
 }: MessageHeaderProps) => {
 
   return (
-    <div className={`flex justify-between items-center text-black/80 chakra-petch text-xs`}>
-      <span>{sender}</span>
+    <div className={`flex justify-start text-black/80 chakra-petch text-xs pl-7 font-semibold`}>
+      <div className="mr-1">
+        <span>{sender}</span>
+      </div>
+      
       <span>{time} {date}</span>
     </div>
   );
