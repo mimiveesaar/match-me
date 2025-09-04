@@ -1,7 +1,7 @@
 "use client";
 
-import { PhotoBubble } from "@atoms/CHATSPACE/Connections Menu/Profile Photo Bubble/PhotoBubble";
-import { Username } from "@atoms/CHATSPACE/Connections Menu/Username/Username";
+import { PhotoBubble } from "@atoms/chatspace/connections-menu/Profile Photo Bubble/PhotoBubble";
+import { Username } from "@atoms/chatspace/connections-menu/Username/Username";
 
 interface PhotoBubbleWithUsernameProps {
   src?: string;

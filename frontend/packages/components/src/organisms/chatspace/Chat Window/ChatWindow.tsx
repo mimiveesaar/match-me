@@ -1,7 +1,7 @@
 "use client";
 
-import { Background } from "@atoms/CHATSPACE/Chat Window/Background/Background";
-import { SpeechBubbleWithHeader } from "@molecules/CHATSPACE/Chat Window/SpeechBubbleWithHeader/SpeechBubbleWithHeader";
+import { Background } from "@atoms/chatspace/chat-window/Background/Background";
+import { SpeechBubbleWithHeader } from "@molecules/chatspace/chat-window/speech-bubble-with-header/SpeechBubbleWithHeader";
 
 export const ChatWindow = () => {
     return (

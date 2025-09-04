@@ -1,7 +1,7 @@
 "use client";
 
-import {SpeechBubble} from "@atoms/CHATSPACE/Chat Window/Speech Bubble/SpeechBubble";
-import {MessageHeader} from "@atoms/CHATSPACE/Chat Window/Message Header/MessageHeader";
+import { SpeechBubble } from "@atoms/chatspace/chat-window/Speech Bubble/SpeechBubble";
+import { MessageHeader } from "@atoms/chatspace/chat-window/Message Header/MessageHeader";
 
 export const SpeechBubbleWithHeader = ({
   sender,
