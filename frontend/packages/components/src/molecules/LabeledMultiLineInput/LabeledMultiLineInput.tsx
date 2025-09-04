@@ -8,6 +8,7 @@ interface LabeledMultiLineInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   maxLength?: number;
+  disabled?: boolean;
 }
 
 export const LabeledMultiLineInput = ({
@@ -15,6 +16,7 @@ export const LabeledMultiLineInput = ({
   placeholder,
   value,
   onChange,
+  disabled,
   maxLength = 250 }: LabeledMultiLineInputProps) => (
   <div className="mb-4">
 

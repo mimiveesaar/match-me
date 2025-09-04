@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ProfileCard } from "@organisms/ProfoleCard/ProfileCard";
+import { ProfileCard } from "@organisms/ProfileCard/ProfileCard";
 import { InterestsSection } from "@organisms/InterestsSection/InterestsSection";
 import { MultiLineInputField } from "@atoms/MultiLineInputField/MultiLineInputField";
 
