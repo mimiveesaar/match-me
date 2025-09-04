@@ -1,2 +1,2 @@
 @org.jspecify.annotations.NullMarked
-package tech.kood.match_me.chat;
+package tech.kood.match_me.chatspace;
