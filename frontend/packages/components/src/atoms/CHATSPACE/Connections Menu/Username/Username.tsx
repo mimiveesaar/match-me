@@ -7,7 +7,7 @@ interface UsernameProps {
 export const Username = ({ username }: UsernameProps) => {
   
   return (
-    <span className="text-ivory text-sm font-medium chakra-petch">
+    <span className="text-ivory text-xl font-medium chakra-petch">
       {username}
     </span>
   );

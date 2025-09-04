@@ -3,8 +3,8 @@
 export const Header = () => {
   
   return (
-    <span className="text-ivory chakra-petch text-2xl font-medium ">
+    <div className="text-ivory chakra-petch text-xl font-medium px-5 pt-7 pb-5">
       Your Connections
-    </span>
+    </div>
   );
 }
