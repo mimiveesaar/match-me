@@ -21,6 +21,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@components/*": ["../../packages/components/src/*"],
+      "@components-public/*": ["../../packages/components/public/*"],
       "@atoms/*": ["../../packages/components/src/atoms/*"],
       "@molecules/*": ["../../packages/components/src/molecules/*"],
       "@organisms/*": ["../../packages/components/src/organisms/*"],

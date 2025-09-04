@@ -15,7 +15,7 @@ export const PhotoBubbleWithUsername = ({
   username,
 }: PhotoBubbleWithUsernameProps) => {
   return (
-    <div className="flex items-center justify-start gap-5 px-10 py-3">
+    <div className="flex items-center justify-start gap-5 px-10 py-2">
       <PhotoBubble src={src} alt={alt} />
       <Username username={username} />
     </div>

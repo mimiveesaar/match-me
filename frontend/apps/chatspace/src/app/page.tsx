@@ -9,37 +9,43 @@ import { MessageInput } from "@components/organisms/chatspace/Message Input/Mess
 
 
 export default function Chatspace() {
-  const userId = "d87e7304-7bfb-4bfb-9318-52c58f3c1034"; // TODO: replace with real logged-in user later
+  const userId = "d87e7304-7bfb-4bfb-9318-52c58f3c1034";
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-950 text-white">
-      {/* Header / Logo */}
-      <header className="flex justify-center py-4 border-b border-gray-800">
+    <div className="flex flex-col h-screen bg-ivory">
+      {/* Header */}
+      <header className="flex justify-center py-4 flex-shrink-0">
         <AlienMeetLogo />
       </header>
 
-      {/* Main content row */}
-      <main className="flex flex-1 w-full max-w-7xl mx-auto">
+      {/* Main content */}
+      <main className="flex w-full max-w-7xl mx-auto">
+
         {/* Left sidebar */}
-        <aside className="w-64 border-r border-gray-800 p-4">
+        <aside className="w-80 flex items-center justify-center mt-20">
           <Menu />
         </aside>
 
         {/* Chat section */}
-        <section className="flex flex-col flex-1 border-r border-gray-800">
-          <div className="flex-1 overflow-y-auto">
+        <section className="flex flex-col flex-1">
+          {/* Chat messages */}
+          <div className="flex-1 overflow-y-auto mt-32">
             <ChatWindow />
           </div>
-          <div className="border-t border-gray-800 p-4">
-            <MessageInput onSend={function (message: string): void {
-              throw new Error("Function not implemented.");
-            } } />
+
+          {/* Message input */}
+          <div className="p-4 flex-shrink-0">
+            <MessageInput
+              onSend={function (message: string): void {
+                throw new Error("Function not implemented.");
+              }}
+            />
           </div>
         </section>
 
         {/* Right sidebar */}
-        <aside className="w-80 p-4">
-          <ConnectionsMenu username={""} />
+        <aside className="w-72 mt-32 flex flex-col">
+          <ConnectionsMenu username="Shelly" />
         </aside>
       </main>
     </div>
