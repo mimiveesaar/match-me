@@ -1,8 +1,8 @@
 package tech.kood.match_me.chatspace.model;
 
-
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +21,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @Column(nullable = false, unique = true, length = 50)
     private String username;
@@ -35,19 +35,11 @@ public class User {
     @ManyToMany(mappedBy = "participants")
     private Set<Conversation> conversations;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getUsername() {
         return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
     }
     public UserStatus getStatus() {
         return status;
