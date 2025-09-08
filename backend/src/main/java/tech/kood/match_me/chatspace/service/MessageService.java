@@ -1,6 +1,7 @@
 package tech.kood.match_me.chatspace.service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -29,12 +30,15 @@ public class MessageService {
     }
 
     public ChatMessageDTO saveMessage(ChatMessageDTO dto) {
+
+        UUID senderUuid = UUID.fromString(dto.getSenderId().toString());
+        UUID conversationUuid = UUID.fromString(dto.getConversationId().toString());
         // Find sender by UUID
-        User sender = userRepository.findById(dto.getSenderId())
+        User sender = userRepository.findById(senderUuid)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // Find conversation by UUID
-        Conversation conversation = conversationRepository.findById(dto.getConversationId())
+        Conversation conversation = conversationRepository.findById(conversationUuid)
                 .orElseThrow(() -> new RuntimeException("Conversation not found"));
 
         // Save message to DB
