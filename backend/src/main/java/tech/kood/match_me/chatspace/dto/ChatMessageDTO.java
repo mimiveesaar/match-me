@@ -9,6 +9,7 @@ public class ChatMessageDTO {
     private String content;
     private LocalDateTime timestamp;
     private String type; // MESSAGE, TYPING, PRESENCE
+     private Boolean typing;
 
     // Getters and Setters
     public UUID getConversationId() {
@@ -40,5 +41,11 @@ public class ChatMessageDTO {
     }
     public String getType() {
         return type;
+    }
+    public Boolean getTyping() {
+        return typing;
+    }
+    public void setTyping(Boolean typing) {
+        this.typing = typing;
     }
 }

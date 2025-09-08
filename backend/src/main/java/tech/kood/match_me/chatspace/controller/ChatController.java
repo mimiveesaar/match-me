@@ -1,8 +1,8 @@
 package tech.kood.match_me.chatspace.controller;
 
-
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import tech.kood.match_me.chatspace.dto.ChatMessageDTO;
@@ -12,9 +12,11 @@ import tech.kood.match_me.chatspace.service.MessageService;
 public class ChatController {
 
     private final MessageService messageService;
+    private final SimpMessagingTemplate messagingTemplate;
 
-    public ChatController(MessageService messageService) {
+    public ChatController(MessageService messageService, SimpMessagingTemplate messagingTemplate) {
         this.messageService = messageService;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @MessageMapping("/chat.sendMessage")
@@ -26,7 +28,7 @@ public class ChatController {
     @MessageMapping("/chat.typing")
     @SendTo("/topic/typing")
     public ChatMessageDTO typing(ChatMessageDTO message) {
-        message.setType("TYPING");
-        return message; // no persistence, just broadcast
-    }
+    System.out.println("Received typing event from " + message.getSenderId());
+    return message;
+}
 }

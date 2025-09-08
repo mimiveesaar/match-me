@@ -11,9 +11,11 @@ import { useState } from "react";
 
 export default function Chatspace() {
   const conversationId = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'; // replace with actual conversation UUID
-  const userId = '11111111-1111-1111-1111-111111111111'; // current user UUID
+  const userId = typeof window !== 'undefined' && window.location.search.includes('userB')
+    ? '22222222-2222-2222-2222-222222222222'
+    : '11111111-1111-1111-1111-111111111111';
 
-  const { messages, sendMessage } = useChat(conversationId, userId);
+  const { messages, sendMessage, handleTyping, otherUserTyping } = useChat(conversationId, userId);
   const [input, setInput] = useState('');
 
   return (
@@ -34,7 +36,7 @@ export default function Chatspace() {
         <section className="flex flex-col flex-1">
           {/* Chat messages */}
           <div className="flex-1 overflow-y-auto mt-32">
-            <ChatWindow messages={messages} currentUserId={userId} />
+            <ChatWindow messages={messages} currentUserId={userId} otherUserTyping={otherUserTyping} />
           </div>
 
           {/* Message input */}
@@ -42,12 +44,11 @@ export default function Chatspace() {
             <MessageInput
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onSend={() => {
-                if (input.trim()) {
-                  sendMessage(input.trim());
-                  setInput('');
-                }
+              onSend={(msg) => {
+                sendMessage(msg);
+                setInput('');
               }}
+              onTyping={handleTyping}
             />
           </div>
         </section>
