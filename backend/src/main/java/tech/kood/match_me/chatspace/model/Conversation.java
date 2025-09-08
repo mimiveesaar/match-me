@@ -13,6 +13,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,10 +22,12 @@ import jakarta.persistence.Table;
 public class Conversation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID) // ✅ proper UUID generation
     private UUID id;
 
     private LocalDateTime createdAt;
+
+    private LocalDateTime lastUpdatedAt;
 
     // Many-to-many between users and conversations
     @ManyToMany
@@ -38,6 +42,20 @@ public class Conversation {
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Message> messages;
 
+    // lifecycle hooks
+    @PrePersist
+    public void onCreate() {
+        LocalDateTime now = LocalDateTime.now();
+        this.createdAt = now;
+        this.lastUpdatedAt = now;
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        this.lastUpdatedAt = LocalDateTime.now();
+    }
+
+    // Getters & Setters
     public UUID getId() {
         return id;
     }
@@ -49,6 +67,12 @@ public class Conversation {
     }
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+    public LocalDateTime getLastUpdatedAt() {
+        return lastUpdatedAt;
+    }
+    public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
+        this.lastUpdatedAt = lastUpdatedAt;
     }
     public Set<User> getParticipants() {
         return participants;

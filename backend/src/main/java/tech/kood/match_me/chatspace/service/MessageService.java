@@ -47,6 +47,10 @@ public class MessageService {
 
         Message saved = messageRepository.save(message);
 
+        // Update conversation "lastUpdatedAt"
+        conversation.setLastUpdatedAt(LocalDateTime.now());
+        conversationRepository.save(conversation);
+
         // Update DTO with timestamp and type for broadcasting
         dto.setTimestamp(saved.getTimestamp());
         dto.setType("MESSAGE");
