@@ -18,6 +18,12 @@ export default function Chatspace() {
   const { messages, sendMessage, handleTyping, otherUserTyping } = useChat(conversationId, userId);
   const [input, setInput] = useState('');
 
+  const users = [
+    { id: '1111', username: 'Henry', isOnline: true },
+    { id: '2222', username: 'Shelly', isOnline: false },
+    { id: '3333', username: 'Zorbplat', isOnline: true },
+  ];
+
   return (
     <div className="flex flex-col h-screen bg-ivory">
       {/* Header */}
@@ -55,7 +61,7 @@ export default function Chatspace() {
 
         {/* Right sidebar */}
         <aside className="w-72 mt-32 flex flex-col">
-          <ConnectionsMenu username="Shelly" />
+          <ConnectionsMenu users={users} />
         </aside>
       </main>
     </div>

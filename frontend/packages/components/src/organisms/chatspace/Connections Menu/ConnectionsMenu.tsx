@@ -4,23 +4,31 @@ import { PhotoBubbleWithUsername } from "@molecules/chatspace/connections-menu/p
 import { Background } from "@atoms/chatspace/connections-menu/Background/Background";
 import { Header } from "@atoms/chatspace/connections-menu/Header/Header";
 
-interface ConnectionsMenuProps {
+interface UserConnection {
+  id: string;
+  username: string;
   src?: string;
   alt?: string;
-  username: string;
+  isOnline: boolean;
 }
 
-export const ConnectionsMenu = ({
-  src,
-  alt,
-  username,
-}: ConnectionsMenuProps) => {
+interface ConnectionsMenuProps {
+  users: UserConnection[];
+}
+
+export const ConnectionsMenu = ({ users }: ConnectionsMenuProps) => {
   return (
     <Background>
       <Header />
-      <PhotoBubbleWithUsername src={src} alt={alt} username={username} />
-      <PhotoBubbleWithUsername src={src} alt={alt} username={username} />
-      <PhotoBubbleWithUsername src={src} alt={alt} username={username} />
+      {users.map((user) => (
+        <PhotoBubbleWithUsername
+          key={user.id}
+          src={user.src}
+          alt={user.alt}
+          username={user.username}
+          isOnline={user.isOnline} // Pass the online status
+        />
+      ))}
     </Background>
   );
-}
+};
