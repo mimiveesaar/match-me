@@ -2,13 +2,13 @@ package tech.kood.match_me.chatspace.model;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -19,7 +19,8 @@ import jakarta.persistence.Table;
 public class Message {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "UUID")
+    @Column(updatable = false, nullable = false)
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,36 +42,47 @@ public class Message {
     public UUID getId() {
         return id;
     }
+
     public void setId(UUID id) {
         this.id = id;
     }
+
     public Conversation getConversation() {
         return conversation;
     }
+
     public void setConversation(Conversation conversation) {
         this.conversation = conversation;
     }
+
     public User getSender() {
         return sender;
     }
+
     public void setSender(User sender) {
         this.sender = sender;
     }
+
     public String getContent() {
         return content;
     }
+
     public void setContent(String content) {
         this.content = content;
     }
+
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
+
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
+
     public MessageStatus getStatus() {
         return status;
     }
+
     public void setStatus(MessageStatus status) {
         this.status = status;
     }

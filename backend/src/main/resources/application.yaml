@@ -1,68 +1,42 @@
-user-management:
-  jwt:
-    secret: q+6sNpZcOymRrX2U6o4aU2jCLvQhVkODoUwiyQ6QL/I=
-    expiration: 3600
-    issuer: match-me
-  refresh-token:
-    expiration: 604800
-    clean-up-interval: 20
-  user:
-    password:
-      min-length: 8
-      max-length: 60
-      require-uppercase: true
-      require-special: true
+server:
+  address: 0.0.0.0
+  port: 8080
+
+spring:
+  application:
+    name: match-me-chat
+  datasource:
+    url: jdbc:postgresql://postgres_container:5432/chat
+    username: chat
+    password: chat
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: false
 
 logging:
   level:
     root: INFO
-    tech.kood.match_me.user_management: DEBUG
-    org.springframework.jms: DEBUG
-    org.apache.activemq: DEBUG
-    org.springframework.boot.autoconfigure.jms: DEBUG
-
-hawtio:
-  authenticationEnabled: false
+    tech.kood.match_me.chatspace: DEBUG
+    org.springframework: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 management:
   endpoints:
     web:
       base-path: /
-      path-mapping:
-        hawtio : hawtio/console
       exposure:
-        include:
-        - hawtio
-        - jolokia
+        include: health,info,metrics
 
-spring:
-  jmx:
-    enabled: true
-  jms: 
-    cache:
-      session-cache-size: 5
-  artemis:
-    mode: embedded
-    password: match-me
-    user: match-me
-    embedded:
-      enabled: true
-      persistent: false
-  datasource:
-    user-management:
-      jdbc-url: jdbc:postgresql://localhost:5432/user_management
-      username: user_management
-      password: user_management
-      driver-class-name: org.postgresql.Driver
-    connections:
-      jdbc-url: jdbc:postgresql://localhost:5432/connections
-      username: connections
-      password: connections
-      driver-class-name: org.postgresql.Driver
-  application:
-    name: match-me
-  flyway:
-    enabled: false
-testcontainers:
-  reuse:
-    enabled: true
+# Optional: WebSocket or other chat-specific configs
+chatspace:
+  websocket:
+    endpoint: /ws
+    allowed-origins: "*"

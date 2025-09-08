@@ -1,6 +1,7 @@
 package tech.kood.match_me.chatspace.testclient;
 
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -11,18 +12,25 @@ import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
+import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
+import org.springframework.web.socket.sockjs.client.SockJsClient;
+import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
 import tech.kood.match_me.chatspace.dto.ChatMessageDTO;
 
 public class ChatTestClient {
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
-        // Create STOMP client
-        WebSocketStompClient stompClient = new WebSocketStompClient(new StandardWebSocketClient());
-        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+        // create WebSocket transport
+        WebSocketClient transport = new StandardWebSocketClient();
+        SockJsClient sockJsClient = new SockJsClient(Collections.singletonList(new WebSocketTransport(transport)));
 
+        // create STOMP client using SockJS
+        WebSocketStompClient stompClient = new WebSocketStompClient(sockJsClient);
+        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+        
         // Connect to WebSocket endpoint
         StompSession session = stompClient
                 .connectAsync("ws://localhost:8080/ws", new StompSessionHandlerAdapter() {
@@ -48,8 +56,8 @@ public class ChatTestClient {
 
         // Create a mock chat message
         ChatMessageDTO mock = new ChatMessageDTO();
-        mock.setConversationId(UUID.randomUUID());
-        mock.setSenderId(UUID.randomUUID());
+        mock.setConversationId(UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"));
+        mock.setSenderId(UUID.fromString("11111111-1111-1111-1111-111111111111"));
         mock.setContent("Hello, this is a mock message!");
         mock.setType("MESSAGE");
 
