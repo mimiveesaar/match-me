@@ -3,6 +3,7 @@ package tech.kood.match_me.connections.features.pendingConnection.actions.declin
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
@@ -18,6 +19,7 @@ import tech.kood.match_me.connections.features.rejectedConnection.domain.api.Rej
 
 
 @ApplicationLayer
+@Service
 public class DeclineConnectionCommandHandlerImpl implements DeclineConnectionCommandHandler {
 
     private final Validator validator;
