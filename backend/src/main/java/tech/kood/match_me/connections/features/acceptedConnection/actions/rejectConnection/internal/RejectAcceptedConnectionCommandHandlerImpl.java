@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.features.acceptedConnection.actions.rejectAcceptedConnection.internal;
+package tech.kood.match_me.connections.features.acceptedConnection.actions.rejectConnection.internal;
 
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.rejectAcceptedConnection.api.RejectAcceptedConnectionRequest;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.rejectAcceptedConnection.api.RejectAcceptedConnectionCommandHandler;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.rejectAcceptedConnection.api.RejectAcceptedConnectionResults;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.rejectConnection.api.RejectAcceptedConnectionRequest;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.rejectConnection.api.RejectAcceptedConnectionCommandHandler;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.rejectConnection.api.RejectAcceptedConnectionResults;
 import tech.kood.match_me.connections.features.acceptedConnection.internal.persistance.AcceptedConnectionRepository;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionCommandHandler;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionRequest;

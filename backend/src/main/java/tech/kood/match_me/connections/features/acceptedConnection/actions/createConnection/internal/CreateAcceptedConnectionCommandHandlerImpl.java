@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.features.acceptedConnection.actions.createAcceptedConnection.internal;
+package tech.kood.match_me.connections.features.acceptedConnection.actions.createConnection.internal;
 
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
@@ -7,9 +7,9 @@ import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.createAcceptedConnection.api.CreateAcceptedConnectionCommandHandler;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.createAcceptedConnection.api.CreateAcceptedConnectionRequest;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.createAcceptedConnection.api.CreateAcceptedConnectionResults;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.createConnection.api.CreateAcceptedConnectionCommandHandler;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.createConnection.api.CreateAcceptedConnectionRequest;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.createConnection.api.CreateAcceptedConnectionResults;
 import tech.kood.match_me.connections.features.acceptedConnection.domain.internal.AcceptedConnectionFactory;
 import tech.kood.match_me.connections.features.acceptedConnection.internal.mapper.AcceptedConnectionMapper;
 import tech.kood.match_me.connections.features.acceptedConnection.internal.persistance.AcceptedConnectionRepository;

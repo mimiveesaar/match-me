@@ -71,6 +71,17 @@ public class AcceptedConnectionRepositoryTests extends ConnectionsTestBase {
     }
 
     @Test
+    void findByUser() {
+        AcceptedConnectionEntity entity1 = acceptedConnectionEntityMother.createAcceptedConnectionEntity();
+        repository.save(entity1);
+
+        var foundEntities = repository.findByUser(entity1.getAcceptedByUserId());
+        assertFalse(foundEntities.isEmpty());
+        assertEquals(1, foundEntities.size());
+        assertEquals(entity1.getId(), foundEntities.getFirst().getId());
+    }
+
+    @Test
     void testFindBetweenUsers() {
         AcceptedConnectionEntity entity = acceptedConnectionEntityMother.createAcceptedConnectionEntity();
         repository.save(entity);

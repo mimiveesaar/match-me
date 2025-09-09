@@ -67,6 +67,13 @@ public class AcceptedConnectionRepository {
                 acceptedConnectionRowMapper);
     }
 
+    public List<AcceptedConnectionEntity> findByUser(UUID userId) {
+        String sql =
+                "SELECT * FROM connections.accepted_connections WHERE accepted_by_user_id = :user_id OR accepted_user_id = :user_id";
+        return jdbcTemplate.query(sql, Map.of("user_id", userId),
+                acceptedConnectionRowMapper);
+    }
+
     public Optional<AcceptedConnectionEntity> findBetweenUsers(UUID userId1, UUID userId2) {
         String sql =
                 "SELECT * FROM connections.accepted_connections WHERE (accepted_by_user_id = :user1 AND accepted_user_id = :user2) OR (accepted_by_user_id = :user2 AND accepted_user_id = :user1)";

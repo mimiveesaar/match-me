@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.features.acceptedConnection.actions.rejectAcceptedConnection.api;
+package tech.kood.match_me.connections.features.acceptedConnection.actions.rejectConnection.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;

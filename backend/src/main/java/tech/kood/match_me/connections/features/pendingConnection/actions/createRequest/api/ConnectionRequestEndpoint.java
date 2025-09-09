@@ -1,30 +1,32 @@
-package tech.kood.match_me.user_management.features.user.actions.login.api;
+package tech.kood.match_me.connections.features.pendingConnection.actions.createRequest.api;
 
-import java.util.UUID;
-
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
+import tech.kood.match_me.user_management.features.user.actions.login.api.LoginRequest;
+import tech.kood.match_me.user_management.features.user.actions.login.api.LoginResults;
+
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/user-management/auth")
-@Tag(name = "User Management", description = "API for user management operations")
-public class LoginEndpoint {
+@RequestMapping("/api/v1/connections")
+@Tag(name = "Connections", description = "API for managing user connections")
+public class ConnectionRequestEndpoint {
 
-    private final LoginCommandHandler loginCommandHandler;
+    private final ConnectionRequestCommandHandler connectionRequestCommandHandler;
 
-    public LoginEndpoint(LoginCommandHandler loginCommandHandler) {
-        this.loginCommandHandler = loginCommandHandler;
+    public ConnectionRequestEndpoint(ConnectionRequestCommandHandler connectionRequestCommandHandler) {
+        this.connectionRequestCommandHandler = connectionRequestCommandHandler;
     }
 
-    @PostMapping("/login")
+    @PostMapping("/request")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User logged in successfully.",
                     content = @Content(mediaType = "application/json",
@@ -46,14 +48,15 @@ public class LoginEndpoint {
                             schema = @Schema(discriminatorProperty = "type",
                                     implementation = LoginResults.SystemError.class)))})
 
-    public ResponseEntity<LoginResults> loginUser(@RequestBody LoginRequest request) {
+    public ResponseEntity<ConnectionRequestResults> loginUser(@RequestBody ConnectionRequest request) {
 
+        String tracingId = UUID.randomUUID().toString();
         if (request.tracingId() != null && !request.tracingId().isEmpty()) {
             tracingId = request.tracingId();
         }
 
 
-        var loginResult = loginCommandHandler.handle(request);
+        var loginResult = loginCommandHandler.handle(internalRequest);
 
         if (loginResult instanceof LoginResults.Success success) {
             return ResponseEntity.ok(success);

@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.features.acceptedConnection.actions.createAcceptedConnection.api;
+package tech.kood.match_me.connections.features.acceptedConnection.actions.createConnection.api;
 
 import java.util.UUID;
 
