@@ -63,7 +63,6 @@ public class ProfileManagementConfig {
     }
 
 @Bean(name = "profileManagementTransactionManager")
-@Primary
 public PlatformTransactionManager profileManagementTransactionManager(
         @Qualifier("profileManagementEmf") LocalContainerEntityManagerFactoryBean profileManagementEmf) {
     return new org.springframework.orm.jpa.JpaTransactionManager(

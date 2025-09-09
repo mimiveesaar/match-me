@@ -1,13 +1,10 @@
 package tech.kood.match_me.profile.controller;
 
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import tech.kood.match_me.profile.dto.ProfileDTO;
 import tech.kood.match_me.profile.dto.ProfileViewDTO;
-import tech.kood.match_me.profile.model.Profile;
 import tech.kood.match_me.profile.service.ProfileService;
 
 @RestController
@@ -39,9 +36,9 @@ public class ProfileController {
         }
 
         try {
-            Profile savedProfile = service.saveOrUpdateProfile(dto);
-            System.out.println("Profile saved with ID: " + savedProfile.getId());
-            return ResponseEntity.ok(toViewDTO(savedProfile));
+            ProfileViewDTO savedProfileDTO = service.saveOrUpdateProfile(dto); // Now returns ProfileViewDTO
+            System.out.println("Profile saved successfully");
+            return ResponseEntity.ok(savedProfileDTO);
         } catch (Exception e) {
             System.out.println("Error saving profile: " + e.getMessage());
             e.printStackTrace();
@@ -51,22 +48,7 @@ public class ProfileController {
 
     @GetMapping("/me")
     public ResponseEntity<ProfileViewDTO> getMyProfile() {
-        Profile profile = service.getMyProfile();
-        return ResponseEntity.ok(toViewDTO(profile));
-    }
-
-    private ProfileViewDTO toViewDTO(Profile profile) {
-        ProfileViewDTO dto = new ProfileViewDTO();
-        dto.setId(profile.getId());
-        dto.setUsername(profile.getUsername());
-        dto.setAge(profile.getAge());
-        dto.setHomeplanet(profile.getHomeplanet().getName());
-        dto.setBodyform(profile.getBodyform().getName());
-        dto.setLookingFor(profile.getLookingFor().getName());
-        dto.setBio(profile.getBio());
-        dto.setInterests(profile.getInterests().stream().map(i -> i.getName())
-                .collect(java.util.stream.Collectors.toSet()));
-        dto.setProfilePic(profile.getProfilePic());
-        return dto;
+        ProfileViewDTO profileDTO = service.getMyProfileDTO(); // Use the new method
+        return ResponseEntity.ok(profileDTO);
     }
 }
