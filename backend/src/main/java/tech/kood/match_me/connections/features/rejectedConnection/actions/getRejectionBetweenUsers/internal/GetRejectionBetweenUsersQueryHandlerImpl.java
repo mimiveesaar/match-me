@@ -42,7 +42,7 @@ public class GetRejectionBetweenUsersQueryHandlerImpl
 
         if (!validationErrors.isEmpty()) {
             return new GetRejectionBetweenUsersResults.InvalidRequest(request.requestId(),
-                    InvalidInputErrorDTO.from(validationErrors), request.tracingId());
+                    InvalidInputErrorDTO.fromValidation(validationErrors), request.tracingId());
         }
 
         try {

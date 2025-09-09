@@ -30,7 +30,7 @@ public final class GetRefreshTokenQueryQueryHandlerImpl implements GetRefreshTok
 
         var validationResults = validator.validate(request);
         if (!validationResults.isEmpty()) {
-            return new GetRefreshTokenResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.from(validationResults), request.tracingId());
+            return new GetRefreshTokenResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
         }
 
         try {

@@ -53,22 +53,6 @@ public class CreateAcceptedConnectionCommandHandlerTests extends ConnectionsTest
     }
 
     @Test
-    void testHandleValidRequest_SuccessWithoutTracingId() {
-        var acceptedByUserId = new UserIdDTO(UUID.randomUUID());
-        var acceptedUserId = new UserIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
-
-        var request = new CreateAcceptedConnectionRequest(requestId, acceptedByUserId, acceptedUserId, null);
-        var result = createAcceptedConnectionHandler.handle(request);
-
-        assertInstanceOf(CreateAcceptedConnectionResults.Success.class, result);
-        var successResult = (CreateAcceptedConnectionResults.Success) result;
-        assertEquals(requestId, successResult.requestId());
-        assertNull(successResult.tracingId());
-        assertNotNull(successResult.connectionIdDTO());
-    }
-
-    @Test
     void testHandleRequest_AlreadyExists() {
         // First, create an accepted connection
         var entity = acceptedConnectionEntityMother.createAcceptedConnectionEntity();
@@ -93,17 +77,16 @@ public class CreateAcceptedConnectionCommandHandlerTests extends ConnectionsTest
         assertEquals(entity.getId(), connections.get().getId());
     }
 
+
+
     @Test
     void testHandleRequest_InvalidRequest_NullRequestId() {
         var acceptedByUserId = new UserIdDTO(UUID.randomUUID());
         var acceptedUserId = new UserIdDTO(UUID.randomUUID());
 
-        var exception = assertThrows(Exception.class, () -> {
-            new CreateAcceptedConnectionRequest(null, acceptedByUserId, acceptedUserId, "tracingId");
-        });
-        
-        assertTrue(exception.getMessage().contains("requestId") || 
-                  exception instanceof NullPointerException);
+        var request = new CreateAcceptedConnectionRequest(null, acceptedByUserId, acceptedUserId, "tracingId");
+        var result = createAcceptedConnectionHandler.handle(request);
+        assertInstanceOf(CreateAcceptedConnectionResults.InvalidRequest.class, result);
     }
 
     @Test
@@ -111,12 +94,9 @@ public class CreateAcceptedConnectionCommandHandlerTests extends ConnectionsTest
         var acceptedUserId = new UserIdDTO(UUID.randomUUID());
         var requestId = UUID.randomUUID();
 
-        var exception = assertThrows(Exception.class, () -> {
-            new CreateAcceptedConnectionRequest(requestId, null, acceptedUserId, "tracingId");
-        });
-        
-        assertTrue(exception.getMessage().contains("acceptedByUser") || 
-                  exception instanceof NullPointerException);
+        var request = new CreateAcceptedConnectionRequest(requestId, null, acceptedUserId, "tracingId");
+        var result = createAcceptedConnectionHandler.handle(request);
+        assertInstanceOf(CreateAcceptedConnectionResults.InvalidRequest.class, result);
     }
 
     @Test
@@ -124,11 +104,19 @@ public class CreateAcceptedConnectionCommandHandlerTests extends ConnectionsTest
         var acceptedByUserId = new UserIdDTO(UUID.randomUUID());
         var requestId = UUID.randomUUID();
 
-        var exception = assertThrows(Exception.class, () -> {
-            new CreateAcceptedConnectionRequest(requestId, acceptedByUserId, null, "tracingId");
-        });
-        
-        assertTrue(exception.getMessage().contains("acceptedUser") || 
-                  exception instanceof NullPointerException);
+        var request = new CreateAcceptedConnectionRequest(requestId, acceptedByUserId, null, "tracingId");
+        var result = createAcceptedConnectionHandler.handle(request);
+        assertInstanceOf(CreateAcceptedConnectionResults.InvalidRequest.class, result);
+    }
+
+    @Test
+    void testHandleRequest_SameUserAsAcceptedByAndAcceptedUser() {
+        var userId = new UserIdDTO(UUID.randomUUID());
+        var requestId = UUID.randomUUID();
+        var tracingId = "test-tracing-id-same-user";
+
+        var request = new CreateAcceptedConnectionRequest(requestId, userId, userId, tracingId);
+        var result = createAcceptedConnectionHandler.handle(request);
+        assertInstanceOf(CreateAcceptedConnectionResults.InvalidRequest.class, result);
     }
 }

@@ -36,7 +36,7 @@ public class GetUserByEmailQueryHandlerImpl implements GetUserByEmailQueryHandle
 
          // Handle input validation.
          if (!validationResults.isEmpty()) {
-             return new GetUserByEmailResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.from(validationResults), request.tracingId());
+             return new GetUserByEmailResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
          }
 
          try {

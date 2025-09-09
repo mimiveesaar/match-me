@@ -64,7 +64,7 @@ public class CreateAccessTokenCommandHandlerImpl implements CreateAccessTokenCom
 
             var validationResults = validator.validate(request);
             if (!validationResults.isEmpty()) {
-                return new CreateAccessTokenResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.from(validationResults), request.tracingId());
+                return new CreateAccessTokenResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
             }
 
             var refreshTokenRequest = new GetRefreshTokenRequest(request.secret(), request.tracingId());

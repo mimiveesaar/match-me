@@ -37,10 +37,10 @@ public final class AcceptedConnectionFactory {
         return acceptedConnection;
     }
 
-    public AcceptedConnection createNew(UserId acceptedByUser, UserId acceptedUser)
+    public AcceptedConnection createNew(UserId acceptedByUserId, UserId acceptedUserId)
             throws CheckedConstraintViolationException {
         var connectionId = connectionIdFactory.createNew();
-        return create(connectionId, acceptedByUser, acceptedUser,
+        return create(connectionId, acceptedByUserId, acceptedUserId,
                 Instant.now().truncatedTo(java.time.temporal.ChronoUnit.SECONDS));
     }
 }

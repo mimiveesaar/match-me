@@ -40,7 +40,7 @@ public class RejectAcceptedConnectionCommandHandlerImpl
         var validationResults = validator.validate(request);
         if (!validationResults.isEmpty()) {
             return new RejectAcceptedConnectionResults.InvalidRequest(request.requestId(),
-                    InvalidInputErrorDTO.from(validationResults), request.tracingId());
+                    InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
         }
 
         try {

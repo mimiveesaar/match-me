@@ -1,21 +1,69 @@
 package tech.kood.match_me.connections.features.acceptedConnection.actions.createAcceptedConnection.internal;
 
+import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.stereotype.Service;
+import tech.kood.match_me.common.api.InvalidInputErrorDTO;
+import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
+import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
+import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.createAcceptedConnection.api.CreateAcceptedConnectionCommandHandler;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.createAcceptedConnection.api.CreateAcceptedConnectionRequest;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.createAcceptedConnection.api.CreateAcceptedConnectionResults;
+import tech.kood.match_me.connections.features.acceptedConnection.domain.internal.AcceptedConnectionFactory;
+import tech.kood.match_me.connections.features.acceptedConnection.internal.mapper.AcceptedConnectionMapper;
+import tech.kood.match_me.connections.features.acceptedConnection.internal.persistance.AcceptedConnectionRepository;
 
 @Service
 @ApplicationLayer
 public class CreateAcceptedConnectionCommandHandlerImpl
         implements CreateAcceptedConnectionCommandHandler {
 
+    private final Validator validator;
+
+    private final AcceptedConnectionRepository acceptedConnectionRepository;
+
+    private final AcceptedConnectionFactory acceptedConnectionFactory;
+
+    private final UserIdFactory userIdFactory;
+
+    private final AcceptedConnectionMapper acceptedConnectionMapper;
+
+    public CreateAcceptedConnectionCommandHandlerImpl(Validator validator, AcceptedConnectionRepository acceptedConnectionRepository, AcceptedConnectionFactory acceptedConnectionFactory, UserIdFactory userIdFactory, AcceptedConnectionMapper acceptedConnectionMapper) {
+        this.validator = validator;
+        this.acceptedConnectionRepository = acceptedConnectionRepository;
+        this.acceptedConnectionFactory = acceptedConnectionFactory;
+        this.userIdFactory = userIdFactory;
+        this.acceptedConnectionMapper = acceptedConnectionMapper;
+    }
+
     @Override
     public CreateAcceptedConnectionResults handle(CreateAcceptedConnectionRequest request) {
-        // TODO: Implement the logic to create an accepted connection
-        // This should include validation, persistence, and returning appropriate results
-        return new CreateAcceptedConnectionResults.SystemError(request.requestId(),
-                "Not implemented yet", request.tracingId());
+        var validationResults = validator.validate(request);
+        if (!validationResults.isEmpty()) {
+            return new CreateAcceptedConnectionResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
+        }
+
+        var existingConnection = acceptedConnectionRepository.findBetweenUsers(request.acceptedByUser().value(), request.acceptedUser().value());
+        if (existingConnection.isPresent()) {
+            return new CreateAcceptedConnectionResults.AlreadyExists(request.requestId(), request.tracingId());
+        }
+
+        try {
+            var acceptedByUser = userIdFactory.create(request.acceptedByUser().value());
+            var acceptedUser = userIdFactory.create(request.acceptedUser().value());
+            var acceptedConnection = acceptedConnectionFactory.createNew(acceptedByUser, acceptedUser);
+            var acceptedConnectionEntity = acceptedConnectionMapper.toEntity(acceptedConnection);
+
+            acceptedConnectionRepository.save(acceptedConnectionEntity);
+            return new CreateAcceptedConnectionResults.Success(request.requestId(), new ConnectionIdDTO(acceptedConnection.getId().getValue()), request.tracingId());
+        }
+        catch (CheckedConstraintViolationException e) {
+            return new CreateAcceptedConnectionResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromException(e) , request.tracingId());
+        }
+        catch (Exception e) {
+            return new CreateAcceptedConnectionResults.SystemError(request.requestId(), "An unexpected error occurred while processing the request.", request.tracingId());
+        }
+
     }
 }

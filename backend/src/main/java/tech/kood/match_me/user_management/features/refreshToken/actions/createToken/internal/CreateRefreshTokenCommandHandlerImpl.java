@@ -48,7 +48,7 @@ public class CreateRefreshTokenCommandHandlerImpl implements CreateRefreshTokenC
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new CreateRefreshTokenResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.from(validationResults), request.tracingId());
+            return new CreateRefreshTokenResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
         }
 
         try {

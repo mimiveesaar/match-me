@@ -32,7 +32,7 @@ public class DeleteRejectedConnectionCommandHandlerImpl
 
         var validationResults = validator.validate(request);
         if (!validationResults.isEmpty()) {
-            return new DeleteRejectedConnectionResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.from(validationResults), request.tracingId());
+            return new DeleteRejectedConnectionResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
         }
 
         try {

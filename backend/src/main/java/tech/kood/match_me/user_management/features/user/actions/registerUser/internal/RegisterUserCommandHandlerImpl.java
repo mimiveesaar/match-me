@@ -42,7 +42,7 @@ public final class RegisterUserCommandHandlerImpl implements RegisterUserCommand
 
         var validationResults = validator.validate(request);
         if (!validationResults.isEmpty()) {
-            return new RegisterUserResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.from(validationResults), request.tracingId());
+            return new RegisterUserResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
         }
 
         try {

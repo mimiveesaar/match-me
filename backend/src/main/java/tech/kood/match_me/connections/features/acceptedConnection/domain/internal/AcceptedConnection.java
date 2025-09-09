@@ -5,10 +5,12 @@ import jakarta.validation.constraints.NotNull;
 import org.jmolecules.ddd.types.AggregateRoot;
 import tech.kood.match_me.connections.common.domain.connectionId.ConnectionId;
 import tech.kood.match_me.common.domain.internal.userId.UserId;
+import tech.kood.match_me.connections.features.acceptedConnection.domain.internal.validation.ValidAcceptedConnection;
 
 import java.time.Instant;
 import java.util.Objects;
 
+@ValidAcceptedConnection
 public class AcceptedConnection implements AggregateRoot<AcceptedConnection, ConnectionId> {
 
     @Valid
@@ -50,12 +52,6 @@ public class AcceptedConnection implements AggregateRoot<AcceptedConnection, Con
         this.acceptedByUser = acceptedByUser;
         this.acceptedUser = acceptedUser;
         this.createdAt = createdAt;
-
-        // User should not be able to accept themselves
-        if (this.acceptedByUser.equals(this.acceptedUser)) {
-            throw new IllegalArgumentException(
-                    "Accepted user cannot be the same as accepted by user");
-        }
     }
 
     @Override

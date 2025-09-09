@@ -42,7 +42,7 @@ public class ConnectionRequestCommandHandlerImpl implements ConnectionRequestCom
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new ConnectionRequestResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.from(validationResults), request.tracingId());
+            return new ConnectionRequestResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
         }
 
         try {

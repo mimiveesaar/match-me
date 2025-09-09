@@ -51,7 +51,7 @@ public class ValidateAccessTokenHandlerImpl implements ValidateAccessTokenHandle
         var validationResults = validator.validate(request);
         if (!validationResults.isEmpty()) {
             return new ValidateAccessTokenResults.InvalidRequest(request.requestId(),
-                    InvalidInputErrorDTO.from(validationResults), request.tracingId());
+                    InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
         }
 
         try {

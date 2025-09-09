@@ -36,7 +36,7 @@ public class InvalidateRefreshTokenCommandHandlerImpl implements InvalidateRefre
         var invalidationResults = validator.validate(request);
 
         if (!invalidationResults.isEmpty()) {
-            return new InvalidateRefreshTokenResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.from(invalidationResults), request.tracingId());
+            return new InvalidateRefreshTokenResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(invalidationResults), request.tracingId());
         }
 
         try {

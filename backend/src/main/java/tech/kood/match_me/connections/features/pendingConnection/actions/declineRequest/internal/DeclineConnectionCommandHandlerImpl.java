@@ -38,7 +38,7 @@ public class DeclineConnectionCommandHandlerImpl implements DeclineConnectionCom
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new DeclineConnectionResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.from(validationResults), request.tracingId());
+            return new DeclineConnectionResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
         }
 
         var pendingConnectionEntityQueryResult = pendingConnectionRepository.findById(request.connectionIdDTO().value());

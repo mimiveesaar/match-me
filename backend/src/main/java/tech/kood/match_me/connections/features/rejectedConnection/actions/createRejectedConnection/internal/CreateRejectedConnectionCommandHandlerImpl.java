@@ -49,7 +49,7 @@ public class CreateRejectedConnectionCommandHandlerImpl
         var validationErrors = validator.validate(request);
         if (!validationErrors.isEmpty()) {
             return new CreateRejectedConnectionResults.InvalidRequest(request.requestId(),
-                    InvalidInputErrorDTO.from(validationErrors), request.tracingId());
+                    InvalidInputErrorDTO.fromValidation(validationErrors), request.tracingId());
         }
 
         try {

@@ -31,7 +31,7 @@ public class GetIncomingConnectionQueryHandlerImpl implements GetIncomingConnect
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new GetIncomingConnectionsResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.from(validationResults), request.tracingId());
+            return new GetIncomingConnectionsResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
         }
 
         try {
