@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
-import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.rejectAcceptedConnection.api.RejectAcceptedConnectionRequest;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.rejectAcceptedConnection.api.RejectAcceptedConnectionCommandHandler;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.rejectAcceptedConnection.api.RejectAcceptedConnectionResults;
@@ -75,7 +74,6 @@ public class RejectAcceptedConnectionCommandHandlerImpl
             if (createRejectedConnectionResult instanceof CreateRejectedConnectionResults.AlreadyExists) {
                 return new RejectAcceptedConnectionResults.AlreadyRejected(request.requestId(), request.tracingId());
             }
-
 
             // Delete the accepted connection (rejecting it)
             acceptedConnectionRepository.deleteById(connectionId);

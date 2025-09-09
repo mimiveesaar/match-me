@@ -35,10 +35,10 @@ public class AcceptedConnectionRepository {
                         """;
 
         jdbcTemplate.update(sql,
-                Map.of("id", acceptedConnectionEntity.getId(), "accepted_by_user_id",
-                        acceptedConnectionEntity.getAcceptedByUserId(), "accepted_user_id",
-                        acceptedConnectionEntity.getAcceptedUserId(), "created_at",
-                        Timestamp.from(acceptedConnectionEntity.getCreatedAt())));
+                Map.of("id", acceptedConnectionEntity.getId(),
+                        "accepted_by_user_id", acceptedConnectionEntity.getAcceptedByUserId(),
+                        "accepted_user_id", acceptedConnectionEntity.getAcceptedUserId(),
+                        "created_at", Timestamp.from(acceptedConnectionEntity.getCreatedAt())));
     }
 
     public Optional<AcceptedConnectionEntity> findById(UUID id) {
