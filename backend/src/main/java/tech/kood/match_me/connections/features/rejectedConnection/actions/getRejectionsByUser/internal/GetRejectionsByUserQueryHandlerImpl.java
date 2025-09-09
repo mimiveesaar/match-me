@@ -39,8 +39,8 @@ public class GetRejectionsByUserQueryHandlerImpl implements GetRejectionsByUserQ
 
         var validationErrors = validator.validate(request);
         if (!validationErrors.isEmpty()) {
-            return new GetRejectionsByUserResults.InvalidRequest(request.requestId(),
-                    InvalidInputErrorDTO.fromValidation(validationErrors), request.tracingId());
+            return new GetRejectionsByUserResults.InvalidRequest(
+                    InvalidInputErrorDTO.fromValidation(validationErrors));
         }
 
         try {
@@ -57,12 +57,11 @@ public class GetRejectionsByUserQueryHandlerImpl implements GetRejectionsByUserQ
                 }
             }).collect(Collectors.toList());
 
-            return new GetRejectionsByUserResults.Success(request.requestId(), rejectionDTOs,
-                    request.tracingId());
+            return new GetRejectionsByUserResults.Success(rejectionDTOs);
 
         } catch (Exception e) {
-            return new GetRejectionsByUserResults.SystemError(request.requestId(),
-                    "Failed to get rejections by user: " + e.getMessage(), request.tracingId());
+            return new GetRejectionsByUserResults.SystemError(
+                    "Failed to get rejections by user: " + e.getMessage());
         }
     }
 }

@@ -42,14 +42,14 @@ public class ConnectionRequestCommandHandlerImpl implements ConnectionRequestCom
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new ConnectionRequestResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
+            return new ConnectionRequestResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
             var findBetweenUsers = pendingConnectionRepository.findBetweenUsers(request.senderId().value(), request.targetId().value());
 
             if (findBetweenUsers.isPresent()) {
-                return new ConnectionRequestResults.AlreadyExists(request.requestId(), request.tracingId());
+                return new ConnectionRequestResults.AlreadyExists();
             }
 
             var senderUserId = userIdFactory.from(request.senderId());
@@ -62,9 +62,9 @@ public class ConnectionRequestCommandHandlerImpl implements ConnectionRequestCom
             var connectionId = new ConnectionIdDTO(pendingConnection.getId().getValue());
             eventPublisher.publishEvent(new ConnectionRequestCreatedEvent(connectionId));
 
-            return new ConnectionRequestResults.Success(request.requestId(), connectionId, request.tracingId());
+            return new ConnectionRequestResults.Success(connectionId);
         } catch (Exception ex) {
-            return new ConnectionRequestResults.SystemError(request.requestId(), ex.getMessage(), request.tracingId());
+            return new ConnectionRequestResults.SystemError(ex.getMessage());
         }
     }
 }

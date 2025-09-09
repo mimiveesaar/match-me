@@ -41,12 +41,12 @@ public class CreateAcceptedConnectionCommandHandlerImpl
     public CreateAcceptedConnectionResults handle(CreateAcceptedConnectionRequest request) {
         var validationResults = validator.validate(request);
         if (!validationResults.isEmpty()) {
-            return new CreateAcceptedConnectionResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
+            return new CreateAcceptedConnectionResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         var existingConnection = acceptedConnectionRepository.findBetweenUsers(request.acceptedByUser().value(), request.acceptedUser().value());
         if (existingConnection.isPresent()) {
-            return new CreateAcceptedConnectionResults.AlreadyExists(request.requestId(), request.tracingId());
+            return new CreateAcceptedConnectionResults.AlreadyExists();
         }
 
         try {
@@ -56,13 +56,13 @@ public class CreateAcceptedConnectionCommandHandlerImpl
             var acceptedConnectionEntity = acceptedConnectionMapper.toEntity(acceptedConnection);
 
             acceptedConnectionRepository.save(acceptedConnectionEntity);
-            return new CreateAcceptedConnectionResults.Success(request.requestId(), new ConnectionIdDTO(acceptedConnection.getId().getValue()), request.tracingId());
+            return new CreateAcceptedConnectionResults.Success(new ConnectionIdDTO(acceptedConnection.getId().getValue()));
         }
         catch (CheckedConstraintViolationException e) {
-            return new CreateAcceptedConnectionResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromException(e) , request.tracingId());
+            return new CreateAcceptedConnectionResults.InvalidRequest(InvalidInputErrorDTO.fromException(e));
         }
         catch (Exception e) {
-            return new CreateAcceptedConnectionResults.SystemError(request.requestId(), "An unexpected error occurred while processing the request.", request.tracingId());
+            return new CreateAcceptedConnectionResults.SystemError("An unexpected error occurred while processing the request.");
         }
 
     }

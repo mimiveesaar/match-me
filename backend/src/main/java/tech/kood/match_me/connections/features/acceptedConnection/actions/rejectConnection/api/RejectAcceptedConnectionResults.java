@@ -1,12 +1,9 @@
 package tech.kood.match_me.connections.features.acceptedConnection.actions.rejectConnection.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
-
-import java.util.UUID;
 
 public sealed interface RejectAcceptedConnectionResults
         permits RejectAcceptedConnectionResults.Success, RejectAcceptedConnectionResults.NotFound,
@@ -14,29 +11,23 @@ public sealed interface RejectAcceptedConnectionResults
         RejectAcceptedConnectionResults.InvalidRequest,
         RejectAcceptedConnectionResults.SystemError {
 
-    record Success(@NotNull @JsonProperty("request_id") UUID requestId,
-            @Nullable @JsonProperty("tracing_id") String tracingId)
+    record Success()
             implements RejectAcceptedConnectionResults {
     }
 
-    record NotFound(@NotNull @JsonProperty("request_id") UUID requestId,
-            @Nullable @JsonProperty("tracing_id") String tracingId)
+    record NotFound()
             implements RejectAcceptedConnectionResults {
     }
 
-    record InvalidRequest(@NotNull @JsonProperty("request_id") UUID requestId,
-            @NotNull @JsonProperty("error") InvalidInputErrorDTO error,
-            @Nullable @JsonProperty("tracing_id") String tracingId)
+    record InvalidRequest(@NotNull @JsonProperty("error") InvalidInputErrorDTO error)
             implements RejectAcceptedConnectionResults {
     }
 
-    record AlreadyRejected(@NotNull @JsonProperty("request_id") UUID requestId,
-            @Nullable @JsonProperty("tracing_id") String tracingId)
+    record AlreadyRejected()
             implements RejectAcceptedConnectionResults {
     }
 
-    record SystemError(@NotNull @JsonProperty("request_id") UUID requestId,
-            @NotEmpty String message, @Nullable @JsonProperty("tracing_id") String tracingId)
+    record SystemError(@NotEmpty String message)
             implements RejectAcceptedConnectionResults {
     }
 }

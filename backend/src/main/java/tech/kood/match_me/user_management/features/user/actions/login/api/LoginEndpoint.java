@@ -48,11 +48,6 @@ public class LoginEndpoint {
 
     public ResponseEntity<LoginResults> loginUser(@RequestBody LoginRequest request) {
 
-        if (request.tracingId() != null && !request.tracingId().isEmpty()) {
-            tracingId = request.tracingId();
-        }
-
-
         var loginResult = loginCommandHandler.handle(request);
 
         if (loginResult instanceof LoginResults.Success success) {

@@ -41,8 +41,8 @@ public class GetRejectionBetweenUsersQueryHandlerImpl
         var validationErrors = validator.validate(request);
 
         if (!validationErrors.isEmpty()) {
-            return new GetRejectionBetweenUsersResults.InvalidRequest(request.requestId(),
-                    InvalidInputErrorDTO.fromValidation(validationErrors), request.tracingId());
+            return new GetRejectionBetweenUsersResults.InvalidRequest(
+                    InvalidInputErrorDTO.fromValidation(validationErrors));
         }
 
         try {
@@ -54,8 +54,7 @@ public class GetRejectionBetweenUsersQueryHandlerImpl
                             user2Id.getValue());
 
             if (rejectionEntity.isEmpty()) {
-                return new GetRejectionBetweenUsersResults.NotFound(request.requestId(),
-                        request.tracingId());
+                return new GetRejectionBetweenUsersResults.NotFound();
             }
 
             RejectedConnectionDTO rejectionDTO;
@@ -65,13 +64,11 @@ public class GetRejectionBetweenUsersQueryHandlerImpl
                 throw new RuntimeException("Failed to map rejected connection entity to DTO", e);
             }
 
-            return new GetRejectionBetweenUsersResults.Success(request.requestId(), rejectionDTO,
-                    request.tracingId());
+            return new GetRejectionBetweenUsersResults.Success(rejectionDTO);
 
         } catch (Exception e) {
-            return new GetRejectionBetweenUsersResults.SystemError(request.requestId(),
-                    "Failed to get rejection between users: " + e.getMessage(),
-                    request.tracingId());
+            return new GetRejectionBetweenUsersResults.SystemError(
+                    "Failed to get rejection between users: " + e.getMessage());
         }
     }
 }

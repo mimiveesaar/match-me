@@ -39,8 +39,8 @@ public class RejectAcceptedConnectionCommandHandlerImpl
 
         var validationResults = validator.validate(request);
         if (!validationResults.isEmpty()) {
-            return new RejectAcceptedConnectionResults.InvalidRequest(request.requestId(),
-                    InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
+            return new RejectAcceptedConnectionResults.InvalidRequest(
+                    InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
@@ -50,8 +50,7 @@ public class RejectAcceptedConnectionCommandHandlerImpl
             var existingAcceptedConnectionQueryResult = acceptedConnectionRepository.findById(connectionId);
 
             if (existingAcceptedConnectionQueryResult.isEmpty()) {
-                return new RejectAcceptedConnectionResults.NotFound(request.requestId(),
-                        request.tracingId());
+                return new RejectAcceptedConnectionResults.NotFound();
             }
 
             var acceptedConnection = existingAcceptedConnectionQueryResult.get();
@@ -60,29 +59,28 @@ public class RejectAcceptedConnectionCommandHandlerImpl
                     acceptedConnection.getAcceptedUserId() : acceptedConnection.getAcceptedByUserId());
 
 
-            var createRejectedConnectionRequest = new CreateRejectedConnectionRequest(rejectedByUserId, rejectedUser, RejectedConnectionReasonDTO.CONNECTION_REMOVED, request.tracingId());
+            var createRejectedConnectionRequest = new CreateRejectedConnectionRequest(rejectedByUserId, rejectedUser, RejectedConnectionReasonDTO.CONNECTION_REMOVED);
             var createRejectedConnectionResult = createRejectedConnectionCommandHandler.handle(createRejectedConnectionRequest);
 
             if (createRejectedConnectionResult instanceof CreateRejectedConnectionResults.SystemError systemError) {
-                return new RejectAcceptedConnectionResults.SystemError(request.requestId(), systemError.message(), request.tracingId());
+                return new RejectAcceptedConnectionResults.SystemError(systemError.message());
             }
 
             if (createRejectedConnectionResult instanceof CreateRejectedConnectionResults.InvalidRequest invalidRequest) {
-                return new RejectAcceptedConnectionResults.InvalidRequest(request.requestId(), invalidRequest.error(), request.tracingId());
+                return new RejectAcceptedConnectionResults.InvalidRequest(invalidRequest.error());
             }
 
             if (createRejectedConnectionResult instanceof CreateRejectedConnectionResults.AlreadyExists) {
-                return new RejectAcceptedConnectionResults.AlreadyRejected(request.requestId(), request.tracingId());
+                return new RejectAcceptedConnectionResults.AlreadyRejected();
             }
 
             // Delete the accepted connection (rejecting it)
             acceptedConnectionRepository.deleteById(connectionId);
 
-            return new RejectAcceptedConnectionResults.Success(request.requestId(),
-                    request.tracingId());
+            return new RejectAcceptedConnectionResults.Success();
 
         } catch (Exception e) {
-            return new RejectAcceptedConnectionResults.SystemError(request.requestId(), e.getMessage(), request.tracingId());
+            return new RejectAcceptedConnectionResults.SystemError(e.getMessage());
         }
     }
 }

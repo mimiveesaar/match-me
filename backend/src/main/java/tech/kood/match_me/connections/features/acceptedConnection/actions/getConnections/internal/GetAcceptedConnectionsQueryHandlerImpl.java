@@ -36,8 +36,8 @@ public class GetAcceptedConnectionsQueryHandlerImpl implements GetAcceptedConnec
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new GetAcceptedConnectionsResults.InvalidRequest(request.requestId(),
-                    InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
+            return new GetAcceptedConnectionsResults.InvalidRequest(
+                    InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
@@ -46,14 +46,14 @@ public class GetAcceptedConnectionsQueryHandlerImpl implements GetAcceptedConnec
             for (var entity : entities) {
                 connections.add(mapper.toDTO(entity));
             }
-            return new GetAcceptedConnectionsResults.Success(request.requestId(), connections, request.tracingId());
+            return new GetAcceptedConnectionsResults.Success(connections);
 
         } catch (CheckedConstraintViolationException e) {
-            return new GetAcceptedConnectionsResults.InvalidRequest(request.requestId(),
-                    InvalidInputErrorDTO.fromException(e), request.tracingId());
+            return new GetAcceptedConnectionsResults.InvalidRequest(
+                    InvalidInputErrorDTO.fromException(e));
         } catch (Exception e) {
-            return new GetAcceptedConnectionsResults.SystemError(request.requestId(),
-                    "An unexpected error occurred while processing the request.", request.tracingId());
+            return new GetAcceptedConnectionsResults.SystemError(
+                    "An unexpected error occurred while processing the request.");
         }
     }
 }

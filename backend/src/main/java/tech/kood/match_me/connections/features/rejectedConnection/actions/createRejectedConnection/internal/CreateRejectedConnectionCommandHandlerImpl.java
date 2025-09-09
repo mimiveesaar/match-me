@@ -48,8 +48,8 @@ public class CreateRejectedConnectionCommandHandlerImpl
 
         var validationErrors = validator.validate(request);
         if (!validationErrors.isEmpty()) {
-            return new CreateRejectedConnectionResults.InvalidRequest(request.requestId(),
-                    InvalidInputErrorDTO.fromValidation(validationErrors), request.tracingId());
+            return new CreateRejectedConnectionResults.InvalidRequest(
+                    InvalidInputErrorDTO.fromValidation(validationErrors));
         }
 
         try {
@@ -61,8 +61,7 @@ public class CreateRejectedConnectionCommandHandlerImpl
                     .findBetweenUsers(rejectedByUserId.getValue(), rejectedUserId.getValue());
 
             if (existingRejection.isPresent()) {
-                return new CreateRejectedConnectionResults.AlreadyExists(request.requestId(),
-                        request.tracingId());
+                return new CreateRejectedConnectionResults.AlreadyExists();
             }
 
             RejectedConnection rejectedConnection = rejectedConnectionFactory.createNew(
@@ -72,14 +71,13 @@ public class CreateRejectedConnectionCommandHandlerImpl
             RejectedConnectionEntity entity = rejectedConnectionMapper.toEntity(rejectedConnection);
             rejectedConnectionRepository.save(entity);
 
-            return new CreateRejectedConnectionResults.Success(request.requestId(),
+            return new CreateRejectedConnectionResults.Success(
                     new ConnectionIdDTO(
-                            rejectedConnection.getId().getValue()),
-                    request.tracingId());
+                            rejectedConnection.getId().getValue()));
 
         } catch (Exception e) {
-            return new CreateRejectedConnectionResults.SystemError(request.requestId(),
-                    "Failed to create rejected connection: " + e.getMessage(), request.tracingId());
+            return new CreateRejectedConnectionResults.SystemError(
+                    "Failed to create rejected connection: " + e.getMessage());
         }
     }
 }

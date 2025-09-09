@@ -32,29 +32,24 @@ public class DeleteRejectedConnectionCommandHandlerImpl
 
         var validationResults = validator.validate(request);
         if (!validationResults.isEmpty()) {
-            return new DeleteRejectedConnectionResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
+            return new DeleteRejectedConnectionResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
-            UUID connectionId = request.connectionIdDTO().value();
+            var entityOptional = rejectedConnectionRepository.findById(request.connectionIdDTO().value());
 
-            // Check if the rejected connection exists
-            var existingRejection = rejectedConnectionRepository.findById(connectionId);
-
-            if (existingRejection.isEmpty()) {
-                return new DeleteRejectedConnectionResults.NotFound(request.requestId(),
-                        request.tracingId());
+            if (entityOptional.isEmpty()) {
+                return new DeleteRejectedConnectionResults.NotFound();
             }
 
-            // Delete the rejected connection
-            rejectedConnectionRepository.deleteById(connectionId);
+            var entity = entityOptional.get();
+            boolean deleted = rejectedConnectionRepository.deleteById(entity.getId());
 
-            return new DeleteRejectedConnectionResults.Success(request.requestId(),
-                    request.tracingId());
+            return new DeleteRejectedConnectionResults.Success();
 
         } catch (Exception e) {
-            return new DeleteRejectedConnectionResults.SystemError(request.requestId(),
-                    "Failed to delete rejected connection: " + e.getMessage(), request.tracingId());
+            return new DeleteRejectedConnectionResults.SystemError(
+                    "Failed to delete rejected connection: " + e.getMessage());
         }
     }
 }

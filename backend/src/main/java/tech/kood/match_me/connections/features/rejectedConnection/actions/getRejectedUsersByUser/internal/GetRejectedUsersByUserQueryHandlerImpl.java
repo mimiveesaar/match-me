@@ -38,8 +38,8 @@ public class GetRejectedUsersByUserQueryHandlerImpl
     public GetRejectedUsersByUserResults handle(GetRejectedUsersByUserRequest request) {
         var validationErrors = validator.validate(request);
         if (!validationErrors.isEmpty()) {
-            return new GetRejectedUsersByUserResults.InvalidRequest(request.requestId(),
-                    InvalidInputErrorDTO.fromValidation(validationErrors), request.tracingId());
+            return new GetRejectedUsersByUserResults.InvalidRequest(
+                    InvalidInputErrorDTO.fromValidation(validationErrors));
         }
 
         try {
@@ -57,12 +57,11 @@ public class GetRejectedUsersByUserQueryHandlerImpl
                 }
             }).collect(Collectors.toList());
 
-            return new GetRejectedUsersByUserResults.Success(request.requestId(), rejectionDTOs,
-                    request.tracingId());
+            return new GetRejectedUsersByUserResults.Success(rejectionDTOs);
 
         } catch (Exception e) {
-            return new GetRejectedUsersByUserResults.SystemError(request.requestId(),
-                    "Failed to get rejected users by user: " + e.getMessage(), request.tracingId());
+            return new GetRejectedUsersByUserResults.SystemError(
+                    "Failed to get rejected users by user: " + e.getMessage());
         }
     }
 }

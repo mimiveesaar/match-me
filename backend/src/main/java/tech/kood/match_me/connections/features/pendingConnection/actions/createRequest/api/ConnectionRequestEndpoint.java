@@ -10,10 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tech.kood.match_me.user_management.features.user.actions.login.api.LoginRequest;
-import tech.kood.match_me.user_management.features.user.actions.login.api.LoginResults;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/connections")
@@ -28,48 +24,42 @@ public class ConnectionRequestEndpoint {
 
     @PostMapping("/request")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User logged in successfully.",
+            @ApiResponse(responseCode = "200", description = "Connection request created successfully.",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(discriminatorProperty = "type",
-                                    implementation = LoginResults.Success.class))),
+                                    implementation = ConnectionRequestResults.Success.class))),
 
             @ApiResponse(responseCode = "400", description = "Invalid request.",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(discriminatorProperty = "type",
-                                    implementation = LoginResults.InvalidRequest.class))),
+                                    implementation = ConnectionRequestResults.InvalidRequest.class))),
 
-            @ApiResponse(responseCode = "401", description = "Unauthorized.",
+            @ApiResponse(responseCode = "409", description = "Connection already exists.",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(discriminatorProperty = "type",
-                                    implementation = LoginResults.InvalidCredentials.class))),
+                                    implementation = ConnectionRequestResults.AlreadyExists.class))),
 
             @ApiResponse(responseCode = "500", description = "Internal server error.",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(discriminatorProperty = "type",
-                                    implementation = LoginResults.SystemError.class)))})
+                                    implementation = ConnectionRequestResults.SystemError.class)))})
 
-    public ResponseEntity<ConnectionRequestResults> loginUser(@RequestBody ConnectionRequest request) {
+    public ResponseEntity<ConnectionRequestResults> createConnectionRequest(@RequestBody ConnectionRequest request) {
 
-        String tracingId = UUID.randomUUID().toString();
-        if (request.tracingId() != null && !request.tracingId().isEmpty()) {
-            tracingId = request.tracingId();
-        }
+        var result = connectionRequestCommandHandler.handle(request);
 
-
-        var loginResult = loginCommandHandler.handle(internalRequest);
-
-        if (loginResult instanceof LoginResults.Success success) {
+        if (result instanceof ConnectionRequestResults.Success success) {
             return ResponseEntity.ok(success);
-        } else if (loginResult instanceof LoginResults.InvalidRequest invalidRequest) {
+        } else if (result instanceof ConnectionRequestResults.InvalidRequest invalidRequest) {
             return ResponseEntity.badRequest().body(invalidRequest);
-        } else if (loginResult instanceof LoginResults.InvalidCredentials invalidCredentials) {
-            return ResponseEntity.status(401).body(invalidCredentials);
-        } else if (loginResult instanceof LoginResults.SystemError systemError) {
+        } else if (result instanceof ConnectionRequestResults.AlreadyExists alreadyExists) {
+            return ResponseEntity.status(409).body(alreadyExists);
+        } else if (result instanceof ConnectionRequestResults.SystemError systemError) {
             return ResponseEntity.status(500).body(systemError);
         } else {
             // This should never happen, but just in case
             return ResponseEntity.status(500)
-                    .body(new LoginResults.SystemError(request.requestId(), "Unexpected error occurred", request.tracingId()));
+                    .body(new ConnectionRequestResults.SystemError("Unexpected error occurred"));
         }
     }
 }

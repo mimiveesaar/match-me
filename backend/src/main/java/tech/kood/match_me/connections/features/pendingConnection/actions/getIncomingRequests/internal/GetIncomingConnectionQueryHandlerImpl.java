@@ -3,6 +3,7 @@ package tech.kood.match_me.connections.features.pendingConnection.actions.getInc
 import jakarta.validation.Validator;
 import org.springframework.stereotype.Service;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
+import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.connections.features.pendingConnection.actions.getIncomingRequests.api.GetIncomingConnectionQueryHandler;
 import tech.kood.match_me.connections.features.pendingConnection.actions.getIncomingRequests.api.GetIncomingConnectionsRequest;
 import tech.kood.match_me.connections.features.pendingConnection.actions.getIncomingRequests.api.GetIncomingConnectionsResults;
@@ -31,20 +32,26 @@ public class GetIncomingConnectionQueryHandlerImpl implements GetIncomingConnect
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new GetIncomingConnectionsResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
+            return new GetIncomingConnectionsResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
             var incomingRequests = pendingConnectionRepository.findByTarget(request.userId().value());
-            var incomingRequestsMapped = new ArrayList<PendingConnectionDTO>();
-            for (PendingConnectionEntity incomingRequest : incomingRequests) {
-                PendingConnectionDTO dto = pendingConnectionMapper.toDTO(incomingRequest);
-                incomingRequestsMapped.add(dto);
-            }
 
-            return new GetIncomingConnectionsResults.Success(request.requestId(), incomingRequestsMapped , request.tracingId());
+            var incomingRequestsMapped = incomingRequests
+                    .stream()
+                    .map(entity -> {
+                        try {
+                            return pendingConnectionMapper.toDTO(entity);
+                        } catch (CheckedConstraintViolationException e) {
+                            throw new RuntimeException("Failed to map pending connection entity to DTO", e);
+                        }
+                    })
+                    .toList();
+
+            return new GetIncomingConnectionsResults.Success(incomingRequestsMapped);
         } catch (Exception e) {
-            return new GetIncomingConnectionsResults.SystemError(request.requestId(), "An unexpected error occurred while processing the request.", request.tracingId());
+            return new GetIncomingConnectionsResults.SystemError("An unexpected error occurred while processing the request.");
         }
     }
 }

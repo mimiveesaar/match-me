@@ -31,7 +31,7 @@ public class GetOutgoingConnectionQueryHandlerImpl implements GetOutgoingConnect
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new GetOutgoingConnectionsResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
+            return new GetOutgoingConnectionsResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
@@ -42,9 +42,9 @@ public class GetOutgoingConnectionQueryHandlerImpl implements GetOutgoingConnect
                 outgoingRequestsMapped.add(dto);
             }
 
-            return new GetOutgoingConnectionsResults.Success(request.requestId(), outgoingRequestsMapped, request.tracingId());
+            return new GetOutgoingConnectionsResults.Success(outgoingRequestsMapped);
         } catch (Exception e) {
-            return new GetOutgoingConnectionsResults.SystemError(request.requestId(), "An unexpected error occurred while processing the request.", request.tracingId());
+            return new GetOutgoingConnectionsResults.SystemError("An unexpected error occurred while processing the request.");
         }
     }
 }
