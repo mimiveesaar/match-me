@@ -1,5 +1,7 @@
 package tech.kood.match_me.profile.controller;
 
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +12,7 @@ import tech.kood.match_me.profile.service.ProfileService;
 
 @RestController
 @RequestMapping("/api/profiles")
-@CrossOrigin(origins = {"http://localhost:3002", "http://localhost:3000"}) // Add this line
+@CrossOrigin(origins = {"http://localhost:3002", "http://localhost:3000"})
 public class ProfileController {
 
     private final ProfileService service;
@@ -19,55 +21,38 @@ public class ProfileController {
         this.service = service;
     }
 
-@PostMapping("/me")
-public ResponseEntity<ProfileViewDTO> saveMyProfile(@RequestBody ProfileDTO dto) {
-    System.out.println("=== POST /api/profiles/me called ===");
-    System.out.println("Received DTO: " + dto);
-    
-    // Add detailed logging
-    if (dto != null) {
-        System.out.println("DTO Details:");
-        System.out.println("  Bio: '" + dto.getBio() + "'");
-        System.out.println("  HomeplanetId: " + dto.getHomeplanetId());
-        System.out.println("  BodyformId: " + dto.getBodyformId());
-        System.out.println("  LookingForId: " + dto.getLookingForId());
-        System.out.println("  InterestIds: " + dto.getInterestIds());
-        System.out.println("  ProfilePic: '" + dto.getProfilePic() + "'");
-    } else {
-        System.out.println("DTO is NULL!");
-    }
-
-    try {
-        Profile savedProfile = service.saveOrUpdateProfile(dto);
-        System.out.println("Profile saved with ID: " + savedProfile.getId());
-        return ResponseEntity.ok(toViewDTO(savedProfile));
-    } catch (Exception e) {
-        System.out.println("Error saving profile: " + e.getMessage());
-        e.printStackTrace();
-        throw e;
-    }
-}
-    @GetMapping("/me")
-    public ResponseEntity<ProfileViewDTO> getMyProfile() {
-        Profile profile = service.getMyProfile(); // no ID needed
-        return ResponseEntity.ok(toViewDTO(profile));
-    }
-
-    // Add PUT method for updates
-    @PutMapping("/me")
-    public ResponseEntity<ProfileViewDTO> updateMyProfile(@RequestBody ProfileDTO dto) {
-        System.out.println("=== PUT /api/profiles/me called ===");
+    @PostMapping("/me")
+    public ResponseEntity<ProfileViewDTO> saveMyProfile(@RequestBody ProfileDTO dto) {
+        System.out.println("=== POST /api/profiles/me called ===");
         System.out.println("Received DTO: " + dto);
 
+        if (dto != null) {
+            System.out.println("DTO Details:");
+            System.out.println("  Bio: '" + dto.getBio() + "'");
+            System.out.println("  HomeplanetId: " + dto.getHomeplanetId());
+            System.out.println("  BodyformId: " + dto.getBodyformId());
+            System.out.println("  LookingForId: " + dto.getLookingForId());
+            System.out.println("  InterestIds: " + dto.getInterestIds());
+            System.out.println("  ProfilePic: '" + dto.getProfilePic() + "'");
+        } else {
+            System.out.println("DTO is NULL!");
+        }
+
         try {
-            Profile updatedProfile = service.saveOrUpdateProfile(dto);
-            System.out.println("Profile updated with ID: " + updatedProfile.getId());
-            return ResponseEntity.ok(toViewDTO(updatedProfile));
+            Profile savedProfile = service.saveOrUpdateProfile(dto);
+            System.out.println("Profile saved with ID: " + savedProfile.getId());
+            return ResponseEntity.ok(toViewDTO(savedProfile));
         } catch (Exception e) {
-            System.out.println("Error updating profile: " + e.getMessage());
+            System.out.println("Error saving profile: " + e.getMessage());
             e.printStackTrace();
             throw e;
         }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<ProfileViewDTO> getMyProfile() {
+        Profile profile = service.getMyProfile();
+        return ResponseEntity.ok(toViewDTO(profile));
     }
 
     private ProfileViewDTO toViewDTO(Profile profile) {
