@@ -1,13 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-
-
 import { InterestsSection } from "../../organisms/InterestsSection/InterestsSection";
 import { MultiLineInputField } from "../../atoms/MultiLineInputField/MultiLineInputField";
 import { ProfileCard } from "../../organisms/ProfileCard/ProfileCard";
 import { Menu } from "../../organisms/Menu/menu";
-
 
 interface MyProfilePageProps {
   initialProfile?: any;
@@ -61,33 +58,46 @@ export const MyProfilePage = ({
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 p-4 sm:p-6 lg:p-8 bg-neutral-50 min-h-screen">
-      <div className="flex flex-col gap-4">
-        <ProfileCard profile={profile} setProfile={setProfile} />
+    <div className="flex">
+      {/* Menu - hidden on mobile, visible on desktop */}
+      <Menu className="hidden lg:block" />
+      
+      {/* Menu for mobile - will be handled by the hamburger button */}
+      <div className="lg:hidden">
+        <Menu />
       </div>
-      <div className="flex flex-col gap-4">
-        <div className="bg-olive rounded p-6 shadow-md min-h-[12rem] flex flex-col justify-start">
-          <span className="mb-2 text-xs italic">/bio</span>
-          <MultiLineInputField
-            placeholder="Bio (optional)"
-            value={bio}
-            onChange={(e) => setBio(e.target.value)} 
-            id={"bio"}
-          />
-        </div>
 
-        <InterestsSection
-          selected={selectedInterests}
-          setSelected={setSelectedInterests}
-        />
+      {/* Main Content */}
+      <div className="flex-1 lg:ml-0">
+        <div className="flex flex-col lg:flex-row gap-8 p-4 sm:p-6 lg:p-8 bg-neutral-50 min-h-screen pt-16 lg:pt-8">
+          <div className="flex flex-col gap-4">
+            <ProfileCard profile={profile} setProfile={setProfile} />
+          </div>
+          <div className="flex flex-col gap-4">
+            <div className="bg-olive rounded p-6 shadow-md min-h-[12rem] flex flex-col justify-start">
+              <span className="mb-2 text-xs italic">/bio</span>
+              <MultiLineInputField
+                placeholder="Bio (optional)"
+                value={bio}
+                onChange={(e) => setBio(e.target.value)} 
+                id={"bio"}
+              />
+            </div>
 
-        <div className="flex items-center justify-center mt-4">
-          <button
-            onClick={handleSave}
-            className="flex items-center gap-2 bg-olive hover:bg-amberglow text-white font-semibold py-2 px-4 rounded-xl shadow-md transition-all duration-200"
-          >
-            Save Changes
-          </button>
+            <InterestsSection
+              selected={selectedInterests}
+              setSelected={setSelectedInterests}
+            />
+
+            <div className="flex items-center justify-center mt-4">
+              <button
+                onClick={handleSave}
+                className="flex items-center gap-2 bg-olive hover:bg-amberglow text-white font-semibold py-2 px-4 rounded-xl shadow-md transition-all duration-200"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
