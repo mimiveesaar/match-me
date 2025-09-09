@@ -37,15 +37,21 @@ export default function MyProfile() {
   };
 
 const handleSaveProfile = async (updatedData: any) => {
+  console.log("=== FRONTEND: Raw updatedData ===");
+  console.log(JSON.stringify(updatedData, null, 2));
+  
   try {
     const response = await fetch('http://localhost:8080/api/profiles/me', {
-      method: 'POST', // Change this from PUT to POST
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(updatedData),
     });
 
+    console.log("=== FRONTEND: What we actually sent ===");
+    console.log(JSON.stringify(updatedData, null, 2));
+    
     if (response.ok) {
       console.log('Profile updated successfully');
       fetchProfile();
