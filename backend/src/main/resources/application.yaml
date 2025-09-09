@@ -6,19 +6,43 @@ spring:
   application:
     name: match-me-chat
   datasource:
-    url: jdbc:postgresql://postgres_container:5432/chat
-    username: chat
-    password: chat
-    driver-class-name: org.postgresql.Driver
+    chatspace:
+      jdbc-url: jdbc:postgresql://127.0.0.1:5432/chat
+      username: chat
+      password: chat
+      driver-class-name: org.postgresql.Driver
+    user-management:
+      jdbc-url: jdbc:postgresql://localhost:5432/user_management
+      username: user_management
+      password: user_management
+      driver-class-name: org.postgresql.Driver
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
     hibernate:
       ddl-auto: update
-    show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: update
   flyway:
     enabled: false
+  hawtio:
+    authenticationEnabled: false
+    
+user-management:
+  jwt:
+    secret: q+6sNpZcOymRrX2U6o4aU2jCLvQhVkODoUwiyQ6QL/I=
+    expiration: 3600
+    issuer: match-me
+  refresh-token:
+    expiration: 604800
+    clean-up-interval: 20
+  user:
+    password:
+      min-length: 8
+      max-length: 60
+      require-uppercase: true
+      require-special: true
 
 logging:
   level:
@@ -28,12 +52,6 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
-management:
-  endpoints:
-    web:
-      base-path: /
-      exposure:
-        include: health,info,metrics
 
 # Optional: WebSocket or other chat-specific configs
 chatspace:

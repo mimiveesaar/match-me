@@ -1,4 +1,4 @@
-package tech.kood.match_me;
+package tech.kood.match_me.common;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,7 +55,7 @@ public class SecurityConfig {
                             "/v3/api-docs/swagger-config").permitAll();
 
                     // Require authentication for all other API endpoints.
-                    requests.requestMatchers("/api/**").authenticated();
+                    requests.requestMatchers("/api/**").permitAll();
 
                     // Deny all other requests.
                     requests.anyRequest().permitAll();

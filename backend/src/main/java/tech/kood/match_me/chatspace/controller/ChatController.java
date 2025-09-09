@@ -11,7 +11,7 @@ import tech.kood.match_me.chatspace.service.MessageService;
 public class ChatController {
 
     private final MessageService messageService;
-    
+
     public ChatController(MessageService messageService) {
         this.messageService = messageService;
     }
@@ -25,7 +25,7 @@ public class ChatController {
     @MessageMapping("/chat.typing")
     @SendTo("/topic/typing")
     public ChatMessageDTO typing(ChatMessageDTO message) {
-    System.out.println("Received typing event from " + message.getSenderId());
-    return message;
-}
+        System.out.println("Received typing event from " + message.getSenderId());
+        return message;
+    }
 }
