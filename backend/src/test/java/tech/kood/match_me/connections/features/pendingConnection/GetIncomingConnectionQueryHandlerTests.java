@@ -47,14 +47,12 @@ public class GetIncomingConnectionQueryHandlerTests extends ConnectionsTestBase 
         repository.save(pendingConnection2);
 
         // Act
-        var request = new GetIncomingConnectionsRequest(requestId, targetId, tracingId);
+        var request = new GetIncomingConnectionsRequest(targetId);
         var result = queryHandler.handle(request);
 
         // Assert
         assertInstanceOf(GetIncomingConnectionsResults.Success.class, result);
         var successResult = (GetIncomingConnectionsResults.Success) result;
-        assertEquals(requestId, successResult.requestId());
-        assertEquals(tracingId, successResult.tracingId());
         assertNotNull(successResult.incomingRequests());
         assertEquals(2, successResult.incomingRequests().size());
         
@@ -78,14 +76,12 @@ public class GetIncomingConnectionQueryHandlerTests extends ConnectionsTestBase 
         var tracingId = "test-tracing-id";
 
         // Act
-        var request = new GetIncomingConnectionsRequest(requestId, targetId, tracingId);
+        var request = new GetIncomingConnectionsRequest(targetId);
         var result = queryHandler.handle(request);
 
         // Assert
         assertInstanceOf(GetIncomingConnectionsResults.Success.class, result);
         var successResult = (GetIncomingConnectionsResults.Success) result;
-        assertEquals(requestId, successResult.requestId());
-        assertEquals(tracingId, successResult.tracingId());
         assertNotNull(successResult.incomingRequests());
         assertTrue(successResult.incomingRequests().isEmpty());
     }
@@ -97,14 +93,12 @@ public class GetIncomingConnectionQueryHandlerTests extends ConnectionsTestBase 
         var tracingId = "test-tracing-id";
 
         // Act - create request with null userId which should fail validation
-        var request = new GetIncomingConnectionsRequest(requestId, null, tracingId);
+        var request = new GetIncomingConnectionsRequest(null);
         var result = queryHandler.handle(request);
 
         // Assert
         assertInstanceOf(GetIncomingConnectionsResults.InvalidRequest.class, result);
         var invalidRequestResult = (GetIncomingConnectionsResults.InvalidRequest) result;
-        assertEquals(requestId, invalidRequestResult.requestId());
-        assertEquals(tracingId, invalidRequestResult.tracingId());
         assertNotNull(invalidRequestResult.error());
         assertFalse(invalidRequestResult.error().errors().isEmpty());
     }

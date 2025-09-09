@@ -35,19 +35,14 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         repository.save(rejectedConnectionEntity);
 
         var connectionId = new ConnectionIdDTO(rejectedConnectionEntity.getId());
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
-        var request = new DeleteRejectedConnectionRequest(requestId, connectionId, tracingId);
+        var request = new DeleteRejectedConnectionRequest(connectionId);
 
         // Act
         var result = deleteRejectedConnectionHandler.handle(request);
 
         // Assert
         assertInstanceOf(DeleteRejectedConnectionResults.Success.class, result);
-        var successResult = (DeleteRejectedConnectionResults.Success) result;
-        assertEquals(requestId, successResult.requestId());
-        assertEquals(tracingId, successResult.tracingId());
 
         // Verify the rejected connection was actually deleted from the repository
         var deletedConnection = repository.findById(rejectedConnectionEntity.getId());
@@ -58,10 +53,8 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
     void testHandleRequest_NotFound() {
         // Arrange: Use a non-existent connection ID
         var nonExistentConnectionId = new ConnectionIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
-        var request = new DeleteRejectedConnectionRequest(requestId, nonExistentConnectionId, tracingId);
+        var request = new DeleteRejectedConnectionRequest(nonExistentConnectionId);
 
         // Act
         var result = deleteRejectedConnectionHandler.handle(request);
@@ -74,11 +67,9 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
     void testHandleRequest_NullId() {
         // This test would require mocking the repository to throw an exception
         // For now, we'll test with a null connection ID to trigger validation error
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
         // Using null for connectionId should trigger a system error due to validation
-        var request = new DeleteRejectedConnectionRequest(requestId, new ConnectionIdDTO(null), tracingId);
+        var request = new DeleteRejectedConnectionRequest(new ConnectionIdDTO(null));
 
         // Act
         var result = deleteRejectedConnectionHandler.handle(request);
@@ -95,12 +86,9 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         repository.save(rejectedConnectionEntity);
 
         var connectionId = new ConnectionIdDTO(rejectedConnectionEntity.getId());
-        var requestId1 = UUID.randomUUID();
-        var requestId2 = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
-        var request1 = new DeleteRejectedConnectionRequest(requestId1, connectionId, tracingId);
-        var request2 = new DeleteRejectedConnectionRequest(requestId2, connectionId, tracingId);
+        var request1 = new DeleteRejectedConnectionRequest(connectionId);
+        var request2 = new DeleteRejectedConnectionRequest(connectionId);
 
         // Act: First deletion
         var result1 = deleteRejectedConnectionHandler.handle(request1);
@@ -114,8 +102,6 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         // Assert: Second deletion returns NotFound
         assertInstanceOf(DeleteRejectedConnectionResults.NotFound.class, result2);
         var notFoundResult = (DeleteRejectedConnectionResults.NotFound) result2;
-        assertEquals(requestId2, notFoundResult.requestId());
-        assertEquals(tracingId, notFoundResult.tracingId());
     }
 
     @Test
@@ -130,9 +116,8 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         assertTrue(initialCount >= 2); // At least our two entities
 
         var connectionId1 = new ConnectionIdDTO(entity1.getId());
-        var requestId = UUID.randomUUID();
 
-        var request = new DeleteRejectedConnectionRequest(requestId, connectionId1, "test-trace");
+        var request = new DeleteRejectedConnectionRequest(connectionId1);
 
         // Act
         var result = deleteRejectedConnectionHandler.handle(request);
@@ -156,10 +141,8 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         repository.save(rejectedConnectionEntity);
 
         var connectionId = new ConnectionIdDTO(rejectedConnectionEntity.getId());
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
-        var request = new DeleteRejectedConnectionRequest(requestId, connectionId, tracingId);
+        var request = new DeleteRejectedConnectionRequest(connectionId);
 
         // Count before deletion
         var initialCount = repository.findAll().size();
@@ -186,8 +169,8 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var connectionId1 = new ConnectionIdDTO(entity1.getId());
         var connectionId2 = new ConnectionIdDTO(entity2.getId());
 
-        var request1 = new DeleteRejectedConnectionRequest(UUID.randomUUID(), connectionId1, "trace-1");
-        var request2 = new DeleteRejectedConnectionRequest(UUID.randomUUID(), connectionId2, "trace-2");
+        var request1 = new DeleteRejectedConnectionRequest(connectionId1);
+        var request2 = new DeleteRejectedConnectionRequest(connectionId2);
 
         // Act
         var result1 = deleteRejectedConnectionHandler.handle(request1);
@@ -211,8 +194,8 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var connectionId = new ConnectionIdDTO(rejectedConnectionEntity.getId());
 
         // Simulate concurrent deletion requests
-        var request1 = new DeleteRejectedConnectionRequest(UUID.randomUUID(), connectionId, "trace-1");
-        var request2 = new DeleteRejectedConnectionRequest(UUID.randomUUID(), connectionId, "trace-2");
+        var request1 = new DeleteRejectedConnectionRequest(connectionId);
+        var request2 = new DeleteRejectedConnectionRequest(connectionId);
 
         // Act: Execute requests (in real concurrent scenario, timing would matter)
         var result1 = deleteRejectedConnectionHandler.handle(request1);

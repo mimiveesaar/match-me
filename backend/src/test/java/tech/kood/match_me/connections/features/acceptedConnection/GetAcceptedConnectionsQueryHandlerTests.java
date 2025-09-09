@@ -37,8 +37,6 @@ public class GetAcceptedConnectionsQueryHandlerTests extends ConnectionsTestBase
         var userId = new UserIdDTO(UUID.randomUUID());
         var otherUser1Id = new UserIdDTO(UUID.randomUUID());
         var otherUser2Id = new UserIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
         // Create test data - connections where user is both accepter and accepted
         var connection1 = acceptedConnectionEntityFactory.create(
@@ -50,14 +48,12 @@ public class GetAcceptedConnectionsQueryHandlerTests extends ConnectionsTestBase
         repository.save(connection2);
 
         // Act
-        var request = new GetAcceptedConnectionsRequest(requestId, userId, tracingId);
+        var request = new GetAcceptedConnectionsRequest(userId);
         var result = queryHandler.handle(request);
 
         // Assert
         assertInstanceOf(GetAcceptedConnectionsResults.Success.class, result);
         var successResult = (GetAcceptedConnectionsResults.Success) result;
-        assertEquals(requestId, successResult.requestId());
-        assertEquals(tracingId, successResult.tracingId());
         assertNotNull(successResult.acceptedConnections());
         assertEquals(2, successResult.acceptedConnections().size());
         
@@ -75,37 +71,28 @@ public class GetAcceptedConnectionsQueryHandlerTests extends ConnectionsTestBase
     void testHandleValidRequest_NoAcceptedConnections_ReturnsEmptyList() {
         // Arrange
         var userId = new UserIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
         // Act
-        var request = new GetAcceptedConnectionsRequest(requestId, userId, tracingId);
+        var request = new GetAcceptedConnectionsRequest(userId);
         var result = queryHandler.handle(request);
 
         // Assert
         assertInstanceOf(GetAcceptedConnectionsResults.Success.class, result);
         var successResult = (GetAcceptedConnectionsResults.Success) result;
-        assertEquals(requestId, successResult.requestId());
-        assertEquals(tracingId, successResult.tracingId());
         assertNotNull(successResult.acceptedConnections());
         assertTrue(successResult.acceptedConnections().isEmpty());
     }
 
     @Test
     void testHandleInvalidRequest_NullUserId_ReturnsInvalidRequest() {
-        // Arrange
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
         // Act - create request with null userId which should fail validation
-        var request = new GetAcceptedConnectionsRequest(requestId, null, tracingId);
+        var request = new GetAcceptedConnectionsRequest(null);
         var result = queryHandler.handle(request);
 
         // Assert
         assertInstanceOf(GetAcceptedConnectionsResults.InvalidRequest.class, result);
         var invalidRequestResult = (GetAcceptedConnectionsResults.InvalidRequest) result;
-        assertEquals(requestId, invalidRequestResult.requestId());
-        assertEquals(tracingId, invalidRequestResult.tracingId());
         assertNotNull(invalidRequestResult.error());
         assertFalse(invalidRequestResult.error().errors().isEmpty());
     }
@@ -115,8 +102,6 @@ public class GetAcceptedConnectionsQueryHandlerTests extends ConnectionsTestBase
         // Arrange
         var userId = new UserIdDTO(UUID.randomUUID());
         var otherUserId = new UserIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
         // Create test data - connection where user is only the accepter
         var connection = acceptedConnectionEntityFactory.create(
@@ -124,7 +109,7 @@ public class GetAcceptedConnectionsQueryHandlerTests extends ConnectionsTestBase
         repository.save(connection);
 
         // Act
-        var request = new GetAcceptedConnectionsRequest(requestId, userId, tracingId);
+        var request = new GetAcceptedConnectionsRequest(userId);
         var result = queryHandler.handle(request);
 
         // Assert
@@ -142,8 +127,6 @@ public class GetAcceptedConnectionsQueryHandlerTests extends ConnectionsTestBase
         // Arrange
         var userId = new UserIdDTO(UUID.randomUUID());
         var otherUserId = new UserIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
         // Create test data - connection where user is only the accepted one
         var connection = acceptedConnectionEntityFactory.create(
@@ -151,7 +134,7 @@ public class GetAcceptedConnectionsQueryHandlerTests extends ConnectionsTestBase
         repository.save(connection);
 
         // Act
-        var request = new GetAcceptedConnectionsRequest(requestId, userId, tracingId);
+        var request = new GetAcceptedConnectionsRequest(userId);
         var result = queryHandler.handle(request);
 
         // Assert

@@ -35,8 +35,6 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
         var rejectedUserId = UUID.randomUUID();
         var rejectedByUserId1 = UUID.randomUUID();
         var rejectedByUserId2 = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
         // Create two rejections WHERE rejectedUserId is the one being rejected
         var entity1 = rejectedConnectionEntityMother.createRejectedConnectionEntity();
@@ -49,7 +47,7 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
         entity2 = rejectedConnectionEntityMother.withReason(entity2, RejectedConnectionReason.CONNECTION_REMOVED);
         repository.save(entity2);
 
-        var request = new GetRejectionsByUserRequest(requestId, new UserIdDTO(rejectedUserId), tracingId);
+        var request = new GetRejectionsByUserRequest(new UserIdDTO(rejectedUserId));
 
         // Act
         var result = getRejectionsByUserHandler.handle(request);
@@ -57,8 +55,6 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
         // Assert
         assertInstanceOf(GetRejectionsByUserResults.Success.class, result);
         var successResult = (GetRejectionsByUserResults.Success) result;
-        assertEquals(requestId, successResult.requestId());
-        assertEquals(tracingId, successResult.tracingId());
         assertEquals(2, successResult.rejections().size());
 
         var rejections = successResult.rejections();
@@ -78,10 +74,8 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
     void testHandleValidRequest_Success_NoRejections() {
         // Arrange
         var rejectedUserId = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
-        var request = new GetRejectionsByUserRequest(requestId, new UserIdDTO(rejectedUserId), tracingId);
+        var request = new GetRejectionsByUserRequest(new UserIdDTO(rejectedUserId));
 
         // Act
         var result = getRejectionsByUserHandler.handle(request);
@@ -89,37 +83,13 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
         // Assert
         assertInstanceOf(GetRejectionsByUserResults.Success.class, result);
         var successResult = (GetRejectionsByUserResults.Success) result;
-        assertEquals(requestId, successResult.requestId());
-        assertEquals(tracingId, successResult.tracingId());
         assertTrue(successResult.rejections().isEmpty());
-    }
-
-    @Test
-    void testHandleRequest_InvalidRequest_NullRequestId() {
-        // Arrange
-        var rejectedUserId = new UserIdDTO(UUID.randomUUID());
-        var tracingId = "test-tracing-id";
-
-        var request = new GetRejectionsByUserRequest(null, rejectedUserId, tracingId);
-
-        // Act
-        var result = getRejectionsByUserHandler.handle(request);
-
-        // Assert
-        assertInstanceOf(GetRejectionsByUserResults.InvalidRequest.class, result);
-        var invalidResult = (GetRejectionsByUserResults.InvalidRequest) result;
-        assertNull(invalidResult.requestId());
-        assertEquals(tracingId, invalidResult.tracingId());
-        assertNotNull(invalidResult.error());
     }
 
     @Test
     void testHandleRequest_InvalidRequest_NullRejectedUser() {
         // Arrange
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
-
-        var request = new GetRejectionsByUserRequest(requestId, null, tracingId);
+        var request = new GetRejectionsByUserRequest(null);
 
         // Act
         var result = getRejectionsByUserHandler.handle(request);
@@ -127,19 +97,15 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
         // Assert
         assertInstanceOf(GetRejectionsByUserResults.InvalidRequest.class, result);
         var invalidResult = (GetRejectionsByUserResults.InvalidRequest) result;
-        assertEquals(requestId, invalidResult.requestId());
-        assertEquals(tracingId, invalidResult.tracingId());
         assertNotNull(invalidResult.error());
     }
 
     @Test
     void testHandleRequest_InvalidRequest_InvalidUserIdDTO() {
         // Arrange
-        var requestId = UUID.randomUUID();
         var rejectedUserId = new UserIdDTO(null); // Invalid UserIdDTO
-        var tracingId = "test-tracing-id";
 
-        var request = new GetRejectionsByUserRequest(requestId, rejectedUserId, tracingId);
+        var request = new GetRejectionsByUserRequest(rejectedUserId);
 
         // Act
         var result = getRejectionsByUserHandler.handle(request);
@@ -147,8 +113,6 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
         // Assert
         assertInstanceOf(GetRejectionsByUserResults.InvalidRequest.class, result);
         var invalidResult = (GetRejectionsByUserResults.InvalidRequest) result;
-        assertEquals(requestId, invalidResult.requestId());
-        assertEquals(tracingId, invalidResult.tracingId());
         assertNotNull(invalidResult.error());
     }
 
@@ -159,7 +123,6 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
         var otherRejectedUserId = UUID.randomUUID();
         var rejectedByUserId1 = UUID.randomUUID();
         var rejectedByUserId2 = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
 
         // Create rejection for target user
         var targetEntity = rejectedConnectionEntityMother.createRejectedConnectionEntity();
@@ -171,7 +134,7 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
         otherEntity = rejectedConnectionEntityMother.withSpecificIds(otherEntity, rejectedByUserId2, otherRejectedUserId);
         repository.save(otherEntity);
 
-        var request = new GetRejectionsByUserRequest(requestId, new UserIdDTO(targetRejectedUserId), null);
+        var request = new GetRejectionsByUserRequest(new UserIdDTO(targetRejectedUserId));
 
         // Act
         var result = getRejectionsByUserHandler.handle(request);
@@ -190,7 +153,6 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
         var rejectedUserId = UUID.randomUUID();
         var rejectedByUserId1 = UUID.randomUUID();
         var rejectedByUserId2 = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
 
         // Create rejection with CONNECTION_DECLINED reason
         var entity1 = rejectedConnectionEntityMother.createRejectedConnectionEntity();
@@ -204,7 +166,7 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
         entity2 = rejectedConnectionEntityMother.withReason(entity2, RejectedConnectionReason.CONNECTION_REMOVED);
         repository.save(entity2);
 
-        var request = new GetRejectionsByUserRequest(requestId, new UserIdDTO(rejectedUserId), null);
+        var request = new GetRejectionsByUserRequest(new UserIdDTO(rejectedUserId));
 
         // Act
         var result = getRejectionsByUserHandler.handle(request);
@@ -230,7 +192,6 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
         var rejectedByUserId1 = UUID.randomUUID();
         var rejectedByUserId2 = UUID.randomUUID();
         var rejectedByUserId3 = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
 
         // Create multiple rejections where different users rejected the same user
         var entity1 = rejectedConnectionEntityMother.createRejectedConnectionEntity();
@@ -245,7 +206,7 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
         entity3 = rejectedConnectionEntityMother.withSpecificIds(entity3, rejectedByUserId3, rejectedUserId);
         repository.save(entity3);
 
-        var request = new GetRejectionsByUserRequest(requestId, new UserIdDTO(rejectedUserId), null);
+        var request = new GetRejectionsByUserRequest(new UserIdDTO(rejectedUserId));
 
         // Act
         var result = getRejectionsByUserHandler.handle(request);
@@ -274,14 +235,13 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
         // Arrange
         var rejectedUserId = UUID.randomUUID();
         var rejectedByUserId = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
 
         // Create a rejection
         var entity = rejectedConnectionEntityMother.createRejectedConnectionEntity();
         entity = rejectedConnectionEntityMother.withSpecificIds(entity, rejectedByUserId, rejectedUserId);
         repository.save(entity);
 
-        var request = new GetRejectionsByUserRequest(requestId, new UserIdDTO(rejectedUserId), null);
+        var request = new GetRejectionsByUserRequest(new UserIdDTO(rejectedUserId));
 
         // Act
         var result = getRejectionsByUserHandler.handle(request);
@@ -296,13 +256,12 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
     void testHandleRequest_Success_EmptyResultForNonExistentUser() {
         // Arrange
         var nonExistentUserId = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
 
         // Create some rejections for other users to ensure the query is selective
         var otherEntity = rejectedConnectionEntityMother.createRejectedConnectionEntity();
         repository.save(otherEntity);
 
-        var request = new GetRejectionsByUserRequest(requestId, new UserIdDTO(nonExistentUserId), null);
+        var request = new GetRejectionsByUserRequest(new UserIdDTO(nonExistentUserId));
 
         // Act
         var result = getRejectionsByUserHandler.handle(request);
@@ -318,13 +277,12 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
         // Arrange
         var rejectedUserId = UUID.randomUUID();
         var rejectedByUserId = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
 
         var entity = rejectedConnectionEntityMother.createRejectedConnectionEntity();
         entity = rejectedConnectionEntityMother.withSpecificIds(entity, rejectedByUserId, rejectedUserId);
         repository.save(entity);
 
-        var request = new GetRejectionsByUserRequest(requestId, new UserIdDTO(rejectedUserId), null);
+        var request = new GetRejectionsByUserRequest(new UserIdDTO(rejectedUserId));
 
         // Act
         var result = getRejectionsByUserHandler.handle(request);
@@ -352,7 +310,6 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
         var user1 = UUID.randomUUID();
         var user2 = UUID.randomUUID();
         var user3 = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
 
         // Create a rejection where targetUserId rejected user1 (should NOT be returned)
         var entity1 = rejectedConnectionEntityMother.createRejectedConnectionEntity();
@@ -369,7 +326,7 @@ public class GetRejectionsByUserQueryHandlerTests extends ConnectionsTestBase {
         entity3 = rejectedConnectionEntityMother.withSpecificIds(entity3, user3, targetUserId);
         repository.save(entity3);
 
-        var request = new GetRejectionsByUserRequest(requestId, new UserIdDTO(targetUserId), null);
+        var request = new GetRejectionsByUserRequest(new UserIdDTO(targetUserId));
 
         // Act
         var result = getRejectionsByUserHandler.handle(request);

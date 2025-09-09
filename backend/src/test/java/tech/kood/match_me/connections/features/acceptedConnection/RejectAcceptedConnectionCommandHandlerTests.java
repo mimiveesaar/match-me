@@ -38,16 +38,12 @@ public class RejectAcceptedConnectionCommandHandlerTests extends ConnectionsTest
 
         var connectionId = new ConnectionIdDTO(entity.getId());
         var rejectedBy = new UserIdDTO(entity.getAcceptedByUserId());
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
-        var request = new RejectAcceptedConnectionRequest(requestId, connectionId, rejectedBy, tracingId);
+        var request = new RejectAcceptedConnectionRequest(connectionId, rejectedBy);
         var result = rejectAcceptedConnectionHandler.handle(request);
 
         assertInstanceOf(RejectAcceptedConnectionResults.Success.class, result);
         var successResult = (RejectAcceptedConnectionResults.Success) result;
-        assertEquals(requestId, successResult.requestId());
-        assertEquals(tracingId, successResult.tracingId());
 
         // Verify the accepted connection was deleted from the repository
         var deleted = repository.findById(connectionId.value());
@@ -64,13 +60,11 @@ public class RejectAcceptedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedBy = new UserIdDTO(entity.getAcceptedByUserId());
         var requestId = UUID.randomUUID();
 
-        var request = new RejectAcceptedConnectionRequest(requestId, connectionId, rejectedBy, null);
+        var request = new RejectAcceptedConnectionRequest(connectionId, rejectedBy);
         var result = rejectAcceptedConnectionHandler.handle(request);
 
         assertInstanceOf(RejectAcceptedConnectionResults.Success.class, result);
         var successResult = (RejectAcceptedConnectionResults.Success) result;
-        assertEquals(requestId, successResult.requestId());
-        assertNull(successResult.tracingId());
 
         // Verify the accepted connection was deleted from the repository
         var deleted = repository.findById(connectionId.value());
@@ -81,54 +75,11 @@ public class RejectAcceptedConnectionCommandHandlerTests extends ConnectionsTest
     void testHandleRequest_NotFound() {
         var connectionId = new ConnectionIdDTO(UUID.randomUUID());
         var rejectedBy = new UserIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
-        var request = new RejectAcceptedConnectionRequest(requestId, connectionId, rejectedBy, tracingId);
+        var request = new RejectAcceptedConnectionRequest(connectionId, rejectedBy);
         var result = rejectAcceptedConnectionHandler.handle(request);
 
         assertInstanceOf(RejectAcceptedConnectionResults.NotFound.class, result);
         var notFoundResult = (RejectAcceptedConnectionResults.NotFound) result;
-        assertEquals(requestId, notFoundResult.requestId());
-        assertEquals(tracingId, notFoundResult.tracingId());
-    }
-
-    @Test
-    void testHandleRequest_InvalidRequest_NullRequestId() {
-        var connectionId = new ConnectionIdDTO(UUID.randomUUID());
-        var rejectedBy = new UserIdDTO(UUID.randomUUID());
-
-        var exception = assertThrows(Exception.class, () -> {
-            new RejectAcceptedConnectionRequest(null, connectionId, rejectedBy, "tracingId");
-        });
-        
-        assertTrue(exception.getMessage().contains("requestId") || 
-                  exception instanceof NullPointerException);
-    }
-
-    @Test
-    void testHandleRequest_InvalidRequest_NullConnectionId() {
-        var rejectedBy = new UserIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
-
-        var exception = assertThrows(Exception.class, () -> {
-            new RejectAcceptedConnectionRequest(requestId, null, rejectedBy, "tracingId");
-        });
-        
-        assertTrue(exception.getMessage().contains("connectionId") || 
-                  exception instanceof NullPointerException);
-    }
-
-    @Test
-    void testHandleRequest_InvalidRequest_NullRejectedBy() {
-        var connectionId = new ConnectionIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
-
-        var exception = assertThrows(Exception.class, () -> {
-            new RejectAcceptedConnectionRequest(requestId, connectionId, null, "tracingId");
-        });
-        
-        assertTrue(exception.getMessage().contains("rejectedBy") || 
-                  exception instanceof NullPointerException);
     }
 }

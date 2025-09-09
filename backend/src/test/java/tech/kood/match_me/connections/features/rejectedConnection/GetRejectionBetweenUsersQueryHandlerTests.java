@@ -34,8 +34,6 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Arrange
         var user1Id = UUID.randomUUID();
         var user2Id = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
         // Create rejection from user1 to user2
         var entity = rejectedConnectionEntityMother.createRejectedConnectionEntity();
@@ -43,7 +41,7 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         entity = rejectedConnectionEntityMother.withReason(entity, RejectedConnectionReason.CONNECTION_DECLINED);
         repository.save(entity);
 
-        var request = new GetRejectionBetweenUsersRequest(requestId, new UserIdDTO(user1Id), new UserIdDTO(user2Id), tracingId);
+        var request = new GetRejectionBetweenUsersRequest(new UserIdDTO(user1Id), new UserIdDTO(user2Id));
 
         // Act
         var result = getRejectionBetweenUsersHandler.handle(request);
@@ -51,8 +49,6 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Assert
         assertInstanceOf(GetRejectionBetweenUsersResults.Success.class, result);
         var successResult = (GetRejectionBetweenUsersResults.Success) result;
-        assertEquals(requestId, successResult.requestId());
-        assertEquals(tracingId, successResult.tracingId());
         assertNotNull(successResult.rejection());
         assertEquals(user1Id, successResult.rejection().rejectedByUser().value());
         assertEquals(user2Id, successResult.rejection().rejectedUser().value());
@@ -63,8 +59,6 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Arrange
         var user1Id = UUID.randomUUID();
         var user2Id = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
         // Create rejection from user1 to user2
         var entity = rejectedConnectionEntityMother.createRejectedConnectionEntity();
@@ -72,7 +66,7 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         repository.save(entity);
 
         // Search with users in reverse order (user2, user1) - should still find the rejection
-        var request = new GetRejectionBetweenUsersRequest(requestId, new UserIdDTO(user2Id), new UserIdDTO(user1Id), tracingId);
+        var request = new GetRejectionBetweenUsersRequest(new UserIdDTO(user2Id), new UserIdDTO(user1Id));
 
         // Act
         var result = getRejectionBetweenUsersHandler.handle(request);
@@ -80,8 +74,6 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Assert
         assertInstanceOf(GetRejectionBetweenUsersResults.Success.class, result);
         var successResult = (GetRejectionBetweenUsersResults.Success) result;
-        assertEquals(requestId, successResult.requestId());
-        assertEquals(tracingId, successResult.tracingId());
         assertNotNull(successResult.rejection());
         // The rejection should still show the original direction (user1 rejected user2)
         assertEquals(user1Id, successResult.rejection().rejectedByUser().value());
@@ -93,10 +85,8 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Arrange
         var user1Id = UUID.randomUUID();
         var user2Id = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
-        var request = new GetRejectionBetweenUsersRequest(requestId, new UserIdDTO(user1Id), new UserIdDTO(user2Id), tracingId);
+        var request = new GetRejectionBetweenUsersRequest(new UserIdDTO(user1Id), new UserIdDTO(user2Id));
 
         // Act
         var result = getRejectionBetweenUsersHandler.handle(request);
@@ -104,8 +94,6 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Assert
         assertInstanceOf(GetRejectionBetweenUsersResults.NotFound.class, result);
         var notFoundResult = (GetRejectionBetweenUsersResults.NotFound) result;
-        assertEquals(requestId, notFoundResult.requestId());
-        assertEquals(tracingId, notFoundResult.tracingId());
     }
 
     @Test
@@ -114,14 +102,13 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         var user1Id = UUID.randomUUID();
         var user2Id = UUID.randomUUID();
         var user3Id = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
 
         // Create rejection between user1 and user3 (not user2)
         var entity = rejectedConnectionEntityMother.createRejectedConnectionEntity();
         entity = rejectedConnectionEntityMother.withSpecificIds(entity, user1Id, user3Id);
         repository.save(entity);
 
-        var request = new GetRejectionBetweenUsersRequest(requestId, new UserIdDTO(user1Id), new UserIdDTO(user2Id), null);
+        var request = new GetRejectionBetweenUsersRequest(new UserIdDTO(user1Id), new UserIdDTO(user2Id));
 
         // Act
         var result = getRejectionBetweenUsersHandler.handle(request);
@@ -135,9 +122,8 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Arrange
         var user1Id = new UserIdDTO(UUID.randomUUID());
         var user2Id = new UserIdDTO(UUID.randomUUID());
-        var tracingId = "test-tracing-id";
 
-        var request = new GetRejectionBetweenUsersRequest(null, user1Id, user2Id, tracingId);
+        var request = new GetRejectionBetweenUsersRequest(user1Id, user2Id);
 
         // Act
         var result = getRejectionBetweenUsersHandler.handle(request);
@@ -145,8 +131,6 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Assert
         assertInstanceOf(GetRejectionBetweenUsersResults.InvalidRequest.class, result);
         var invalidResult = (GetRejectionBetweenUsersResults.InvalidRequest) result;
-        assertNull(invalidResult.requestId());
-        assertEquals(tracingId, invalidResult.tracingId());
         assertNotNull(invalidResult.error());
     }
 
@@ -154,10 +138,7 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
     void testHandleRequest_InvalidRequest_NullUser1() {
         // Arrange
         var user2Id = new UserIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
-
-        var request = new GetRejectionBetweenUsersRequest(requestId, null, user2Id, tracingId);
+        var request = new GetRejectionBetweenUsersRequest(null, user2Id);
 
         // Act
         var result = getRejectionBetweenUsersHandler.handle(request);
@@ -165,8 +146,6 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Assert
         assertInstanceOf(GetRejectionBetweenUsersResults.InvalidRequest.class, result);
         var invalidResult = (GetRejectionBetweenUsersResults.InvalidRequest) result;
-        assertEquals(requestId, invalidResult.requestId());
-        assertEquals(tracingId, invalidResult.tracingId());
         assertNotNull(invalidResult.error());
     }
 
@@ -177,7 +156,7 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         var requestId = UUID.randomUUID();
         var tracingId = "test-tracing-id";
 
-        var request = new GetRejectionBetweenUsersRequest(requestId, user1Id, null, tracingId);
+        var request = new GetRejectionBetweenUsersRequest(user1Id, null);
 
         // Act
         var result = getRejectionBetweenUsersHandler.handle(request);
@@ -185,8 +164,6 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Assert
         assertInstanceOf(GetRejectionBetweenUsersResults.InvalidRequest.class, result);
         var invalidResult = (GetRejectionBetweenUsersResults.InvalidRequest) result;
-        assertEquals(requestId, invalidResult.requestId());
-        assertEquals(tracingId, invalidResult.tracingId());
         assertNotNull(invalidResult.error());
     }
 
@@ -195,10 +172,8 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Arrange
         var user1Id = new UserIdDTO(null); // Invalid UserIdDTO
         var user2Id = new UserIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
-        var request = new GetRejectionBetweenUsersRequest(requestId, user1Id, user2Id, tracingId);
+        var request = new GetRejectionBetweenUsersRequest(user1Id, user2Id);
 
         // Act
         var result = getRejectionBetweenUsersHandler.handle(request);
@@ -206,8 +181,6 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Assert
         assertInstanceOf(GetRejectionBetweenUsersResults.InvalidRequest.class, result);
         var invalidResult = (GetRejectionBetweenUsersResults.InvalidRequest) result;
-        assertEquals(requestId, invalidResult.requestId());
-        assertEquals(tracingId, invalidResult.tracingId());
         assertNotNull(invalidResult.error());
     }
 
@@ -216,10 +189,8 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Arrange
         var user1Id = new UserIdDTO(UUID.randomUUID());
         var user2Id = new UserIdDTO(null); // Invalid UserIdDTO
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
-        var request = new GetRejectionBetweenUsersRequest(requestId, user1Id, user2Id, tracingId);
+        var request = new GetRejectionBetweenUsersRequest(user1Id, user2Id);
 
         // Act
         var result = getRejectionBetweenUsersHandler.handle(request);
@@ -227,8 +198,6 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Assert
         assertInstanceOf(GetRejectionBetweenUsersResults.InvalidRequest.class, result);
         var invalidResult = (GetRejectionBetweenUsersResults.InvalidRequest) result;
-        assertEquals(requestId, invalidResult.requestId());
-        assertEquals(tracingId, invalidResult.tracingId());
         assertNotNull(invalidResult.error());
     }
 
@@ -236,10 +205,7 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
     void testHandleRequest_InvalidRequest_SameUser() {
         // Arrange
         var userId = new UserIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
-
-        var request = new GetRejectionBetweenUsersRequest(requestId, userId, userId, tracingId);
+        var request = new GetRejectionBetweenUsersRequest(userId, userId);
 
         // Act
         var result = getRejectionBetweenUsersHandler.handle(request);
@@ -247,8 +213,6 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Assert
         assertInstanceOf(GetRejectionBetweenUsersResults.InvalidRequest.class, result);
         var invalidResult = (GetRejectionBetweenUsersResults.InvalidRequest) result;
-        assertEquals(requestId, invalidResult.requestId());
-        assertEquals(tracingId, invalidResult.tracingId());
         assertNotNull(invalidResult.error());
     }
 
@@ -257,7 +221,6 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Arrange
         var user1Id = UUID.randomUUID();
         var user2Id = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
 
         // Create rejection with CONNECTION_REMOVED reason
         var entity = rejectedConnectionEntityMother.createRejectedConnectionEntity();
@@ -265,7 +228,7 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         entity = rejectedConnectionEntityMother.withReason(entity, RejectedConnectionReason.CONNECTION_REMOVED);
         repository.save(entity);
 
-        var request = new GetRejectionBetweenUsersRequest(requestId, new UserIdDTO(user1Id), new UserIdDTO(user2Id), null);
+        var request = new GetRejectionBetweenUsersRequest(new UserIdDTO(user1Id), new UserIdDTO(user2Id));
 
         // Act
         var result = getRejectionBetweenUsersHandler.handle(request);
@@ -281,13 +244,12 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Arrange
         var user1Id = UUID.randomUUID();
         var user2Id = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
 
         var entity = rejectedConnectionEntityMother.createRejectedConnectionEntity();
         entity = rejectedConnectionEntityMother.withSpecificIds(entity, user1Id, user2Id);
         repository.save(entity);
 
-        var request = new GetRejectionBetweenUsersRequest(requestId, new UserIdDTO(user1Id), new UserIdDTO(user2Id), null);
+        var request = new GetRejectionBetweenUsersRequest(new UserIdDTO(user1Id), new UserIdDTO(user2Id));
 
         // Act
         var result = getRejectionBetweenUsersHandler.handle(request);
@@ -314,7 +276,6 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         var targetUser2 = UUID.randomUUID();
         var otherUser1 = UUID.randomUUID();
         var otherUser2 = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
 
         // Create multiple rejections that don't involve our target users
         var entity1 = rejectedConnectionEntityMother.createRejectedConnectionEntity();
@@ -325,7 +286,7 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         entity2 = rejectedConnectionEntityMother.withSpecificIds(entity2, targetUser1, otherUser1);
         repository.save(entity2);
 
-        var request = new GetRejectionBetweenUsersRequest(requestId, new UserIdDTO(targetUser1), new UserIdDTO(targetUser2), null);
+        var request = new GetRejectionBetweenUsersRequest(new UserIdDTO(targetUser1), new UserIdDTO(targetUser2));
 
         // Act
         var result = getRejectionBetweenUsersHandler.handle(request);
@@ -339,14 +300,13 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Arrange
         var user1Id = UUID.randomUUID();
         var user2Id = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
 
         // Create a rejection
         var entity = rejectedConnectionEntityMother.createRejectedConnectionEntity();
         entity = rejectedConnectionEntityMother.withSpecificIds(entity, user1Id, user2Id);
         repository.save(entity);
 
-        var request = new GetRejectionBetweenUsersRequest(requestId, new UserIdDTO(user1Id), new UserIdDTO(user2Id), null);
+        var request = new GetRejectionBetweenUsersRequest(new UserIdDTO(user1Id), new UserIdDTO(user2Id));
 
         // Act
         var result = getRejectionBetweenUsersHandler.handle(request);
@@ -363,7 +323,6 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         var user1Id = UUID.randomUUID();
         var user2Id = UUID.randomUUID();
         var user3Id = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
 
         // Create multiple rejections
         var entity1 = rejectedConnectionEntityMother.createRejectedConnectionEntity();
@@ -379,7 +338,7 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         entity3 = rejectedConnectionEntityMother.withSpecificIds(entity3, user2Id, user3Id);
         repository.save(entity3);
 
-        var request = new GetRejectionBetweenUsersRequest(requestId, new UserIdDTO(user1Id), new UserIdDTO(user2Id), null);
+        var request = new GetRejectionBetweenUsersRequest(new UserIdDTO(user1Id), new UserIdDTO(user2Id));
 
         // Act
         var result = getRejectionBetweenUsersHandler.handle(request);
@@ -399,16 +358,14 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
         // Arrange
         var user1Id = UUID.randomUUID();
         var user2Id = UUID.randomUUID();
-        var requestId1 = UUID.randomUUID();
-        var requestId2 = UUID.randomUUID();
 
         // Create rejection from user1 to user2
         var entity = rejectedConnectionEntityMother.createRejectedConnectionEntity();
         entity = rejectedConnectionEntityMother.withSpecificIds(entity, user1Id, user2Id);
         repository.save(entity);
 
-        var request1 = new GetRejectionBetweenUsersRequest(requestId1, new UserIdDTO(user1Id), new UserIdDTO(user2Id), null);
-        var request2 = new GetRejectionBetweenUsersRequest(requestId2, new UserIdDTO(user2Id), new UserIdDTO(user1Id), null);
+        var request1 = new GetRejectionBetweenUsersRequest(new UserIdDTO(user1Id), new UserIdDTO(user2Id));
+        var request2 = new GetRejectionBetweenUsersRequest(new UserIdDTO(user2Id), new UserIdDTO(user1Id));
 
         // Act
         var result1 = getRejectionBetweenUsersHandler.handle(request1);

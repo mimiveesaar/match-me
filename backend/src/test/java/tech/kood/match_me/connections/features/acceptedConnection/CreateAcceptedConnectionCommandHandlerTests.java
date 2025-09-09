@@ -32,16 +32,12 @@ public class CreateAcceptedConnectionCommandHandlerTests extends ConnectionsTest
     void testHandleValidRequest_Success() {
         var acceptedByUserId = new UserIdDTO(UUID.randomUUID());
         var acceptedUserId = new UserIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
-        var request = new CreateAcceptedConnectionRequest(requestId, acceptedByUserId, acceptedUserId, tracingId);
+        var request = new CreateAcceptedConnectionRequest(acceptedByUserId, acceptedUserId);
         var result = createAcceptedConnectionHandler.handle(request);
 
         assertInstanceOf(CreateAcceptedConnectionResults.Success.class, result);
         var successResult = (CreateAcceptedConnectionResults.Success) result;
-        assertEquals(requestId, successResult.requestId());
-        assertEquals(tracingId, successResult.tracingId());
         assertNotNull(successResult.connectionIdDTO());
         assertNotNull(successResult.connectionIdDTO().value());
 
@@ -60,16 +56,12 @@ public class CreateAcceptedConnectionCommandHandlerTests extends ConnectionsTest
 
         var acceptedByUserId = new UserIdDTO(entity.getAcceptedByUserId());
         var acceptedUserId = new UserIdDTO(entity.getAcceptedUserId());
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
-        var request = new CreateAcceptedConnectionRequest(requestId, acceptedByUserId, acceptedUserId, tracingId);
+        var request = new CreateAcceptedConnectionRequest(acceptedByUserId, acceptedUserId);
         var result = createAcceptedConnectionHandler.handle(request);
 
         assertInstanceOf(CreateAcceptedConnectionResults.AlreadyExists.class, result);
         var alreadyExistsResult = (CreateAcceptedConnectionResults.AlreadyExists) result;
-        assertEquals(requestId, alreadyExistsResult.requestId());
-        assertEquals(tracingId, alreadyExistsResult.tracingId());
 
         // Verify no duplicate was created
         var connections = repository.findBetweenUsers(entity.getAcceptedByUserId(), entity.getAcceptedUserId());
@@ -84,7 +76,7 @@ public class CreateAcceptedConnectionCommandHandlerTests extends ConnectionsTest
         var acceptedByUserId = new UserIdDTO(UUID.randomUUID());
         var acceptedUserId = new UserIdDTO(UUID.randomUUID());
 
-        var request = new CreateAcceptedConnectionRequest(null, acceptedByUserId, acceptedUserId, "tracingId");
+        var request = new CreateAcceptedConnectionRequest(acceptedByUserId, acceptedUserId);
         var result = createAcceptedConnectionHandler.handle(request);
         assertInstanceOf(CreateAcceptedConnectionResults.InvalidRequest.class, result);
     }
@@ -92,9 +84,8 @@ public class CreateAcceptedConnectionCommandHandlerTests extends ConnectionsTest
     @Test
     void testHandleRequest_InvalidRequest_NullAcceptedByUser() {
         var acceptedUserId = new UserIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
 
-        var request = new CreateAcceptedConnectionRequest(requestId, null, acceptedUserId, "tracingId");
+        var request = new CreateAcceptedConnectionRequest(null, acceptedUserId);
         var result = createAcceptedConnectionHandler.handle(request);
         assertInstanceOf(CreateAcceptedConnectionResults.InvalidRequest.class, result);
     }
@@ -102,9 +93,8 @@ public class CreateAcceptedConnectionCommandHandlerTests extends ConnectionsTest
     @Test
     void testHandleRequest_InvalidRequest_NullAcceptedUser() {
         var acceptedByUserId = new UserIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
 
-        var request = new CreateAcceptedConnectionRequest(requestId, acceptedByUserId, null, "tracingId");
+        var request = new CreateAcceptedConnectionRequest(acceptedByUserId, null);
         var result = createAcceptedConnectionHandler.handle(request);
         assertInstanceOf(CreateAcceptedConnectionResults.InvalidRequest.class, result);
     }
@@ -112,10 +102,8 @@ public class CreateAcceptedConnectionCommandHandlerTests extends ConnectionsTest
     @Test
     void testHandleRequest_SameUserAsAcceptedByAndAcceptedUser() {
         var userId = new UserIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id-same-user";
 
-        var request = new CreateAcceptedConnectionRequest(requestId, userId, userId, tracingId);
+        var request = new CreateAcceptedConnectionRequest(userId, userId);
         var result = createAcceptedConnectionHandler.handle(request);
         assertInstanceOf(CreateAcceptedConnectionResults.InvalidRequest.class, result);
     }

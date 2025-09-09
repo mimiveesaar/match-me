@@ -5,14 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
-import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.connections.common.ConnectionsTestBase;
 import tech.kood.match_me.connections.features.pendingConnection.actions.getOutgoingRequests.api.GetOutgoingConnectionQueryHandler;
 import tech.kood.match_me.connections.features.pendingConnection.actions.getOutgoingRequests.api.GetOutgoingConnectionsRequest;
 import tech.kood.match_me.connections.features.pendingConnection.actions.getOutgoingRequests.api.GetOutgoingConnectionsResults;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.PendingConnectionRepository;
-import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.pendingConnectionEntity.PendingConnectionEntity;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.pendingConnectionEntity.PendingConnectionEntityFactory;
 
 import java.time.Instant;
@@ -49,14 +47,12 @@ public class GetOutgoingConnectionQueryHandlerTests extends ConnectionsTestBase 
         repository.save(pendingConnection2);
 
         // Act
-        var request = new GetOutgoingConnectionsRequest(requestId, senderId, tracingId);
+        var request = new GetOutgoingConnectionsRequest(senderId);
         var result = queryHandler.handle(request);
 
         // Assert
         assertInstanceOf(GetOutgoingConnectionsResults.Success.class, result);
         var successResult = (GetOutgoingConnectionsResults.Success) result;
-        assertEquals(requestId, successResult.requestId());
-        assertEquals(tracingId, successResult.tracingId());
         assertNotNull(successResult.outgoingRequests());
         assertEquals(2, successResult.outgoingRequests().size());
         
@@ -76,14 +72,12 @@ public class GetOutgoingConnectionQueryHandlerTests extends ConnectionsTestBase 
         var tracingId = "test-tracing-id";
 
         // Act
-        var request = new GetOutgoingConnectionsRequest(requestId, senderId, tracingId);
+        var request = new GetOutgoingConnectionsRequest(senderId);
         var result = queryHandler.handle(request);
 
         // Assert
         assertInstanceOf(GetOutgoingConnectionsResults.Success.class, result);
         var successResult = (GetOutgoingConnectionsResults.Success) result;
-        assertEquals(requestId, successResult.requestId());
-        assertEquals(tracingId, successResult.tracingId());
         assertNotNull(successResult.outgoingRequests());
         assertTrue(successResult.outgoingRequests().isEmpty());
     }
@@ -95,14 +89,12 @@ public class GetOutgoingConnectionQueryHandlerTests extends ConnectionsTestBase 
         var tracingId = "test-tracing-id";
 
         // Act - create request with null userId which should fail validation
-        var request = new GetOutgoingConnectionsRequest(requestId, null, tracingId);
+        var request = new GetOutgoingConnectionsRequest(null);
         var result = queryHandler.handle(request);
 
         // Assert
         assertInstanceOf(GetOutgoingConnectionsResults.InvalidRequest.class, result);
         var invalidRequestResult = (GetOutgoingConnectionsResults.InvalidRequest) result;
-        assertEquals(requestId, invalidRequestResult.requestId());
-        assertEquals(tracingId, invalidRequestResult.tracingId());
         assertNotNull(invalidRequestResult.error());
         assertFalse(invalidRequestResult.error().errors().isEmpty());
     }
