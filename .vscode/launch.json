@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ChatTestClient",
+            "request": "launch",
+            "mainClass": "tech.kood.match_me.chatspace.testclient.ChatTestClient",
+            "projectName": "match-me"
+        },
+        {
+            "type": "java",
+            "name": "ChatModuleApplication",
+            "request": "launch",
+            "mainClass": "tech.kood.match_me.ChatModuleApplication",
+            "projectName": "match-me"
+        },
+        {
+            "type": "java",
             "name": "Application",
             "request": "launch",
             "mainClass": "tech.kood.match_me.Application",
