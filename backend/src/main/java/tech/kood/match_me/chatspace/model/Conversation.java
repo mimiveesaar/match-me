@@ -22,7 +22,7 @@ import jakarta.persistence.Table;
 public class Conversation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID) // ✅ proper UUID generation
+    @GeneratedValue(strategy = GenerationType.UUID) 
     private UUID id;
 
     private LocalDateTime createdAt;

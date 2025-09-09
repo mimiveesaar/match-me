@@ -29,6 +29,7 @@ public class MessageService {
         this.conversationRepository = conversationRepository;
     }
 
+    // Saving messages
     public ChatMessageDTO saveMessage(ChatMessageDTO dto) {
 
         UUID senderUuid = UUID.fromString(dto.getSenderId().toString());

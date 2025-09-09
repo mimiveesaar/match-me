@@ -2,7 +2,6 @@ package tech.kood.match_me.chatspace.controller;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import tech.kood.match_me.chatspace.dto.ChatMessageDTO;
@@ -12,11 +11,9 @@ import tech.kood.match_me.chatspace.service.MessageService;
 public class ChatController {
 
     private final MessageService messageService;
-    private final SimpMessagingTemplate messagingTemplate;
-
-    public ChatController(MessageService messageService, SimpMessagingTemplate messagingTemplate) {
+    
+    public ChatController(MessageService messageService) {
         this.messageService = messageService;
-        this.messagingTemplate = messagingTemplate;
     }
 
     @MessageMapping("/chat.sendMessage")
