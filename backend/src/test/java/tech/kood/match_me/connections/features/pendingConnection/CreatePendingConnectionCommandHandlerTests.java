@@ -87,19 +87,6 @@ public class CreatePendingConnectionCommandHandlerTests extends ConnectionsTestB
     }
 
     @Test
-    void testHandleRequest_InvalidRequest_NullRequestId() {
-        var senderId = new UserIdDTO(UUID.randomUUID());
-        var targetId = new UserIdDTO(UUID.randomUUID());
-
-        var request = new ConnectionRequest(targetId, senderId);
-        var result = connectionRequestHandler.handle(request);
-
-        assertInstanceOf(ConnectionRequestResults.InvalidRequest.class, result);
-        var invalidResult = (ConnectionRequestResults.InvalidRequest) result;
-        assertNotNull(invalidResult.error());
-    }
-
-    @Test
     void testHandleRequest_InvalidRequest_NullSenderId() {
         var targetId = new UserIdDTO(UUID.randomUUID());
 

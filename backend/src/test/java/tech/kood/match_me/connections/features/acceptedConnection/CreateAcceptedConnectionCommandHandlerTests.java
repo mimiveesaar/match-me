@@ -69,18 +69,6 @@ public class CreateAcceptedConnectionCommandHandlerTests extends ConnectionsTest
         assertEquals(entity.getId(), connections.get().getId());
     }
 
-
-
-    @Test
-    void testHandleRequest_InvalidRequest_NullRequestId() {
-        var acceptedByUserId = new UserIdDTO(UUID.randomUUID());
-        var acceptedUserId = new UserIdDTO(UUID.randomUUID());
-
-        var request = new CreateAcceptedConnectionRequest(acceptedByUserId, acceptedUserId);
-        var result = createAcceptedConnectionHandler.handle(request);
-        assertInstanceOf(CreateAcceptedConnectionResults.InvalidRequest.class, result);
-    }
-
     @Test
     void testHandleRequest_InvalidRequest_NullAcceptedByUser() {
         var acceptedUserId = new UserIdDTO(UUID.randomUUID());

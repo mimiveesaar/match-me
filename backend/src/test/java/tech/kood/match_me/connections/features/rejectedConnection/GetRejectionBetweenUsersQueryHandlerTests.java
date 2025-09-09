@@ -118,23 +118,6 @@ public class GetRejectionBetweenUsersQueryHandlerTests extends ConnectionsTestBa
     }
 
     @Test
-    void testHandleRequest_InvalidRequest_NullRequestId() {
-        // Arrange
-        var user1Id = new UserIdDTO(UUID.randomUUID());
-        var user2Id = new UserIdDTO(UUID.randomUUID());
-
-        var request = new GetRejectionBetweenUsersRequest(user1Id, user2Id);
-
-        // Act
-        var result = getRejectionBetweenUsersHandler.handle(request);
-
-        // Assert
-        assertInstanceOf(GetRejectionBetweenUsersResults.InvalidRequest.class, result);
-        var invalidResult = (GetRejectionBetweenUsersResults.InvalidRequest) result;
-        assertNotNull(invalidResult.error());
-    }
-
-    @Test
     void testHandleRequest_InvalidRequest_NullUser1() {
         // Arrange
         var user2Id = new UserIdDTO(UUID.randomUUID());
