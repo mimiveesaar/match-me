@@ -1,11 +1,7 @@
 package tech.kood.match_me.profile.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import tech.kood.match_me.profile.dto.ProfileDTO;
 import tech.kood.match_me.profile.dto.ProfileViewDTO;
@@ -14,6 +10,7 @@ import tech.kood.match_me.profile.service.ProfileService;
 
 @RestController
 @RequestMapping("/api/profiles")
+@CrossOrigin(origins = {"http://localhost:3002", "http://localhost:3000"}) // Add this line
 public class ProfileController {
 
     private final ProfileService service;
@@ -42,6 +39,23 @@ public class ProfileController {
     public ResponseEntity<ProfileViewDTO> getMyProfile() {
         Profile profile = service.getMyProfile(); // no ID needed
         return ResponseEntity.ok(toViewDTO(profile));
+    }
+
+    // Add PUT method for updates
+    @PutMapping("/me")
+    public ResponseEntity<ProfileViewDTO> updateMyProfile(@RequestBody ProfileDTO dto) {
+        System.out.println("=== PUT /api/profiles/me called ===");
+        System.out.println("Received DTO: " + dto);
+
+        try {
+            Profile updatedProfile = service.saveOrUpdateProfile(dto);
+            System.out.println("Profile updated with ID: " + updatedProfile.getId());
+            return ResponseEntity.ok(toViewDTO(updatedProfile));
+        } catch (Exception e) {
+            System.out.println("Error updating profile: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     private ProfileViewDTO toViewDTO(Profile profile) {

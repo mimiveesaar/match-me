@@ -36,27 +36,26 @@ export default function MyProfile() {
     }
   };
 
-  const handleSaveProfile = async (updatedData: any) => {
-    try {
-      const response = await fetch('http://localhost:8080/api/profiles/me', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedData),
-      });
+const handleSaveProfile = async (updatedData: any) => {
+  try {
+    const response = await fetch('http://localhost:8080/api/profiles/me', {
+      method: 'POST', // Change this from PUT to POST
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedData),
+    });
 
-      if (response.ok) {
-        console.log('Profile updated successfully');
-        // Optionally refresh the profile data
-        fetchProfile();
-      } else {
-        console.error('Failed to update profile');
-      }
-    } catch (error) {
-      console.error('Error updating profile:', error);
+    if (response.ok) {
+      console.log('Profile updated successfully');
+      fetchProfile();
+    } else {
+      console.error('Failed to update profile');
     }
-  };
+  } catch (error) {
+    console.error('Error updating profile:', error);
+  }
+};
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;

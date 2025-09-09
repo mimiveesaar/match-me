@@ -1,7 +1,7 @@
 
 import type { Metadata } from 'next'
 import { IBM_Plex_Sans } from 'next/font/google'
-import './globals.css'
+import '/home/katikraavi/match-me/frontend/packages/components/public/style/styles.css'
 
 const ibmPlexSans = IBM_Plex_Sans({ 
   weight: ['400', '600'],

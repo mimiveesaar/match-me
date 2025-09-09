@@ -6,6 +6,8 @@ import React, { useState, useEffect } from "react";
 import { InterestsSection } from "../../organisms/InterestsSection/InterestsSection";
 import { MultiLineInputField } from "../../atoms/MultiLineInputField/MultiLineInputField";
 import { ProfileCard } from "../../organisms/ProfileCard/ProfileCard";
+import { Menu } from "../../organisms/Menu/menu";
+
 
 interface MyProfilePageProps {
   initialProfile?: any;
@@ -23,7 +25,7 @@ export const MyProfilePage = ({
   const [selectedInterests, setSelectedInterests] = useState<string[]>(
     initialProfile?.interestIds?.map(String) || []
   );
-
+  
   const [profile, setProfile] = useState({
     name: "Xylar of Nebulon-5",
     age: "458",
