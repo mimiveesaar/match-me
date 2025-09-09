@@ -4,7 +4,6 @@ import { MenuHeader } from "@atoms/Menu/Header/header";
 import { MenuBase } from "@atoms/Menu/MenuBase/menu_base";
 import { PageLink } from "@atoms/Menu/PageLink/pagelink";
 import { SignOutButton } from "@atoms/Menu/SignOut/signout";
-import React from "react";
 
 export const Menu = () => (
   <MenuBase className="flex flex-col h-full p-4">

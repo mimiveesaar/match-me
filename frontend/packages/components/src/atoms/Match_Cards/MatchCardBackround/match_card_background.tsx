@@ -10,7 +10,6 @@ interface CardProps {
 
 export const MatchCardBackground = ({
   children,
-  className = "",
   color = "minty",
 }: CardProps) => {
 
