@@ -61,7 +61,7 @@ public class LoginEndpoint {
         } else {
             // This should never happen, but just in case
             return ResponseEntity.status(500)
-                    .body(new LoginResults.SystemError(request.requestId(), "Unexpected error occurred", request.tracingId()));
+                    .body(new LoginResults.SystemError("Unexpected error occurred"));
         }
     }
 }

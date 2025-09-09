@@ -48,16 +48,16 @@ public class CreateRefreshTokenCommandHandlerImpl implements CreateRefreshTokenC
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new CreateRefreshTokenResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
+            return new CreateRefreshTokenResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
             var userId = userIdFactory.from(request.userId());
 
-            var userQueryResult = getUserByIdQueryHandler.handle(new GetUserByIdRequest(request.userId(), request.tracingId()));
+            var userQueryResult = getUserByIdQueryHandler.handle(new GetUserByIdRequest(request.userId()));
 
             if (userQueryResult instanceof GetUserByIdResults.UserNotFound) {
-                return new CreateRefreshTokenResults.UserNotFound(request.requestId(), request.userId(), request.tracingId());
+                return new CreateRefreshTokenResults.UserNotFound(request.userId());
             }
 
             RefreshToken refreshToken = refreshTokenFactory.createNew(userId);
@@ -65,12 +65,12 @@ public class CreateRefreshTokenCommandHandlerImpl implements CreateRefreshTokenC
             var refreshTokenEntity = refreshTokenMapper.toEntity(refreshToken);
             refreshTokenRepository.save(refreshTokenEntity);
 
-            var result = new CreateRefreshTokenResults.Success(request.requestId(), refreshTokenMapper.toDTO(refreshToken), request.tracingId());
+            var result = new CreateRefreshTokenResults.Success(refreshTokenMapper.toDTO(refreshToken));
             events.publishEvent(new RefreshTokenCreated(result.refreshToken()));
             return result;
 
         } catch (Exception e) {
-            return new CreateRefreshTokenResults.SystemError(request.requestId(), e.getMessage(), request.tracingId());
+            return new CreateRefreshTokenResults.SystemError(e.getMessage());
         }
     }
 }

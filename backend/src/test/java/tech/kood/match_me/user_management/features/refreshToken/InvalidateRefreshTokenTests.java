@@ -48,7 +48,7 @@ public class InvalidateRefreshTokenTests extends UserManagementTestBase {
         assert registerResult instanceof RegisterUserResults.Success;
 
         var userId = ((RegisterUserResults.Success) registerResult).userId();
-        var createTokenRequest = new CreateRefreshTokenRequest(UUID.randomUUID(), userId, null);
+        var createTokenRequest = new CreateRefreshTokenRequest(userId);
         var createTokenResult = createRefreshTokenCommandHandler.handle(createTokenRequest);
 
         assert createTokenResult instanceof CreateRefreshTokenResults.Success;
@@ -56,7 +56,7 @@ public class InvalidateRefreshTokenTests extends UserManagementTestBase {
         var successResult = (CreateRefreshTokenResults.Success) createTokenResult;
 
         // Act: Invalidate the refresh token
-        var invalidateRequest = new InvalidateRefreshTokenRequest(successResult.refreshToken().secret(), null);
+        var invalidateRequest = new InvalidateRefreshTokenRequest(successResult.refreshToken().secret());
         var invalidateResult = invalidateRefreshTokenHandler.handle(invalidateRequest);
 
         // Assert: Check if the token was invalidated successfully

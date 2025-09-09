@@ -46,10 +46,6 @@ public class CreateAccessTokenEndpoint {
 
     public ResponseEntity<CreateAccessTokenResults> getAccessToken(@RequestBody CreateAccessTokenRequest request) {
 
-        if (request.tracingId() == null || request.tracingId().isEmpty()) {
-            request = request.withTracingId(UUID.randomUUID().toString());
-        }
-
         var result = createAccessTokenCommandHandler.handle(request);
         return switch (result) {
             case CreateAccessTokenResults.Success success -> ResponseEntity.ok(success);
@@ -57,7 +53,7 @@ public class CreateAccessTokenEndpoint {
             case CreateAccessTokenResults.InvalidRequest invalidRequest ->
                     ResponseEntity.status(400).body(invalidRequest);
             case CreateAccessTokenResults.SystemError systemError -> ResponseEntity.status(500).body(systemError);
-            case null -> ResponseEntity.status(500).body(new CreateAccessTokenResults.SystemError(request.requestId(), "Unexpected error occurred", request.tracingId()));
+            case null -> ResponseEntity.status(500).body(new CreateAccessTokenResults.SystemError("Unexpected error occurred"));
         };
     }
 }

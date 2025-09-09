@@ -48,12 +48,12 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
         assert registerResult instanceof RegisterUserResults.Success;
 
         var userId = ((RegisterUserResults.Success) registerResult).userId();
-        var createTokenRequest = new CreateRefreshTokenRequest(userId, null);
+        var createTokenRequest = new CreateRefreshTokenRequest(userId);
         var createTokenResult = createRefreshTokenCommandHandler.handle(createTokenRequest);
         assert createTokenResult instanceof CreateRefreshTokenResults.Success;
 
         var refreshToken = ((CreateRefreshTokenResults.Success) createTokenResult).refreshToken();
-        var getAccessTokenRequest = new CreateAccessTokenRequest(refreshToken.secret(), null);
+        var getAccessTokenRequest = new CreateAccessTokenRequest(refreshToken.secret());
         var getAccessTokenResult = createAccessTokenHandler.handle(getAccessTokenRequest);
 
         assert getAccessTokenResult instanceof CreateAccessTokenResults.Success;
@@ -61,7 +61,7 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
         var jwt = ((CreateAccessTokenResults.Success) getAccessTokenResult).jwt();
         assert jwt != null;
 
-        var validateRequest = new ValidateAccessTokenRequest(jwt, null);
+        var validateRequest = new ValidateAccessTokenRequest(jwt);
         var validateResult = validateAccessTokenHandler.handle(validateRequest);
 
         assert validateResult instanceof ValidateAccessTokenResults.Success;
@@ -69,7 +69,7 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
 
     @Test
     public void shouldHandleInvalidAccessToken() {
-        var validateRequest = new ValidateAccessTokenRequest("invalid-token", null);
+        var validateRequest = new ValidateAccessTokenRequest("invalid-token");
         var validateResult = validateAccessTokenHandler.handle(validateRequest);
 
         assert validateResult instanceof ValidateAccessTokenResults.InvalidToken : "The handler should return an InvalidToken result for an invalid access token";

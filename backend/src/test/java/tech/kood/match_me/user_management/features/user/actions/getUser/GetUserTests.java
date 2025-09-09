@@ -43,7 +43,7 @@ public class GetUserTests extends UserManagementTestBase {
 
         var userId = ((RegisterUserResults.Success) registerResult).userId();
 
-        var getRequest = new GetUserByIdRequest(userId, null);
+        var getRequest = new GetUserByIdRequest(userId);
 
         var getResult = getUserByIdHandler.handle(getRequest);
         assert getResult instanceof GetUserByIdResults.Success;
@@ -57,8 +57,7 @@ public class GetUserTests extends UserManagementTestBase {
 
         var email = registerRequest.email();
 
-        var getRequest = new GetUserByEmailRequest(email,
-                UUID.randomUUID().toString());
+        var getRequest = new GetUserByEmailRequest(email);
 
         var getResult = getUserByEmailHandler.handle(getRequest);
         assert getResult instanceof GetUserByEmailResults.Success;
@@ -66,9 +65,7 @@ public class GetUserTests extends UserManagementTestBase {
 
     @Test
     void shouldReturnUserNotFoundForInvalidId() {
-        var getRequest = new GetUserByIdRequest(UUID.randomUUID(),
-                new UserIdDTO(UUID.randomUUID()),
-                UUID.randomUUID().toString());
+        var getRequest = new GetUserByIdRequest(new UserIdDTO(UUID.randomUUID()));
 
         var getResult = getUserByIdHandler.handle(getRequest);
         assert getResult instanceof GetUserByIdResults.UserNotFound;
@@ -76,7 +73,7 @@ public class GetUserTests extends UserManagementTestBase {
 
     @Test
     void shouldReturnUserNotFoundForInvalidEmail() {
-        var getRequest = new GetUserByEmailRequest(new EmailDTO("void@example.com"), null);
+        var getRequest = new GetUserByEmailRequest(new EmailDTO("void@example.com"));
         var getResult = getUserByEmailHandler.handle(getRequest);
         assert getResult instanceof GetUserByEmailResults.UserNotFound;
     }
@@ -91,8 +88,8 @@ public class GetUserTests extends UserManagementTestBase {
         assert res2 instanceof RegisterUserResults.Success;
         var email1 = req1.email();
         var email2 = req2.email();
-        var getRequest1 = new GetUserByEmailRequest(email1, null);
-        var getRequest2 = new GetUserByEmailRequest(email2, null);
+        var getRequest1 = new GetUserByEmailRequest(email1);
+        var getRequest2 = new GetUserByEmailRequest(email2);
         var getResult1 = getUserByEmailHandler.handle(getRequest1);
         var getResult2 = getUserByEmailHandler.handle(getRequest2);
         assert getResult1 instanceof GetUserByEmailResults.Success;
@@ -109,8 +106,8 @@ public class GetUserTests extends UserManagementTestBase {
         assert res2 instanceof RegisterUserResults.Success;
         var userId1 = ((RegisterUserResults.Success) res1).userId();
         var userId2 = ((RegisterUserResults.Success) res2).userId();
-        var getRequest1 = new GetUserByIdRequest(userId1, null);
-        var getRequest2 = new GetUserByIdRequest(userId2, null);
+        var getRequest1 = new GetUserByIdRequest(userId1);
+        var getRequest2 = new GetUserByIdRequest(userId2);
         var getResult1 = getUserByIdHandler.handle(getRequest1);
         var getResult2 = getUserByIdHandler.handle(getRequest2);
         assert getResult1 instanceof GetUserByIdResults.Success;

@@ -44,11 +44,7 @@ public class RegisterUserEndpoint {
                             schema = @Schema(implementation = RegisterUserResults.SystemError.class)))})
 
     public ResponseEntity<RegisterUserResults> registerUser(@RequestBody RegisterUserRequest request) {
-
-        if (request.tracingId() == null || request.tracingId().isEmpty()) {
-           request = request.withTracingId(UUID.randomUUID().toString());
-        }
-
+        
         try {
             var result = registerUserHandler.handle(request);
 
@@ -64,12 +60,10 @@ public class RegisterUserEndpoint {
 
         } catch (Exception e) {
             //This should never happen.
-            return ResponseEntity.internalServerError().body(new RegisterUserResults.SystemError(request.requestId(),
-                    e.getMessage(), request.tracingId()));
+            return ResponseEntity.internalServerError().body(new RegisterUserResults.SystemError(e.getMessage()));
         }
 
         //This should never happen.
-        return ResponseEntity.internalServerError().body(new RegisterUserResults.SystemError(request.requestId(),
-                "Internal server error", request.tracingId()));
+        return ResponseEntity.internalServerError().body(new RegisterUserResults.SystemError("Internal server error"));
     }
 }

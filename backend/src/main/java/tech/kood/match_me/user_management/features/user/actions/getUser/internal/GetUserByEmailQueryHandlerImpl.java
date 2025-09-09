@@ -36,22 +36,22 @@ public class GetUserByEmailQueryHandlerImpl implements GetUserByEmailQueryHandle
 
          // Handle input validation.
          if (!validationResults.isEmpty()) {
-             return new GetUserByEmailResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
+             return new GetUserByEmailResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
          }
 
          try {
              var userEntity = userRepository.findUserByEmail(request.email().toString());
 
              if (userEntity.isEmpty()) {
-                 return new GetUserByEmailResults.UserNotFound(request.requestId(), request.email(), request.tracingId());
+                 return new GetUserByEmailResults.UserNotFound(request.email());
              }
 
              var userDTO = userMapper.toDTO(userEntity.get());
-             return new GetUserByEmailResults.Success(request.requestId(), userDTO, request.tracingId());
+             return new GetUserByEmailResults.Success(userDTO);
          } catch (Exception e) {
              logger.error("Failed to retrieve userId by email: " + e.getMessage());
 
-             return new GetUserByEmailResults.SystemError(request.requestId(), e.getMessage(), request.tracingId());
+             return new GetUserByEmailResults.SystemError(e.getMessage());
          }
      }
 }

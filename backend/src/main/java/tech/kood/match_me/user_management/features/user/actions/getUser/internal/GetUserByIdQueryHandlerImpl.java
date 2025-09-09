@@ -37,21 +37,21 @@ public class GetUserByIdQueryHandlerImpl implements GetUserByIdQueryHandler {
 
         // Handle input validation.
         if (!validationResults.isEmpty()) {
-            return new GetUserByIdResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
+            return new GetUserByIdResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
             var userEntity = userRepository.findUserById(request.userId().value());
 
             if (userEntity.isEmpty()) {
-                return new GetUserByIdResults.UserNotFound(request.requestId(), request.userId(), request.tracingId());
+                return new GetUserByIdResults.UserNotFound(request.userId());
             }
 
             var userDTO = userMapper.toDTO(userEntity.get());
-            return new GetUserByIdResults.Success(request.requestId(), userDTO, request.tracingId());
+            return new GetUserByIdResults.Success(userDTO);
         } catch (Exception e) {
             logger.error("Failed to retrieve userId by ID: " + e.getMessage());
-            return new GetUserByIdResults.SystemError(request.requestId(), e.getMessage(), request.tracingId());
+            return new GetUserByIdResults.SystemError(e.getMessage());
         }
     }
 }

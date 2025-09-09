@@ -30,19 +30,19 @@ public final class GetRefreshTokenQueryQueryHandlerImpl implements GetRefreshTok
 
         var validationResults = validator.validate(request);
         if (!validationResults.isEmpty()) {
-            return new GetRefreshTokenResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
+            return new GetRefreshTokenResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
             var tokenEntity = refreshTokenRepository.findValidToken(request.secret().toString(), Instant.now());
             if (tokenEntity.isEmpty()) {
-                return new GetRefreshTokenResults.InvalidSecret(request.requestId(), request.tracingId());
+                return new GetRefreshTokenResults.InvalidSecret();
             }
 
             var result = refreshTokenMapper.toDTO(tokenEntity.get());
-            return new GetRefreshTokenResults.Success(request.requestId(), result, request.tracingId());
+            return new GetRefreshTokenResults.Success(result);
         } catch (Exception e) {
-            return new GetRefreshTokenResults.SystemError(request.requestId(), e.getMessage(), request.tracingId());
+            return new GetRefreshTokenResults.SystemError(e.getMessage());
         }
     }
 }

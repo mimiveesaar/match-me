@@ -12,4 +12,19 @@ import tech.kood.match_me.user_management.common.domain.api.PasswordDTO;
 @ApplicationLayer
 public record RegisterUserRequest(@Valid @NotNull @JsonProperty("email") EmailDTO email,
                                   @Valid @NotNull @JsonProperty("password") PasswordDTO password) {
+
+    public RegisterUserRequest withEmail(String email) {
+        return new RegisterUserRequest(new EmailDTO(email), password);
+    }
+
+    public RegisterUserRequest withEmail(EmailDTO email) {
+        return new RegisterUserRequest(email, password);
+    }
+
+    public RegisterUserRequest withPassword(String password) {
+        return new RegisterUserRequest(email, new PasswordDTO(password));
+    }
+    public RegisterUserRequest withPassword(PasswordDTO password) {
+        return new RegisterUserRequest(email, password);
+    }
 }

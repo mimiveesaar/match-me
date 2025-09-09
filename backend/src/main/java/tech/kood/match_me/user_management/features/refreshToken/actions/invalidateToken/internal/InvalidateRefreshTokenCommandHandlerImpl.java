@@ -36,26 +36,24 @@ public class InvalidateRefreshTokenCommandHandlerImpl implements InvalidateRefre
         var invalidationResults = validator.validate(request);
 
         if (!invalidationResults.isEmpty()) {
-            return new InvalidateRefreshTokenResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(invalidationResults), request.tracingId());
+            return new InvalidateRefreshTokenResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(invalidationResults));
         }
 
         try {
             var deletedToken = refreshTokenRepository.deleteToken(request.secret().toString());
 
             if (deletedToken.isEmpty()) {
-                return new InvalidateRefreshTokenResults.TokenNotFound(request.requestId(), request.tracingId());
+                return new InvalidateRefreshTokenResults.TokenNotFound();
             }
 
-            var result = new InvalidateRefreshTokenResults.Success(request.requestId(), request.tracingId());
+            var result = new InvalidateRefreshTokenResults.Success();
 
             var deletedTokenDTO = refreshTokenMapper.toDTO(deletedToken.get());
             events.publishEvent(new RefreshTokenInvalidatedEvent(deletedTokenDTO));
             return result;
         } catch (Exception e) {
             return new InvalidateRefreshTokenResults.SystemError(
-                    request.requestId(),
-                    e.getMessage(),
-                    request.tracingId()
+                    e.getMessage()
             );
         }
     }

@@ -56,14 +56,7 @@ public final class InvalidateRefreshTokenEndpoint {
     public ResponseEntity<InvalidateRefreshTokenResults> invalidateRefreshToken(
             @Valid @RequestBody InvalidateRefreshTokenRequest request) {
 
-
-        String tracingId = UUID.randomUUID().toString();
-        if (request.tracingId() != null && !request.tracingId().isEmpty()) {
-            tracingId = request.tracingId();
-        }
-
-        var internalRequest = new InvalidateRefreshTokenRequest(request.secret(), tracingId);
-        var result = invalidateRefreshTokenCommandHandler.handle(internalRequest);
+        var result = invalidateRefreshTokenCommandHandler.handle(request);
 
         return switch (result) {
             case InvalidateRefreshTokenResults.Success success -> ResponseEntity.ok(success);
@@ -73,7 +66,7 @@ public final class InvalidateRefreshTokenEndpoint {
                     ResponseEntity.status(400).body(invalidRequest);
             case InvalidateRefreshTokenResults.SystemError systemError -> ResponseEntity.status(500).body(systemError);
             case null ->
-                    ResponseEntity.status(500).body(new InvalidateRefreshTokenResults.SystemError(request.requestId(), "Unexpected error occurred", tracingId));
+                    ResponseEntity.status(500).body(new InvalidateRefreshTokenResults.SystemError("Unexpected error occurred"));
         };
     }
 }
