@@ -18,9 +18,9 @@ interface AccountFormSignUp2Props {
   isLoading?: boolean;
 }
 
-export const AccountFormSignUp2 = ({ 
-  onSubmit, 
-  isLoading = false 
+export const AccountFormSignUp2 = ({
+  onSubmit,
+  isLoading = false
 }: AccountFormSignUp2Props) => {
   const [planet, setPlanet] = useState("");
   const [lookingFor, setLookingFor] = useState("");
@@ -29,7 +29,7 @@ export const AccountFormSignUp2 = ({
 
   const handleSubmit = async () => {
     const formData = { planet, lookingFor, interests, bio };
-    
+
     if (onSubmit) {
       await onSubmit(formData);
     } else {
@@ -39,7 +39,10 @@ export const AccountFormSignUp2 = ({
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <CircleWrapper className="w-[600px] h-[600px] p-8 text-center bg-minty">
+      <CircleWrapper
+        className="w-[600px] h-[600px] p-8 text-center"
+        style={{ backgroundColor: '#D2F0EA' }}
+      >
         <div className="w-full px-6 py-8 text-center">
           <div className="w-full">
             <h2 className="text-lg font-semibold mb-6">New Account</h2>
@@ -71,7 +74,7 @@ export const AccountFormSignUp2 = ({
               onChange={(e) => setBio(e.target.value)}
               disabled={isLoading}
             />
-            <NextPageIconButton 
+            <NextPageIconButton
               onClick={handleSubmit}
               disabled={isLoading || !planet || !lookingFor}
             />

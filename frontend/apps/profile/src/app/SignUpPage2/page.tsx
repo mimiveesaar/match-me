@@ -18,7 +18,7 @@ export default function SignupPage() {
       console.log('Profile created:', result);
       
       // Redirect to profile page or next step
-      router.push(`/profile/${result.id}`);
+      router.push('/SignUpPage3');
     } catch (error) {
       console.error('Error creating profile:', error);
       // You might want to show an error message to the user

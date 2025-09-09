@@ -1,6 +1,6 @@
 "use client";
 
-import { CharacterCounter } from "@atoms/CharacterCounter/CharacterCounter";
+import { CharacterCounter } from "../../atoms/CharacterCounter/CharacterCounter";
 import React, { useState } from "react";
 
 const ALL_INTERESTS = [
