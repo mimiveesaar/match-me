@@ -51,17 +51,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String tracingId = UUID.randomUUID().toString();
-        
         try {
-            var validationRequest = new ValidateAccessTokenRequest(jwt, tracingId);
+            var validationRequest = new ValidateAccessTokenRequest(jwt);
             var validationResult = validateAccessTokenHandler.handle(validationRequest);
 
             if (validationResult instanceof ValidateAccessTokenResults.Success successResult) {
                 var userId = successResult.userId();
 
-                UUID getUserRequestId = UUID.randomUUID();
-                var getUserByIdRequest = new GetUserByIdRequest(getUserRequestId, userId, tracingId);
+                var getUserByIdRequest = new GetUserByIdRequest(userId);
                 var userResult = getUserByIdQueryHandler.handle(getUserByIdRequest);
 
                 if (userResult instanceof GetUserByIdResults.Success user) {

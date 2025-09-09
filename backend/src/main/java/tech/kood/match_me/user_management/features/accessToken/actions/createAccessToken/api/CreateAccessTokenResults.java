@@ -1,11 +1,8 @@
 package tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api;
 
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.jmolecules.architecture.layered.ApplicationLayer;
@@ -31,20 +28,15 @@ public sealed interface CreateAccessTokenResults
         CreateAccessTokenResults.SystemError {
 
 
-    record Success(@NotNull @JsonProperty("request_id") UUID requestId, @NotEmpty @JsonProperty("jwt") String jwt,
-                   @Nullable @JsonProperty("tracing_id") String tracingId) implements CreateAccessTokenResults {
+    record Success(@NotEmpty @JsonProperty("jwt") String jwt) implements CreateAccessTokenResults {
     }
 
-    record InvalidRequest(@NotNull @JsonProperty("request_id") UUID requestId,
-                          @NotNull @JsonProperty("error") InvalidInputErrorDTO error,
-                          @Nullable String tracingId) implements CreateAccessTokenResults {
+    record InvalidRequest(@NotNull @JsonProperty("error") InvalidInputErrorDTO error) implements CreateAccessTokenResults {
     }
 
-    record InvalidToken(@NotNull @JsonProperty("request_id") UUID requestId,
-                        @Nullable String tracingId) implements CreateAccessTokenResults {
+    record InvalidToken() implements CreateAccessTokenResults {
     }
 
-    record SystemError(@NotNull @JsonProperty("request_id") UUID requestId, @NotEmpty String message,
-                       @Nullable String tracingId) implements CreateAccessTokenResults {
+    record SystemError(@NotEmpty String message) implements CreateAccessTokenResults {
     }
 }

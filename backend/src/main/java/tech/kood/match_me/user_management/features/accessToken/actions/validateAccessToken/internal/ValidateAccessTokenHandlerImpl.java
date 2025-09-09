@@ -50,8 +50,7 @@ public class ValidateAccessTokenHandlerImpl implements ValidateAccessTokenHandle
 
         var validationResults = validator.validate(request);
         if (!validationResults.isEmpty()) {
-            return new ValidateAccessTokenResults.InvalidRequest(request.requestId(),
-                    InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
+            return new ValidateAccessTokenResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
@@ -67,14 +66,14 @@ public class ValidateAccessTokenHandlerImpl implements ValidateAccessTokenHandle
             var accessToken = accessTokenFactory.create(request.jwtToken(), userId);
             var accessTokenDTO = accessTokenMapper.toDTO(accessToken);
 
-            return new ValidateAccessTokenResults.Success(request.requestId(), accessTokenDTO, userIdDto, request.tracingId());
+            return new ValidateAccessTokenResults.Success(accessTokenDTO, userIdDto);
 
         } catch (JWTVerificationException | IllegalArgumentException e) {
             logger.warn("Invalid JWT: {}", e.getMessage());
-            return new ValidateAccessTokenResults.InvalidToken(request.requestId(), request.tracingId());
+            return new ValidateAccessTokenResults.InvalidToken();
         } catch (CheckedConstraintViolationException e) {
             logger.error("Invalid signed JWT: {}", e.getMessage());
-            return new ValidateAccessTokenResults.SystemError(request.requestId(), e.getMessage(), request.tracingId());
+            return new ValidateAccessTokenResults.SystemError(e.getMessage());
         }
     }
 }

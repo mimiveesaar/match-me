@@ -1,11 +1,8 @@
 package tech.kood.match_me.user_management.features.user.actions.login.api;
 
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -33,22 +30,15 @@ public sealed interface LoginResults
         LoginResults.InvalidRequest,
         LoginResults.SystemError {
 
-    record Success(@NotNull @JsonProperty("request_id") UUID requestId,
-                   @NotNull @Valid @JsonProperty("refresh_token") RefreshTokenDTO refreshToken,
-                   @Nullable @JsonProperty("tracing_id") String tracingId) implements LoginResults {
+    record Success(@NotNull @Valid @JsonProperty("refresh_token") RefreshTokenDTO refreshToken) implements LoginResults {
     }
 
-    record InvalidRequest(@NotNull @JsonProperty("request_id") UUID requestId,
-                          @NotNull @Valid @JsonProperty("error") InvalidInputErrorDTO error,
-                          @Nullable @JsonProperty("tracing_id") String tracingId) implements LoginResults {
+    record InvalidRequest(@NotNull @Valid @JsonProperty("error") InvalidInputErrorDTO error) implements LoginResults {
     }
 
-    record InvalidCredentials(@NotNull @JsonProperty("request_id") UUID requestId,
-                              @Nullable @JsonProperty("tracing_id") String tracingId) implements LoginResults {
+    record InvalidCredentials() implements LoginResults {
     }
 
-    record SystemError(@NotNull @JsonProperty("request_id") UUID requestId,
-                       @NotEmpty @JsonProperty("message") String message,
-                       @Nullable @JsonProperty("tracing_id") String tracingId) implements LoginResults {
+    record SystemError(@NotEmpty @JsonProperty("message") String message) implements LoginResults {
     }
 }

@@ -42,16 +42,13 @@ public final class RegisterUserCommandHandlerImpl implements RegisterUserCommand
 
         var validationResults = validator.validate(request);
         if (!validationResults.isEmpty()) {
-            return new RegisterUserResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.fromValidation(validationResults), request.tracingId());
+            return new RegisterUserResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
             // Check for email uniqueness.
             if (userRepository.emailExists(request.email().toString())) {
-                return new RegisterUserResults.EmailExists(
-                        request.requestId(),
-                        request.email(),
-                        request.tracingId());
+                return new RegisterUserResults.EmailExists(request.email());
             }
 
             var user = userFactory.newUser(request.email().value(), request.password().value());
@@ -60,17 +57,13 @@ public final class RegisterUserCommandHandlerImpl implements RegisterUserCommand
             // Save the userId entity to the database.
             userRepository.saveUser(userEntity);
 
-            var result = new RegisterUserResults.Success(
-                    request.requestId(),
-                    UserIdDTO.of(user.getId().toString()),
-                    request.tracingId()
-            );
+            var result = new RegisterUserResults.Success(UserIdDTO.of(user.getId().toString()));
 
             events.publishEvent(new UserRegisteredEvent(result.userId()));
             return result;
 
         } catch (Exception e) {
-            return new RegisterUserResults.SystemError(request.requestId(), e.getMessage(), request.tracingId());
+            return new RegisterUserResults.SystemError(e.getMessage());
         }
     }
 }
