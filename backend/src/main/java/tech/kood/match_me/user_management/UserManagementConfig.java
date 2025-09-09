@@ -25,10 +25,6 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-
-@EnableJpaRepositories(basePackages = "tech.kood.match_me.user_management.repository",
-        entityManagerFactoryRef = "userManagementEmf",
-        transactionManagerRef = "userManagementTransactionManager")
 @Configuration
 public class UserManagementConfig {
 
@@ -99,30 +95,6 @@ public class UserManagementConfig {
     @Qualifier("userManagementScheduledExecutorService")
     public ScheduledExecutorService scheduledExecutorService() {
         return Executors.newScheduledThreadPool(2); // Define 2 threads to run in parallel.
-    }
-
-    @Bean
-    public LocalContainerEntityManagerFactoryBean userManagementEmf(
-            @Qualifier("userManagementDataSource") DataSource dataSource) {
-
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setGenerateDdl(true);
-        vendorAdapter.setShowSql(true);
-
-        LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-        emf.setDataSource(dataSource);
-        emf.setPackagesToScan("tech.kood.match_me.user_management.model");
-        emf.setPersistenceUnitName("userManagementPU");
-        emf.setJpaVendorAdapter(vendorAdapter);
-
-        return emf;
-    }
-
-    @Bean(name = "userManagementTransactionManager")
-    public PlatformTransactionManager userManagementTransactionManager(
-            @Qualifier("userManagementEmf") LocalContainerEntityManagerFactoryBean userManagementEmf) {
-        return new JpaTransactionManager(java.util.Objects.requireNonNull(
-                userManagementEmf.getObject(), "EntityManagerFactory must not be null"));
     }
 
 

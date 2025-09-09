@@ -11,6 +11,11 @@ spring:
       username: chat
       password: chat
       driver-class-name: org.postgresql.Driver
+    profile:
+      jdbc-url: jdbc:postgresql://localhost:5432/profile
+      username: profile
+      password: profile
+      driver-class-name: org.postgresql.Driver
     user-management:
       jdbc-url: jdbc:postgresql://localhost:5432/user_management
       username: user_management
