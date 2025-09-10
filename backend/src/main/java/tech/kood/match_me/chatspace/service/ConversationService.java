@@ -1,5 +1,6 @@
 package tech.kood.match_me.chatspace.service;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -48,6 +49,27 @@ public class ConversationService {
 
         return conversation.getMessages().stream()
                 .sorted(Comparator.comparing(Message::getTimestamp))
+                .toList();
+    }
+
+    public List<Conversation> getUserConversationsSorted(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found: " + userId));
+
+        List<Conversation> conversations = conversationRepository.findByParticipantsWithData(user);
+
+        return conversations.stream()
+                .sorted((c1, c2) -> {
+                    LocalDateTime last1 = c1.getMessages().stream()
+                            .map(Message::getTimestamp)
+                            .max(Comparator.naturalOrder())
+                            .orElse(LocalDateTime.MIN);
+                    LocalDateTime last2 = c2.getMessages().stream()
+                            .map(Message::getTimestamp)
+                            .max(Comparator.naturalOrder())
+                            .orElse(LocalDateTime.MIN);
+                    return last2.compareTo(last1); 
+                })
                 .toList();
     }
 }
