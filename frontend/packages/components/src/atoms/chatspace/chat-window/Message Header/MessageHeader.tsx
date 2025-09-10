@@ -14,7 +14,7 @@ export const MessageHeader = ({
 }: MessageHeaderProps) => {
 
   return (
-    <div className={`flex justify-start text-black/80 chakra-petch text-xs pl-7 font-semibold`}>
+    <div className={`flex justify-start text-black/70 chakra-petch text-[10px] pl-7 font-semibold`}>
       <div className="mr-1">
         <span>{sender}</span>
       </div>
