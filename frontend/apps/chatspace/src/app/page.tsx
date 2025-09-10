@@ -11,17 +11,17 @@ import axios from "axios";
 
 
 export default function Chatspace() {
-  
-  const [users, setUsers] = useState<Array<{id: string, username: string, isOnline: boolean}>>([]);
+
+  const [users, setUsers] = useState<Array<{ id: string, username: string, isOnline: boolean }>>([]);
   const [conversationId, setConversationId] = useState<string | null>(null);
-  
+
   const search = typeof window !== 'undefined' ? window.location.search.toLowerCase() : '';
   const userId = search.includes('userb')
     ? '33333333-3333-3333-3333-333333333333'
     : '11111111-1111-1111-1111-111111111111';
-  
+
   const senderUsername = search.includes('userb') ? 'mike' : 'Henry';
-  
+
   const { messages, setMessages, sendMessage, handleTyping, otherUserTyping } = useChat(conversationId ?? '', userId, senderUsername);
   const [input, setInput] = useState('');
 
@@ -32,30 +32,46 @@ export default function Chatspace() {
   }
 
   useEffect(() => {
-    async function fetchConnections() {
+    async function fetchConnectionsAndConversations() {
       try {
-        console.log(`Fetching connections for ${senderUsername}:`, userId); // Debug log
-        const response = await axios.get(`http://localhost:8080/api/users/${userId}/connections`);
+        // 1️⃣ Fetch user connections
+        const response = await axios.get(
+          `http://localhost:8080/api/users/${userId}/connections`
+        );
         const connections = response.data.map((user: UserConnection) => ({
           id: user.id,
           username: user.username,
-          isOnline: user.status === 'ONLINE'
+          isOnline: user.status === "ONLINE",
         }));
-        console.log('Connections fetched:', connections); // Debug log
         setUsers(connections);
+
+        // 2️⃣ Fetch all conversations for the logged-in user
+        const convosRes = await axios.get(
+          `http://localhost:8080/api/conversations/user/${userId}`
+        );
+        const conversations = convosRes.data;
+
+        // 3️⃣ Automatically open the latest conversation
+        if (conversations.length > 0) {
+          const latestConvo = conversations[0]; // already sorted by latest message
+          setConversationId(latestConvo.id);
+          setMessages(latestConvo.messages || []);
+        }
+
       } catch (err) {
-        console.error('Failed to fetch connections:', err);
-        
-        // Temporary fallback for testing - remove when backend is ready
-        const mockConnections = userId === '11111111-1111-1111-1111-111111111111' 
-          ? [{ id: '33333333-3333-3333-3333-333333333333', username: 'mike', isOnline: true }]
-          : [{ id: '11111111-1111-1111-1111-111111111111', username: 'Henry', isOnline: true }];
+        console.error("Failed to fetch connections or conversations:", err);
+
+        // Fallback: mock connections
+        const mockConnections =
+          userId === "11111111-1111-1111-1111-111111111111"
+            ? [{ id: "33333333-3333-3333-3333-333333333333", username: "mike", isOnline: true }]
+            : [{ id: "11111111-1111-1111-1111-111111111111", username: "Henry", isOnline: true }];
         setUsers(mockConnections);
       }
     }
 
-    fetchConnections();
-  }, [userId, senderUsername]); // Added senderUsername to deps
+    fetchConnectionsAndConversations();
+  }, [userId, senderUsername]);
 
   return (
     <div className="flex flex-col h-screen bg-ivory">
