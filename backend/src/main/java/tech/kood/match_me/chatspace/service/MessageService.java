@@ -59,6 +59,7 @@ public class MessageService {
         // Update DTO with timestamp and type for broadcasting
         dto.setTimestamp(saved.getTimestamp());
         dto.setType("MESSAGE");
+        dto.setSenderUsername(sender.getUsername());
 
         return dto;
     }

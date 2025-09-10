@@ -1,6 +1,7 @@
 package tech.kood.match_me.chatspace.testclient;
 
 import java.lang.reflect.Type;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -30,7 +31,7 @@ public class ChatTestClient {
         // create STOMP client using SockJS
         WebSocketStompClient stompClient = new WebSocketStompClient(sockJsClient);
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-        
+
         // Connect to WebSocket endpoint
         StompSession session = stompClient
                 .connectAsync("ws://localhost:8080/ws", new StompSessionHandlerAdapter() {
@@ -55,7 +56,15 @@ public class ChatTestClient {
         });
 
         // Create a mock chat message
-        ChatMessageDTO mock = new ChatMessageDTO();
+        ChatMessageDTO mock = new ChatMessageDTO(
+                UUID.fromString("11111111-1111-1111-1111-111111111111"), // senderId
+                UUID.fromString("22222222-2222-2222-2222-222222222222"), // receiverId
+                "Hello, this is a mock message!", // content/message
+                "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", // conversation/chatId
+                LocalDateTime.now(), // timestamp
+                "MESSAGE", // type/status
+                false // isRead
+        );
         mock.setConversationId(UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"));
         mock.setSenderId(UUID.fromString("11111111-1111-1111-1111-111111111111"));
         mock.setContent("Hello, this is a mock message!");
