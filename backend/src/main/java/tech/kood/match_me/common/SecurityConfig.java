@@ -1,5 +1,7 @@
 package tech.kood.match_me.common;
 
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -8,6 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import tech.kood.match_me.user_management.features.accessToken.filters.JwtAuthenticationFilter;
 
@@ -23,14 +28,27 @@ public class SecurityConfig {
     }
 
     @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3001"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable()).cors(cors -> cors.disable())
+        http.csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS instead of disabling
                 .addFilterBefore(jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(management -> management.sessionCreationPolicy(
                 SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(requests -> {
-
                     // Allow unauthenticated access to authentication endpoints.
                     requests.requestMatchers(
                             "/api/*/user-management/auth/login",
@@ -43,6 +61,7 @@ public class SecurityConfig {
                     // endpoints for development
                     requests.requestMatchers("/api/profiles/**").permitAll();
                     requests.requestMatchers("/api/chatspace/**").permitAll();
+                    requests.requestMatchers("/api/users/**").permitAll(); // Add this for your connections endpoint
 
                     // Allow unauthenticated access to health checks and
                     // actuator endpoints.
@@ -63,5 +82,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 }
