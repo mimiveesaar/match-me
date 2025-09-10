@@ -34,7 +34,7 @@ export const ChatWindow = ({
 
   return (
     <Background>
-      <div className="flex flex-col space-y-2 p-4 overflow-y-auto h-full">
+      <div className="flex flex-col space-y-2 p-4 overflow-y-auto h-full pb-16">
         {messages.map((msg) => {
           const isCurrentUser = msg.senderId === currentUserId;
           const { time, date } = parseTimestampArray(msg.timestamp);

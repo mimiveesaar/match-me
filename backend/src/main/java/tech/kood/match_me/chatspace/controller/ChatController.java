@@ -28,13 +28,7 @@ public class ChatController {
             @DestinationVariable UUID conversationId,
             @Payload ChatMessageDto message) {
 
-        System.out.println("🟢 Received message at backend for conversation: " + conversationId);
-        System.out.println("Message payload: " + message.getContent() + " from sender: " + message.getSenderUsername());
-        System.out.println("Timestamp: " + message.getTimestamp());
-
         ChatMessageDto savedMessage = messageService.saveMessage(message);
-
-        System.out.println("🟢 Message saved with timestamp: " + savedMessage.getTimestamp());
 
         // broadcast to only that conversation
         messagingTemplate.convertAndSend(

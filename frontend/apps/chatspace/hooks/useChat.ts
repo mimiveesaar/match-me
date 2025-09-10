@@ -43,13 +43,16 @@ export const useChat = (conversationId: string, userId: string, senderUsername: 
         });
 
       // Subscribe to typing events
-      typingSubRef.current = client.subscribe('/topic/typing', (msg: IMessage) => {
-        const body = JSON.parse(msg.body) as ChatMessage;
-        if (body.conversationId === conversationId && body.senderId !== userId) {
-          console.log('Typing event received:', body.typing);
-          setOtherUserTyping(body.typing ?? false);
+      typingSubRef.current = client.subscribe(
+        `/topic/conversations/${conversationId}/typing`,
+        (msg: IMessage) => {
+          const body = JSON.parse(msg.body) as ChatMessage;
+          if (body.senderId !== userId) {
+            console.log('Typing event received:', body.typing);
+            setOtherUserTyping(body.typing ?? false);
+          }
         }
-      });
+      );
     };
 
     client.activate();
@@ -103,7 +106,7 @@ export const useChat = (conversationId: string, userId: string, senderUsername: 
     console.log(`Sending typing event: ${isTyping}`);
 
     clientRef.current.publish({
-      destination: '/app/chat.typing',
+      destination: `/app/chat/${conversationId}/typing`,
       body: JSON.stringify(typingMessage),
     });
   };
