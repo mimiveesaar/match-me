@@ -5,11 +5,19 @@ import { SpeechBubbleWithHeader } from "@molecules/chatspace/chat-window/speech-
 import { TypingIndicator } from "@atoms/chatspace/chat-window/TypingIndicator/TypingIndicator";
 import { ChatWindowProps } from "@/types";
 
+import { useEffect, useRef } from "react";
+
 export const ChatWindow = ({
   messages,
   currentUserId,
-  otherUserTyping = false, // receive this from parent
+  otherUserTyping = false,
 }: ChatWindowProps & { otherUserTyping?: boolean }) => {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to bottom whenever messages update
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   // Parse timestamp and return both time and date
   const parseTimestampArray = (arr?: number[]) => {
@@ -26,7 +34,7 @@ export const ChatWindow = ({
 
   return (
     <Background>
-      <div className="flex flex-col space-y-2 p-4">
+      <div className="flex flex-col space-y-2 p-4 overflow-y-auto h-full">
         {messages.map((msg) => {
           const isCurrentUser = msg.senderId === currentUserId;
           const { time, date } = parseTimestampArray(msg.timestamp);
@@ -54,6 +62,9 @@ export const ChatWindow = ({
             <TypingIndicator />
           </div>
         )}
+
+        {/* Dummy div to scroll into view */}
+        <div ref={messagesEndRef} />
       </div>
     </Background>
   );
