@@ -11,16 +11,17 @@ import axios from "axios";
 
 
 export default function Chatspace() {
-
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<Array<{id: string, username: string, isOnline: boolean}>>([]);
   const [conversationId, setConversationId] = useState<string | null>(null);
-
-
-  const userId = typeof window !== 'undefined' && window.location.search.includes('userB')
+  
+  const search = typeof window !== 'undefined' ? window.location.search.toLowerCase() : '';
+  const userId = search.includes('userb')
     ? '33333333-3333-3333-3333-333333333333'
     : '11111111-1111-1111-1111-111111111111';
-
-  const { messages, setMessages, sendMessage, handleTyping, otherUserTyping } = useChat(conversationId ?? '', userId);
+  
+  const senderUsername = search.includes('userb') ? 'mike' : 'Henry';
+  
+  const { messages, setMessages, sendMessage, handleTyping, otherUserTyping } = useChat(conversationId ?? '', userId, senderUsername);
   const [input, setInput] = useState('');
 
   interface UserConnection {
@@ -32,23 +33,28 @@ export default function Chatspace() {
   useEffect(() => {
     async function fetchConnections() {
       try {
-        // Point to your Spring Boot backend (usually port 8080)
+        console.log(`Fetching connections for ${senderUsername}:`, userId); // Debug log
         const response = await axios.get(`http://localhost:8080/api/users/${userId}/connections`);
         const connections = response.data.map((user: UserConnection) => ({
           id: user.id,
           username: user.username,
           isOnline: user.status === 'ONLINE'
         }));
+        console.log('Connections fetched:', connections); // Debug log
         setUsers(connections);
       } catch (err) {
         console.error('Failed to fetch connections:', err);
+        
+        // Temporary fallback for testing - remove when backend is ready
+        const mockConnections = userId === '11111111-1111-1111-1111-111111111111' 
+          ? [{ id: '33333333-3333-3333-3333-333333333333', username: 'mike', isOnline: true }]
+          : [{ id: '11111111-1111-1111-1111-111111111111', username: 'Henry', isOnline: true }];
+        setUsers(mockConnections);
       }
     }
 
     fetchConnections();
-  }, [userId]);
-
-
+  }, [userId, senderUsername]); // Added senderUsername to deps
 
   return (
     <div className="flex flex-col h-screen bg-ivory">
@@ -65,9 +71,9 @@ export default function Chatspace() {
         </aside>
 
         {/* Chat section */}
-        <section className="flex flex-col flex-1">
+        <section className="flex flex-col flex-1 relative">
           {/* Chat messages */}
-          <div className="flex-1 overflow-y-auto mt-32">
+          <div className="flex-1 mt-32">
             <ChatWindow messages={messages} currentUserId={userId} otherUserTyping={otherUserTyping} />
           </div>
 
@@ -91,12 +97,14 @@ export default function Chatspace() {
             users={users}
             onSelectUser={async (otherUserId) => {
               try {
+                console.log(`Opening conversation: ${userId} -> ${otherUserId}`); // Debug log
                 const response = await axios.post(`http://localhost:8080/api/conversations/open`, null, {
                   params: { userId, otherUserId },
                 });
                 const convo = response.data;
+                console.log('Conversation opened:', convo); // Debug log
                 setConversationId(convo.id);
-                setMessages(convo.messages);
+                setMessages(convo.messages || []); // Ensure messages is array
               } catch (err) {
                 console.error('Failed to open conversation:', err);
               }

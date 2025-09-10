@@ -3,7 +3,7 @@ import { Client, IMessage, StompSubscription } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { ChatMessage } from '@hooks/types';
 
-export const useChat = (conversationId: string, userId: string) => {
+export const useChat = (conversationId: string, userId: string, senderUsername: string) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [otherUserTyping, setOtherUserTyping] = useState(false);
 
@@ -13,6 +13,13 @@ export const useChat = (conversationId: string, userId: string) => {
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    // Only connect WebSocket when we have a conversation
+    if (!conversationId) {
+      console.log('No conversation selected, skipping WebSocket connection');
+      return;
+    }
+
+    console.log(`Connecting WebSocket for ${senderUsername} to conversation ${conversationId}`);
 
     const client = new Client({
       webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
@@ -21,15 +28,15 @@ export const useChat = (conversationId: string, userId: string) => {
     });
 
     client.onConnect = () => {
-      console.log('Connected to WebSocket');
+      console.log(`WebSocket connected for ${senderUsername}`);
 
       // Subscribe to messages
       messagesSubRef.current = client.subscribe(
         `/topic/conversations/${conversationId}`,
         (msg: IMessage) => {
           const body = JSON.parse(msg.body) as ChatMessage;
-          console.log('📥 Received message from backend:', body);
-          
+          console.log('Received message:', body);
+
           if (body.type === 'MESSAGE') {
             setMessages((prev) => [...prev, body]);
           }
@@ -39,7 +46,7 @@ export const useChat = (conversationId: string, userId: string) => {
       typingSubRef.current = client.subscribe('/topic/typing', (msg: IMessage) => {
         const body = JSON.parse(msg.body) as ChatMessage;
         if (body.conversationId === conversationId && body.senderId !== userId) {
-          console.log('📥 typing received in other tab', body);
+          console.log('Typing event received:', body.typing);
           setOtherUserTyping(body.typing ?? false);
         }
       });
@@ -49,28 +56,33 @@ export const useChat = (conversationId: string, userId: string) => {
     clientRef.current = client;
 
     return () => {
+      console.log(`Disconnecting WebSocket for ${senderUsername}`);
       messagesSubRef.current?.unsubscribe();
+      typingSubRef.current?.unsubscribe();
       if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
       client.deactivate();
     };
-  }, [conversationId, userId]);
+  }, [conversationId, userId, senderUsername]); // Added senderUsername to deps
 
   const sendMessage = (content: string) => {
-    if (!clientRef.current || !clientRef.current.connected) return;
+    if (!clientRef.current || !clientRef.current.connected) {
+      console.error('Cannot send message: WebSocket not connected');
+      return;
+    }
 
     const message: ChatMessage = {
       conversationId,
       senderId: userId,
-      senderUsername: 'Henry',
+      senderUsername,
       content,
       type: 'MESSAGE',
       timestamp: [],
     };
 
-    console.log('📤 Sending message to backend:', message);
+    console.log('Sending message:', message);
 
     clientRef.current.publish({
-      destination: `/app/chat/${conversationId}/sendMessage`, // <-- updated
+      destination: `/app/chat/${conversationId}/sendMessage`,
       body: JSON.stringify(message),
     });
   };
@@ -81,14 +93,14 @@ export const useChat = (conversationId: string, userId: string) => {
     const typingMessage: ChatMessage = {
       conversationId,
       senderId: userId,
-      senderUsername: 'Henry',
+      senderUsername,
       content: '',
       type: 'TYPING',
       timestamp: [],
       typing: isTyping,
     };
 
-    console.log('Sending typing event', isTyping);
+    console.log(`Sending typing event: ${isTyping}`);
 
     clientRef.current.publish({
       destination: '/app/chat.typing',
@@ -96,7 +108,6 @@ export const useChat = (conversationId: string, userId: string) => {
     });
   };
 
-  // Call this on every keystroke
   const handleTyping = () => {
     sendTyping(true);
 
@@ -104,7 +115,7 @@ export const useChat = (conversationId: string, userId: string) => {
 
     typingTimeoutRef.current = setTimeout(() => {
       sendTyping(false);
-    }, 1000); // stop typing after 1s of inactivity
+    }, 1000);
   };
 
   return { messages, setMessages, sendMessage, handleTyping, otherUserTyping };
