@@ -8,7 +8,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-import tech.kood.match_me.chatspace.dto.ChatMessageDTO;
+import tech.kood.match_me.chatspace.dto.ChatMessageDto;
 import tech.kood.match_me.chatspace.service.MessageService;
 
 
@@ -27,9 +27,9 @@ public class ChatController {
     @MessageMapping("/chat/{conversationId}/sendMessage")
     public void sendMessage(
             @DestinationVariable UUID conversationId,
-            @Payload ChatMessageDTO message) {
+            @Payload ChatMessageDto message) {
 
-        ChatMessageDTO savedMessage = messageService.saveMessage(message);
+        ChatMessageDto savedMessage = messageService.saveMessage(message);
 
         // broadcast to only that conversation
         messagingTemplate.convertAndSend(
@@ -42,7 +42,7 @@ public class ChatController {
     @MessageMapping("/chat/{conversationId}/typing")
     public void typing(
             @DestinationVariable UUID conversationId,
-            @Payload ChatMessageDTO typingMessage) {
+            @Payload ChatMessageDto typingMessage) {
 
         typingMessage.setType("TYPING");
 

@@ -6,5 +6,5 @@ import java.util.UUID;
 public record ConversationDto(
         UUID id,
         List<String> participants,
-        List<ChatMessageDTO> messages
+        List<ChatMessageDto> messages
 ) {}

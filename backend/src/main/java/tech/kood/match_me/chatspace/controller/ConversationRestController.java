@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import tech.kood.match_me.chatspace.dto.ChatMessageDTO;
+import tech.kood.match_me.chatspace.dto.ChatMessageDto;
 import tech.kood.match_me.chatspace.dto.ConversationDto;
 import tech.kood.match_me.chatspace.model.Conversation;
 import tech.kood.match_me.chatspace.model.User;
@@ -33,7 +33,7 @@ public class ConversationRestController {
                 conversation.getParticipants().stream().map(User::getUsername).toList(),
                 conversationService.getMessages(conversation.getId())
                         .stream()
-                        .map(m -> new ChatMessageDTO(
+                        .map(m -> new ChatMessageDto(
                         conversation.getId(),
                         m.getSender().getId(),
                         m.getSender().getUsername(),

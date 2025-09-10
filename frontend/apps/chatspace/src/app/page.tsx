@@ -13,12 +13,15 @@ import axios from "axios";
 export default function Chatspace() {
 
   const [users, setUsers] = useState([]);
-  const conversationId = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'; // replace with actual conversation UUID
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<any[]>([]);
+
+
   const userId = typeof window !== 'undefined' && window.location.search.includes('userB')
     ? '22222222-2222-2222-2222-222222222222'
     : '11111111-1111-1111-1111-111111111111';
 
-  const { messages, sendMessage, handleTyping, otherUserTyping } = useChat(conversationId, userId);
+  const { sendMessage, handleTyping, otherUserTyping } = useChat(conversationId ?? '', userId);
   const [input, setInput] = useState('');
 
   interface UserConnection {
@@ -85,7 +88,21 @@ export default function Chatspace() {
 
         {/* Right sidebar */}
         <aside className="w-72 mt-32 flex flex-col">
-          <ConnectionsMenu users={users} />
+          <ConnectionsMenu
+            users={users}
+            onSelectUser={async (otherUserId) => {
+              try {
+                const response = await axios.post(`http://localhost:8080/api/conversations/open`, null, {
+                  params: { userId, otherUserId },
+                });
+                const convo = response.data;
+                setConversationId(convo.id);
+                setMessages(convo.messages);
+              } catch (err) {
+                console.error('Failed to open conversation:', err);
+              }
+            }}
+          />
         </aside>
       </main>
     </div>

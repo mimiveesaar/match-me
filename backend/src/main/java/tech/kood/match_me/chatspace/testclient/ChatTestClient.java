@@ -19,7 +19,7 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
-import tech.kood.match_me.chatspace.dto.ChatMessageDTO;
+import tech.kood.match_me.chatspace.dto.ChatMessageDto;
 
 public class ChatTestClient {
 
@@ -43,20 +43,20 @@ public class ChatTestClient {
             @Override
             @NonNull
             public Type getPayloadType(@NonNull StompHeaders headers) {
-                return ChatMessageDTO.class;
+                return ChatMessageDto.class;
             }
 
             @Override
             public void handleFrame(@NonNull StompHeaders headers, @Nullable Object payload) {
                 if (payload != null) {
-                    ChatMessageDTO message = (ChatMessageDTO) payload;
+                    ChatMessageDto message = (ChatMessageDto) payload;
                     System.out.println("Received message: " + message.getContent());
                 }
             }
         });
 
         // Create a mock chat message
-        ChatMessageDTO mock = new ChatMessageDTO(
+        ChatMessageDto mock = new ChatMessageDto(
                 UUID.fromString("11111111-1111-1111-1111-111111111111"), // senderId
                 UUID.fromString("22222222-2222-2222-2222-222222222222"), // receiverId
                 "Hello, this is a mock message!", // content/message
