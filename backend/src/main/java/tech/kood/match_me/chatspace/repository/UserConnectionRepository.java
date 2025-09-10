@@ -10,7 +10,8 @@ import tech.kood.match_me.chatspace.model.UserConnection;
 
 public interface UserConnectionRepository extends JpaRepository<UserConnection, UUID> {
 
-     @Query("SELECT uc FROM UserConnection uc JOIN FETCH uc.connectedUser WHERE uc.user.id = :userId")
+    @Query("SELECT uc FROM UserConnection uc JOIN FETCH uc.connectedUser JOIN FETCH uc.user "
+            + "WHERE uc.user.id = :userId OR uc.connectedUser.id = :userId")
     List<UserConnection> findByUserIdWithConnectedUser(UUID userId);
 
 }
