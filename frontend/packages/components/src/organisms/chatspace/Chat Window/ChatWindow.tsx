@@ -11,8 +11,6 @@ export const ChatWindow = ({
   otherUserTyping = false, // receive this from parent
 }: ChatWindowProps & { otherUserTyping?: boolean }) => {
 
-  console.log(messages);
-
   // Parse timestamp and return both time and date
   const parseTimestampArray = (arr?: number[]) => {
     if (!arr || arr.length < 6) return { time: "", date: "" };

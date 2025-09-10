@@ -13,6 +13,7 @@ export const useChat = (conversationId: string, userId: string) => {
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+
     const client = new Client({
       webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
       debug: (str) => console.log(str),
@@ -23,12 +24,16 @@ export const useChat = (conversationId: string, userId: string) => {
       console.log('Connected to WebSocket');
 
       // Subscribe to messages
-      messagesSubRef.current = client.subscribe('/topic/messages', (msg: IMessage) => {
-        const body = JSON.parse(msg.body) as ChatMessage;
-        if (body.conversationId === conversationId && body.type === 'MESSAGE') {
-          setMessages((prev) => [...prev, body]);
-        }
-      });
+      messagesSubRef.current = client.subscribe(
+        `/topic/conversations/${conversationId}`,
+        (msg: IMessage) => {
+          const body = JSON.parse(msg.body) as ChatMessage;
+          console.log('📥 Received message from backend:', body);
+          
+          if (body.type === 'MESSAGE') {
+            setMessages((prev) => [...prev, body]);
+          }
+        });
 
       // Subscribe to typing events
       typingSubRef.current = client.subscribe('/topic/typing', (msg: IMessage) => {
@@ -56,14 +61,16 @@ export const useChat = (conversationId: string, userId: string) => {
     const message: ChatMessage = {
       conversationId,
       senderId: userId,
-      senderName: 'Henry',
+      senderUsername: 'Henry',
       content,
       type: 'MESSAGE',
-      timestamp: '',
+      timestamp: [],
     };
 
+    console.log('📤 Sending message to backend:', message);
+
     clientRef.current.publish({
-      destination: '/app/chat.sendMessage',
+      destination: `/app/chat/${conversationId}/sendMessage`, // <-- updated
       body: JSON.stringify(message),
     });
   };
@@ -74,10 +81,10 @@ export const useChat = (conversationId: string, userId: string) => {
     const typingMessage: ChatMessage = {
       conversationId,
       senderId: userId,
-      senderName: 'Henry',
+      senderUsername: 'Henry',
       content: '',
       type: 'TYPING',
-      timestamp: '',
+      timestamp: [],
       typing: isTyping,
     };
 
@@ -100,5 +107,5 @@ export const useChat = (conversationId: string, userId: string) => {
     }, 1000); // stop typing after 1s of inactivity
   };
 
-  return { messages, sendMessage, handleTyping, otherUserTyping };
+  return { messages, setMessages, sendMessage, handleTyping, otherUserTyping };
 };

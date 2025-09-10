@@ -1,9 +1,9 @@
 export interface ChatMessage {
   conversationId: string;
   senderId: string;
-  senderName: string;
+  senderUsername: string;
   content: string;
-  timestamp: string;
+  timestamp: number[];
   type: string;
   typing?: boolean;
 }
