@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.connections.common.ConnectionsTestBase;
+import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.createConnection.api.CreateAcceptedConnectionCommandHandler;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.createConnection.api.CreateAcceptedConnectionRequest;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.createConnection.api.CreateAcceptedConnectionResults;
@@ -32,8 +33,9 @@ public class CreateAcceptedConnectionCommandHandlerTests extends ConnectionsTest
     void testHandleValidRequest_Success() {
         var acceptedByUserId = new UserIdDTO(UUID.randomUUID());
         var acceptedUserId = new UserIdDTO(UUID.randomUUID());
+        var connectionId = new ConnectionIdDTO(UUID.randomUUID());
 
-        var request = new CreateAcceptedConnectionRequest(acceptedByUserId, acceptedUserId);
+        var request = new CreateAcceptedConnectionRequest(connectionId, acceptedByUserId, acceptedUserId);
         var result = createAcceptedConnectionHandler.handle(request);
 
         assertInstanceOf(CreateAcceptedConnectionResults.Success.class, result);
@@ -56,8 +58,9 @@ public class CreateAcceptedConnectionCommandHandlerTests extends ConnectionsTest
 
         var acceptedByUserId = new UserIdDTO(entity.getAcceptedByUserId());
         var acceptedUserId = new UserIdDTO(entity.getAcceptedUserId());
+        var connectionId = new ConnectionIdDTO(UUID.randomUUID());
 
-        var request = new CreateAcceptedConnectionRequest(acceptedByUserId, acceptedUserId);
+        var request = new CreateAcceptedConnectionRequest(connectionId, acceptedByUserId, acceptedUserId);
         var result = createAcceptedConnectionHandler.handle(request);
 
         assertInstanceOf(CreateAcceptedConnectionResults.AlreadyExists.class, result);
@@ -72,8 +75,9 @@ public class CreateAcceptedConnectionCommandHandlerTests extends ConnectionsTest
     @Test
     void testHandleRequest_InvalidRequest_NullAcceptedByUser() {
         var acceptedUserId = new UserIdDTO(UUID.randomUUID());
+        var connectionId = new ConnectionIdDTO(UUID.randomUUID());
 
-        var request = new CreateAcceptedConnectionRequest(null, acceptedUserId);
+        var request = new CreateAcceptedConnectionRequest(connectionId, null, acceptedUserId);
         var result = createAcceptedConnectionHandler.handle(request);
         assertInstanceOf(CreateAcceptedConnectionResults.InvalidRequest.class, result);
     }
@@ -81,8 +85,9 @@ public class CreateAcceptedConnectionCommandHandlerTests extends ConnectionsTest
     @Test
     void testHandleRequest_InvalidRequest_NullAcceptedUser() {
         var acceptedByUserId = new UserIdDTO(UUID.randomUUID());
+        var connectionId = new ConnectionIdDTO(UUID.randomUUID());
 
-        var request = new CreateAcceptedConnectionRequest(acceptedByUserId, null);
+        var request = new CreateAcceptedConnectionRequest(connectionId, acceptedByUserId, null);
         var result = createAcceptedConnectionHandler.handle(request);
         assertInstanceOf(CreateAcceptedConnectionResults.InvalidRequest.class, result);
     }
@@ -90,8 +95,9 @@ public class CreateAcceptedConnectionCommandHandlerTests extends ConnectionsTest
     @Test
     void testHandleRequest_SameUserAsAcceptedByAndAcceptedUser() {
         var userId = new UserIdDTO(UUID.randomUUID());
+        var connectionId = new ConnectionIdDTO(UUID.randomUUID());
 
-        var request = new CreateAcceptedConnectionRequest(userId, userId);
+        var request = new CreateAcceptedConnectionRequest(connectionId, userId, userId);
         var result = createAcceptedConnectionHandler.handle(request);
         assertInstanceOf(CreateAcceptedConnectionResults.InvalidRequest.class, result);
     }

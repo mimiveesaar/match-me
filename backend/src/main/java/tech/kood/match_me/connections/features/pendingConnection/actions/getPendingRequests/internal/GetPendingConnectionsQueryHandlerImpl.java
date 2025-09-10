@@ -1,12 +1,12 @@
-package tech.kood.match_me.connections.features.pendingConnection.actions.getPendingConnections.internal;
+package tech.kood.match_me.connections.features.pendingConnection.actions.getPendingRequests.internal;
 
 import jakarta.validation.Validator;
 import org.springframework.stereotype.Service;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.connections.features.pendingConnection.actions.getPendingConnections.api.GetPendingConnectionsQueryHandler;
-import tech.kood.match_me.connections.features.pendingConnection.actions.getPendingConnections.api.GetPendingConnectionsRequest;
-import tech.kood.match_me.connections.features.pendingConnection.actions.getPendingConnections.api.GetPendingConnectionsResults;
+import tech.kood.match_me.connections.features.pendingConnection.actions.getPendingRequests.api.GetPendingConnectionsQueryHandler;
+import tech.kood.match_me.connections.features.pendingConnection.actions.getPendingRequests.api.GetPendingConnectionsRequest;
+import tech.kood.match_me.connections.features.pendingConnection.actions.getPendingRequests.api.GetPendingConnectionsResults;
 import tech.kood.match_me.connections.features.pendingConnection.domain.api.PendingConnectionDTO;
 import tech.kood.match_me.connections.features.pendingConnection.internal.mapper.PendingConnectionMapper;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.PendingConnectionRepository;

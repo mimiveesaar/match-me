@@ -32,17 +32,18 @@ public class GetIncomingConnectionQueryHandlerTests extends ConnectionsTestBase 
     private PendingConnectionEntityFactory pendingConnectionEntityFactory;
 
     @Test
-    void testHandleValidRequest_ReturnsIncomingConnections() throws CheckedConstraintViolationException {
+    void testHandleValidRequest_ReturnsIncomingConnections()
+            throws CheckedConstraintViolationException {
         // Arrange
         var targetId = new UserIdDTO(UUID.randomUUID());
         var senderId1 = new UserIdDTO(UUID.randomUUID());
         var senderId2 = new UserIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
         // Create test data - two pending connections with the same target (incoming)
-        var pendingConnection1 = pendingConnectionEntityFactory.create(UUID.randomUUID(), senderId1.value(), targetId.value(), Instant.now());
-        var pendingConnection2 = pendingConnectionEntityFactory.create(UUID.randomUUID(), senderId2.value(), targetId.value(), Instant.now());
+        var pendingConnection1 = pendingConnectionEntityFactory.create(UUID.randomUUID(),
+                senderId1.value(), targetId.value(), Instant.now());
+        var pendingConnection2 = pendingConnectionEntityFactory.create(UUID.randomUUID(),
+                senderId2.value(), targetId.value(), Instant.now());
         repository.save(pendingConnection1);
         repository.save(pendingConnection2);
 
@@ -55,17 +56,15 @@ public class GetIncomingConnectionQueryHandlerTests extends ConnectionsTestBase 
         var successResult = (GetIncomingConnectionsResults.Success) result;
         assertNotNull(successResult.incomingRequests());
         assertEquals(2, successResult.incomingRequests().size());
-        
+
         // Verify that the correct connections are returned
         var incomingRequests = successResult.incomingRequests();
-        assertTrue(incomingRequests.stream().anyMatch(connection ->
-            connection.senderId().value().equals(senderId1.value()) &&
-            connection.targetId().value().equals(targetId.value())
-        ));
-        assertTrue(incomingRequests.stream().anyMatch(connection ->
-            connection.senderId().value().equals(senderId2.value()) &&
-            connection.targetId().value().equals(targetId.value())
-        ));
+        assertTrue(incomingRequests.stream()
+                .anyMatch(connection -> connection.senderId().value().equals(senderId1.value())
+                        && connection.targetId().value().equals(targetId.value())));
+        assertTrue(incomingRequests.stream()
+                .anyMatch(connection -> connection.senderId().value().equals(senderId2.value())
+                        && connection.targetId().value().equals(targetId.value())));
     }
 
     @Test

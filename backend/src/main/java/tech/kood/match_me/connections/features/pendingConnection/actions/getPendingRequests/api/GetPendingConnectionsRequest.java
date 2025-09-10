@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.features.pendingConnection.actions.getPendingConnections.api;
+package tech.kood.match_me.connections.features.pendingConnection.actions.getPendingRequests.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;

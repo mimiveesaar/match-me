@@ -17,11 +17,9 @@ import java.time.Instant;
 public final class AcceptedConnectionFactory {
 
     private final Validator validator;
-    private final ConnectionIdFactory connectionIdFactory;
 
-    public AcceptedConnectionFactory(Validator validator, ConnectionIdFactory connectionIdFactory) {
+    public AcceptedConnectionFactory(Validator validator) {
         this.validator = validator;
-        this.connectionIdFactory = connectionIdFactory;
     }
 
     public AcceptedConnection create(ConnectionId connectionId, UserId acceptedByUser,
@@ -37,9 +35,8 @@ public final class AcceptedConnectionFactory {
         return acceptedConnection;
     }
 
-    public AcceptedConnection createNew(UserId acceptedByUserId, UserId acceptedUserId)
+    public AcceptedConnection createNew(ConnectionId connectionId, UserId acceptedByUserId, UserId acceptedUserId)
             throws CheckedConstraintViolationException {
-        var connectionId = connectionIdFactory.createNew();
         return create(connectionId, acceptedByUserId, acceptedUserId,
                 Instant.now().truncatedTo(java.time.temporal.ChronoUnit.SECONDS));
     }
