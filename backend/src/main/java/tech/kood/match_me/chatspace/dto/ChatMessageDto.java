@@ -7,11 +7,15 @@ public class ChatMessageDto {
 
     private UUID conversationId;
     private UUID senderId;
-    private String senderUsername; 
+    private String senderUsername;
     private String content;
     private LocalDateTime timestamp;
     private String type; // MESSAGE, TYPING, PRESENCE
     private Boolean typing;
+
+    public ChatMessageDto() {
+        // no-args constructor required for Jackson
+    }
 
     public ChatMessageDto(UUID conversationId,
             UUID senderId,
