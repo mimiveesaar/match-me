@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.features.pendingConnection.actions.acceptRequest.api;
+package tech.kood.match_me.connections.features.pendingConnection.actions.acceptRequest.internal;
 
 
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tech.kood.match_me.connections.features.pendingConnection.actions.acceptRequest.api.AcceptConnectionCommandHandler;
+import tech.kood.match_me.connections.features.pendingConnection.actions.acceptRequest.api.AcceptConnectionRequest;
+import tech.kood.match_me.connections.features.pendingConnection.actions.acceptRequest.api.AcceptConnectionResults;
 
 @RestController
 @RequestMapping("/api/v1/connections")
