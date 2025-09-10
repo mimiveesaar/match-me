@@ -1,14 +1,12 @@
 "use client";
 
-import { PhotoBubble } from "@atoms/chatspace/connections-menu/Profile Photo Bubble/PhotoBubble";
-import { Username } from "@atoms/chatspace/connections-menu/Username/Username";
 
 interface PhotoBubbleWithUsernameProps {
   src?: string;
   alt?: string;
   username: string;
-  isOnline?: boolean; // new prop
-  onClick: () => void;
+  isOnline?: boolean;
+  onClick: () => void; // required
 }
 
 export const PhotoBubbleWithUsername = ({

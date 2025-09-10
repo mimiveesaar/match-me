@@ -3,17 +3,17 @@ package tech.kood.match_me.chatspace.dto;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class ChatMessageDTO {
+public class ChatMessageDto {
 
     private UUID conversationId;
     private UUID senderId;
-    private String senderUsername; // NEW: helpful for frontend display
+    private String senderUsername; 
     private String content;
     private LocalDateTime timestamp;
     private String type; // MESSAGE, TYPING, PRESENCE
     private Boolean typing;
 
-    public ChatMessageDTO(UUID conversationId,
+    public ChatMessageDto(UUID conversationId,
             UUID senderId,
             String senderUsername,
             String content,

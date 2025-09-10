@@ -14,9 +14,10 @@ interface UserConnection {
 
 interface ConnectionsMenuProps {
   users: UserConnection[];
+  onSelectUser: (userId: string) => void; // NEW
 }
 
-export const ConnectionsMenu = ({ users }: ConnectionsMenuProps) => {
+export const ConnectionsMenu = ({ users, onSelectUser }: ConnectionsMenuProps) => {
   return (
     <Background>
       <Header />
@@ -26,7 +27,8 @@ export const ConnectionsMenu = ({ users }: ConnectionsMenuProps) => {
           src={user.src}
           alt={user.alt}
           username={user.username}
-          isOnline={user.isOnline} // Pass the online status
+          isOnline={user.isOnline}
+          onClick={() => onSelectUser(user.id)} // forward the click
         />
       ))}
     </Background>

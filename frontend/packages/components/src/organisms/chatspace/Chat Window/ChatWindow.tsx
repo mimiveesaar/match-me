@@ -2,8 +2,8 @@
 
 import { Background } from "@atoms/chatspace/chat-window/Background/Background";
 import { SpeechBubbleWithHeader } from "@molecules/chatspace/chat-window/speech-bubble-with-header/SpeechBubbleWithHeader";
-import { ChatMessage, ChatWindowProps } from "/workspace/frontend/packages/components/src/types";
 import { TypingIndicator } from "@atoms/chatspace/chat-window/TypingIndicator/TypingIndicator";
+import { ChatWindowProps } from "@/types";
 
 export const ChatWindow = ({
   messages,
@@ -11,16 +11,19 @@ export const ChatWindow = ({
   otherUserTyping = false, // receive this from parent
 }: ChatWindowProps & { otherUserTyping?: boolean }) => {
 
-  const formatTime = (timestamp: string | undefined) => {
-    if (!timestamp) return "";
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  };
+  console.log(messages);
 
-  const formatDate = (timestamp: string | undefined) => {
-    if (!timestamp) return "";
-    const date = new Date(timestamp);
-    return date.toLocaleDateString();
+  // Parse timestamp and return both time and date
+  const parseTimestampArray = (arr?: number[]) => {
+    if (!arr || arr.length < 6) return { time: "", date: "" };
+
+    const [year, month, day, hour, minute, second] = arr;
+    const dateObj = new Date(year, month - 1, day, hour, minute, second);
+
+    return {
+      time: dateObj.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      date: dateObj.toLocaleDateString([], { month: "numeric", day: "numeric", year: "2-digit" }),
+    };
   };
 
   return (
@@ -28,6 +31,7 @@ export const ChatWindow = ({
       <div className="flex flex-col space-y-2 p-4">
         {messages.map((msg) => {
           const isCurrentUser = msg.senderId === currentUserId;
+          const { time, date } = parseTimestampArray(msg.timestamp);
 
           return (
             <div
@@ -35,9 +39,9 @@ export const ChatWindow = ({
               className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}
             >
               <SpeechBubbleWithHeader
-                sender={isCurrentUser ? "Me" : msg.senderName || "Unknown"}
-                time={formatTime(msg.timestamp)}
-                date={formatDate(msg.timestamp)}
+                sender={isCurrentUser ? "Me" : msg.senderUsername || "Unknown"}
+                time={time}
+                date={date}
                 bubbleColor={isCurrentUser ? "bg-amberglow" : "bg-ivory"}
               >
                 {msg.content}

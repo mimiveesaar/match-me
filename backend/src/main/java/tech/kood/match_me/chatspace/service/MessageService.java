@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import tech.kood.match_me.chatspace.dto.ChatMessageDTO;
+import tech.kood.match_me.chatspace.dto.ChatMessageDto;
 import tech.kood.match_me.chatspace.model.Conversation;
 import tech.kood.match_me.chatspace.model.Message;
 import tech.kood.match_me.chatspace.model.MessageStatus;
@@ -30,7 +30,7 @@ public class MessageService {
     }
 
     // Saving messages
-    public ChatMessageDTO saveMessage(ChatMessageDTO dto) {
+    public ChatMessageDto saveMessage(ChatMessageDto dto) {
 
         UUID senderUuid = UUID.fromString(dto.getSenderId().toString());
         UUID conversationUuid = UUID.fromString(dto.getConversationId().toString());
