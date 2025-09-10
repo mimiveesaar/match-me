@@ -36,18 +36,13 @@ management:
         - jolokia
 
 spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
   jmx:
     enabled: true
-  jms: 
-    cache:
-      session-cache-size: 5
-  artemis:
-    mode: embedded
-    password: match-me
-    user: match-me
-    embedded:
-      enabled: true
-      persistent: false
   datasource:
     user-management:
       jdbc-url: jdbc:postgresql://localhost:5432/user_management
