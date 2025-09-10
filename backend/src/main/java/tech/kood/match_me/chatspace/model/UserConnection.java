@@ -24,7 +24,7 @@ public class UserConnection {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "connected_user_id", nullable = false)
     private User connectedUser;
 
@@ -32,10 +32,27 @@ public class UserConnection {
     private final LocalDateTime createdAt = LocalDateTime.now();
 
     // getters and setters
-    public UUID getId() { return id; }
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-    public User getConnectedUser() { return connectedUser; }
-    public void setConnectedUser(User connectedUser) { this.connectedUser = connectedUser; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    public UUID getId() {
+        return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getConnectedUser() {
+        return connectedUser;
+    }
+
+    public void setConnectedUser(User connectedUser) {
+        this.connectedUser = connectedUser;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 }

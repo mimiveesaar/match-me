@@ -28,4 +28,8 @@ public interface ConversationRepository extends JpaRepository<Conversation, UUID
         WHERE p1 = :user1 AND p2 = :user2
     """)
     Optional<Conversation> findByParticipantsWithData(@Param("user1") User user1, @Param("user2") User user2);
+
+    @Query("SELECT c FROM Conversation c JOIN c.participants p1 JOIN c.participants p2 "
+            + "WHERE p1.id = :userId AND p2.id = :otherUserId")
+    Optional<Conversation> findByParticipantsIds(UUID userId, UUID otherUserId);
 }
