@@ -22,10 +22,13 @@ public class WebSocketPresenceListener {
     @EventListener
     public void handleSessionConnected(SessionConnectEvent event) {
         String sessionId = event.getMessage().getHeaders().get("simpSessionId").toString();
-        String userId = (String) event.getUser().getName(); // assuming principal name = userId
+
+        // Hardcode the logged-in user for testing
+        String userId = "11111111-1111-1111-1111-111111111111"; // Henry's UUID
+
         onlineUsers.put(sessionId, userId);
 
-        // broadcast that user is online
+        // broadcast online status
         messagingTemplate.convertAndSend("/topic/status/" + userId, "ONLINE");
         System.out.println("User " + userId + " connected. Online users: " + onlineUsers.values());
     }

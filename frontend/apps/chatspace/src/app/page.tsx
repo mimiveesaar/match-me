@@ -6,10 +6,13 @@ import { ConnectionsMenu } from "@components/organisms/chatspace/Connections Men
 import { ChatWindow } from "@components/organisms/chatspace/Chat Window/ChatWindow";
 import { MessageInput } from "@components/organisms/chatspace/Message Input/MessageInput";
 import { useChat } from "../../hooks/useChat";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 
 export default function Chatspace() {
+
+  const [users, setUsers] = useState([]);
   const conversationId = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'; // replace with actual conversation UUID
   const userId = typeof window !== 'undefined' && window.location.search.includes('userB')
     ? '22222222-2222-2222-2222-222222222222'
@@ -18,11 +21,32 @@ export default function Chatspace() {
   const { messages, sendMessage, handleTyping, otherUserTyping } = useChat(conversationId, userId);
   const [input, setInput] = useState('');
 
-  const users = [
-    { id: '1111', username: 'Henry', isOnline: true },
-    { id: '2222', username: 'Shelly', isOnline: false },
-    { id: '3333', username: 'Zorbplat', isOnline: true },
-  ];
+  interface UserConnection {
+    id: string;
+    username: string;
+    status: string;
+  }
+
+  useEffect(() => {
+    async function fetchConnections() {
+      try {
+        // Point to your Spring Boot backend (usually port 8080)
+        const response = await axios.get(`http://localhost:8080/api/users/${userId}/connections`);
+        const connections = response.data.map((user: UserConnection) => ({
+          id: user.id,
+          username: user.username,
+          isOnline: user.status === 'ONLINE'
+        }));
+        setUsers(connections);
+      } catch (err) {
+        console.error('Failed to fetch connections:', err);
+      }
+    }
+
+    fetchConnections();
+  }, [userId]);
+
+
 
   return (
     <div className="flex flex-col h-screen bg-ivory">

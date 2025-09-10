@@ -8,6 +8,7 @@ interface PhotoBubbleWithUsernameProps {
   alt?: string;
   username: string;
   isOnline?: boolean; // new prop
+  onClick: () => void;
 }
 
 export const PhotoBubbleWithUsername = ({
@@ -15,9 +16,13 @@ export const PhotoBubbleWithUsername = ({
   alt,
   username,
   isOnline = false,
+  onClick,
 }: PhotoBubbleWithUsernameProps) => {
   return (
-    <div className="flex items-center gap-2 mb-2 pl-4">
+    <button
+      onClick={onClick}
+      className="flex items-center gap-2 mb-2 pl-4 focus:outline-none cursor-pointer"
+    >
       <div className="relative">
         <img
           src={src || '/default-avatar.png'}
@@ -28,7 +33,7 @@ export const PhotoBubbleWithUsername = ({
           <span className="absolute bottom-0 right-0 w-2 h-2 bg-limeburst rounded-full" />
         )}
       </div>
-      <div className="chakra-petch text-ivory ">{username}</div>
-    </div>
+      <div className="chakra-petch text-ivory">{username}</div>
+    </button>
   );
 };
