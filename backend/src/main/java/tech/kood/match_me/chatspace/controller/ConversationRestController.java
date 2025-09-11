@@ -4,9 +4,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,15 +19,18 @@ import tech.kood.match_me.chatspace.model.Conversation;
 import tech.kood.match_me.chatspace.model.Message;
 import tech.kood.match_me.chatspace.model.User;
 import tech.kood.match_me.chatspace.service.ConversationService;
+import tech.kood.match_me.chatspace.service.MessageService;
 
 @RestController
 @RequestMapping("/api/conversations")
 public class ConversationRestController {
 
     private final ConversationService conversationService;
+    private final MessageService messageService;
 
-    public ConversationRestController(ConversationService conversationService) {
+    public ConversationRestController(ConversationService conversationService, MessageService messageService) {
         this.conversationService = conversationService;
+        this.messageService = messageService;
     }
 
     // Called when user clicks on a connection
@@ -71,5 +76,14 @@ public class ConversationRestController {
                         .toList()
         ))
                 .toList();
+    }
+
+    @PutMapping("/{id}/read")
+    public ResponseEntity<Void> markConversationRead(
+            @PathVariable UUID id,
+            @RequestParam UUID userId
+    ) {
+        messageService.markConversationAsRead(id, userId);
+        return ResponseEntity.ok().build();
     }
 }

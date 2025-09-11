@@ -1,9 +1,14 @@
 package tech.kood.match_me.chatspace.service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.chatspace.dto.ChatMessageDto;
 import tech.kood.match_me.chatspace.model.Conversation;
@@ -20,13 +25,16 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final ChatUserRepository userRepository;
     private final ConversationRepository conversationRepository;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     public MessageService(MessageRepository messageRepository,
             ChatUserRepository userRepository,
-            ConversationRepository conversationRepository) {
+            ConversationRepository conversationRepository,
+            SimpMessagingTemplate simpMessagingTemplate) {
         this.messageRepository = messageRepository;
         this.userRepository = userRepository;
         this.conversationRepository = conversationRepository;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     // Saving messages
@@ -39,8 +47,13 @@ public class MessageService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // Find conversation by UUID
-        Conversation conversation = conversationRepository.findById(conversationUuid)
+        Conversation conversation = conversationRepository.findByIdWithParticipants(conversationUuid)
                 .orElseThrow(() -> new RuntimeException("Conversation not found"));
+
+        // Get all recipients (all participants except the sender)
+        List<User> recipients = conversation.getParticipants().stream()
+                .filter(u -> !u.getId().equals(sender.getId()))
+                .toList();
 
         // Save message to DB
         Message message = new Message();
@@ -54,9 +67,23 @@ public class MessageService {
 
         System.out.println("🟢 Saved message ID: " + saved.getId() + ", content: " + saved.getContent());
 
-        // Update conversation "lastUpdatedAt"
+        // Update conversation lastUpdatedAt
         conversation.setLastUpdatedAt(LocalDateTime.now());
         conversationRepository.save(conversation);
+
+        // Broadcast unread to all recipients via STOMP
+        for (User recipient : recipients) {
+            boolean isUnread = true;
+
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("hasUnread", isUnread);
+            payload.put("conversationId", conversation.getId());
+
+            simpMessagingTemplate.convertAndSend(
+                    "/topic/unread/" + recipient.getId(),
+                    payload
+            );
+        }
 
         // Update DTO with timestamp and type for broadcasting
         dto.setTimestamp(saved.getTimestamp());
@@ -65,4 +92,24 @@ public class MessageService {
 
         return dto;
     }
+
+    // Marking messages as read
+    @Transactional
+    public void markConversationAsRead(UUID conversationId, UUID userId) {
+        List<Message> unreadMessages = messageRepository.findByConversationIdAndSenderIdNotAndStatus(
+                conversationId, userId, MessageStatus.SENT
+        );
+
+        for (Message msg : unreadMessages) {
+            msg.setStatus(MessageStatus.READ);
+        }
+
+        messageRepository.saveAll(unreadMessages);
+
+        simpMessagingTemplate.convertAndSend(
+                "/topic/unread/" + userId,
+                false
+        );
+    }
+
 }

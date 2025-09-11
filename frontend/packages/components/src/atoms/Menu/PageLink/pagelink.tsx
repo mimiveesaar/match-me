@@ -1,31 +1,36 @@
-import React from "react";
-import { useRouter } from "next/navigation";
+"use client";
+
+import Link from "next/link";
 
 interface PageLinkProps {
   label: string;
   href?: string;
   onClick?: () => void;
   className?: string;
+  dot?: boolean;
 }
 
-export const PageLink = ({ label, href, onClick, className }: PageLinkProps) => {
-  const router = useRouter();
+export const PageLink = ({ label, href, onClick, className = "", dot = false }: PageLinkProps) => {
+  const baseStyle = "px-3 py-2 text-xl font-medium cursor-pointer font-serif hover:scale-110 transition-transform";
 
-  const handleClick = () => {
-    if (onClick) {
-      onClick(); // Close menu on mobile
-    }
-    if (href) {
-      router.push(href); // Navigate to the page
-    }
-  };
+  const content = (
+    <div className="flex items-center gap-2">
+      {label}
+      {dot && <span className="w-2 h-2 bg-red-500 rounded-full inline-block" />}
+    </div>
+  );
+
+  if (href) {
+    return (
+      <Link href={href} className={`${baseStyle} ${className}`}>
+        {content}
+      </Link>
+    );
+  }
 
   return (
-    <button
-      onClick={handleClick}
-      className={`text-left text-lg font-medium text-gray-700 hover:text-olive transition-colors duration-200 py-2 px-3 rounded-lg hover:bg-gray-100 w-full ${className || ''}`}
-    >
-      {label}
+    <button onClick={onClick} className={`${baseStyle} ${className}`} type="button">
+      {content}
     </button>
   );
 };

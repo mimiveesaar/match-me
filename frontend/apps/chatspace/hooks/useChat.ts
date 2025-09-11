@@ -85,7 +85,7 @@ export const useChat = (conversationId: string, userId: string, senderUsername: 
     console.log('Sending message:', message);
 
     clientRef.current.publish({
-      destination: `/app/chat/${conversationId}/sendMessage`,
+      destination: `/app/chat`,
       body: JSON.stringify(message),
     });
   };
