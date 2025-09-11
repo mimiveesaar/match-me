@@ -24,7 +24,9 @@ public class ProfileController {
         System.out.println("Received DTO: " + dto);
 
         if (dto != null) {
+
             System.out.println("DTO Details:");
+            System.out.println("  Age: " + dto.getAge());
             System.out.println("  Bio: '" + dto.getBio() + "'");
             System.out.println("  HomeplanetId: " + dto.getHomeplanetId());
             System.out.println("  BodyformId: " + dto.getBodyformId());

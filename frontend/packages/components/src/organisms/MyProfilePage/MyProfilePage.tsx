@@ -42,6 +42,8 @@ export const MyProfilePage = ({
 
   const handleSave = async () => {
     const fullProfile = {
+      name: profile.name,
+      age: profile.age,
       homeplanetId: profile.homeplanetId || 1,
       bodyformId: profile.bodyformId || 1,
       lookingForId: profile.lookingForId || 1,
@@ -59,8 +61,7 @@ export const MyProfilePage = ({
 
   return (
     <div className="flex">
-      {/* Menu - hidden on mobile, visible on desktop */}
-      <Menu className="hidden lg:block" />
+
       
       {/* Menu for mobile - will be handled by the hamburger button */}
       <div className="lg:hidden">

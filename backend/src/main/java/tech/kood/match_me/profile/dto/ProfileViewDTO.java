@@ -1,11 +1,13 @@
 package tech.kood.match_me.profile.dto;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 public class ProfileViewDTO {
     private UUID id;
     private String username;
+    private String name;
     private int age;
     private String homeplanet;
     private String bodyform;
@@ -13,6 +15,10 @@ public class ProfileViewDTO {
     private String bio;
     private Set<String> interests;
     private String profilePic;
+    private List<Integer> interestIds;
+    private Integer homeplanetId;
+    private Integer bodyformId;
+    private Integer lookingForId;
 
     // Getters and Setters
     public UUID getId() {
@@ -85,5 +91,45 @@ public class ProfileViewDTO {
 
     public void setProfilePic(String profilePic) {
         this.profilePic = profilePic;
+    }
+
+    public List<Integer> getInterestIds() {
+        return interestIds;
+    }
+
+    public void setInterestIds(List<Integer> interestIds) {
+        this.interestIds = interestIds;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getHomeplanetId() {
+        return homeplanetId;
+    }
+
+    public void setHomeplanetId(Integer homeplanetId) {
+        this.homeplanetId = homeplanetId;
+    }
+
+    public Integer getBodyformId() {
+        return bodyformId;
+    }
+
+    public void setBodyformId(Integer bodyformId) {
+        this.bodyformId = bodyformId;
+    }
+
+    public Integer getLookingForId() {
+        return lookingForId;
+    }
+
+    public void setLookingForId(Integer lookingForId) {
+        this.lookingForId = lookingForId;
     }
 }
