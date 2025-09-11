@@ -8,6 +8,8 @@ import { MessageInput } from "@components/organisms/chatspace/Message Input/Mess
 import { useChat } from "../../hooks/useChat";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import SockJS from "sockjs-client";
+import { Client } from "@stomp/stompjs";
 
 
 export default function Chatspace() {
@@ -22,6 +24,28 @@ export default function Chatspace() {
 
   const senderUsername = search.includes('userb') ? 'mike' : 'Henry';
 
+  const socket = new SockJS("http://localhost:8080/ws");
+  const stompClient = new Client({
+    webSocketFactory: () => socket,
+    reconnectDelay: 5000, // auto-reconnect
+    connectHeaders: {
+      userId, // <-- send it here
+    },
+    onConnect: (frame) => {
+      console.log("Connected as user:", userId);
+
+      // Subscribe to own status changes
+      stompClient.subscribe(`/topic/status/${userId}`, (message) => {
+        console.log("Status update:", message.body);
+      });
+    },
+    onStompError: (frame) => {
+      console.error("STOMP error:", frame.headers["message"], frame.body);
+    },
+  });
+
+  stompClient.activate();
+
   const { messages, setMessages, sendMessage, handleTyping, otherUserTyping } = useChat(conversationId ?? '', userId, senderUsername);
   const [input, setInput] = useState('');
 
@@ -34,7 +58,7 @@ export default function Chatspace() {
   useEffect(() => {
     async function fetchConnectionsAndConversations() {
       try {
-        // 1️⃣ Fetch user connections
+        // Fetch user connections
         const response = await axios.get(
           `http://localhost:8080/api/users/${userId}/connections`
         );
@@ -45,13 +69,13 @@ export default function Chatspace() {
         }));
         setUsers(connections);
 
-        // 2️⃣ Fetch all conversations for the logged-in user
+        // Fetch all conversations for the logged-in user
         const convosRes = await axios.get(
           `http://localhost:8080/api/conversations/user/${userId}`
         );
         const conversations = convosRes.data;
 
-        // 3️⃣ Automatically open the latest conversation
+        // Automatically open the latest conversation
         if (conversations.length > 0) {
           const latestConvo = conversations[0]; // already sorted by latest message
           setConversationId(latestConvo.id);
