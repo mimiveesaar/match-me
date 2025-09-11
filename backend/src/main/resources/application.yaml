@@ -36,11 +36,6 @@ management:
         - jolokia
 
 spring:
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
   jmx:
     enabled: true
   datasource:

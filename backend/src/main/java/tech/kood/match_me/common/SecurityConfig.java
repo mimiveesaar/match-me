@@ -1,4 +1,4 @@
-package tech.kood.match_me;
+package tech.kood.match_me.common;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

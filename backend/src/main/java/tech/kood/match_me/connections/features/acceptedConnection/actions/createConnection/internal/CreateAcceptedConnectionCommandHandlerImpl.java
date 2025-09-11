@@ -2,12 +2,15 @@ package tech.kood.match_me.connections.features.acceptedConnection.actions.creat
 
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 import tech.kood.match_me.connections.common.domain.connectionId.ConnectionIdFactory;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.createConnection.api.AcceptedConnectionCreatedEvent;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.createConnection.api.CreateAcceptedConnectionCommandHandler;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.createConnection.api.CreateAcceptedConnectionRequest;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.createConnection.api.CreateAcceptedConnectionResults;
@@ -32,18 +35,23 @@ public class CreateAcceptedConnectionCommandHandlerImpl
 
     private final AcceptedConnectionMapper acceptedConnectionMapper;
 
-    public CreateAcceptedConnectionCommandHandlerImpl(Validator validator, AcceptedConnectionRepository acceptedConnectionRepository, AcceptedConnectionFactory acceptedConnectionFactory, UserIdFactory userIdFactory, ConnectionIdFactory connectionIdFactory, AcceptedConnectionMapper acceptedConnectionMapper) {
+    private final ApplicationEventPublisher applicationEventPublisher;
+
+    public CreateAcceptedConnectionCommandHandlerImpl(Validator validator, AcceptedConnectionRepository acceptedConnectionRepository, AcceptedConnectionFactory acceptedConnectionFactory, UserIdFactory userIdFactory, ConnectionIdFactory connectionIdFactory, AcceptedConnectionMapper acceptedConnectionMapper, ApplicationEventPublisher applicationEventPublisher) {
         this.validator = validator;
         this.acceptedConnectionRepository = acceptedConnectionRepository;
         this.acceptedConnectionFactory = acceptedConnectionFactory;
         this.userIdFactory = userIdFactory;
         this.connectionIdFactory = connectionIdFactory;
         this.acceptedConnectionMapper = acceptedConnectionMapper;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
+    @Transactional
     public CreateAcceptedConnectionResults handle(CreateAcceptedConnectionRequest request) {
         var validationResults = validator.validate(request);
+
         if (!validationResults.isEmpty()) {
             return new CreateAcceptedConnectionResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
@@ -61,6 +69,7 @@ public class CreateAcceptedConnectionCommandHandlerImpl
             var acceptedConnectionEntity = acceptedConnectionMapper.toEntity(acceptedConnection);
 
             acceptedConnectionRepository.save(acceptedConnectionEntity);
+            applicationEventPublisher.publishEvent(new AcceptedConnectionCreatedEvent(acceptedConnectionMapper.toDTO(acceptedConnection)));
             return new CreateAcceptedConnectionResults.Success(new ConnectionIdDTO(acceptedConnection.getId().getValue()));
         }
         catch (CheckedConstraintViolationException e) {

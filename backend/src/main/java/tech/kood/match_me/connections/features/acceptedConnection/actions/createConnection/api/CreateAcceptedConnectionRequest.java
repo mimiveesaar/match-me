@@ -6,8 +6,10 @@ import jakarta.validation.constraints.NotNull;
 import org.jmolecules.architecture.cqrs.Command;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.createConnection.api.validation.ValidCreateAcceptedConnection;
 
 @Command
+@ValidCreateAcceptedConnection
 public record CreateAcceptedConnectionRequest(
         @NotNull @Valid @JsonProperty("connection_id") ConnectionIdDTO connectionId,
         @NotNull @Valid @JsonProperty("accepted_by_user") UserIdDTO acceptedByUser,
