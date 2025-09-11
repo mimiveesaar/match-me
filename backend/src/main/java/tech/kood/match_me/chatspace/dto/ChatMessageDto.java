@@ -3,6 +3,9 @@ package tech.kood.match_me.chatspace.dto;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import jakarta.transaction.Transactional;
+
+@Transactional
 public class ChatMessageDto {
 
     private UUID conversationId;

@@ -5,7 +5,11 @@ import { MenuBase } from "@atoms/Menu/MenuBase/menu_base";
 import { PageLink } from "@atoms/Menu/PageLink/pagelink";
 import { SignOutButton } from "@atoms/Menu/SignOut/signout";
 
-export const Menu = () => (
+interface MenuProps {
+  hasUnread: boolean;
+}
+
+export const Menu = ({ hasUnread }: MenuProps) => (
   <MenuBase className="flex flex-col h-full p-4">
     
     {/* Top: Header */}
@@ -18,7 +22,7 @@ export const Menu = () => (
       <PageLink label="Matches" />
       <PageLink label="My Profile" />
       <PageLink label="My Connections" />
-      <PageLink label="Chatspace" />
+      <PageLink label="Chatspace" dot={hasUnread}  />
     </div>
 
     {/* Spacer pushes sign-out to bottom */}

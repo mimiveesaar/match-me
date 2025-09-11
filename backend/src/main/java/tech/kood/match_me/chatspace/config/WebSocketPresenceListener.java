@@ -58,7 +58,7 @@ public class WebSocketPresenceListener {
         // Broadcast online status
         messagingTemplate.convertAndSend("/topic/status/" + userId, "ONLINE");
         System.out.println("[CONNECT] Broadcast ONLINE for userId=" + userId);
-        System.out.println("[CONNECT] Current online users: " + onlineUsers.values());
+
     }
 
     @EventListener

@@ -13,6 +13,9 @@ import tech.kood.match_me.chatspace.model.User;
 
 public interface ConversationRepository extends JpaRepository<Conversation, UUID> {
 
+    @Query("SELECT c FROM Conversation c LEFT JOIN FETCH c.participants WHERE c.id = :id")
+    Optional<Conversation> findByIdWithParticipants(@Param("id") UUID id);
+
     @Query("SELECT c FROM Conversation c LEFT JOIN FETCH c.participants LEFT JOIN FETCH c.messages WHERE c.id = :id")
     Optional<Conversation> findByIdWithParticipantsAndMessages(@Param("id") UUID id);
 

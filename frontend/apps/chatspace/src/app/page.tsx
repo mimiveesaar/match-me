@@ -16,6 +16,7 @@ export default function Chatspace() {
 
   const [users, setUsers] = useState<Array<{ id: string, username: string, isOnline: boolean }>>([]);
   const [conversationId, setConversationId] = useState<string | null>(null);
+  const [hasUnread, setHasUnread] = useState(false);
 
   const search = typeof window !== 'undefined' ? window.location.search.toLowerCase() : '';
   const userId = search.includes('userb')
@@ -24,27 +25,45 @@ export default function Chatspace() {
 
   const senderUsername = search.includes('userb') ? 'mike' : 'Henry';
 
-  const socket = new SockJS("http://localhost:8080/ws");
-  const stompClient = new Client({
-    webSocketFactory: () => socket,
-    reconnectDelay: 5000, // auto-reconnect
-    connectHeaders: {
-      userId, // <-- send it here
-    },
-    onConnect: (frame) => {
-      console.log("Connected as user:", userId);
+  useEffect(() => {
+    const socket = new SockJS("http://localhost:8080/ws");
 
-      // Subscribe to own status changes
-      stompClient.subscribe(`/topic/status/${userId}`, (message) => {
-        console.log("Status update:", message.body);
-      });
-    },
-    onStompError: (frame) => {
-      console.error("STOMP error:", frame.headers["message"], frame.body);
-    },
-  });
+    const stompClient = new Client({
+      webSocketFactory: () => socket,
+      reconnectDelay: 5000,
+      connectHeaders: { userId },
+      onConnect: () => {
+        console.log("Connected as user:", userId);
 
-  stompClient.activate();
+        stompClient.subscribe(`/topic/status/${userId}`, (message) => {
+          console.log("Status update:", message.body);
+        });
+
+        stompClient.subscribe(`/topic/unread/${userId}`, (msg) => {
+          const payload = JSON.parse(msg.body);
+          console.log("🔴 STOMP /topic/unread payload:", payload);
+
+          // If the user is already viewing this conversation, skip the dot
+          if (payload.conversationId === conversationId) {
+            console.log("✅ Skipping dot because user is already in this conversation");
+            return;
+          }
+
+          setHasUnread(payload.hasUnread);
+        });
+      },
+      onStompError: (frame) => {
+        console.error("STOMP error:", frame.headers["message"], frame.body);
+      },
+    });
+
+    stompClient.activate();
+
+    return () => {
+      stompClient.deactivate();
+    };
+  }, [userId]); // runs once per userId
+
 
   const { messages, setMessages, sendMessage, handleTyping, otherUserTyping } = useChat(conversationId ?? '', userId, senderUsername);
   const [input, setInput] = useState('');
@@ -56,6 +75,7 @@ export default function Chatspace() {
   }
 
   useEffect(() => {
+
     async function fetchConnectionsAndConversations() {
       try {
         // Fetch user connections
@@ -97,6 +117,35 @@ export default function Chatspace() {
     fetchConnectionsAndConversations();
   }, [userId, senderUsername]);
 
+  useEffect(() => {
+    if (!conversationId || !userId) return;
+
+    const markAsRead = async () => {
+      try {
+        await axios.put(
+          `http://localhost:8080/api/conversations/${conversationId}/read`,
+          null,
+          { params: { userId } }
+        );
+
+        // Optimistically update local messages
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.senderId !== userId ? { ...m, status: "READ" } : m
+          )
+        );
+      } catch (err) {
+        console.error("Failed to mark conversation as read", err);
+      }
+    };
+
+    markAsRead();
+  }, [conversationId, userId]);
+
+  useEffect(() => {
+    console.log("🔹 hasUnread state changed:", hasUnread);
+  }, [hasUnread]);
+
   return (
     <div className="flex flex-col h-screen bg-ivory">
       {/* Header */}
@@ -108,7 +157,7 @@ export default function Chatspace() {
       <main className="flex w-full max-w-7xl mx-auto">
         {/* Left sidebar */}
         <aside className="w-80 flex items-center justify-center mt-20">
-          <Menu />
+          <Menu hasUnread={hasUnread} />
         </aside>
 
         {/* Chat section */}

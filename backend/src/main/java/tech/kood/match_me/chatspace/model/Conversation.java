@@ -22,23 +22,21 @@ import jakarta.persistence.Table;
 public class Conversation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID) 
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime lastUpdatedAt;
 
-    // Many-to-many between users and conversations
     @ManyToMany
     @JoinTable(
-        name = "conversation_participants",
-        joinColumns = @JoinColumn(name = "conversation_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id")
+            name = "conversation_participants",
+            joinColumns = @JoinColumn(name = "conversation_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> participants;
 
-    // One-to-many messages
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Message> messages;
 
@@ -59,30 +57,39 @@ public class Conversation {
     public UUID getId() {
         return id;
     }
+
     public void setId(UUID id) {
         this.id = id;
     }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
     public LocalDateTime getLastUpdatedAt() {
         return lastUpdatedAt;
     }
+
     public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
         this.lastUpdatedAt = lastUpdatedAt;
     }
+
     public Set<User> getParticipants() {
         return participants;
     }
+
     public void setParticipants(Set<User> participants) {
         this.participants = participants;
     }
+
     public Set<Message> getMessages() {
         return messages;
     }
+
     public void setMessages(Set<Message> messages) {
         this.messages = messages;
     }

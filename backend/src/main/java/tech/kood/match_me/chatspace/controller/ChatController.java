@@ -23,16 +23,15 @@ public class ChatController {
     }
 
     // Send a message to a specific conversation
-    @MessageMapping("/chat/{conversationId}/sendMessage")
-    public void sendMessage(
-            @DestinationVariable UUID conversationId,
-            @Payload ChatMessageDto message) {
+    @MessageMapping("/chat")
+    public void sendMessage(@Payload ChatMessageDto message) {
+        System.out.println("📥 Received STOMP message for conversation: " + message.getConversationId());
 
         ChatMessageDto savedMessage = messageService.saveMessage(message);
 
         // broadcast to only that conversation
         messagingTemplate.convertAndSend(
-                "/topic/conversations/" + conversationId,
+                "/topic/conversations/" + message.getConversationId(),
                 savedMessage
         );
     }
