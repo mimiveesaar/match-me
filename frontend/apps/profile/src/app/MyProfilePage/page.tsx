@@ -32,13 +32,45 @@ export default function MyProfile() {
       const response = await fetch('http://localhost:8080/api/profiles/me');
       if (response.ok) {
         const data = await response.json();
-        console.log("=== BACKEND RESPONSE ===", data); // Add this to see what you're getting
+        console.log("=== BACKEND RESPONSE ===", data);
         setProfile(data);
       } else {
         console.error('Failed to fetch profile');
+        // If no profile exists, set a default structure
+        setProfile({
+          id: '',
+          username: '',
+          age: 0,
+          homeplanet: '',
+          bodyform: '',
+          lookingFor: '',
+          homeplanetId: 1,
+          bodyformId: 1,
+          lookingForId: 1,
+          bio: '',
+          interests: [],
+          interestIds: [],
+          profilePic: ''
+        });
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
+      // Set default profile on error
+      setProfile({
+        id: '',
+        username: '',
+        age: 0,
+        homeplanet: '',
+        bodyform: '',
+        lookingFor: '',
+        homeplanetId: 1,
+        bodyformId: 1,
+        lookingForId: 1,
+        bio: '',
+        interests: [],
+        interestIds: [],
+        profilePic: ''
+      });
     } finally {
       setIsLoading(false);
     }
@@ -58,10 +90,12 @@ export default function MyProfile() {
       });
 
       if (response.ok) {
-        console.log('Profile updated successfully');
-        fetchProfile();
+        const savedProfile = await response.json();
+        console.log('Profile updated successfully:', savedProfile);
+        setProfile(savedProfile);
       } else {
-        console.error('Failed to update profile');
+        const errorText = await response.text();
+        console.error('Failed to update profile:', errorText);
       }
     } catch (error) {
       console.error('Error updating profile:', error);

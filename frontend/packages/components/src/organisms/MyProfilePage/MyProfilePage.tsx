@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { InterestsSection } from "../../organisms/InterestsSection/InterestsSection";
 import { MultiLineInputField } from "../../atoms/MultiLineInputField/MultiLineInputField";
-import { ProfileCard } from "../../organisms/ProfileCard/ProfileCard";
 import { Menu } from "../../organisms/Menu/menu";
+import { ProfileCard } from "@organisms/ProfileCard/ProfileCard";
+import { ProfileCardData } from "@/types";
 
 interface MyProfilePageProps {
   initialProfile?: any;
@@ -22,28 +23,43 @@ export const MyProfilePage = ({
   const [selectedInterests, setSelectedInterests] = useState<string[]>(
     initialProfile?.interestIds?.map(String) || []
   );
-  
-  const [profile, setProfile] = useState({
-    name: "Xylar of Nebulon-5",
-    age: "458",
-    bodyform: "Spherioformes",
-    lookingfor: "Romance",
-    planet: "Nebulon-5",
-    ...initialProfile
+
+  const [profile, setProfile] = useState<ProfileCardData>({
+    name: initialProfile?.username || "Xylar of Nebulon-5",
+    age: initialProfile?.age?.toString() || "458",
+    bodyform: initialProfile?.bodyform || "Spherioformes",
+    lookingfor: initialProfile?.lookingFor || "Romance",
+    planet: initialProfile?.homeplanet || "Nebulon-5",
+    homeplanetId: initialProfile?.homeplanetId || 1,
+    bodyformId: initialProfile?.bodyformId || 1,
+    lookingForId: initialProfile?.lookingForId || 1,
+    profilePic: initialProfile?.profilePic || "https://example.com/default.jpg"
   });
 
   useEffect(() => {
     if (initialProfile) {
       setBio(initialProfile.bio || bio);
       setSelectedInterests(initialProfile.interestIds?.map(String) || []);
-      setProfile(prev => ({ ...prev, ...initialProfile }));
+
+      setProfile(prev => ({
+        ...prev,
+        name: initialProfile.username || prev.name,
+        age: initialProfile.age?.toString() || prev.age,
+        bodyform: initialProfile.bodyform || prev.bodyform,
+        lookingfor: initialProfile.lookingFor || prev.lookingfor,
+        planet: initialProfile.homeplanet || prev.planet,
+        homeplanetId: initialProfile.homeplanetId || prev.homeplanetId,
+        bodyformId: initialProfile.bodyformId || prev.bodyformId,
+        lookingForId: initialProfile.lookingForId || prev.lookingForId,
+        profilePic: initialProfile.profilePic || prev.profilePic
+      }));
     }
   }, [initialProfile]);
 
   const handleSave = async () => {
     const fullProfile = {
-      name: profile.name,
-      age: profile.age,
+      username: profile.name,  // This sends the name as username
+      age: parseInt(profile.age),
       homeplanetId: profile.homeplanetId || 1,
       bodyformId: profile.bodyformId || 1,
       lookingForId: profile.lookingForId || 1,
@@ -52,8 +68,17 @@ export const MyProfilePage = ({
       profilePic: profile.profilePic || "https://example.com/default.jpg"
     };
 
+    console.log("=== SAVING PROFILE ===");
+    console.log("Profile data being sent:", fullProfile);
+    console.log("Name being sent as username:", profile.name);
+
     if (onSave) {
-      await onSave(fullProfile);
+      try {
+        await onSave(fullProfile);
+        // Don't reset the profile here - let the parent component handle the refresh
+      } catch (error) {
+        console.error("Save failed:", error);
+      }
     } else {
       console.log("Saving profile:", fullProfile);
     }
@@ -61,8 +86,6 @@ export const MyProfilePage = ({
 
   return (
     <div className="flex">
-
-      
       {/* Menu for mobile - will be handled by the hamburger button */}
       <div className="lg:hidden">
         <Menu />
@@ -80,7 +103,7 @@ export const MyProfilePage = ({
               <MultiLineInputField
                 placeholder="Bio (optional)"
                 value={bio}
-                onChange={(e) => setBio(e.target.value)} 
+                onChange={(e) => setBio(e.target.value)}
                 id={"bio"}
               />
             </div>
