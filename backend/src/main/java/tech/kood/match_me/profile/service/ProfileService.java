@@ -38,10 +38,15 @@ public class ProfileService {
     public ProfileViewDTO saveOrUpdateProfile(ProfileDTO dto) {
         Profile profile = getMyProfile(); // fetch existing profile
 
-        if (dto.getName() != null) {
-        System.out.println("Updating name to: " + dto.getName());
-        profile.setUsername(dto.getName()); // Still save to username field in database
-    }
+        // OR if you want to handle both:
+        if (dto.getUsername() != null) {
+            System.out.println("Updating username to: " + dto.getUsername());
+            profile.setUsername(dto.getUsername());
+        } else if (dto.getName() != null) {
+            System.out.println("Updating username from name field to: " + dto.getName());
+            profile.setUsername(dto.getName());
+        }
+
         if (dto.getAge() != null) {
             profile.setAge(dto.getAge());
         }

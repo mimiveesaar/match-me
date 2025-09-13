@@ -53,6 +53,8 @@ export const MyProfilePage = ({
         lookingForId: initialProfile.lookingForId || prev.lookingForId,
         profilePic: initialProfile.profilePic || prev.profilePic
       }));
+
+       console.log("Profile updated with name:", initialProfile.username);
     }
   }, [initialProfile]);
 
