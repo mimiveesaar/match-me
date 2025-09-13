@@ -1,0 +1,88 @@
+package tech.kood.match_me.user_management.features.accessToken.filters;
+
+import java.io.IOException;
+import java.util.UUID;
+
+import org.jmolecules.architecture.layered.ApplicationLayer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Service;
+import org.springframework.web.filter.OncePerRequestFilter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdQueryHandler;
+import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdRequest;
+import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdResults;
+import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenHandler;
+import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenRequest;
+import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenResults;
+
+@ApplicationLayer
+@Service
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
+    private final ValidateAccessTokenHandler validateAccessTokenHandler;
+    private final GetUserByIdQueryHandler getUserByIdQueryHandler;
+
+    public JwtAuthenticationFilter(ValidateAccessTokenHandler validateAccessTokenHandler, GetUserByIdQueryHandler getUserByIdQueryHandler) {
+        this.validateAccessTokenHandler = validateAccessTokenHandler;
+        this.getUserByIdQueryHandler = getUserByIdQueryHandler;
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String jwt = authorizationHeader.substring(7);
+        if (jwt == null || jwt.isEmpty()) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String tracingId = UUID.randomUUID().toString();
+        
+        try {
+            var validationRequest = new ValidateAccessTokenRequest(jwt, tracingId);
+            var validationResult = validateAccessTokenHandler.handle(validationRequest);
+
+            if (validationResult instanceof ValidateAccessTokenResults.Success successResult) {
+                var userId = successResult.userId();
+
+                UUID getUserRequestId = UUID.randomUUID();
+                var getUserByIdRequest = new GetUserByIdRequest(getUserRequestId, userId, tracingId);
+                var userResult = getUserByIdQueryHandler.handle(getUserByIdRequest);
+
+                if (userResult instanceof GetUserByIdResults.Success user) {
+                    UsernamePasswordAuthenticationToken auth =
+                            new UsernamePasswordAuthenticationToken(user, null, null);
+
+                    auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                } else if (userResult instanceof GetUserByIdResults.UserNotFound) {
+                    logger.warn("User not found for ID: {} during JWT authentication", userId.toString());
+
+                } else if (userResult instanceof GetUserByIdResults.SystemError systemError) {
+                    logger.error("System error while fetching userId by ID: {} during JWT authentication. Error: {}", userId.toString(), systemError.message());
+                }
+                } else if (validationResult instanceof ValidateAccessTokenResults.InvalidToken) {
+                    logger.debug("Invalid JWT token provided for authentication");
+                }
+        } catch (Exception e) {
+            logger.error("Unexpected error during JWT authentication", e);
+        }
+
+        filterChain.doFilter(request, response);
+    }
+}

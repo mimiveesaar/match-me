@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { MenuBase } from './menu_base';
 
 const meta: Meta<typeof MenuBase> = {
@@ -10,5 +10,9 @@ export default meta;
 type Story = StoryObj<typeof MenuBase>;
 
 export const Default: Story = {
-  render: () => <MenuBase children={undefined} />,
+  render: () => (
+    <div className="flex justify-center items-center h-screen">
+      <MenuBase children={undefined} />
+    </div>
+  ),
 };

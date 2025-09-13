@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=Noto+Serif:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
 
 @import "tailwindcss";
 @source "../../../";
@@ -20,7 +20,9 @@
   --color-coral: #EF764E;
   --color-limeburst: #30F84E;
   --color-ivory: #FFFCF7;
+  --color-powder-blue: #2F6690;
   --color-ivory-90: rgba(255, 252, 247, 0.9);
+  --font-ibm-plex-sans: 'IBM Plex Sans', sans-serif;
 }
 
 body {
@@ -29,6 +31,10 @@ body {
 
 .serif-text {
   font-family: 'Noto Serif', serif;
+}
+
+.chakra-petch {
+  font-family: 'Chakra Petch', sans-serif;
 }
 
 /* width */
@@ -63,15 +69,21 @@ body {
   .h-800 { height: 800px; }
   
   .rounded-custom-4 { border-radius: 4px; }
+  .rounded-custom-8 { border-radius: 8px; }
   .rounded-custom-16 { border-radius: 16px; }
 
   .drop-shadow-custom {
     filter: drop-shadow(-4px 4px 4px rgba(0, 0, 0, 0.25));
   }
 
-   .drop-shadow-custom-2 {
+  .drop-shadow-custom-2 {
     filter: drop-shadow(-2px 2px 2px rgba(0, 0, 0, 0.25));
   }
+
+  .inner-shadow-custom {
+    box-shadow: inset -4px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+
 
   @keyframes animation-scroll {
 

@@ -8,6 +8,7 @@ interface LabeledInputFieldProps {
   placeholder: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 }
 
 export const LabeledInputField = ({
@@ -16,11 +17,12 @@ export const LabeledInputField = ({
   value,
   onChange,
   id = `input-${label.replace(/\s+/g, "-").toLowerCase()}`,
+  disabled = false,
 }: LabeledInputFieldProps) => (
   <div className="mb-4">
     <label
       htmlFor={id}
-      className="block text-[10px] text-gray-500 italic mb-1 ml-1"
+      className="block text-left text-xs text-gray-500 italic mb-1 ml-1"
     >
       /{label.toLowerCase()}
     </label>
@@ -29,6 +31,7 @@ export const LabeledInputField = ({
       placeholder={placeholder}
       value={value}
       onChange={onChange}
+      disabled={disabled}
     />
   </div>
 );

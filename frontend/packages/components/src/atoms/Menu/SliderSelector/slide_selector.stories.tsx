@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { RangeSlider } from './slide_selector';
 
 const meta: Meta<typeof RangeSlider> = {

@@ -5,37 +5,30 @@ import { MenuHeader } from "@atoms/Menu/Header/header";
 import { MenuBase } from "@atoms/Menu/MenuBase/menu_base";
 import { PageLink } from "@atoms/Menu/PageLink/pagelink";
 import { SignOutButton } from "@atoms/Menu/SignOut/signout";
-import { FilteringDropdown } from "@molecules/Menu/filtering_dropdown";
+import React from "react";
 
+interface MenuProps {
+  hasUnread: boolean;
+}
 
-export const Menu = ({ filters, setFilters }) => {
-  const [showDropdown, setShowDropdown] = useState(false);
+export const Menu = ({ hasUnread }: MenuProps) => (
+  <MenuBase className="flex flex-col h-full p-4">
+    
+    {/* Top: Header */}
+    <div className="w-full flex justify-center mb-10">
+      <MenuHeader header="Menu" />
+    </div>
 
-  const handleMatchesClick = () => {
-    setShowDropdown(prev => !prev);
-  };
+    {/* Middle: PageLinks */}
+    <div className="flex flex-col gap-3 items-start pl-2">
+      <PageLink label="Matches" />
+      <PageLink label="My Profile" />
+      <PageLink label="My Connections" />
+      <PageLink label="Chatspace" dot={hasUnread}  />
+    </div>
 
-  return (
-    <MenuBase className="flex flex-col h-full p-7 py-3">
-      <div className="w-full flex justify-center mb-5">
-        <MenuHeader header="Menu" />
-      </div>
-
-      <div className="flex flex-col gap-1 items-start w-full">
-        <PageLink label="Matches" onClick={handleMatchesClick} />
-
-        {showDropdown && (
-          <div className="w-full">
-            <FilteringDropdown filters={filters} setFilters={setFilters} />
-          </div>
-        )}
-
-        <PageLink label="My Profile" />
-        <PageLink label="My Connections" />
-        <PageLink label="Chatspace" />
-      </div>
-
-      <div className="flex-1" />
+    {/* Spacer pushes sign-out to bottom */}
+    <div className="flex-1" />
 
       <div className="w-full flex justify-center mt-4">
         <SignOutButton />

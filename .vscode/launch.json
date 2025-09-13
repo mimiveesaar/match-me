@@ -1,0 +1,36 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "ChatTestClient",
+            "request": "launch",
+            "mainClass": "tech.kood.match_me.chatspace.testclient.ChatTestClient",
+            "projectName": "match-me"
+        },
+        {
+            "type": "java",
+            "name": "ChatModuleApplication",
+            "request": "launch",
+            "mainClass": "tech.kood.match_me.ChatModuleApplication",
+            "projectName": "match-me"
+        },
+        {
+            "type": "java",
+            "name": "Application",
+            "request": "launch",
+            "mainClass": "tech.kood.match_me.Application",
+            "projectName": "match-me"
+        },
+        {
+            "type": "java",
+            "name": "TestMatchMeApplication",
+            "request": "launch",
+            "mainClass": "tech.kood.match_me.TestMatchMeApplication",
+            "projectName": "match-me"
+        }
+    ]
+}

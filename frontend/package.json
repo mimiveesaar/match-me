@@ -4,12 +4,16 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:user-management": "turbo run dev --filter=user-management",
+    "dev:profile": "turbo run dev --filter=profile",
+    "dev:storybook": "turbo run storybook --filter=components",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.11",
+    "@types/react": "^19.1.12",
     "prettier": "^3.5.3",
     "turbo": "^2.5.4",
     "typescript": "5.8.2"

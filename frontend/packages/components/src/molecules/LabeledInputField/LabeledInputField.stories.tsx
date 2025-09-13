@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { LabeledInputField } from "./LabeledInputField";
 
 const meta: Meta<typeof LabeledInputField> = {

@@ -1,6 +1,6 @@
 import React from "react";
 import { InterestTag } from "./InterestTag";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 
 const meta: Meta<typeof InterestTag> = {
   title: "Molecules/InterestTag",

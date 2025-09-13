@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/nextjs';
 import { StarIcon } from './star_icon';
 
 const meta: Meta<typeof StarIcon> = {

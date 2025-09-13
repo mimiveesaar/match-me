@@ -1,0 +1,50 @@
+package tech.kood.match_me.chatspace.repository;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import tech.kood.match_me.chatspace.model.Conversation;
+import tech.kood.match_me.chatspace.model.User;
+
+public interface ConversationRepository extends JpaRepository<Conversation, UUID> {
+
+    @Query("SELECT c FROM Conversation c LEFT JOIN FETCH c.participants WHERE c.id = :id")
+    Optional<Conversation> findByIdWithParticipants(@Param("id") UUID id);
+
+    @Query("SELECT c FROM Conversation c LEFT JOIN FETCH c.participants LEFT JOIN FETCH c.messages WHERE c.id = :id")
+    Optional<Conversation> findByIdWithParticipantsAndMessages(@Param("id") UUID id);
+
+    @Query("SELECT c FROM Conversation c JOIN c.participants p1 JOIN c.participants p2 WHERE p1 = :user1 AND p2 = :user2")
+    Optional<Conversation> findByParticipants(@Param("user1") User user1, @Param("user2") User user2);
+
+    @Query("""
+        SELECT c 
+        FROM Conversation c
+        JOIN c.participants p1
+        JOIN c.participants p2
+        LEFT JOIN FETCH c.participants
+        LEFT JOIN FETCH c.messages
+        WHERE p1 = :user1 AND p2 = :user2
+    """)
+    Optional<Conversation> findByParticipantsWithData(@Param("user1") User user1, @Param("user2") User user2);
+
+    @Query("SELECT c FROM Conversation c JOIN c.participants p1 JOIN c.participants p2 "
+            + "WHERE p1.id = :userId AND p2.id = :otherUserId")
+    Optional<Conversation> findByParticipantsIds(UUID userId, UUID otherUserId);
+
+    List<Conversation> findByParticipantsContaining(User user);
+
+    @Query("""
+        SELECT DISTINCT c 
+        FROM Conversation c
+        LEFT JOIN FETCH c.participants
+        LEFT JOIN FETCH c.messages
+        WHERE :user MEMBER OF c.participants
+    """)
+    List<Conversation> findByParticipantsWithData(@Param("user") User user);
+}

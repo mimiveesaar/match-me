@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { ProfilePicture } from "./ProfilePicture";
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { ProfilePicture, RoundProfilePicture } from "./ProfilePicture";
 
 const meta: Meta<typeof ProfilePicture> = {
   title: "Atoms/ProfilePicture",
@@ -18,4 +18,8 @@ export const Default: Story = {
     width: 260,
     height: 160,
   },
+};
+
+export const SmallCircle: Story = {
+  render: (args) => <RoundProfilePicture {...args} />,
 };

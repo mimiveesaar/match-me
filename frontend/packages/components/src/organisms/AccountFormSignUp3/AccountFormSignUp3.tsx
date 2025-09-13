@@ -1,21 +1,32 @@
-
 import React from "react";
-
 import { useState } from "react";
 import { CircleWrapper } from "../../atoms/CircleWrapper/CircleWrapper";
 import { CameraIcon } from "../../atoms/CameraIcon/CameraIcon";
 import { ProfilePicture } from "../../atoms/ProfilePicture/ProfilePicture";
+import { CheckIcon } from "../../atoms/CheckIcon/CheckIcon";
 
-import { CheckIcon } from "@atoms/CheckIcon/CheckIcon";
+interface AccountFormSignUp3Props {
+  onSubmit?: (profileImageUrl: string | null) => void | Promise<void>;
+  isLoading?: boolean;
+}
 
-export const AccountFormSignUp3 = () => {
-  // Add state for the selected image URL
+export const AccountFormSignUp3 = ({
+  onSubmit,
+  isLoading = false
+}: AccountFormSignUp3Props) => {
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
 
   const handleFileSelected = (file: File) => {
-    // Create a temporary URL to preview the image
     const imageUrl = URL.createObjectURL(file);
     setProfileImageUrl(imageUrl);
+  };
+
+  const handleSubmit = async () => {
+    if (onSubmit) {
+      await onSubmit(profileImageUrl);
+    } else {
+      console.log({ profileImageUrl });
+    }
   };
 
   return (
@@ -29,11 +40,10 @@ export const AccountFormSignUp3 = () => {
           </div>
 
           <div className="flex items-center justify-center mb-8">
-            {/* Pass the image URL to ProfilePicture to show the preview */}
             <ProfilePicture imageUrl={profileImageUrl} />
           </div>
 
-          <CheckIcon onClick={() => console.log({ profileImageUrl })} />
+          <CheckIcon onClick={handleSubmit} />
         </div>
       </CircleWrapper>
     </div>
