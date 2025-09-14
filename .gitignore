@@ -1,1 +1,4 @@
 .pnpm-store
+
+# User uploaded images (don't commit to git)
+uploads/profile-images/*

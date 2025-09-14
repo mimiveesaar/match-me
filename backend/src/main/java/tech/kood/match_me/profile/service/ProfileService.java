@@ -1,9 +1,22 @@
 package tech.kood.match_me.profile.service;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.core.io.ClassPathResource;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import tech.kood.match_me.profile.dto.ProfileDTO;
 import tech.kood.match_me.profile.dto.ProfileViewDTO;
@@ -97,6 +110,99 @@ public class ProfileService {
 
         return profileRepo.findAllWithRelations().stream().findFirst()
                 .orElseThrow(() -> new RuntimeException("No profile found"));
+    }
+
+    @Value("${app.upload.dir:${user.home}/profile-images}")
+    private String uploadDir;
+
+    public String saveProfileImage(MultipartFile file) throws IOException {
+        // Create upload directory if it doesn't exist
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        // Generate unique filename
+        String filename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        Path filePath = uploadPath.resolve(filename);
+
+        // Save file
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        return filename; // Store just filename, not full path
+    }
+
+    @Transactional("profileManagementTransactionManager")
+    public ProfileViewDTO updateProfileImage(String imagePath) {
+        Profile profile = getMyProfile();
+
+        // Delete old image if it exists
+        String oldImage = profile.getProfilePic();
+        if (oldImage != null && !oldImage.isEmpty() && !oldImage.startsWith("http")) {
+            try {
+                deleteImageFile(oldImage);
+            } catch (IOException e) {
+                System.out.println("Warning: Could not delete old image: " + e.getMessage());
+            }
+        }
+
+        profile.setProfilePic(imagePath);
+        Profile savedProfile = profileRepo.saveAndFlush(profile);
+        return toViewDTO(savedProfile);
+    }
+
+    public Resource getProfileImage() throws IOException {
+        Profile profile = getMyProfile();
+        String filename = profile.getProfilePic();
+
+        // If no profile pic is set, use default
+        if (filename == null || filename.isEmpty()) {
+            return getDefaultProfileImage();
+        }
+
+        // If it's a URL, we can't serve it directly - use default
+        if (filename.startsWith("http")) {
+            return getDefaultProfileImage();
+        }
+
+        Path imagePath = Paths.get(uploadDir).resolve(filename);
+        Resource resource = new UrlResource(imagePath.toUri());
+
+        if (resource.exists() && resource.isReadable()) {
+            return resource;
+        } else {
+            // If file doesn't exist, return default instead of error
+            System.out.println("Profile image not found: " + filename + ", using default");
+            return getDefaultProfileImage();
+        }
+    }
+
+    private Resource getDefaultProfileImage() throws IOException {
+        // Load default image from resources
+        ClassPathResource defaultImage = new ClassPathResource("static/images/default-profile.png");
+
+        if (defaultImage.exists()) {
+            return defaultImage;
+        } else {
+            throw new FileNotFoundException(
+                    "Default profile image not found at: static/images/default-profile.png");
+        }
+    }
+
+    public String getDefaultProfileImageUrl() {
+        return "/images/default-profile.png";
+    }
+
+    private void deleteImageFile(String filename) throws IOException {
+        if (filename == null || filename.isEmpty() || filename.startsWith("http")) {
+            return;
+        }
+
+        Path imagePath = Paths.get(uploadDir).resolve(filename);
+        if (Files.exists(imagePath)) {
+            Files.delete(imagePath);
+            System.out.println("Deleted old image: " + imagePath);
+        }
     }
 
     private ProfileViewDTO toViewDTO(Profile profile) {

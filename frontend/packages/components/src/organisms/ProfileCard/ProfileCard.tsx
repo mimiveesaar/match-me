@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { LabeledInputField } from "../../molecules/LabeledInputField/LabeledInputField";
 import { LabeledSelectField } from "../../atoms/LabeledSelectField /LabeledSelectField";
 import { ProfileCardData } from "@/types";
@@ -20,6 +20,9 @@ export const ProfileCard = ({
   const [lookingforOptions, setLookingforOptions] = useState<Option[]>([]);
   const [planetOptions, setPlanetOptions] = useState<Option[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -76,6 +79,76 @@ export const ProfileCard = ({
       homeplanetId: profile.homeplanetId
     });
   }, [profile]);
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file size (e.g., max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size must be less than 5MB');
+      return;
+    }
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    setUploading(true);
+    setImageError(false);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('http://localhost:8080/api/profiles/me/image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const updatedProfile = await response.json();
+        // Update the profile state with the new image path
+        setProfile({ 
+          ...profile, 
+          profilePic: updatedProfile.profilePic 
+        });
+        console.log('Image uploaded successfully!');
+      } else {
+        const error = await response.text();
+        console.error('Upload failed:', error);
+        alert('Upload failed: ' + error);
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('Upload failed. Please try again.');
+    } finally {
+      setUploading(false);
+      // Clear the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const getImageSrc = () => {
+    if (profile.profilePic && profile.profilePic !== "https://example.com/default.jpg") {
+      // If we have a profile pic filename, use the API endpoint
+      return `http://localhost:8080/api/profiles/me/image?v=${Date.now()}`;
+    }
+    // Default image
+    return "https://i.imgur.com/0y8Ftya.png";
+  };
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
 
   const handleInputChange = (field: keyof ProfileCardData) => (
     e: React.ChangeEvent<HTMLInputElement>
@@ -136,11 +209,43 @@ export const ProfileCard = ({
 
   return (
     <div className="bg-amberglow rounded p-6 shadow-md w-80">
-      <img
-        src="https://i.imgur.com/0y8Ftya.png"
-        alt="alien"
-        className="rounded mb-4 w-full object-cover h-40"
-      />
+      {/* Image Upload Section */}
+      <div className="relative mb-4">
+        <img
+          src={imageError ? `http://localhost:8080/api/profiles/me/image` : getImageSrc()}
+          alt="Profile"
+          className="rounded w-full object-cover h-40 cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={handleImageClick}
+          onError={handleImageError}
+        />
+        
+        {/* Upload overlay */}
+        {uploading && (
+          <div className="absolute inset-0 bg-black bg-opacity-50 rounded flex items-center justify-center">
+            <div className="text-white text-sm">Uploading...</div>
+          </div>
+        )}
+        
+        {/* Upload button overlay */}
+        <div 
+          className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 rounded flex items-center justify-center opacity-0 hover:opacity-100 transition-all cursor-pointer"
+          onClick={handleImageClick}
+        >
+          <div className="text-white text-sm font-semibold">
+            📷 Change Photo
+          </div>
+        </div>
+        
+        {/* Hidden file input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          disabled={uploading}
+          className="hidden"
+        />
+      </div>
 
       <LabeledInputField
         label="/name"
