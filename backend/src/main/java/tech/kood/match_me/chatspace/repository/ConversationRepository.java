@@ -7,10 +7,12 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import tech.kood.match_me.chatspace.model.Conversation;
 import tech.kood.match_me.chatspace.model.User;
 
+@Repository
 public interface ConversationRepository extends JpaRepository<Conversation, UUID> {
 
     @Query("SELECT c FROM Conversation c LEFT JOIN FETCH c.participants WHERE c.id = :id")
