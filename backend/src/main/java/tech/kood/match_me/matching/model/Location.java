@@ -1,7 +1,9 @@
 package tech.kood.match_me.matching.model;
 
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Entity;
 
+@Entity
 @Embeddable
 public class Location {
 
