@@ -17,8 +17,7 @@ services:
       - ./postgres/scripts/init-connections.sql:/docker-entrypoint-initdb.d/init-connections.sql
       - ./postgres/scripts/init-matching.sql:/docker-entrypoint-initdb.d/init-matching.sql
       - ./postgres/scripts/init-profile.sql:/docker-entrypoint-initdb.d/init-profile.sql
-
-networks:
-  default:
-    external:
-      name: matchme-shared-net
+#networks:
+#  default:
+#    external:
+#      name: matchme-shared-net

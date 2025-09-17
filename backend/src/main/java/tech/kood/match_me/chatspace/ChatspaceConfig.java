@@ -1,5 +1,6 @@
 package tech.kood.match_me.chatspace;
 
+import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -46,8 +47,15 @@ public class ChatspaceConfig {
     }
 
     @Bean
+    @ConfigurationProperties(prefix = "spring.datasource.chatspace.jpa")
+    public Properties chatspaceJpaProperties() {
+        return new Properties();
+    }
+
+    @Bean
     public LocalContainerEntityManagerFactoryBean chatspaceEmf(
-            @Qualifier("chatspaceDataSource") DataSource dataSource) {
+            @Qualifier("chatspaceDataSource") DataSource dataSource,
+            @Qualifier("chatspaceJpaProperties") Properties jpaProps) {
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(true);
@@ -59,6 +67,7 @@ public class ChatspaceConfig {
         emf.setPersistenceUnitName("chatspacePU");
         emf.setJpaVendorAdapter(vendorAdapter);
 
+        emf.setJpaProperties(jpaProps);
         return emf;
     }
 
