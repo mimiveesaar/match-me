@@ -1,5 +1,6 @@
 package tech.kood.match_me.profile;
 
+import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -45,8 +46,15 @@ public class ProfileManagementConfig {
     }
 
     @Bean
+    @ConfigurationProperties(prefix = "spring.datasource.profile.jpa")
+    public Properties profileJpaProperties() {
+        return new Properties();
+    }
+
+    @Bean
     public LocalContainerEntityManagerFactoryBean profileManagementEmf(
-            @Qualifier("profileManagementDataSource") DataSource dataSource) {
+            @Qualifier("profileManagementDataSource") DataSource dataSource,
+            @Qualifier("profileJpaProperties") Properties jpaProps) {
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(true);
@@ -58,6 +66,7 @@ public class ProfileManagementConfig {
         emf.setPersistenceUnitName("profilePU");
         emf.setJpaVendorAdapter(vendorAdapter);
 
+        emf.setJpaProperties(jpaProps);
         return emf;
     }
 
