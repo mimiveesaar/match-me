@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
@@ -26,6 +27,7 @@ import tech.kood.match_me.matching.model.User;
 @Repository
 public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
 
+    @Qualifier("matchingEmf")
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -71,17 +73,17 @@ public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
             hpQuery.select(hpRoot).where(cb.equal(hpRoot.get("name"), filter.getHomeplanet()));
 
             Homeplanet selectedPlanet;
-            try {
-                selectedPlanet = entityManager.createQuery(hpQuery).getSingleResult();
-            } catch (NoResultException e) {
-                return Collections.emptyList();
-            }
+                try {
+                    selectedPlanet = entityManager.createQuery(hpQuery).getSingleResult();
+                } catch (NoResultException e) {
+                    return Collections.emptyList();
+                }
 
             double homeLat = selectedPlanet.getLatitude();
             double homeLon = selectedPlanet.getLongitude();
             double maxDistance = filter.getMaxDistanceLy();
 
-            // Get the user's planet coordinates (not filter by planet name!)
+            // Get the user's planet coordinates
             Expression<Double> userLat = homeplanetJoin.get("latitude");
             Expression<Double> userLon = homeplanetJoin.get("longitude");
 
