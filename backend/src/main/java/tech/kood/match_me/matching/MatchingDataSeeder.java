@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class MatchingDataSeeder implements CommandLineRunner {
 
     @Autowired
-    @Qualifier("matchingManagementJdbcTemplate") //?
+    @Qualifier("matchingJdbcTemplate") //?
     private JdbcTemplate jdbcTemplate;
 
     @Override
