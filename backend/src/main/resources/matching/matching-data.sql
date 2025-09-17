@@ -1,15 +1,3 @@
-
-CREATE TABLE IF NOT EXISTS users (
-    id UUID PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    age INT,
-    profilepic_src VARCHAR(255),
-    homeplanet_id INT,
-    looking_for_id INT,
-    bodyform_id INT,
-    bio TEXT
-);
-
 INSERT INTO users (id, username, age, profilepic_src, homeplanet_id, bodyform_id, looking_for_id, bio) VALUES
 ('3fa85f64-5717-4562-b3fc-2c963f66afa1', 'starhopper42', 27, '/images/profiles/starhopper.png', 1, 1, 1, 'Explorer of galaxies and maker of maps.'),
 ('c9a6463d-5e4b-43ef-924e-25d7a9e8e6c2', 'nebular_nikki', 31, '/images/profiles/nebular_nikki.png', 2, 2, 2, 'Dreaming beyond the stars.'),
@@ -33,22 +21,6 @@ INSERT INTO users (id, username, age, profilepic_src, homeplanet_id, bodyform_id
 ('0b2e39ea-d1ef-4b6c-93b6-1d0ff861197e', 'kepler_kai', 37, '/images/profiles/kepler-kai.png', 14, 1, 3, 'Mapping hearts like exoplanets.'),
 ('d87e7304-7bfb-4bfb-9318-52c58f3c1034', '1', 35, NULL, 1, 1, 1, 'Supermatch');
 
-
-CREATE TABLE IF NOT EXISTS user_rejections (
-    id UUID PRIMARY KEY,
-    rejecter_id UUID NOT NULL,
-    rejected_id UUID NOT NULL,
-    CONSTRAINT fk_rejecter FOREIGN KEY (rejecter_id) REFERENCES users(id),
-    CONSTRAINT fk_rejected FOREIGN KEY (rejected_id) REFERENCES users(id)
-);
-
-CREATE TABLE IF NOT EXISTS user_interests (
-    user_id UUID NOT NULL,
-    interest_id INT NOT NULL,
-    PRIMARY KEY (user_id, interest_id),
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id),
-    CONSTRAINT fk_interest FOREIGN KEY (interest_id) REFERENCES interests(id)
-);
 
 INSERT INTO user_interests (user_id, interest_id) VALUES
 ('3fa85f64-5717-4562-b3fc-2c963f66afa1', 1),
@@ -89,10 +61,6 @@ INSERT INTO user_interests (user_id, interest_id) VALUES
 ('bfd6b738-6c58-4b77-8aa2-dce297fa23b5', 8),
 ('0b2e39ea-d1ef-4b6c-93b6-1d0ff861197e', 12);
 
-CREATE TABLE IF NOT EXISTS looking_for (
-    id INT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE
-);
 
 INSERT INTO looking_for (id, name) VALUES
 (1, 'Friendship'),
@@ -102,10 +70,6 @@ INSERT INTO looking_for (id, name) VALUES
 (5, 'Host Symbiosis'),
 (6, 'Chtulhu');
 
-CREATE TABLE IF NOT EXISTS interests (
-    id INT PRIMARY KEY,
-    interest VARCHAR(100) NOT NULL UNIQUE
-);
 
 INSERT INTO interests (id, interest) VALUES
 (1, 'Telepathic Chess'),
@@ -149,12 +113,6 @@ INSERT INTO interests (id, interest) VALUES
 (39, 'Cryptography'),
 (40, 'Wormhole Jumping');
 
-CREATE TABLE IF NOT EXISTS homeplanets (
-    id INT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE,
-    latitude DOUBLE PRECISION NOT NULL,
-    longitude DOUBLE PRECISION NOT NULL
-);
 
 INSERT INTO homeplanets (id, name, latitude, longitude) VALUES
 (1, 'Xeron-5', 45.2, 130.5),
@@ -173,20 +131,6 @@ INSERT INTO homeplanets (id, name, latitude, longitude) VALUES
 (14, 'Oortania', -60.4, -40.1),
 (15, 'Vrexalon', 0, 0);
 
--- Create connection_requests table
-CREATE TABLE IF NOT EXISTS connection_requests (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    requester_id UUID NOT NULL,
-    requested_id UUID NOT NULL,
-    CONSTRAINT fk_requester FOREIGN KEY (requester_id) REFERENCES users(id) ON DELETE CASCADE,
-    CONSTRAINT fk_requested FOREIGN KEY (requested_id) REFERENCES users(id) ON DELETE CASCADE,
-    CONSTRAINT unique_request UNIQUE (requester_id, requested_id)
-);
-
-CREATE TABLE IF NOT EXISTS bodyforms (
-    id INTEGER PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE
-);
 
 INSERT INTO bodyforms (id, name) VALUES
 (1, 'Gelatinous'),
