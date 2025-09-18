@@ -7,8 +7,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.getConnections.api.GetAcceptedConnectionsQueryHandler;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.getConnections.api.GetAcceptedConnectionsRequest;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.getConnections.api.GetAcceptedConnectionsResults;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.rejectConnection.api.RejectAcceptedConnectionCommandHandler;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.rejectConnection.api.RejectAcceptedConnectionRequest;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.rejectConnection.api.RejectAcceptedConnectionResults;
@@ -24,7 +27,7 @@ import tech.kood.match_me.connections.features.pendingConnection.actions.decline
 import tech.kood.match_me.connections.features.pendingConnection.actions.getPendingRequests.api.GetPendingConnectionsQueryHandler;
 import tech.kood.match_me.connections.features.pendingConnection.actions.getPendingRequests.api.GetPendingConnectionsRequest;
 import tech.kood.match_me.connections.features.pendingConnection.actions.getPendingRequests.api.GetPendingConnectionsResults;
-import tech.kood.match_me.connections.gateway.dto.GetPendingConnectionsDTO;
+import tech.kood.match_me.connections.gateway.dto.*;
 import tech.kood.match_me.user_management.features.user.domain.api.UserDTO;
 
 
@@ -53,6 +56,7 @@ public class ConnectionsGateway {
         this.declineConnectionCommandHandler = declineConnectionCommandHandler;
     }
 
+
     @GetMapping("/pending-requests")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Pending connection requests retrieved successfully.",
@@ -73,9 +77,9 @@ public class ConnectionsGateway {
         var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var userId = ((UserDTO) principal).id();
 
-
         var getPendingConnectionsRequest = new GetPendingConnectionsRequest(userId);
         var result = getPendingConnectionsQueryHandler.handle(getPendingConnectionsRequest);
+
         if (result instanceof GetPendingConnectionsResults.Success success) {
             return ResponseEntity.ok(success);
         } else if (result instanceof GetPendingConnectionsResults.InvalidRequest invalidRequest) {
@@ -88,6 +92,40 @@ public class ConnectionsGateway {
         }
     }
 
+    @GetMapping("/")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Accepted connections retrieved successfully.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(discriminatorProperty = "type",
+                                    implementation = GetAcceptedConnectionsResults.Success.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(discriminatorProperty = "type",
+                                    implementation = GetAcceptedConnectionsResults.InvalidRequest.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(discriminatorProperty = "type",
+                                    implementation = GetAcceptedConnectionsResults.SystemError.class)))
+    })
+    public ResponseEntity<GetAcceptedConnectionsResults> getAcceptedConnections() {
+
+        var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var userId = ((UserDTO) principal).id();
+
+        var request = new GetAcceptedConnectionsRequest(userId);
+        var result = getAcceptedConnectionsQueryHandler.handle(request);
+
+        if (result instanceof GetAcceptedConnectionsResults.Success success) {
+            return ResponseEntity.ok(success);
+        } else if (result instanceof GetAcceptedConnectionsResults.InvalidRequest invalidRequest) {
+            return ResponseEntity.badRequest().body(invalidRequest);
+        } else if (result instanceof GetAcceptedConnectionsResults.SystemError systemError) {
+            return ResponseEntity.status(500).body(systemError);
+        } else {
+            // This should never happen, but just in case
+            return ResponseEntity.status(500).body(new GetAcceptedConnectionsResults.SystemError("Unknown error"));
+        }
+    }
 
     @PostMapping("/accept-request")
     @ApiResponses(value = {
@@ -117,8 +155,13 @@ public class ConnectionsGateway {
                             schema = @io.swagger.v3.oas.annotations.media.Schema(
                                     discriminatorProperty = "type",
                                     implementation = AcceptConnectionResults.SystemError.class)))})
-    public ResponseEntity<AcceptConnectionResults> acceptConnectionRequest(AcceptConnectionRequest request) {
-        var result = acceptConnectionCommandHandler.handle(request);
+    public ResponseEntity<AcceptConnectionResults> acceptConnectionRequest(AcceptConnectionDTO request) {
+
+        var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var userId = ((UserDTO) principal).id();
+
+        var internalRequest = new AcceptConnectionRequest(request.connectionIdDTO(), userId);
+        var result = acceptConnectionCommandHandler.handle(internalRequest);
 
         if (result instanceof AcceptConnectionResults.Success success) {
             return ResponseEntity.ok(success);
@@ -159,9 +202,13 @@ public class ConnectionsGateway {
                             schema = @Schema(discriminatorProperty = "type",
                                     implementation = ConnectionRequestResults.SystemError.class)))})
 
-    public ResponseEntity<ConnectionRequestResults> createConnectionRequest(@RequestBody ConnectionRequest request) {
+    public ResponseEntity<ConnectionRequestResults> createConnectionRequest(@RequestBody ConnectionRequestDTO request) {
 
-        var result = connectionRequestCommandHandler.handle(request);
+        var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var userId = ((UserDTO) principal).id();
+
+        var internalRequest = new ConnectionRequest(request.targetId(), userId);
+        var result = connectionRequestCommandHandler.handle(internalRequest);
 
         if (result instanceof ConnectionRequestResults.Success success) {
             return ResponseEntity.ok(success);
@@ -208,7 +255,12 @@ public class ConnectionsGateway {
                                     implementation = RejectAcceptedConnectionResults.SystemError.class)))
     })
     public ResponseEntity<RejectAcceptedConnectionResults> rejectAcceptedConnection(
-            RejectAcceptedConnectionRequest request) {
+            RejectConnectionDTO rejectConnection) {
+
+        var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var userId = ((UserDTO) principal).id();
+
+        var request = new RejectAcceptedConnectionRequest(rejectConnection.connectionId(), userId);
         var result = rejectAcceptedConnectionCommandHandler.handle(request);
 
         if (result instanceof RejectAcceptedConnectionResults.Success success) {
@@ -244,7 +296,12 @@ public class ConnectionsGateway {
                     schema = @io.swagger.v3.oas.annotations.media.Schema(discriminatorProperty = "type",
                             implementation = DeclineConnectionResults.SystemError.class)))
     })
-    public ResponseEntity<DeclineConnectionResults> declineConnectionRequest(DeclineConnectionRequest request) {
+    public ResponseEntity<DeclineConnectionResults> declineConnectionRequest(@Validated DeclineConnectionDTO declineConnection) {
+
+        var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var userId = ((UserDTO) principal).id();
+
+        var request = new DeclineConnectionRequest(declineConnection.connectionId(), userId);
         var result = declineConnectionCommandHandler.handle(request);
 
         if (result instanceof DeclineConnectionResults.Success success) {
