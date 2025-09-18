@@ -2,7 +2,6 @@ package tech.kood.match_me.user_management.features.accessToken.actions.createAc
 
 import java.time.Instant;
 
-import jakarta.transaction.Transactional;
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.slf4j.Logger;
@@ -12,6 +11,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.user_management.UserManagementConfig;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;

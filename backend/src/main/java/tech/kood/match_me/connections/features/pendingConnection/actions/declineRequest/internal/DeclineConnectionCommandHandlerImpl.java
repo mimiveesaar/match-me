@@ -7,10 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
-import tech.kood.match_me.connections.features.pendingConnection.actions.declineRequest.api.ConnectionRequestUndoEvent;
-import tech.kood.match_me.connections.features.pendingConnection.actions.declineRequest.api.DeclineConnectionCommandHandler;
-import tech.kood.match_me.connections.features.pendingConnection.actions.declineRequest.api.DeclineConnectionRequest;
-import tech.kood.match_me.connections.features.pendingConnection.actions.declineRequest.api.DeclineConnectionResults;
+import tech.kood.match_me.connections.features.pendingConnection.actions.declineRequest.api.*;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.PendingConnectionRepository;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionRequest;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionCommandHandler;
@@ -61,7 +58,9 @@ public class DeclineConnectionCommandHandlerImpl implements DeclineConnectionCom
 
             eventPublisher.publishEvent(new ConnectionRequestUndoEvent(request.connectionIdDTO(), new UserIdDTO(pendingConnectionEntity.getSenderId()), new UserIdDTO(pendingConnectionEntity.getTargetId())));
             return new DeclineConnectionResults.Success();
-        } else {
+        }
+        //Decline the pending connection request and create a rejected connection.
+        else {
             var createRejectedConnectionRequest = new CreateRejectedConnectionRequest(request.declinedByUser(), new UserIdDTO(pendingConnectionEntity.getSenderId()), RejectedConnectionReasonDTO.CONNECTION_DECLINED);
 
             var result = createRejectedConnectionCommandHandler.handle(createRejectedConnectionRequest);
@@ -77,7 +76,7 @@ public class DeclineConnectionCommandHandlerImpl implements DeclineConnectionCom
                 return new DeclineConnectionResults.AlreadyDeclined();
             }
 
-            eventPublisher.publishEvent(new ConnectionRequestUndoEvent(request.connectionIdDTO(), new UserIdDTO(pendingConnectionEntity.getSenderId()), new UserIdDTO(pendingConnectionEntity.getTargetId())));
+            eventPublisher.publishEvent(new ConnectionRequestDeclinedEvent(request.connectionIdDTO(), new UserIdDTO(pendingConnectionEntity.getSenderId()), new UserIdDTO(pendingConnectionEntity.getTargetId())));
             return new DeclineConnectionResults.Success();
         }
     }

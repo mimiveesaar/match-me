@@ -1,11 +1,11 @@
 package tech.kood.match_me.user_management.features.user.actions.getUser.internal;
 
-import jakarta.transaction.Transactional;
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByEmailQueryHandler;
 import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByEmailRequest;

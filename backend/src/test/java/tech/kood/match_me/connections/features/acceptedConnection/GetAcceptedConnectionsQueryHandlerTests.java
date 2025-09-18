@@ -60,10 +60,10 @@ public class GetAcceptedConnectionsQueryHandlerTests extends ConnectionsTestBase
         // Verify that the correct connections are returned
         var connections = successResult.acceptedConnections();
         assertTrue(connections.stream().anyMatch(connection ->
-            (connection.acceptedByUser().value().equals(userId.value()) && 
-             connection.acceptedUser().value().equals(otherUser1Id.value())) ||
-            (connection.acceptedByUser().value().equals(otherUser2Id.value()) && 
-             connection.acceptedUser().value().equals(userId.value()))
+            (connection.acceptedByUserId().value().equals(userId.value()) &&
+             connection.acceptedUserId().value().equals(otherUser1Id.value())) ||
+            (connection.acceptedByUserId().value().equals(otherUser2Id.value()) &&
+             connection.acceptedUserId().value().equals(userId.value()))
         ));
     }
 
@@ -118,8 +118,8 @@ public class GetAcceptedConnectionsQueryHandlerTests extends ConnectionsTestBase
         assertEquals(1, successResult.acceptedConnections().size());
         
         var connection1 = successResult.acceptedConnections().get(0);
-        assertEquals(userId.value(), connection1.acceptedByUser().value());
-        assertEquals(otherUserId.value(), connection1.acceptedUser().value());
+        assertEquals(userId.value(), connection1.acceptedByUserId().value());
+        assertEquals(otherUserId.value(), connection1.acceptedUserId().value());
     }
 
     @Test
@@ -143,7 +143,7 @@ public class GetAcceptedConnectionsQueryHandlerTests extends ConnectionsTestBase
         assertEquals(1, successResult.acceptedConnections().size());
         
         var connection1 = successResult.acceptedConnections().get(0);
-        assertEquals(otherUserId.value(), connection1.acceptedByUser().value());
-        assertEquals(userId.value(), connection1.acceptedUser().value());
+        assertEquals(otherUserId.value(), connection1.acceptedByUserId().value());
+        assertEquals(userId.value(), connection1.acceptedUserId().value());
     }
 }

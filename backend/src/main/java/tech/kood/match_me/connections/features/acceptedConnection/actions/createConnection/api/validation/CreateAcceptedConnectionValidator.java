@@ -22,10 +22,10 @@ public class CreateAcceptedConnectionValidator implements ConstraintValidator<Va
         if (value.acceptedUser().value().equals(value.acceptedByUser().value())) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("Accepted by user and accepted user must not be the same")
-                    .addPropertyNode("acceptedByUser")
+                    .addPropertyNode("acceptedByUserId")
                     .addConstraintViolation();
             context.buildConstraintViolationWithTemplate("Accepted by user and accepted user must not be the same")
-                    .addPropertyNode("acceptedUser")
+                    .addPropertyNode("acceptedUserId")
                     .addConstraintViolation();
             return false;
         }

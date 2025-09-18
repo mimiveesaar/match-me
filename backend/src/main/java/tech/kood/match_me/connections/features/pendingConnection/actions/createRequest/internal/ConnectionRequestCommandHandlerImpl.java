@@ -60,7 +60,7 @@ public class ConnectionRequestCommandHandlerImpl implements ConnectionRequestCom
             pendingConnectionRepository.save(pendingConnectionEntity);
 
             var connectionId = new ConnectionIdDTO(pendingConnection.getId().getValue());
-            eventPublisher.publishEvent(new ConnectionRequestCreatedEvent(connectionId));
+            eventPublisher.publishEvent(new ConnectionRequestCreatedEvent(connectionId, request.senderId(), request.targetId()));
 
             return new ConnectionRequestResults.Success(connectionId);
         } catch (Exception ex) {

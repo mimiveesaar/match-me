@@ -13,10 +13,10 @@ public class AcceptedConnectionValidator implements ConstraintValidator<ValidAcc
         if (value.getAcceptedUser().equals(value.getAcceptedByUser())) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("Accepted by user and accepted user must not be the same")
-                    .addPropertyNode("acceptedByUser")
+                    .addPropertyNode("acceptedByUserId")
                     .addConstraintViolation();
             context.buildConstraintViolationWithTemplate("Accepted by user and accepted user must not be the same")
-                    .addPropertyNode("acceptedUser")
+                    .addPropertyNode("acceptedUserId")
                     .addConstraintViolation();
             return false;
         }

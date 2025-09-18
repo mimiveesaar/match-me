@@ -61,7 +61,7 @@ public class AcceptConnectionCommandHandlerImpl implements AcceptConnectionComma
 
         if (!pendingConnectionEntity.getTargetId().equals(request.acceptedByUser().value())) {
             var fieldError =
-                    new InputFieldErrorDTO("acceptedByUser", request.acceptedByUser().value(),
+                    new InputFieldErrorDTO("acceptedByUserId", request.acceptedByUser().value(),
                             "Only the target user can accept a connection request");
             return new AcceptConnectionResults.InvalidRequest(
                     new InvalidInputErrorDTO(List.of(fieldError)));

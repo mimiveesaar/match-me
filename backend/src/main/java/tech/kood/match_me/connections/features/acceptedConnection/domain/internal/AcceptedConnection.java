@@ -69,8 +69,8 @@ public class AcceptedConnection implements AggregateRoot<AcceptedConnection, Con
 
     @Override
     public String toString() {
-        return "AcceptedConnection{" + "connectionId=" + connectionId + ", acceptedByUser="
-                + acceptedByUser + ", acceptedUser=" + acceptedUser + ", createdAt=" + createdAt
+        return "AcceptedConnection{" + "connectionId=" + connectionId + ", acceptedByUserId="
+                + acceptedByUser + ", acceptedUserId=" + acceptedUser + ", createdAt=" + createdAt
                 + '}';
     }
 }

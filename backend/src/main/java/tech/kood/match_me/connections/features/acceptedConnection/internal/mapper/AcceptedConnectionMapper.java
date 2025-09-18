@@ -48,8 +48,8 @@ public class AcceptedConnectionMapper {
             throws CheckedConstraintViolationException {
 
         var connectionId = connectionIdFactory.create(acceptedConnectionDTO.connectionIdDTO().value());
-        var acceptedByUserId = userIdFactory.create(acceptedConnectionDTO.acceptedByUser().value());
-        var acceptedUserId = userIdFactory.create(acceptedConnectionDTO.acceptedUser().value());
+        var acceptedByUserId = userIdFactory.create(acceptedConnectionDTO.acceptedByUserId().value());
+        var acceptedUserId = userIdFactory.create(acceptedConnectionDTO.acceptedUserId().value());
         var createdAt = acceptedConnectionDTO.createdAt();
 
         return acceptedConnectionFactory.create(connectionId, acceptedByUserId, acceptedUserId,

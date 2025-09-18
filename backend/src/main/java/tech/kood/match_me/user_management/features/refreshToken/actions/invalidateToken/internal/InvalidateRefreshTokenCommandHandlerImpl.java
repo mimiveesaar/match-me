@@ -1,10 +1,10 @@
 package tech.kood.match_me.user_management.features.refreshToken.actions.invalidateToken.internal;
 
-import jakarta.transaction.Transactional;
 import jakarta.validation.Validator;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.features.refreshToken.actions.invalidateToken.api.RefreshTokenInvalidatedEvent;
 import tech.kood.match_me.user_management.features.refreshToken.actions.invalidateToken.api.InvalidateRefreshTokenCommandHandler;

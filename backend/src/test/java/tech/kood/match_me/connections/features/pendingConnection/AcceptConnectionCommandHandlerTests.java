@@ -22,7 +22,6 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @Transactional
@@ -68,8 +67,8 @@ public class AcceptConnectionCommandHandlerTests extends ConnectionsTestBase {
         var acceptedConnections = successResult.acceptedConnections();
         assertFalse(acceptedConnections.isEmpty());
         var acceptedConnection = acceptedConnections.getFirst();
-        assertEquals(targetId.value(), acceptedConnection.acceptedByUser().value());
-        assertEquals(senderId.value(), acceptedConnection.acceptedUser().value());
+        assertEquals(targetId.value(), acceptedConnection.acceptedByUserId().value());
+        assertEquals(senderId.value(), acceptedConnection.acceptedUserId().value());
     }
 
     @Test
@@ -100,7 +99,7 @@ public class AcceptConnectionCommandHandlerTests extends ConnectionsTestBase {
         var invalidRequestResult = (AcceptConnectionResults.InvalidRequest) result;
         assertNotNull(invalidRequestResult.error());
         assertFalse(invalidRequestResult.error().errors().isEmpty());
-        assertEquals("acceptedByUser", invalidRequestResult.error().errors().get(0).field());
+        assertEquals("acceptedByUserId", invalidRequestResult.error().errors().get(0).field());
     }
 
     @Test
