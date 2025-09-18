@@ -2,16 +2,16 @@
 
 import React from "react";
 
-import { Age } from "../../atoms/Match_Cards/Age/age";
-import { BioTextbox } from "../../atoms/Match_Cards/Bio/BioBox/biobox";
-import { SectionLine } from "../../atoms/Match_Cards/Bio/SectionLine/section_line";
-import { MatchCardBackground } from "../../atoms/Match_Cards/MatchCardBackround/match_card_background";
-import { StarIcon } from "../../atoms/Match_Cards/Star/star_icon";
-import { LocationTag } from "../../atoms/Match_Cards/Tags/LocationTag/location_tag";
-import { RelationshipTypeTag } from "../../atoms/Match_Cards/Tags/RelationshipTypeTag/relationship_type_tag";
-import { Username } from "../../atoms/Match_Cards/UserName/username";
-import { BodyformTag } from "@atoms/Match_Cards/Tags/BodyformTag/bodyform_tag";
-import { CardInterestTag } from "@atoms/Match_Cards/Tags/InterestTag/card_interest_tag";
+import { Age } from "../../atoms/MatchCards/Age/age";
+import { BioTextbox } from "../../atoms/MatchCards/Bio/BioBox/biobox";
+import { SectionLine } from "../../atoms/MatchCards/Bio/SectionLine/section_line";
+import { MatchCardBackground } from "../../atoms/MatchCards/MatchCardBackround/match_card_background";
+import { StarIcon } from "../../atoms/MatchCards/Star/star_icon";
+import { LocationTag } from "../../atoms/MatchCards/Tags/LocationTag/location_tag";
+import { RelationshipTypeTag } from "../../atoms/MatchCards/Tags/RelationshipTypeTag/relationship_type_tag";
+import { Username } from "../../atoms/MatchCards/Username/username";
+import { BodyformTag } from "@atoms/MatchCards/Tags/BodyformTag/bodyform_tag";
+import { CardInterestTag } from "@atoms/MatchCards/Tags/InterestTag/card_interest_tag";
 
 interface MatchCardBackProps {
     cardColor?: "amberglow" | "olive" | "peony" | "minty" | "moss" | "coral";
@@ -60,7 +60,7 @@ export const MatchCardBack = ({
                 </div>
 
                 <div className="py-4">
-                    <BioTextbox bio={bio}/>
+                    <BioTextbox bio={bio} />
                 </div>
 
                 <div className="text-ivory text-xs font-normal font-ibm_plex_sans">

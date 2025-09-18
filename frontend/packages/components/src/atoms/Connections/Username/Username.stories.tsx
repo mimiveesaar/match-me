@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { Username } from "./Username";
+import { ConnectionsUsername } from "./Username";
 
-const meta: Meta<typeof Username> = {
+const meta: Meta<typeof ConnectionsUsername> = {
   title: "Atoms/Connections/Username",
-  component: Username,
+  component: ConnectionsUsername,
   argTypes: {
     username: { control: "text" },
   },
 };
 export default meta;
 
-type Story = StoryObj<typeof Username>;
+type Story = StoryObj<typeof ConnectionsUsername>;
 
 export const Default: Story = {
   args: {

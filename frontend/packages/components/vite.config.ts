@@ -5,7 +5,6 @@ import tailwindcss from "@tailwindcss/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { builtinModules } from "module";
 import pkg from "./package.json";
-import { visualizer } from "rollup-plugin-visualizer";
 import dts from "vite-plugin-dts";
 import preserveDirectives from "rollup-preserve-directives";
 import path from "node:path";
@@ -25,7 +24,6 @@ export default defineConfig({
     dts({
       tsconfigPath: "./tsconfig.json",
     }),
-    visualizer(),
   ],
   build: {
     ssr: true,

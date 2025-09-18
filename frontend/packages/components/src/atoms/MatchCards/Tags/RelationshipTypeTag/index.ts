@@ -1,0 +1,1 @@
+export * from "./relationship_type_tag";

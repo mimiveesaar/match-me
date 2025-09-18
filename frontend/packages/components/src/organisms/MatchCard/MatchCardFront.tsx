@@ -1,14 +1,14 @@
 import React from "react";
 
-import { Age } from "../../atoms/Match_Cards/Age/age";
-import { BioTextbox } from "../../atoms/Match_Cards/Bio/BioBox/biobox";
-import { SectionLine } from "../../atoms/Match_Cards/Bio/SectionLine/section_line";
-import { MatchCardBackground } from "../../atoms/Match_Cards/MatchCardBackround/match_card_background";
-import { MatchCardProfilePic } from "../../atoms/Match_Cards/ProfilePicture/match_card_profile_pic";
-import { StarIcon } from "../../atoms/Match_Cards/Star/star_icon";
-import { LocationTag } from "../../atoms/Match_Cards/Tags/LocationTag/location_tag";
-import { RelationshipTypeTag } from "../../atoms/Match_Cards/Tags/RelationshipTypeTag/relationship_type_tag";
-import { Username } from "../../atoms/Match_Cards/UserName/username";
+import { Age } from "../../atoms/MatchCards/Age/age";
+import { BioTextbox } from "../../atoms/MatchCards/Bio/BioBox/biobox";
+import { SectionLine } from "../../atoms/MatchCards/Bio/SectionLine/section_line";
+import { MatchCardBackground } from "../../atoms/MatchCards/MatchCardBackround/match_card_background";
+import { MatchCardProfilePic } from "../../atoms/MatchCards/ProfilePicture/match_card_profile_pic";
+import { StarIcon } from "../../atoms/MatchCards/Star/star_icon";
+import { LocationTag } from "../../atoms/MatchCards/Tags/LocationTag/location_tag";
+import { RelationshipTypeTag } from "../../atoms/MatchCards/Tags/RelationshipTypeTag/relationship_type_tag";
+import { Username } from "../../atoms/MatchCards/Username/username";
 import { ButtonTriangle } from "../../molecules/Match Cards/MatchCardButtons/match_card_buttons";
 
 
