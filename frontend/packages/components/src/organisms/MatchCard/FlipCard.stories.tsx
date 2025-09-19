@@ -16,10 +16,20 @@ export const Default: Story = {
     render: () =>
         <FlipCard
             front={
-                <MatchCardFront location={"Mars"} relationshipType={"Martian lover"} bio={"Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry."}/>
+                <MatchCardFront location={"Mars"}
+                                bio={"Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry."}
+                                lookingFor={""} userId={""} onReject={function (userId: string): void {
+                    throw new Error("Function not implemented.");
+                }} onConnectionRequest={function (userId: string): void {
+                    throw new Error("Function not implemented.");
+                }}/>
             }
             back={
-                <MatchCardBack location={"Mars"} relationshipType={"Martian lover"} bodyform={"Gelatinous"} bio={"Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry."} />
+                <MatchCardBack location={"Mars"} bodyform={"Gelatinous"}
+                               bio={"Hi, I'm Shelly! Martian explorer by day, dream weaver by night. Lover of olive lattes and quantum poetry."}
+                               lookingFor={""} onHide={function (): void {
+                    throw new Error("Function not implemented.");
+                }} />
             } 
         />,
 };

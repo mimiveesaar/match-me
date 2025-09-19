@@ -1,17 +1,18 @@
 "use client";
 
+import { Age } from "@atoms/MatchCards/Age/Age";
+import { BioTextbox } from "@atoms/MatchCards/Bio/Biobox/Biobox";
+import { SectionLine } from "@atoms/MatchCards/Bio/SectionLine/SectionLine";
+import { MatchCardBackground } from "@atoms/MatchCards/MatchCardBackround/MatchCardBackground";
+import { StarIcon } from "@atoms/MatchCards/Star/StarIcon";
+import { BodyformTag } from "@atoms/MatchCards/Tags/BodyformTag/BodyformTag";
+import { CardInterestTag } from "@atoms/MatchCards/Tags/InterestTag/CardInterestTag";
+import { LocationTag } from "@atoms/MatchCards/Tags/LocationTag/LocationTag";
+import { RelationshipTypeTag } from "@atoms/MatchCards/Tags/RelationshipTypeTag/RelationshipTypeTag";
+import { Username } from "@atoms/MatchCards/Username/Username";
 import React from "react";
 
-import { Age } from "../../atoms/Match_Cards/Age/age";
-import { BioTextbox } from "../../atoms/Match_Cards/Bio/BioBox/biobox";
-import { SectionLine } from "../../atoms/Match_Cards/Bio/SectionLine/section_line";
-import { MatchCardBackground } from "../../atoms/Match_Cards/MatchCardBackround/match_card_background";
-import { StarIcon } from "../../atoms/Match_Cards/Star/star_icon";
-import { LocationTag } from "../../atoms/Match_Cards/Tags/LocationTag/location_tag";
-import { RelationshipTypeTag } from "../../atoms/Match_Cards/Tags/RelationshipTypeTag/relationship_type_tag";
-import { Username } from "../../atoms/Match_Cards/UserName/username";
-import { BodyformTag } from "@atoms/Match_Cards/Tags/BodyformTag/bodyform_tag";
-import { CardInterestTag } from "@atoms/Match_Cards/Tags/InterestTag/card_interest_tag";
+
 
 interface MatchCardBackProps {
     cardColor?: "amberglow" | "olive" | "peony" | "minty" | "moss" | "coral";
@@ -24,7 +25,7 @@ interface MatchCardBackProps {
     interests?: string[];
     onHide: () => void;
     supermatch?: boolean;
-};
+}
 
 export const MatchCardBack = ({
     cardColor = "olive",

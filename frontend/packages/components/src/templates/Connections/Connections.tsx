@@ -10,8 +10,7 @@ import {
   OutgoingPings,
   OutgoingPingsProps,
 } from "@organisms/Connections/OutgoingPings/OutgoingPings";
-import { Menu } from "@organisms/Menu/menu";
-import React, { useState } from "react";
+import { Menu } from "@organisms/Menu/Menu";
 
 export interface ConnectionsProps {
   incomingPings: IncomingPingsProps;
@@ -28,7 +27,7 @@ export const Connections = ({
     <div className="mx-auto h-full max-sm:w-full">
       <div className="mt-20 flex h-full w-full flex-col justify-center sm:flex-row">
         <div className="hidden max-h-[600px] sm:flex lg:mr-4">
-          <Menu />
+          <Menu hasUnread={false} />
         </div>
         <div className="flex w-full flex-col space-y-3 lg:flex-row lg:space-y-0 lg:p-3">
           <div className="flex items-start justify-center lg:ml-3">
