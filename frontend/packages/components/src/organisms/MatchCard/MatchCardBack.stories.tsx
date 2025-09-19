@@ -22,7 +22,6 @@ export const Default: Story = {
   args: {
     cardColor: "olive",
     location: "Venus",
-    relationshipType: "Astral companion",
     bodyform: "Polymorphontes",
     bio: "A cosmic wanderer seeking a partner to explore the mysteries of the universe. Loves stargazing and interstellar travel.",
 

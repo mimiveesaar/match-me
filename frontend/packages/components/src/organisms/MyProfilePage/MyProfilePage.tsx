@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { InterestsSection } from "../../organisms/InterestsSection/InterestsSection";
+import { InterestsSection } from "../InterestsSection/InterestsSection";
 import { MultiLineInputField } from "../../atoms/MultiLineInputField/MultiLineInputField";
-import { ProfileCard } from "../../organisms/ProfileCard/ProfileCard";
-import { Menu } from "../../organisms/Menu/menu";
+import { ProfileCard } from "../ProfileCard/ProfileCard";
+import { Menu } from "@organisms/Menu/Menu";
+
 
 interface MyProfilePageProps {
   initialProfile?: any;
@@ -60,11 +61,11 @@ export const MyProfilePage = ({
   return (
     <div className="flex">
       {/* Menu - hidden on mobile, visible on desktop */}
-      <Menu className="hidden lg:block" />
+      <Menu className="hidden lg:block" hasUnread={false} />
       
       {/* Menu for mobile - will be handled by the hamburger button */}
       <div className="lg:hidden">
-        <Menu />
+        <Menu hasUnread={false} />
       </div>
 
       {/* Main Content */}

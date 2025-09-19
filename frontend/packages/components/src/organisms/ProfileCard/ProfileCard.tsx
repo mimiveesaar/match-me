@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { LabeledInputField } from "../../molecules/LabeledInputField/LabeledInputField";
-import { LabeledSelectField } from "../../atoms/LabeledSelectField /LabeledSelectField";
+import { LabeledSelectField } from "@atoms/LabeledSelectField/LabeledSelectField";
 
 export const ProfileCard = ({
   profile,
