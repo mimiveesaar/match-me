@@ -4,7 +4,7 @@ server:
 
 spring:
   application:
-    name: match-me-chat
+    name: match-me
   datasource:
     matching:
       jdbc-url: jdbc:postgresql://127.0.0.1:5432/matching
@@ -46,9 +46,14 @@ spring:
           hibernate:
             ddl-auto: update
     user-management:
-      jdbc-url: jdbc:postgresql://postgres_container:5432/user-management
-      username: user-management
-      password: user-management
+      jdbc-url: jdbc:postgresql://localhost:5432/user_management
+      username: user_management
+      password: user_management
+      driver-class-name: org.postgresql.Driver
+    connections:
+      jdbc-url: jdbc:postgresql://localhost:5432/connections
+      username: connections
+      password: connections
       driver-class-name: org.postgresql.Driver
   flyway:
     enabled: false

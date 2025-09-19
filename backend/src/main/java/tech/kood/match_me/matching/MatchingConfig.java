@@ -53,6 +53,7 @@ public class MatchingConfig {
     }
 
     @Bean
+    @Qualifier("matchingEmf")
     public LocalContainerEntityManagerFactoryBean matchingEmf(
             @Qualifier("matchingDataSource") DataSource dataSource,
             @Qualifier("matchingJpaProperties") Properties jpaProps

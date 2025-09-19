@@ -27,8 +27,8 @@ import tech.kood.match_me.matching.model.User;
 @Repository
 public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
 
-    @Qualifier("matchingEmf")
-    @PersistenceContext
+    @PersistenceContext(unitName = "matchingEmf")
+//    @Qualifier("matchingEmf")
     private EntityManager entityManager;
 
     @Override
