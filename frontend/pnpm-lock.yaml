@@ -51,7 +51,7 @@ importers:
 
   apps/user-management:
     dependencies:
-      '@local/components':
+      components:
         specifier: workspace:*
         version: link:../../packages/components
       next:

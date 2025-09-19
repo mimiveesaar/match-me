@@ -6,9 +6,9 @@ const meta: Meta<typeof DropdownSelector> = {
   title: 'Atoms/Menu/Dropdown Selector',
   component: DropdownSelector,
   argTypes: {
-    header: {control: 'text' },
-    options: { control: 'array' },
-    selectedOptions: { control: 'array' },
+    header: { control: 'text' },
+    // options: { control: 'arr' },
+    // selectedOptions: { control: 'array' },
     onSelect: { action: 'selected' },
   },
 };

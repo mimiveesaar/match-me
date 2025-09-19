@@ -1,5 +1,5 @@
 {
-  "name": "@local/components",
+  "name": "components",
   "version": "0.0.0",
   "private": true,
   "type": "module",
