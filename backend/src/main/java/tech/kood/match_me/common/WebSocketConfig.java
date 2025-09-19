@@ -1,4 +1,4 @@
-package tech.kood.match_me.chatspace.config;
+package tech.kood.match_me.common;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;

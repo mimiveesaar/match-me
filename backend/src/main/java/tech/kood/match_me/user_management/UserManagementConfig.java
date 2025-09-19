@@ -114,8 +114,6 @@ public class UserManagementConfig {
 
     @Bean(initMethod = "migrate")
     @Qualifier("userManagementFlyway")
-    @ConditionalOnProperty(prefix = "user-management.flyway", name = "enabled",
-            havingValue = "true", matchIfMissing = false)
     public Flyway userManagementFlyway(
             @Qualifier("userManagementDataSource") DataSource dataSource) {
         var flyway = Flyway.configure().dataSource(dataSource)
