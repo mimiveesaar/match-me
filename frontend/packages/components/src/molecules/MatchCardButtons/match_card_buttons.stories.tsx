@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/nextjs";
-import { ButtonTriangle } from "./match_card_buttons";
+import { ButtonTriangle } from "./matchCardButtons";
 
 const meta: Meta<typeof ButtonTriangle> = {
   title: "Molecules/Match Cards/ButtonTriangle",

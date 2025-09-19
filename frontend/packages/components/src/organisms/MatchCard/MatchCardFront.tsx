@@ -9,7 +9,7 @@ import { StarIcon } from "../../atoms/MatchCards/Star/star_icon";
 import { LocationTag } from "../../atoms/MatchCards/Tags/LocationTag/location_tag";
 import { RelationshipTypeTag } from "../../atoms/MatchCards/Tags/RelationshipTypeTag/relationship_type_tag";
 import { Username } from "../../atoms/MatchCards/Username/username";
-import { ButtonTriangle } from "../../molecules/MatchCardButtons/match_card_buttons";
+import { ButtonTriangle } from "../../molecules/MatchCardButtons/matchCardButtons";
 
 
 interface MatchCardFrontProps {

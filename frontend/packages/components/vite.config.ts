@@ -29,14 +29,17 @@ export default defineConfig({
     ssr: true,
     outDir: "dist",
     lib: {
-      entry: "./src/index.ts",
+      entry: [
+        "./src/index.ts",
+        "./src/atoms/index.ts",
+      ],
       name: "Components",
       fileName: "components",
       formats: ["es"],
     },
     rollupOptions: {
       // Externalize deps that shouldn't be bundled
-      external: [...builtinModules, ...Object.keys(pkg.peerDependencies || {})],
+      external: [...builtinModules, 'react', 'react/jsx-runtime'],
       output: {
         exports: "auto",
         preserveModules: true,

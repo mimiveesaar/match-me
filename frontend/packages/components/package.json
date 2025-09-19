@@ -1,11 +1,9 @@
 {
-  "name": "components",
+  "name": "@local/components",
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "main": "dist/components.js",
-  "module": "dist/components.js",
-  "types": "dist/types/index.d.ts",
+  "main": "dist/inndex.js",
   "sideEffects": false,
   "scripts": {
     "build": "vite build",
@@ -17,7 +15,11 @@
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "types": "./dist/types/index.d.ts"
+      "types": "./dist/index.d.ts"
+    },
+    "./*": {
+      "import": "./dist/*/index.js",
+      "types": "./dist/*/index.d.ts"
     },
     "./styles": {
       "default": "./dist/style/styles.css"

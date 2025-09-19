@@ -10,7 +10,6 @@ interface CircleWrapperProps {
 
 export const CircleWrapper = ({
   children,
-
   className = "",
 }: CircleWrapperProps) => {
   return (
