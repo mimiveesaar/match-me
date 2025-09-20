@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { Background } from './Background';
+import { MessageInputBackground } from './MessageInputBackground';
 
-const meta: Meta<typeof Background> = {
+const meta: Meta<typeof MessageInputBackground> = {
     title: "Atoms/Chatspace/MessageInput/Background",
-    component: Background,
+    component: MessageInputBackground,
 };
 export default meta;
 
-type Story = StoryObj<typeof Background>;
+type Story = StoryObj<typeof MessageInputBackground>;
 
 export const Default: Story = {
   render: () => (
     <div className="flex justify-center items-center">
-      <Background children={undefined} />
+      <MessageInputBackground children={undefined} />
     </div>
   ),
 };

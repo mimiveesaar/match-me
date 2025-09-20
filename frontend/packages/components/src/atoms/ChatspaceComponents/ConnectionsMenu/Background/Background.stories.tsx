@@ -1,21 +1,21 @@
 import { Meta, StoryObj } from "@storybook/nextjs";
-import { Background } from "./Background";
+import { ConnectionsMenuBackground } from "./ConnectionsMenuBackground";
 
-const meta: Meta<typeof Background> = {
-  title: "Atoms/ChatSpace/Connections Menu/Background",
-  component: Background,
+const meta: Meta<typeof ConnectionsMenuBackground> = {
+  title: "Atoms/ChatSpace/ConnectionsMenu/Background",
+  component: ConnectionsMenuBackground,
 };
 
 export default meta;
 
-type Story = StoryObj<typeof Background>;
+type Story = StoryObj<typeof ConnectionsMenuBackground>;
 
 export const Default: Story = {
   render: (args) => (
     <div
       className="flex justify-center items-center w-[100vw] h-[100vh] bg-gray-100"
     >
-      <Background {...args} />
+      <ConnectionsMenuBackground {...args} />
     </div>
   ),
   args: {

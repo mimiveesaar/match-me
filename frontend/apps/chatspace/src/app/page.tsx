@@ -1,10 +1,10 @@
 "use client";
 
-import { AlienMeetLogo } from "@components/atoms/Alien.meet logo/alien_meet";
+import { AlienMeetLogo } from "@atoms/AlienMeetLogo/AlienMeetLogo";
 import { Menu } from "@components/organisms/Menu/menu";
-import { ConnectionsMenu } from "@components/organisms/chatspace/Connections Menu/ConnectionsMenu";
-import { ChatWindow } from "@components/organisms/chatspace/Chat Window/ChatWindow";
-import { MessageInput } from "@components/organisms/chatspace/Message Input/MessageInput";
+import { ConnectionsMenu } from "@organisms/ChatspaceOrganisms/ConnectionsMenu/ConnectionsMenu";
+import { ChatWindow } from "@organisms/ChatspaceOrganisms/ChatWindow/ChatWindow";
+import { MessageInput } from "@organisms/ChatspaceOrganisms/MessageInput/MessageInput";
 import { useChat } from "../../hooks/useChat";
 import { useEffect, useState } from "react";
 import axios from "axios";

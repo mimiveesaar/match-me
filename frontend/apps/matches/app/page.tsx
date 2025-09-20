@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu } from "/workspace/frontend/packages/components/src/organisms/Menu/menu";
-import { FlipCard } from "/workspace/frontend/packages/components/src/organisms/MatchCard/FlipCard";
-import { MatchCardFront, MatchCardFrontProps } from "/workspace/frontend/packages/components/src/organisms/MatchCard/MatchCardFront";
-import { MatchCardBack } from "/workspace/frontend/packages/components/src/organisms/MatchCard/MatchCardBack";
-import { AlienMeetLogo } from "/workspace/frontend/packages/components/src/atoms/Alien.meet logo/alien_meet";
-import { useUserSearch } from "/workspace/frontend/apps/matches/app/hooks/useUserSearch";
+import { Menu } from "@organisms/Menu/Menu";
+import { FlipCard } from "@organisms/MatchCard/FlipCard";
+import { MatchCardFront, MatchCardFrontProps } from "@organisms/MatchCard/MatchCardFront";
+import { MatchCardBack } from "@organisms/MatchCard/MatchCardBack";
+import { AlienMeetLogo } from "@atoms/AlienMeetLogo/AlienMeetLogo";
+import { useUserSearch } from "./hooks/useUserSearch";
 import { MatchUser, Filters } from "../types";
 
 
@@ -133,7 +133,7 @@ export default function Matches() {
       <div className="flex w-full max-w-7xl gap-2">
         {/* Left: Filter menu */}
         <div className="max-h-screen md:max-h-[80vh]">
-          <Menu filters={filters} setFilters={setFilters} />
+          <Menu hasUnread={false}  />
         </div>
 
         {/* Right: dynamic content */}

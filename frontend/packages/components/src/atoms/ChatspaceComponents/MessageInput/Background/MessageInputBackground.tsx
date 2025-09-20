@@ -7,7 +7,7 @@ interface BackgroundProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   onTyping?: () => void; // callback for typing events
 }
 
-export const Background = ({ rightElement, onTyping, ...props }: BackgroundProps) => {
+export const MessageInputBackground = ({ rightElement, onTyping, ...props }: BackgroundProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     // Call the external onChange handler if provided
     props.onChange?.(e);
