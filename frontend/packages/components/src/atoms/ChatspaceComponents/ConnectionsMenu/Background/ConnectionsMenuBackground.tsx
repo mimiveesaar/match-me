@@ -6,7 +6,7 @@ interface BackgroundProps {
   children: ReactNode;
 }
 
-export const Background = ({ children }: BackgroundProps) => {
+export const ConnectionsMenuBackground = ({ children }: BackgroundProps) => {
   return (
     <div className="flex justify-center items-center px-4">
       <div

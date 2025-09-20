@@ -2,7 +2,7 @@
 
 import React from "react";
 
-export const SectionLine = () => {
+export const BioSectionLine = () => {
   
   return (
    <div className="flex flex-col items-start">

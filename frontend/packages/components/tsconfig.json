@@ -21,20 +21,28 @@
 
     "outDir": "dist/types",
     "paths": {
-      "@atoms/*": ["./src/atoms/*"],
-      "@molecules/*": ["./src/molecules/*"],
-      "@organisms/*": ["./src/organisms/*"],
-      "@templates/*": ["./src/templates/*"],
-      "@layouts/*": ["./src/layouts/*"],
-      "@utilities/*": ["../payload-config/src/utilities/*"],
-      "@styles/*": ["./src/styles/*"],
-      "@type/*": ["src/types/*"],
-      "@settings": ["settings.ts"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@assets/*": ["./src/assets/*"],
-      "@/*": ["./src/*"],
+      "@components/*": ["packages/components/src/*"],
+      "@atoms/*": ["packages/components/src/atoms/*"],
+      "@molecules/*": ["packages/components/src/molecules/*"],
+      "@organisms/*": ["packages/components/src/organisms/*"],
+      "@templates/*": ["packages/components/src/templates/*"],
+      "@layouts/*": ["packages/components/src/layouts/*"],
+      "@styles/*": ["packages/components/src/styles/*"],
+      "@hooks/*": ["apps/matches/app/hooks/*"],
+      "@utils/*": ["packages/components/src/utils/*"],
+      "@assets/*": ["packages/components/src/assets/*"],
+
+      // still keep payload-config/utilities relative if needed
+      "@utilities/*": ["packages/payload-config/src/utilities/*"],
+
+      // shared types
       "@types/*": ["packages/types/*"],
+
+      // fallback for "catch-all"
+      "@/*": ["packages/components/src/*"],
+
+      // special case
+      "@settings": ["packages/components/src/settings.ts"]
     }
   }
 }
