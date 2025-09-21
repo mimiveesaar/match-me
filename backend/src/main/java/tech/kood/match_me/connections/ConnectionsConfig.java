@@ -35,12 +35,12 @@ public class ConnectionsConfig {
         return new JdbcTemplate(dataSource);
     }
 
-    @Qualifier("connectionsFlyway")
-    @Bean(initMethod = "migrate")
-    public Flyway connectionsFlyway(@Qualifier("connectionsDataSource") DataSource dataSource) {
-        var flyway = Flyway.configure().dataSource(dataSource)
-                .locations("classpath:/connections/database/flyway").load();
-        // flyway.migrate();
-        return flyway;
-    }
+    // @Qualifier("connectionsFlyway")
+    // @Bean(initMethod = "migrate")
+    // public Flyway connectionsFlyway(@Qualifier("connectionsDataSource") DataSource dataSource) {
+    // var flyway = Flyway.configure().dataSource(dataSource)
+    // .locations("classpath:/connections/database/flyway").load();
+    // // flyway.migrate();
+    // return flyway;
+    // }
 }

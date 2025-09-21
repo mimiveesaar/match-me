@@ -11,15 +11,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.transaction.PlatformTransactionManager;
+import jakarta.persistence.EntityManagerFactory;
 
 @EnableJpaRepositories(basePackages = "tech.kood.match_me.profile.repository",
         entityManagerFactoryRef = "profileManagementEmf",
@@ -71,14 +72,11 @@ public class ProfileManagementConfig {
         return emf;
     }
 
-@Bean(name = "profileManagementTransactionManager")
-@Primary
-public PlatformTransactionManager profileManagementTransactionManager(
-        @Qualifier("profileManagementEmf") LocalContainerEntityManagerFactoryBean profileManagementEmf) {
-    return new org.springframework.orm.jpa.JpaTransactionManager(
-            java.util.Objects.requireNonNull(profileManagementEmf.getObject(),
-                    "EntityManagerFactory must not be null"));
-}
+    @Bean(name = "profileManagementTransactionManager")
+    public PlatformTransactionManager profileManagementTransactionManager(
+            @Qualifier("profileManagementEmf") EntityManagerFactory profileManagementEmf) {
+        return new JpaTransactionManager(profileManagementEmf);
+    }
 
 
     @Bean("profileManagementTaskScheduler")

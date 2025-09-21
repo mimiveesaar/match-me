@@ -8,54 +8,50 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProfileDataSeeder implements CommandLineRunner {
-    
+
     @Autowired
     @Qualifier("profileManagementJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
-    
+
     @Override
     public void run(String... args) throws Exception {
         System.out.println("=== SEEDING PROFILE DATA ===");
-        
+
         // First, fix the table structure and sequences
         createSequencesAndFixTables();
-        
+
         // Then seed data
         seedAllData();
-        
+
         System.out.println("=== PROFILE DATA SEEDING COMPLETE ===");
     }
-    
+
     private void createSequencesAndFixTables() {
         String[] tables = {"bodyforms", "homeplanets", "looking_for", "interests"};
-        
+
         for (String table : tables) {
             try {
                 // Create sequence if it doesn't exist
-                jdbcTemplate.execute(String.format(
-                    "CREATE SEQUENCE IF NOT EXISTS %s_id_seq", table
-                ));
-                
+                jdbcTemplate
+                        .execute(String.format("CREATE SEQUENCE IF NOT EXISTS %s_id_seq", table));
+
                 // Set the column default to use the sequence
                 jdbcTemplate.execute(String.format(
-                    "ALTER TABLE %s ALTER COLUMN id SET DEFAULT nextval('%s_id_seq')", 
-                    table, table
-                ));
-                
+                        "ALTER TABLE %s ALTER COLUMN id SET DEFAULT nextval('%s_id_seq')", table,
+                        table));
+
                 // Make the sequence owned by the table
-                jdbcTemplate.execute(String.format(
-                    "ALTER SEQUENCE %s_id_seq OWNED BY %s.id", 
-                    table, table
-                ));
-                
+                jdbcTemplate.execute(
+                        String.format("ALTER SEQUENCE %s_id_seq OWNED BY %s.id", table, table));
+
                 System.out.println("Fixed sequence for " + table);
-                
+
             } catch (Exception e) {
                 System.out.println("Error fixing sequence for " + table + ": " + e.getMessage());
             }
         }
     }
-    
+
     private void seedAllData() {
         seedBodyforms();
         seedHomeplanets();
@@ -63,61 +59,77 @@ public class ProfileDataSeeder implements CommandLineRunner {
         seedInterests();
         verifyData();
     }
-    
+
     private void seedBodyforms() {
-        String[] bodyforms = {"Humanoid", "Reptilian", "Energy Being"};
+        // Updated to match MatchingDataSeeder options
+        String[] bodyforms = {
+            "Gelatinous", "Tentacled", "Humanoid", "Energy-Based", "Mechanical",
+            "Insectoid", "Reptilian", "Gas Cloud", "Crystalline", "Mimetic Blob"
+        };
         for (String bodyform : bodyforms) {
             jdbcTemplate.update(
-                "INSERT INTO bodyforms (name) VALUES (?) ON CONFLICT (name) DO NOTHING", 
-                bodyform
-            );
+                    "INSERT INTO bodyforms (name) VALUES (?) ON CONFLICT (name) DO NOTHING",
+                    bodyform);
         }
         System.out.println("Bodyforms seeded");
     }
-    
+
     private void seedHomeplanets() {
-        String[] homeplanets = {"Earth", "Nibiru", "Zog Prime"};
+        // Updated to match MatchingDataSeeder options
+        String[] homeplanets = {
+            "Xeron-5", "Draknor", "Vega Prime", "Bloop-X12", "Zal'Tek Major",
+            "Nimbus-9", "Krylon Beta", "Nova Eden", "Tharnis", "Quarnyx Delta", 
+            "Glooporia", "Skarn", "Uvuul-4", "Oortania", "Vrexalon"
+        };
         for (String homeplanet : homeplanets) {
             jdbcTemplate.update(
-                "INSERT INTO homeplanets (name) VALUES (?) ON CONFLICT (name) DO NOTHING", 
-                homeplanet
-            );
+                    "INSERT INTO homeplanets (name) VALUES (?) ON CONFLICT (name) DO NOTHING",
+                    homeplanet);
         }
         System.out.println("Homeplanets seeded");
     }
-    
+
     private void seedLookingFor() {
-        String[] lookingFor = {"Friendship", "Romance", "Alliance"};
+        // Updated to match MatchingDataSeeder options
+        String[] lookingFor = {
+            "Friendship", "Romance", "Strategic Alliance", 
+            "Co-parenting Hatchlings", "Host Symbiosis", "Chtulhu"
+        };
         for (String item : lookingFor) {
             jdbcTemplate.update(
-                "INSERT INTO looking_for (name) VALUES (?) ON CONFLICT (name) DO NOTHING", 
-                item
-            );
+                    "INSERT INTO looking_for (name) VALUES (?) ON CONFLICT (name) DO NOTHING",
+                    item);
         }
         System.out.println("Looking_for seeded");
     }
-    
+
     private void seedInterests() {
+        // Updated to match MatchingDataSeeder expanded options
         String[] interests = {
-            "Music", "Art", "Sports", "Travel", "Reading", "Gaming", 
-            "Cooking", "Photography", "Dancing", "Writing", "Yoga", 
-            "Hiking", "Meditation", "Movies", "Technology", "Science", 
-            "Politics", "Animals", "Fashion", "Gardening"
+            "Telepathic Chess", "Black Hole Karaoke", "Baking", "Binary Poetry", "Painting",
+            "Parallel Parking", "Reading", "Collecting Rocks", "Butterfly watching", "Plasma Sculpting",
+            "Terraforming", "Zero-G Yoga", "Fishing", "Galactic Geocaching", "Nebula Photography",
+            "Starship Racing", "Archaeology", "Cooking", "Light-speed Surfing", "Wormhole Navigation",
+            "Cryo-sleep", "Martian Mining", "Solar Wind Sailing", "Meditation", "Opera Singing",
+            "Ballet", "Fashion Design", "Black Market Trading", "Cosmic Comics", "Meteorite Hunting",
+            "Exoplanet Exploration", "Star Map Reading", "Galactic Diplomacy", "Gardening", 
+            "Interstellar DJing", "Teleportation Tricks", "Brewing", "Droid Repair", 
+            "Cryptography", "Wormhole Jumping"
         };
-        
+
         for (String interest : interests) {
             jdbcTemplate.update(
-                "INSERT INTO interests (name) VALUES (?) ON CONFLICT (name) DO NOTHING", 
-                interest
-            );
+                    "INSERT INTO interests (name) VALUES (?) ON CONFLICT (name) DO NOTHING",
+                    interest);
         }
         System.out.println("Interests seeded");
     }
-    
+
     private void verifyData() {
         String[] tables = {"bodyforms", "homeplanets", "looking_for", "interests"};
         for (String table : tables) {
-            Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM " + table, Integer.class);
+            Integer count =
+                    jdbcTemplate.queryForObject("SELECT COUNT(*) FROM " + table, Integer.class);
             System.out.println("Table " + table + " has " + count + " rows");
         }
     }
