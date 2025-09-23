@@ -15,15 +15,15 @@ public class MatchingDataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        System.out.println("=== SEEDING MATCHING DATA ===");
-//
-//        // First, fix the table structure and sequences
-//        createSequencesAndFixTables();
-//
-//        // Then seed data
-//        seedAllData();
-//
-//        System.out.println("=== MATCHING DATA SEEDING COMPLETE ===");
+        System.out.println("=== SEEDING MATCHING DATA ===");
+
+        // First, fix the table structure and sequences
+        createSequencesAndFixTables();
+
+        // Then seed data
+        seedAllData();
+
+        System.out.println("=== MATCHING DATA SEEDING COMPLETE ===");
     }
 
     private void createSequencesAndFixTables() {
