@@ -1,48 +1,68 @@
 {
-  "include": ["src/**/*", "style"],
-  "exclude": ["dist", "build", "node_modules"],
+  "include": [
+    "src/**/*",
+    "style"
+  ],
+  "exclude": [
+    "dist",
+    "build",
+    "node_modules"
+  ],
   "compilerOptions": {
     "rootDir": "src",
     "baseUrl": ".",
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     "jsx": "react-jsx",
     "declaration": true,
     "declarationMap": true,
-
     /* Bundler mode */
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "emitDeclarationOnly": true,
-
     "outDir": "dist/types",
     "paths": {
-      "@components/*": ["packages/components/src/*"],
-      "@atoms/*": ["packages/components/src/atoms/*"],
-      "@molecules/*": ["packages/components/src/molecules/*"],
-      "@organisms/*": ["packages/components/src/organisms/*"],
-      "@templates/*": ["packages/components/src/templates/*"],
-      "@layouts/*": ["packages/components/src/layouts/*"],
-      "@styles/*": ["packages/components/src/styles/*"],
-      "@hooks/*": ["apps/matches/app/hooks/*"],
-      "@utils/*": ["packages/components/src/utils/*"],
-      "@assets/*": ["packages/components/src/assets/*"],
-
-      // still keep payload-config/utilities relative if needed
-      "@utilities/*": ["packages/payload-config/src/utilities/*"],
-
-      // shared types
-      "@types/*": ["packages/types/*"],
-
-      // fallback for "catch-all"
-      "@/*": ["packages/components/src/*"],
-
-      // special case
-      "@settings": ["packages/components/src/settings.ts"]
+      "@atoms": [
+        "./src/atoms"
+      ],
+      "@atoms/*": [
+        "./src/atoms/*"
+      ],
+      "@molecules": [
+        "./src/molecules"
+      ],
+      "@molecules/*": [
+        "./src/molecules/*"
+      ],
+      "@organisms": [
+        "./src/organisms"
+      ],
+      "@organisms/*": [
+        "./src/organisms/*"
+      ],
+      "@templates": [
+        "./src/templates"
+      ],
+      "@templates/*": [
+        "./src/templates/*"
+      ],
+      "@styles/*": [
+        "./src/styles/*"
+      ],
+      "@types": [
+        "./src/types"
+      ],
+      "@/*": [
+        "./src/*"
+      ],
     }
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { LightningButton, SunButton, MoonButton } from "src/atoms";
+import { LightningButton, SunButton, MoonButton } from "@atoms";
 
 type ButtonTriangleProps = {
   rejectedId: string;

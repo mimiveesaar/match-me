@@ -1,11 +1,8 @@
-/// <reference types="vitest/config" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { builtinModules } from "module";
-import pkg from "./package.json";
-import { visualizer } from "rollup-plugin-visualizer";
 import dts from "vite-plugin-dts";
 import preserveDirectives from "rollup-preserve-directives";
 import path from "node:path";
@@ -16,7 +13,6 @@ const dirname =
     ? __dirname
     : path.dirname(fileURLToPath(import.meta.url));
 
-// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
   plugins: [
     react(),
@@ -25,20 +21,25 @@ export default defineConfig({
     dts({
       tsconfigPath: "./tsconfig.json",
     }),
-    visualizer(),
   ],
   build: {
     ssr: true,
     outDir: "dist",
     lib: {
-      entry: "./src/index.ts",
+      entry: [
+        "./src/index.ts",
+        "./src/atoms/index.ts",
+        "./src/molecules/index.ts",
+        "./src/organisms/index.ts",
+        "./src/templates/index.ts",
+      ],
       name: "Components",
       fileName: "components",
       formats: ["es"],
     },
     rollupOptions: {
       // Externalize deps that shouldn't be bundled
-      external: [...builtinModules, ...Object.keys(pkg.peerDependencies || {})],
+      external: [...builtinModules, 'react', 'react/jsx-runtime'],
       output: {
         exports: "auto",
         preserveModules: true,

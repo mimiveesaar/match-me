@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageHeader, SpeechBubble } from "src/atoms";
+import { MessageHeader, SpeechBubble } from "@atoms";
 
 export const SpeechBubbleWithHeader = ({
   sender,

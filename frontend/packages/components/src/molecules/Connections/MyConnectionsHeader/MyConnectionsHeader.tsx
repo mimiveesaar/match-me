@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { MyConnectionsIcon } from "src/atoms";
+import { MyConnectionsIcon } from "@atoms";
 
 export const MyConnectionsHeader = () => {
   return (

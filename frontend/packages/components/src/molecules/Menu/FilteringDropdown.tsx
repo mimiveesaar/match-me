@@ -1,6 +1,6 @@
 "use client";
 
-import { RangeSlider, DropdownSelector } from "src/atoms";
+import { RangeSlider, DropdownSelector } from "@atoms";
 import { Filters } from "../../types"
 
 import React, { useEffect } from "react";

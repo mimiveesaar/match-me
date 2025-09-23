@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from '@storybook/nextjs';
 import { ConnectionsMenu } from "./ConnectionsMenu";
 
-
 const meta: Meta<typeof ConnectionsMenu> = {
   title: 'Organisms/ChatSpace/Connections Menu/Connections Menu',
   component: ConnectionsMenu,

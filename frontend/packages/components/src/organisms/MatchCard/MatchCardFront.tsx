@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { Age, BioTextbox, LocationTag, MatchCardBackground, MatchCardProfilePic, RelationshipTypeTag, SectionLine, StarIcon, Username } from "src/atoms";
-import { ButtonTriangle } from "src/molecules";
+import { Age, BioTextbox, LocationTag, MatchCardBackground, MatchCardProfilePic, RelationshipTypeTag, SectionLine, StarIcon, Username } from "@atoms";
+import { ButtonTriangle } from "@molecules";
 
 
 export interface MatchCardFrontProps {

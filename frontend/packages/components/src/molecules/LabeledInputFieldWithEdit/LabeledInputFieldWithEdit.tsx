@@ -1,5 +1,5 @@
 import React from "react";
-import { InputField } from "../../atoms/InputField/InputField";
+import { InputField } from "@atoms";
 
 
 interface LabeledInputFieldWithEditProps {
@@ -11,6 +11,6 @@ interface LabeledInputFieldWithEditProps {
 
 export const LabeledInputFieldWithEdit = ({ label, placeholder, value, onChange }: LabeledInputFieldWithEditProps) => (
   <div className="mb-4">
-    <InputField label = {label} placeholder={placeholder} value={value} onChange={onChange} />
+    <InputField label={label} placeholder={placeholder} value={value} onChange={onChange} />
   </div>
 );

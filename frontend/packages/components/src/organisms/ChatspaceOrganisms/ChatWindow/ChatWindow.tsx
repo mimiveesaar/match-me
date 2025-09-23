@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { Background, TypingIndicator } from "src/atoms";
-import { SpeechBubbleWithHeader } from "src/molecules";
+import { Background, TypingIndicator } from "@atoms";
+import { SpeechBubbleWithHeader } from "@molecules";
 import { ChatWindowProps } from "src/types";
 
 

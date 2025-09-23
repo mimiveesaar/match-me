@@ -1,6 +1,6 @@
 "use client";
 
-import { MenuBase, MenuHeader, PageLink, SignOutButton } from "src/atoms";
+import { MenuBase, MenuHeader, PageLink, SignOutButton } from "@atoms";
 
 
 interface MenuProps {

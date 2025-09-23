@@ -3,7 +3,7 @@
 
 import { StarIcon } from "lucide-react";
 import React from "react";
-import { MatchCardBackground, Username, Age, LocationTag, RelationshipTypeTag, BodyformTag, SectionLine, BioTextbox, CardInterestTag } from "src/atoms";
+import { MatchCardBackground, Username, Age, LocationTag, RelationshipTypeTag, BodyformTag, SectionLine, BioTextbox, CardInterestTag } from "@atoms";
 
 
 

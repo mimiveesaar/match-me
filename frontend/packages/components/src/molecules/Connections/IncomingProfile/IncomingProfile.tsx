@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { RoundProfilePicture, Username, AcceptButton, DeclineButtonRed } from "src/atoms";
+import { RoundProfilePicture, Username, AcceptButton, DeclineButtonRed } from "@atoms";
 
 export interface IncomingProfileProps {
   username?: string;

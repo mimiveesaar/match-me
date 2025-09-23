@@ -1,6 +1,6 @@
 "use client";
 
-import { RoundProfilePicture, Username, DeclineButtonIvory } from "src/atoms";
+import { RoundProfilePicture, Username, DeclineButtonIvory } from "@atoms";
 
 
 export interface ConnectionProfileProps {

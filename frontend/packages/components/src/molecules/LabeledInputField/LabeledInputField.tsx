@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { InputField } from "../../atoms/InputField/InputField";
+import { InputField } from "@atoms";
 
 interface LabeledInputFieldProps {
   id?: string;
