@@ -1,8 +1,8 @@
 "use client";
 
-import { OutgoingPingsHeader } from "@molecules/Connections/OutgoingPingsHeader/OutgoingPingsHeader";
-import { OutgoingProfile } from "@molecules/Connections/OutgoingProfile/OutgoingProfile";
+
 import { useState } from "react";
+import { OutgoingPingsHeader, OutgoingProfile } from "src/molecules";
 
 export interface OutgoingPingsProps {
   outgoingPings: OutgoingPing[];

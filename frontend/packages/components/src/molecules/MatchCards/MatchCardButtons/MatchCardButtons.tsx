@@ -1,11 +1,6 @@
 "use client";
 
-import { LightningButton } from "@atoms/MatchCards/Buttons/LightningButton/LightningButton";
-import { MoonButton } from "@atoms/MatchCards/Buttons/MoonButton/MoonButton";
-import { SunButton } from "@atoms/MatchCards/Buttons/SunButton/SunButton";
-
-
-
+import { LightningButton, SunButton, MoonButton } from "src/atoms";
 
 type ButtonTriangleProps = {
   rejectedId: string;
@@ -18,7 +13,7 @@ export const ButtonTriangle = ({ rejectedId, onReject, requestedId, onConnection
   return (
     <div className="relative w-100 h-16">
       <div className="absolute top-0 left-1/2 transform -translate-x-1/2">
-        <LightningButton onClick={() => onConnectionRequest(requestedId)}/>
+        <LightningButton onClick={() => onConnectionRequest(requestedId)} />
       </div>
 
       <div className="absolute bottom-0 left-0">

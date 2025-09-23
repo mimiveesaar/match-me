@@ -1,10 +1,9 @@
 "use client";
 
-import { SectionLine } from "@atoms/Connections/SectionLine/SectionLine";
-import { ConnectionProfile } from "@molecules/Connections/ConnectionProfile/ConnectionProfile";
-import { IncomingPingsHeader } from "@molecules/Connections/IncomingPingsHeader/IncomingPingsHeader";
-import { MyConnectionsHeader } from "@molecules/Connections/MyConnectionsHeader/MyConnectionsHeader";
+
 import { useState } from "react";
+import { SectionLine } from "src/atoms";
+import { ConnectionProfile, MyConnectionsHeader } from "src/molecules";
 
 export interface MyConnectionsProps {
   myConnections: MyConnection[];

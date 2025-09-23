@@ -1,5 +1,6 @@
-import { OutgoingPingIcon } from "@atoms/Connections/OutgoingPingIcon/OutgoingPingIcon";
+
 import React, { useState } from "react";
+import { OutgoingPingIcon } from "src/atoms";
 
 export const OutgoingPingsHeader = () => {
   return (

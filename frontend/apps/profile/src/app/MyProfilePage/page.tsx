@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MyProfilePage } from "../../../../../packages/components";
+
+import { MyProfilePage } from "@organisms/MyProfilePage/MyProfilePage";
+
 
 interface ProfileData {
   homeplanetId: number;
@@ -36,32 +38,32 @@ export default function MyProfile() {
     }
   };
 
-const handleSaveProfile = async (updatedData: any) => {
-  console.log("=== FRONTEND: Raw updatedData ===");
-  console.log(JSON.stringify(updatedData, null, 2));
-  
-  try {
-    const response = await fetch('http://localhost:8080/api/profiles/me', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedData),
-    });
-
-    console.log("=== FRONTEND: What we actually sent ===");
+  const handleSaveProfile = async (updatedData: any) => {
+    console.log("=== FRONTEND: Raw updatedData ===");
     console.log(JSON.stringify(updatedData, null, 2));
-    
-    if (response.ok) {
-      console.log('Profile updated successfully');
-      fetchProfile();
-    } else {
-      console.error('Failed to update profile');
+
+    try {
+      const response = await fetch('http://localhost:8080/api/profiles/me', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      console.log("=== FRONTEND: What we actually sent ===");
+      console.log(JSON.stringify(updatedData, null, 2));
+
+      if (response.ok) {
+        console.log('Profile updated successfully');
+        fetchProfile();
+      } else {
+        console.error('Failed to update profile');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
     }
-  } catch (error) {
-    console.error('Error updating profile:', error);
-  }
-};
+  };
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
@@ -69,7 +71,7 @@ const handleSaveProfile = async (updatedData: any) => {
 
   return (
     <div>
-      <MyProfilePage 
+      <MyProfilePage
         initialProfile={profile}
         onSave={handleSaveProfile}
       />

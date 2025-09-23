@@ -1,8 +1,8 @@
 "use client";
 
+import { RangeSlider, DropdownSelector } from "src/atoms";
 import { Filters } from "../../types"
-import { DropdownSelector } from "@atoms/Menu/DropdownSelector/DropdownSelector";
-import { RangeSlider } from "@atoms/Menu/SliderSelector/SlideSelector";
+
 import React, { useEffect } from "react";
 
 

@@ -3,10 +3,15 @@
 import { ReactNode } from "react";
 
 interface BackgroundProps {
-  children: ReactNode;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  placeholder?: string;
+  rightElement?: ReactNode;
+  children?: ReactNode;
 }
 
-export const Background = ({ children }: BackgroundProps) => {
+export const Background = ({ children,
+}: BackgroundProps) => {
   return (
     <div className="flex justify-center items-center px-4">
       <div

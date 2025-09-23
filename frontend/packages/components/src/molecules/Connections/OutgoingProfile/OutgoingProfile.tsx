@@ -1,9 +1,7 @@
 "use client";
 
-import { DeclineButtonIvory } from "@atoms/Connections/DeclineButton/DeclineButton";
-import { Username } from "@atoms/Connections/Username/Username";
-import { RoundProfilePicture } from "@atoms/ProfilePicture/ProfilePicture";
 import React, { useState } from "react";
+import { RoundProfilePicture, Username, DeclineButtonIvory } from "src/atoms";
 
 export interface OutgoingProfileProps {
   username: string;

@@ -133,7 +133,7 @@ export default function Matches() {
       <div className="flex w-full max-w-7xl gap-2">
         {/* Left: Filter menu */}
         <div className="max-h-screen md:max-h-[80vh]">
-          <Menu hasUnread={false}  />
+          <Menu hasUnread={false} />
         </div>
 
         {/* Right: dynamic content */}

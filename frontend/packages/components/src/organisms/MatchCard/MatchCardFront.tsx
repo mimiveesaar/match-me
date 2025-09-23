@@ -1,16 +1,8 @@
 "use client";
 
-import { Age } from "@atoms/MatchCards/Age/Age";
-import { BioTextbox } from "@atoms/MatchCards/Bio/Biobox/Biobox";
-import { SectionLine } from "@atoms/MatchCards/Bio/SectionLine/SectionLine";
-import { MatchCardBackground } from "@atoms/MatchCards/MatchCardBackround/MatchCardBackground";
-import { MatchCardProfilePic } from "@atoms/MatchCards/ProfilePicture/MatchCardProfilePic";
-import { StarIcon } from "@atoms/MatchCards/Star/StarIcon";
-import { LocationTag } from "@atoms/MatchCards/Tags/LocationTag/LocationTag";
-import { RelationshipTypeTag } from "@atoms/MatchCards/Tags/RelationshipTypeTag/RelationshipTypeTag";
-import { Username } from "@atoms/MatchCards/Username/Username";
-import { ButtonTriangle } from "@molecules/MatchCards/MatchCardButtons/MatchCardButtons";
 import React from "react";
+import { Age, BioTextbox, LocationTag, MatchCardBackground, MatchCardProfilePic, RelationshipTypeTag, SectionLine, StarIcon, Username } from "src/atoms";
+import { ButtonTriangle } from "src/molecules";
 
 
 export interface MatchCardFrontProps {

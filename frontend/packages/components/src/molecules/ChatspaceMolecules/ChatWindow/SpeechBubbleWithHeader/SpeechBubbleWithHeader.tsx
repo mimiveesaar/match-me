@@ -1,9 +1,6 @@
 "use client";
 
-import { MessageHeader } from "@atoms/ChatspaceComponents/ChatWindow/MessageHeader/MessageHeader";
-import { SpeechBubble } from "@atoms/ChatspaceComponents/ChatWindow/SpeechBubble/SpeechBubble";
-
-
+import { MessageHeader, SpeechBubble } from "src/atoms";
 
 export const SpeechBubbleWithHeader = ({
   sender,
@@ -18,8 +15,8 @@ export const SpeechBubbleWithHeader = ({
   bubbleColor?: "bg-amberglow" | "bg-ivory";
   children: React.ReactNode;
 }) => {
-  const isAmberglow = bubbleColor === "bg-amberglow";
-  
+  const isAmberglow = bubbleColor === "bg-amberglow"
+
   return (
     <div className="flex flex-col space-y-0.5">
       <div className={isAmberglow ? "flex justify-end pr-7" : ""}>

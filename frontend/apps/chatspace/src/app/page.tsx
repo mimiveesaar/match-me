@@ -1,7 +1,7 @@
 "use client";
 
 import { AlienMeetLogo } from "@atoms/AlienMeetLogo/AlienMeetLogo";
-import { Menu } from "@components/organisms/Menu/menu";
+import { Menu } from "@organisms/Menu/Menu";
 import { ConnectionsMenu } from "@organisms/ChatspaceOrganisms/ConnectionsMenu/ConnectionsMenu";
 import { ChatWindow } from "@organisms/ChatspaceOrganisms/ChatWindow/ChatWindow";
 import { MessageInput } from "@organisms/ChatspaceOrganisms/MessageInput/MessageInput";

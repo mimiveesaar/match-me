@@ -1,8 +1,8 @@
 'use client';
 
-import { Background } from "@atoms/ChatspaceComponents/MessageInput/Background/Background";
-import { SendButton } from "@atoms/ChatspaceComponents/MessageInput/Button/Button";
+
 import { useState, useRef } from 'react';
+import { Background, SendButton } from 'src/atoms';
 
 
 interface MessageInputProps {

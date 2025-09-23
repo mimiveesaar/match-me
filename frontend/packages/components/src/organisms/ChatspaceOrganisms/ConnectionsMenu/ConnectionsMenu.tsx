@@ -1,9 +1,7 @@
 "use client";
 
-import { Background } from "@atoms/ChatspaceComponents/ConnectionsMenu/Background/Background";
-import { Header } from "@atoms/ChatspaceComponents/ConnectionsMenu/Header/Header";
-import { PhotoBubbleWithUsername } from "@molecules/ChatspaceMolecules/ConnectionsMenu/PhotoBubbleWithUsername/PhotoBubbleWithUsername";
-
+import { Background, Header } from "src/atoms";
+import { PhotoBubbleWithUsername } from "src/molecules";
 
 
 interface UserConnection {

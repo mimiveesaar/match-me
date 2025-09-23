@@ -1,16 +1,9 @@
 "use client";
 
-import { Age } from "@atoms/MatchCards/Age/Age";
-import { BioTextbox } from "@atoms/MatchCards/Bio/Biobox/Biobox";
-import { SectionLine } from "@atoms/MatchCards/Bio/SectionLine/SectionLine";
-import { MatchCardBackground } from "@atoms/MatchCards/MatchCardBackround/MatchCardBackground";
-import { StarIcon } from "@atoms/MatchCards/Star/StarIcon";
-import { BodyformTag } from "@atoms/MatchCards/Tags/BodyformTag/BodyformTag";
-import { CardInterestTag } from "@atoms/MatchCards/Tags/InterestTag/CardInterestTag";
-import { LocationTag } from "@atoms/MatchCards/Tags/LocationTag/LocationTag";
-import { RelationshipTypeTag } from "@atoms/MatchCards/Tags/RelationshipTypeTag/RelationshipTypeTag";
-import { Username } from "@atoms/MatchCards/Username/Username";
+
+import { StarIcon } from "lucide-react";
 import React from "react";
+import { MatchCardBackground, Username, Age, LocationTag, RelationshipTypeTag, BodyformTag, SectionLine, BioTextbox, CardInterestTag } from "src/atoms";
 
 
 
@@ -50,7 +43,7 @@ export const MatchCardBack = ({
                         <Username username={username} />
                         <Age age={age} />
                     </div>
-                    {supermatch && ( 
+                    {supermatch && (
                         <div className="w-full pr-3 pt-1 absolute top-1 right-0 flex justify-end gap-1">
                             <StarIcon />
                         </div>

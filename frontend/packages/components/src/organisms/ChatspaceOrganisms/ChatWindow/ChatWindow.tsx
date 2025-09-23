@@ -1,10 +1,10 @@
 "use client";
 
-import { ChatWindowProps } from "@/types";
-import { useEffect, useRef } from "react";
-import { TypingIndicator } from "@atoms/ChatspaceComponents/ChatWindow/TypingIndicator/TypingIndicator";
-import { SpeechBubbleWithHeader } from "@molecules/ChatspaceMolecules/ChatWindow/SpeechBubbleWithHeader/SpeechBubbleWithHeader";
-import { Background } from "@atoms/ChatspaceComponents/ChatWindow/Background/Background";
+import { useRef, useEffect } from "react";
+import { Background, TypingIndicator } from "src/atoms";
+import { SpeechBubbleWithHeader } from "src/molecules";
+import { ChatWindowProps } from "src/types";
+
 
 export const ChatWindow = ({
   messages,
@@ -32,7 +32,9 @@ export const ChatWindow = ({
   };
 
   return (
-    <Background>
+    <Background value={""} onChange={function (e: React.ChangeEvent<HTMLTextAreaElement>): void {
+      throw new Error("Function not implemented.");
+    }}>
       <div className="flex flex-col space-y-2 p-4 overflow-y-auto h-full pb-16">
         {messages.map((msg) => {
           const isCurrentUser = msg.senderId === currentUserId;

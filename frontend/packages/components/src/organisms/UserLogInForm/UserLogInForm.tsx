@@ -5,7 +5,8 @@ import React from "react";
 import { LabeledInputField } from "../../molecules/LabeledInputField/LabeledInputField";
 import { CircleWrapper } from "../../atoms/CircleWrapper/CircleWrapper";
 import { useState } from "react";
-import { KeyIcon } from "@atoms/KeyIcon/KeyIcon";
+import { KeyIcon } from "src";
+
 
 export const LogIn = () => {
   const [email, setEmail] = useState("");
