@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
+import { useState } from "react";
 import { MultiLineInputField } from "./MultiLineInputField";
 
 const meta: Meta<typeof MultiLineInputField> = {
@@ -17,9 +18,18 @@ export default meta;
 type Story = StoryObj<typeof MultiLineInputField>;
 
 export const Default: Story = {
+  render: (args) => {
+    const [value, setValue] = useState("");
+    return (
+      <MultiLineInputField
+        {...args}
+        value={value}
+        setValue={setValue}
+      />
+    );
+  },
   args: {
     placeholder: "Write your bio here...",
-    value: "",
     maxLength: 250,
     rows: 4,
   },

@@ -15,7 +15,6 @@ type Story = StoryObj<typeof CircleWrapper>;
 
 export const Default: Story = {
   args: {
-
     className: "w-32 h-32 text-center text-sm bg-blue-200",
     children: "I'm in a circle!",
   },
