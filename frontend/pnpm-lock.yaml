@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      next:
+        specifier: ^15.5.4
+        version: 15.5.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4.1.11
@@ -107,7 +111,7 @@ importers:
         specifier: ^4
         version: 4.1.11
       '@types/node':
-        specifier: ^20
+        specifier: ^20.19.2
         version: 20.19.2
       '@types/react':
         specifier: ^19
@@ -121,6 +125,15 @@ importers:
       '@types/stompjs':
         specifier: ^2.3.9
         version: 2.3.9
+      eslint:
+        specifier: ^8
+        version: 8.57.1
+      eslint-config-next:
+        specifier: 15.0.3
+        version: 15.0.3(eslint@8.57.1)(typescript@5.8.2)
+      postcss:
+        specifier: ^8
+        version: 8.5.6
       tailwindcss:
         specifier: ^4
         version: 4.1.11
@@ -167,9 +180,6 @@ importers:
 
   apps/profile:
     dependencies:
-      components:
-        specifier: workspace:*
-        version: link:../../packages/components
       next:
         specifier: 15.0.3
         version: 15.0.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)

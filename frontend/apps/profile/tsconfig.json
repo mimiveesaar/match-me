@@ -20,7 +20,7 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./*"],
       "@atoms/*": ["../../packages/components/src/atoms/*"],
       "@molecules/*": ["../../packages/components/src/molecules/*"],
       "@organisms/*": ["../../packages/components/src/organisms/*"],
