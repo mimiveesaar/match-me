@@ -8,6 +8,5 @@ export * from './Connections/OutgoingPingsHeader/OutgoingPingsHeader';
 export * from './Connections/OutgoingProfile/OutgoingProfile';
 export * from './InterestTag/InterestTag';
 export * from './LabeledInputField/LabeledInputField';
-export * from './LabeledInputFieldWithEdit/LabeledInputFieldWithEdit';
 export * from './MatchCards/MatchCardButtons/MatchCardButtons';
 export * from './Menu/FilteringDropdown';
