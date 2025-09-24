@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, FlipCard, MatchCardFront, MatchCardFrontProps, MatchCardBack } from "components/organisms";
+import {  FlipCard, MatchCardFront, MatchCardFrontProps, MatchCardBack, Menu } from "components/organisms";
 import { AlienMeetLogo } from "components/atoms";
 import { useUserSearch } from "./hooks/useUserSearch";
 import { MatchUser, Filters } from "./types";
