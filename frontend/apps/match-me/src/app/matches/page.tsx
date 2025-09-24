@@ -17,7 +17,7 @@ const lookingForColors: Record<string, MatchCardFrontProps["cardColor"]> = {
 };
 
 export default function Matches() {
-  const userId = "d87e7304-7bfb-4bfb-9318-52c58f3c1034"; // replace with real logged-in user later
+  const userId = "3fa85f64-5717-4562-b3fc-2c963f66afa1"; // Dummy user from mock data
 
   const [filters, setFilters] = useState<Filters>({
     minAge: 18,
