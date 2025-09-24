@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, ReactNode } from "react";
-// @ts-ignore
 import styles from "./styles.module.css";
 
 interface FlipCardProps {

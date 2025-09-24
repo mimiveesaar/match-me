@@ -24,7 +24,7 @@
       "types": "./dist/*/index.d.ts"
     },
     "./styles": {
-      "default": "dist/style/styles.css"
+      "default": "dist/components.css"
     }
   },
   "devDependencies": {
@@ -40,8 +40,7 @@
     "postcss-import": "^16.1.1",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.14",
-    "rollup-plugin-postcss": "^4.0.2",
-    "vite-plugin-lib-inject-css": "^2.2.2"
+    "rollup-plugin-postcss": "^4.0.2"
   },
   "dependencies": {
     "@chromatic-com/storybook": "^4.0.1",
