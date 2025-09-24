@@ -74,24 +74,27 @@ export const ProfileCard = ({
         label="/bodyform"
         value={profile.bodyform}
         onChange={handleSelectChange("bodyform")}
-        options={bodyformOptions}
-      />
+        options={bodyformOptions} setValue={function (value: string): void {
+          throw new Error("Function not implemented.");
+        } }      />
 
       <LabeledSelectField
         id="lookingfor"
         label="/lookingfor"
         value={profile.lookingfor}
         onChange={handleSelectChange("lookingfor")}
-        options={lookingforOptions}
-      />
+        options={lookingforOptions} setValue={function (value: string): void {
+          throw new Error("Function not implemented.");
+        } }      />
 
       <LabeledSelectField
         id="planet"
         label="/planet"
         value={profile.planet}
         onChange={handleSelectChange("planet")}
-        options={planetOptions}
-      />
+        options={planetOptions} setValue={function (value: string): void {
+          throw new Error("Function not implemented.");
+        } }      />
     </div>
   );
 };
