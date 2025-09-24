@@ -6,6 +6,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+import java.util.UUID;
+
 @Component
 public class MatchingDataSeeder implements CommandLineRunner {
 
@@ -17,52 +20,64 @@ public class MatchingDataSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception {
         System.out.println("=== SEEDING MATCHING DATA ===");
 
-//        // First, fix the table structure and sequences
-//        createSequencesAndFixTables();
-//
-//        // Then seed data
-//        seedAllData();
+        // First, fix the table structure and sequences
+        createSequencesAndFixTables();
+
+        // Then seed data
+        seedAllData();
 
         System.out.println("=== MATCHING DATA SEEDING COMPLETE ===");
     }
 
     private void createSequencesAndFixTables() {
-        String[] tables = {"users", "user_interests", "looking_for", "interests", "homeplanets", "bodyforms"};
+        Map<String, String> columnTypes = Map.of(
+                "users", "uuid",
+                "user_interests", "uuid", // guessing here – verify
+                "interests", "bigint",
+                "looking_for", "integer",
+                "homeplanets", "integer",
+                "bodyforms", "integer"
+        );
 
-        for (String table : tables) {
+        for (Map.Entry<String, String> entry : columnTypes.entrySet()) {
+            String table = entry.getKey();
+            String type = entry.getValue();
+
+            if (!type.equals("integer")) {
+                System.out.println("Skipping sequence fix for non-integer ID column: " + table + " (" + type + ")");
+                continue;
+            }
+
             try {
-                // Create sequence if it doesn't exist
                 jdbcTemplate.execute(String.format(
                         "CREATE SEQUENCE IF NOT EXISTS %s_id_seq", table
                 ));
 
-                // Set the column default to use the sequence
                 jdbcTemplate.execute(String.format(
                         "ALTER TABLE %s ALTER COLUMN id SET DEFAULT nextval('%s_id_seq')",
                         table, table
                 ));
 
-                // Make the sequence owned by the table
                 jdbcTemplate.execute(String.format(
                         "ALTER SEQUENCE %s_id_seq OWNED BY %s.id",
                         table, table
                 ));
 
-                System.out.println("Fixed sequence for " + table);
+                System.out.println("✅ Fixed sequence for " + table);
 
             } catch (Exception e) {
-                System.out.println("Error fixing sequence for " + table + ": " + e.getMessage());
+                System.out.println("❌ Error fixing sequence for " + table + ": " + e.getMessage());
             }
         }
     }
 
     private void seedAllData() {
-        seedUsers();
-        seedUserInterests();
-        seedLookingFor();
-        seedInterests();
-        seedHomeplanets();
-        seedBodyforms();
+        seedBodyforms();     // must come before users
+        seedHomeplanets();   // must come before users
+        seedLookingFor();    // must come before users
+        seedInterests();     // not referenced by users but needed for user_interests
+        seedUsers();         // now safe to seed users
+        seedUserInterests(); // after both users and interests are seeded
         verifyData();
     }
 
@@ -78,27 +93,35 @@ public class MatchingDataSeeder implements CommandLineRunner {
             {"c6ee9999-8371-46cf-9302-45f1ddee6a6d", "marsmaven", 33, "/images/profiles/marsmaven.png", 2, 1, 2, "Martian-born, Earth-raised, curiosity-fueled."},
             {"4b07cd42-d78f-4fa5-bf91-f3ad3cf8db99", "astrochick", 28, "/images/profiles/astrochick.png", 6, 6, 6, "Rockets, robots, and romance."},
             {"e85e2b12-01dc-4564-b78c-d6d4c77002b9", "quantumquinn", 38, "/images/profiles/quantumquinn.png", 3, 3, 2, "Entangled in all the right ways."},
-            {"41b5a984-9822-4bc2-9c3c-93b1d4238e6f", "lunar_luke", 24, "/images/profiles/lunar_luke.png", 7, 1, 7, "Moon-walker in search of a dance partner."},
+            {"41b5a984-9822-4bc2-9c3c-93b1d4238e6f", "lunar_luke", 24, "/images/profiles/lunar_luke.png", 7, 1, 3, "Moon-walker in search of a dance partner."},
             {"dcf48c31-d8e1-4e90-8599-1e4f4c5c0977", "plutonianpixie", 30, "/images/profiles/plutonianpixie.png", 3, 3, 3, "Cold hands, warm heart, outer orbit dreams."},
-            {"8fc909b7-cbc1-41ce-bc70-4b41ea4a2326", "galaxygazer", 36, "/images/profiles/galaxygazer.png", 8, 2, 8, "My telescope sees far, but I’m looking for someone near."},
+            {"8fc909b7-cbc1-41ce-bc70-4b41ea4a2326", "galaxygazer", 36, "/images/profiles/galaxygazer.png", 8, 2, 6, "My telescope sees far, but I’m looking for someone near."},
             {"51d00c53-7714-41cb-8cf1-8e620155f3ec", "astro_ari", 27, "/images/profiles/astro-ari.png", 2, 2, 2, "Martinis and meteor showers."},
-            {"19f54fd2-84ec-4213-a4ab-d81cf865fbc7", "jupiterjazz", 42, "/images/profiles/jupiterjazz.png", 9, 3, 9, "Rhythms of the cosmos, melodies of love."},
+            {"19f54fd2-84ec-4213-a4ab-d81cf865fbc7", "jupiterjazz", 42, "/images/profiles/jupiterjazz.png", 9, 3, 2, "Rhythms of the cosmos, melodies of love."},
             {"3d47007e-96e0-4d37-8663-02a6e1e23d84", "zenzara", 21, "/images/profiles/zenzara.png", 10, 3, 3, "Meditating in zero gravity."},
-            {"7c9e4e62-7e32-4ce3-872b-78370839d0f2", "nova_nate", 34, "/images/profiles/nova-nate.png", 11, 4, 10, "Burn bright, love brighter."},
+            {"7c9e4e62-7e32-4ce3-872b-78370839d0f2", "nova_nate", 34, "/images/profiles/nova-nate.png", 11, 4, 4, "Burn bright, love brighter."},
             {"e4e7a4e1-4ab0-406c-b6c4-7c6cbd28f671", "solarys", 29, "/images/profiles/solarys.png", 12, 5, 1, "Daylight dreamer, starlight lover."},
             {"bfd6b738-6c58-4b77-8aa2-dce297fa23b5", "wormholewendy", 26, "/images/profiles/wormholewendy.png", 13, 6, 2, "Faster than light, slower to trust."},
             {"0b2e39ea-d1ef-4b6c-93b6-1d0ff861197e", "kepler_kai", 37, "/images/profiles/kepler-kai.png", 14, 1, 3, "Mapping hearts like exoplanets."}
         };
 
         for (Object[] user : users) {
+            UUID id = UUID.fromString((String) user[0]);  // Convert first element to UUID
+
             jdbcTemplate.update(
                     "INSERT INTO users (id, username, age, profilepic_src, homeplanet_id, bodyform_id, looking_for_id, bio) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) "
-                    + "ON CONFLICT (id) DO NOTHING",
-                    user
+                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) "
+                            + "ON CONFLICT (id) DO NOTHING",
+                    id,                   // UUID instead of String
+                    user[1],              // username
+                    user[2],              // age
+                    user[3],              // profilepic_src
+                    user[4],              // homeplanet_id
+                    user[5],              // bodyform_id
+                    user[6],              // looking_for_id
+                    user[7]               // bio
             );
         }
-        System.out.println("Users seeded");
     }
 
     private void seedUserInterests() {
@@ -142,12 +165,13 @@ public class MatchingDataSeeder implements CommandLineRunner {
             {"0b2e39ea-d1ef-4b6c-93b6-1d0ff861197e", 12}
         };
 
-        for (Object[] ui : userInterests) {
+        for (Object[] userInterest : userInterests) {
+            UUID userId = UUID.fromString((String) userInterest[0]);  // Convert string to UUID
+            Integer interestId = (Integer) userInterest[1];            // Interest ID remains an Integer
+
             jdbcTemplate.update(
-                    "INSERT INTO user_interests (user_id, interest_id) "
-                    + "VALUES (?, ?) "
-                    + "ON CONFLICT (user_id, interest_id) DO NOTHING",
-                    ui[0], ui[1]
+                    "INSERT INTO user_interests (user_id, interest_id) VALUES (?, ?) ON CONFLICT (user_id, interest_id) DO NOTHING",
+                    userId, interestId  // Pass UUID and Integer to the query
             );
         }
         System.out.println("User interests seeded");
