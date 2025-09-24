@@ -129,8 +129,12 @@ export default function Matches() {
       {/* Content row: always has Menu on left */}
       <div className="flex w-full max-w-7xl gap-2">
         {/* Left: Filter menu */}
-        <div className="max-h-screen md:max-h-[80vh]">
-          <Menu hasUnread={false} />
+        <div className="max-h-screen md:max-h-[80vh] mt-34">
+          <Menu
+              filters={filters}
+              setFilters={setFilters}
+              hasUnread={true}
+              className={undefined} />
         </div>
 
         {/* Right: dynamic content */}
@@ -144,7 +148,7 @@ export default function Matches() {
               No matches found.
             </div>
           ) : (
-            <div className="w-full pt-28 pl-4 md:pl-10">
+            <div className="w-full pt-28 pl-4 md:pl-10 mt-6">
               {/* Mobile: Horizontal scrolling */}
               <div className="md:hidden overflow-x-auto pb-4">
                 <div className="flex gap-4 w-max">
