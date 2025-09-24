@@ -6,8 +6,11 @@ import { builtinModules } from "module";
 import dts from "vite-plugin-dts";
 import preserveDirectives from "rollup-preserve-directives";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
+import { libInjectCss } from 'vite-plugin-lib-inject-css'
+import { fileURLToPath } from 'node:url'
+
+
 const dirname =
   typeof __dirname !== "undefined"
     ? __dirname
@@ -16,12 +19,14 @@ const dirname =
 export default defineConfig({
   plugins: [
     react(),
+    libInjectCss(),
     tailwindcss(),
     tsconfigPaths(),
     dts({
       tsconfigPath: "./tsconfig.json",
     }),
   ],
+  css: {},
   build: {
     ssr: true,
     outDir: "dist",
@@ -37,6 +42,7 @@ export default defineConfig({
       fileName: "components",
       formats: ["es"],
     },
+    cssCodeSplit: true,
     rollupOptions: {
       // Externalize deps that shouldn't be bundled
       external: [...builtinModules, 'react', 'react/jsx-runtime'],
