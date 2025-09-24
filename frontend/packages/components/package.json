@@ -24,7 +24,7 @@
       "types": "./dist/*/index.d.ts"
     },
     "./styles": {
-      "default": "./dist/index.css"
+      "default": "dist/style/styles.css"
     }
   },
   "devDependencies": {
