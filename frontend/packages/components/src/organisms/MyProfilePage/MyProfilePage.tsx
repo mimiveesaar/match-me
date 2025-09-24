@@ -82,8 +82,9 @@ export const MyProfilePage = ({
                 placeholder="Bio (optional)"
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
-                id={"bio"}
-              />
+                id={"bio"} setValue={function (value: string): void {
+                  throw new Error("Function not implemented.");
+                } }              />
             </div>
 
             <InterestsSection
