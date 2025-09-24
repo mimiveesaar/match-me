@@ -5,7 +5,7 @@ import { Menu } from "components/organisms";
 import { ConnectionsMenu } from "components/organisms";
 import { ChatWindow } from "components/organisms";
 import { MessageInput } from "components/organisms";
-import { useChat } from "@hooks/useChat";
+import { useChat } from "./hooks/useChat";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import SockJS from "sockjs-client";
