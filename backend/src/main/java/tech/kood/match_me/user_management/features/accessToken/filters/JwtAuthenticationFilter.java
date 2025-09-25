@@ -1,7 +1,6 @@
 package tech.kood.match_me.user_management.features.accessToken.filters;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.slf4j.Logger;
@@ -51,17 +50,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String tracingId = UUID.randomUUID().toString();
-        
         try {
-            var validationRequest = new ValidateAccessTokenRequest(jwt, tracingId);
+            var validationRequest = new ValidateAccessTokenRequest(jwt);
             var validationResult = validateAccessTokenHandler.handle(validationRequest);
 
             if (validationResult instanceof ValidateAccessTokenResults.Success successResult) {
                 var userId = successResult.userId();
 
-                UUID getUserRequestId = UUID.randomUUID();
-                var getUserByIdRequest = new GetUserByIdRequest(getUserRequestId, userId, tracingId);
+                var getUserByIdRequest = new GetUserByIdRequest(userId);
                 var userResult = getUserByIdQueryHandler.handle(getUserByIdRequest);
 
                 if (userResult instanceof GetUserByIdResults.Success user) {

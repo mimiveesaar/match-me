@@ -64,19 +64,15 @@ public class CreateAccessTokenCommandHandlerImpl implements CreateAccessTokenCom
 
             var validationResults = validator.validate(request);
             if (!validationResults.isEmpty()) {
-                return new CreateAccessTokenResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.from(validationResults), request.tracingId());
+                return new CreateAccessTokenResults.InvalidRequest(InvalidInputErrorDTO.from(validationResults));
             }
 
-            var refreshTokenRequest = new GetRefreshTokenRequest(request.secret(), request.tracingId());
+            var refreshTokenRequest = new GetRefreshTokenRequest(request.secret());
             var refreshTokenResult = getRefreshTokenHandler.handle(refreshTokenRequest);
 
             if (refreshTokenResult instanceof GetRefreshTokenResults.InvalidRequest invalidRequest) {
                 //This should never run. But for application correctness, we return an error.
-                var error = new CreateAccessTokenResults.SystemError(
-                        request.requestId(),
-                        "Unexpected result from refresh token handler",
-                        request.tracingId());
-
+                var error = new CreateAccessTokenResults.SystemError("Unexpected result from refresh token handler");
                 logger.error(error.message());
                 return error;
             }
@@ -87,18 +83,13 @@ public class CreateAccessTokenCommandHandlerImpl implements CreateAccessTokenCom
                 //Return an error.
 
                 logger.error(systemError.message());
-                return new CreateAccessTokenResults.SystemError(
-                        request.requestId(),
-                        systemError.message(),
-                        request.tracingId());
+                return new CreateAccessTokenResults.SystemError(systemError.message());
 
             }
 
             if (refreshTokenResult instanceof GetRefreshTokenResults.InvalidSecret invalidSecret) {
                 // Return an error if the refresh token is invalid.
-                return new CreateAccessTokenResults.InvalidToken(
-                        request.requestId(),
-                        request.tracingId());
+                return new CreateAccessTokenResults.InvalidToken();
             }
 
 
@@ -119,20 +110,17 @@ public class CreateAccessTokenCommandHandlerImpl implements CreateAccessTokenCom
                 var accessToken = accessTokenFactory.create(jwt, userId);
                 var accessTokenDTO = accessTokenMapper.toDTO(accessToken);
 
-                var result = new CreateAccessTokenResults.Success(request.requestId(), jwt, request.tracingId());
+                var result = new CreateAccessTokenResults.Success(jwt);
 
                 events.publishEvent(new AccessTokenCreatedEvent(accessTokenDTO));
                 return result;
             }
 
         } catch (Exception e) {
-            return new CreateAccessTokenResults.SystemError(
-                    request.requestId(),
-                    e.getMessage(),
-                    request.tracingId());
+            return new CreateAccessTokenResults.SystemError(e.getMessage());
         }
 
         //This should never run. But for application correctness, we return an error.
-        return new CreateAccessTokenResults.SystemError(request.requestId(), "Unexpected error", request.tracingId());
+        return new CreateAccessTokenResults.SystemError("Unexpected error");
     }
 }

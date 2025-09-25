@@ -46,12 +46,12 @@ public class GetAccessTokenTests extends UserManagementTestBase {
         assert registerResult instanceof RegisterUserResults.Success;
 
         var user = ((RegisterUserResults.Success) registerResult).userId();
-        var createTokenRequest = new CreateRefreshTokenRequest(user, null);
+        var createTokenRequest = new CreateRefreshTokenRequest(user);
         var createTokenResult = createRefreshTokenCommandHandler.handle(createTokenRequest);
         assert createTokenResult instanceof CreateRefreshTokenResults.Success;
 
         var refreshToken = ((CreateRefreshTokenResults.Success) createTokenResult).refreshToken();
-        var getAccessTokenRequest = new CreateAccessTokenRequest(refreshToken.secret(), null);
+        var getAccessTokenRequest = new CreateAccessTokenRequest(refreshToken.secret());
         var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
 
         assert getAccessTokenResult instanceof CreateAccessTokenResults.Success;
@@ -64,7 +64,7 @@ public class GetAccessTokenTests extends UserManagementTestBase {
     public void shouldHandleInvalidRefreshToken() {
 
         //Create a request with an invalid refresh token.
-        var getAccessTokenRequest = new CreateAccessTokenRequest(new RefreshTokenSecretDTO(UUID.randomUUID()), null);
+        var getAccessTokenRequest = new CreateAccessTokenRequest(new RefreshTokenSecretDTO(UUID.randomUUID()));
         var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
 
         assert getAccessTokenResult instanceof CreateAccessTokenResults.InvalidToken : "The handler should return an InvalidToken result for an invalid refresh token";

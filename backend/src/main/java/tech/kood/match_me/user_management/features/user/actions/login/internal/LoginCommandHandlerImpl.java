@@ -45,13 +45,13 @@ public final class LoginCommandHandlerImpl implements LoginCommandHandler {
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new LoginResults.InvalidRequest(request.requestId(), InvalidInputErrorDTO.from(validationResults), request.tracingId());
+            return new LoginResults.InvalidRequest(InvalidInputErrorDTO.from(validationResults));
         }
 
         try {
             var userEntity = userRepository.findUserByEmail(request.email().value());
             if (userEntity.isEmpty()) {
-                return new LoginResults.InvalidCredentials(request.requestId(), request.tracingId());
+                return new LoginResults.InvalidCredentials();
             }
 
             var foundUser = userMapper.toUser(userEntity.get());
@@ -60,28 +60,28 @@ public final class LoginCommandHandlerImpl implements LoginCommandHandler {
             var hashedPassword = hashedPasswordFactory.fromPlainText(password, foundUser.getHashedPassword().getSalt());
 
             if (!foundUser.getHashedPassword().equals(hashedPassword)) {
-                return new LoginResults.InvalidCredentials(request.requestId(), request.tracingId());
+                return new LoginResults.InvalidCredentials();
             }
 
             var foundUserDTO = userMapper.toDTO(foundUser);
-            var refreshTokenRequest = new CreateRefreshTokenRequest(foundUserDTO.id(), request.tracingId());
+            var refreshTokenRequest = new CreateRefreshTokenRequest(foundUserDTO.id());
             var tokenResult = createRefreshTokenCommandHandler.handle(refreshTokenRequest);
 
             if (tokenResult instanceof CreateRefreshTokenResults.SystemError systemError) {
                 //In a real application we would retry.
-                return new LoginResults.SystemError(request.requestId(), systemError.message(), request.tracingId());
+                return new LoginResults.SystemError(systemError.message());
             }
 
             if (!(tokenResult instanceof CreateRefreshTokenResults.Success successResult)) {
                 //This should never happen.
-                return new LoginResults.SystemError(request.requestId(), "Unexpected result from refresh token handler", request.tracingId());
+                return new LoginResults.SystemError("Unexpected result from refresh token handler");
             }
 
             events.publishEvent(new UserLoggedInEvent(foundUserDTO.id()));
-            return new LoginResults.Success(request.requestId(), successResult.refreshToken(), request.tracingId());
+            return new LoginResults.Success(successResult.refreshToken());
 
         } catch (Exception e) {
-            return new LoginResults.SystemError(request.requestId(), e.getMessage(), request.tracingId());
+            return new LoginResults.SystemError(e.getMessage());
         }
     }
 }

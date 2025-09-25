@@ -8,27 +8,12 @@ import org.jmolecules.architecture.cqrs.QueryModel;
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 
-import java.util.UUID;
 
 @QueryModel
 @ApplicationLayer
-public record GetUserByIdRequest(@NotNull @JsonProperty("request_id") UUID requestId,
-                                 @NotNull @Valid @JsonProperty("user_id") UserIdDTO userId,
-                                 @Nullable @JsonProperty("tracing_id") String tracingId) {
-
-    public GetUserByIdRequest(UserIdDTO userId, @Nullable String tracingId) {
-        this(UUID.randomUUID(), userId, tracingId);
-    }
-
-    public GetUserByIdRequest withRequestId(UUID requestId) {
-        return new GetUserByIdRequest(requestId, userId, tracingId);
-    }
+public record GetUserByIdRequest(@NotNull @Valid @JsonProperty("user_id") UserIdDTO userId) {
 
     public GetUserByIdRequest withUserId(UserIdDTO userId) {
-        return new GetUserByIdRequest(requestId, userId, tracingId);
-    }
-
-    public GetUserByIdRequest withTracingId(String tracingId) {
-        return new GetUserByIdRequest(requestId, userId, tracingId);
+        return new GetUserByIdRequest(userId);
     }
 }

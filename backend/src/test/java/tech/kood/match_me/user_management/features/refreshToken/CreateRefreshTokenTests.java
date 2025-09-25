@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
+import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.RefreshTokenRepository;
 import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdQueryHandler;
 import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdRequest;
@@ -51,12 +51,12 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
 
         var userId = ((RegisterUserResults.Success) registerResult).userId();
 
-        var getUserResult = getUserByIdQueryHandler.handle(new GetUserByIdRequest(userId, null));
+        var getUserResult = getUserByIdQueryHandler.handle(new GetUserByIdRequest(userId));
 
         assert getUserResult instanceof GetUserByIdResults.Success;
         var user = ((GetUserByIdResults.Success) getUserResult).user();
 
-        var createTokenRequest = new CreateRefreshTokenRequest(user.id(), null);
+        var createTokenRequest = new CreateRefreshTokenRequest(user.id());
         var createTokenResult = createRefreshTokenCommandHandler.handle(createTokenRequest);
         assert createTokenResult instanceof CreateRefreshTokenResults.Success;
 
@@ -69,7 +69,7 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
     void shouldHandleUserNotFound() {
 
         // Create a request with a non-existent userId ID to simulate userId not found
-        var createTokenRequest = new CreateRefreshTokenRequest(new UserIdDTO(UUID.randomUUID()),null);
+        var createTokenRequest = new CreateRefreshTokenRequest(new UserIdDTO(UUID.randomUUID()));
         var result = createRefreshTokenCommandHandler.handle(createTokenRequest);
 
 

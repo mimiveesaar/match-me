@@ -92,14 +92,17 @@ export default function RegisterPage() {
     }
 
     return (
-        <UserSignUpForm
-            email={email}
-            setEmail={setEmail}
-            password={password}
-            setPassword={setPassword}
-            confirmPassword={confirmPassword}
-            setConfirmPassword={setConfirmPassword}
-            errors={errors}
-            onSubmit={() => handleRegister(router)} />
+        <div className="flex min-h-screen items-center justify-center bg-gray-50">
+            <UserSignUpForm
+                email={email}
+                setEmail={setEmail}
+                password={password}
+                setPassword={setPassword}
+                confirmPassword={confirmPassword}
+                setConfirmPassword={setConfirmPassword}
+                errors={errors}
+                onSubmit={() => handleRegister(router)}
+            />
+        </div>
     );
 }
