@@ -19,10 +19,10 @@ export default function Chatspace() {
 
   const search = typeof window !== 'undefined' ? window.location.search.toLowerCase() : '';
   const userId = search.includes('userb')
-    ? '33333333-3333-3333-3333-333333333333'
+    ? '22222222-2222-2222-2222-222222222222'
     : '11111111-1111-1111-1111-111111111111';
 
-  const senderUsername = search.includes('userb') ? 'charlie_stellar' : 'alice_space';
+  const senderUsername = search.includes('userb') ? 'bob_cosmic' : 'alice_space';
 
     useEffect(() => {
         const client = getStompClient(userId);
@@ -114,8 +114,8 @@ export default function Chatspace() {
         // Fallback: mock connections
         const mockConnections =
           userId === "11111111-1111-1111-1111-111111111111"
-            ? [{ id: "33333333-3333-3333-3333-333333333333", username: "mike", isOnline: true }]
-            : [{ id: "11111111-1111-1111-1111-111111111111", username: "Henry", isOnline: true }];
+            ? [{ id: "22222222-2222-2222-2222-222222222222", username: "bob_cosmic", isOnline: true }]
+            : [{ id: "11111111-1111-1111-1111-111111111111", username: "alice_space", isOnline: true }];
         setUsers(mockConnections);
       }
     }

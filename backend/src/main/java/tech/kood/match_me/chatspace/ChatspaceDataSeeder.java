@@ -72,6 +72,7 @@ public class ChatspaceDataSeeder implements CommandLineRunner {
         seedUsers();         // Core entities first
         seedConversations(); // Independent of users initially
         seedConversationParticipants(); // Junction table after both users and conversations
+        seedUserConnections();
         seedMessages();      // Dependent on users and conversations
 
         verifyData();
@@ -211,6 +212,39 @@ public class ChatspaceDataSeeder implements CommandLineRunner {
         }
 
         System.out.println("✅ Messages seeded");
+    }
+
+    private void seedUserConnections() throws SQLException {
+        Object[][] connections = {
+                {
+                        UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), // id
+                        UUID.fromString("11111111-1111-1111-1111-111111111111"), // user_id
+                        UUID.fromString("22222222-2222-2222-2222-222222222222"), // connected_user_id
+                        java.time.LocalDateTime.now().minusHours(1)             // created_at
+                },
+                {
+                        UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
+                        UUID.fromString("22222222-2222-2222-2222-222222222222"),
+                        UUID.fromString("33333333-3333-3333-3333-333333333333"),
+                        java.time.LocalDateTime.now().minusHours(2)
+                }
+                // Add more connections as needed
+        };
+
+        for (Object[] conn : connections) {
+            try {
+                jdbcTemplate.update(
+                        "INSERT INTO user_connections (id, user_id, connected_user_id, created_at) " +
+                                "VALUES (?, ?, ?, ?) " +
+                                "ON CONFLICT (id) DO NOTHING",
+                        conn[0], conn[1], conn[2], conn[3]
+                );
+            } catch (Exception e) {
+                System.out.println("❌ Error seeding user_connection " + conn[0] + ": " + e.getMessage());
+            }
+        }
+
+        System.out.println("✅ User connections seeded");
     }
 
     private void verifyData() {
