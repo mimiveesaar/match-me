@@ -24,7 +24,7 @@ export const Default: Story = {
       <MultiLineInputField
         {...args}
         value={value}
-        setValue={setValue}
+        onChange={(e) => setValue(e.target.value)}
       />
     );
   },

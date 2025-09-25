@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { LogIn } from "./UserLogInForm";
+import { UserLoginForm } from "./UserLogInForm";
 
-const meta: Meta<typeof LogIn> = {
-  title: "Organisms/LogIn",
-  component: LogIn,
+const meta: Meta<typeof UserLoginForm> = {
+  title: "Organisms/UserLoginForm",
+  component: UserLoginForm,
   tags: ["autodocs"],
 };
 export default meta;
 
-type Story = StoryObj<typeof LogIn>;
+type Story = StoryObj<typeof UserLoginForm>;
 
 export const Default: Story = {};

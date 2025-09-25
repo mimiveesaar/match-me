@@ -10,4 +10,23 @@ export default meta;
 
 type Story = StoryObj<typeof UserSignUpForm>;
 
-export const Default: Story = {};
+import React, { useState } from "react";
+
+export const Default: Story = {
+  render: (args) => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    return (
+      <UserSignUpForm
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        confirmPassword={confirmPassword}
+        setConfirmPassword={setConfirmPassword}
+        {...args}
+      />
+    );
+  },
+};

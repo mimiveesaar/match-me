@@ -6,14 +6,15 @@ interface InputFieldProps {
   id?: string;
   placeholder: string;
   value?: string;
+  type?: string;
   disabled?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const InputField = ({ id, placeholder, value, onChange, disabled }: InputFieldProps) => (
+export const InputField = ({ id, placeholder, value, onChange, type, disabled }: InputFieldProps) => (
   <input
     id={id}
-    type="text"
+    type={type ?? "text"}
     placeholder={placeholder}
     value={value}
     onChange={onChange}

@@ -22,12 +22,12 @@ const config: StorybookConfig = {
     "name": getAbsolutePath('@storybook/nextjs-vite'),
     "options": {}
   },
-  "staticDirs": [
-    "../public"
-  ],
+  // "staticDirs": [
+  //   "../public"
+  // ],
   viteFinal: async (config, { configType }) => {
     return mergeConfig(config, {
-      plugins: [tsconfigPaths({projects : ["./tsconfig.json"]})],
+      plugins: [tsconfigPaths({ projects: ["./tsconfig.json"] })],
     });
   }
 };

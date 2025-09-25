@@ -8,29 +8,21 @@ interface LabeledInputFieldProps {
   label: string;
   placeholder: string;
   value?: string;
-  setValue?: (value: string) => void;
+  type?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
   error?: string;
 }
 
-export function LabeledInputField({ label, placeholder, disabled, error, id, onChange, setValue, value }: LabeledInputFieldProps) {
+export function LabeledInputField({ label, placeholder, disabled, error, type, id, onChange, value }: LabeledInputFieldProps) {
 
   const inputId = id || `input-${label.replace(/\s+/g, "-").toLowerCase()}`;
-
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (onChange) {
-      onChange(e);
-    }
-    setValue(e.target.value);
-  }
 
   return (
     <div className="mb-4">
       <label
         htmlFor={inputId}
-        className="block text-sm font-medium text-gray-700 mb-1"
+        className="block text-sm text-left font-medium text-gray-700 mb-1"
       >
         /{label.toLowerCase()}
       </label>
@@ -38,6 +30,7 @@ export function LabeledInputField({ label, placeholder, disabled, error, id, onC
         id={inputId}
         placeholder={placeholder}
         value={value}
+        type={type}
         onChange={onChange}
         disabled={disabled}
       />
