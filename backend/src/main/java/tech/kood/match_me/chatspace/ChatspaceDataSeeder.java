@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
@@ -66,7 +67,7 @@ public class ChatspaceDataSeeder implements CommandLineRunner {
         }
     }
 
-    private void seedAllData() {
+    private void seedAllData() throws SQLException {
         // Seed data in dependency order
         seedUsers();         // Core entities first
         seedConversations(); // Independent of users initially
@@ -76,7 +77,7 @@ public class ChatspaceDataSeeder implements CommandLineRunner {
         verifyData();
     }
 
-    private void seedUsers() {
+    private void seedUsers() throws SQLException {
         Object[][] users = {
                 {"11111111-1111-1111-1111-111111111111", "alice_space", "ONLINE"},
                 {"22222222-2222-2222-2222-222222222222", "bob_cosmic", "OFFLINE"},
@@ -89,7 +90,7 @@ public class ChatspaceDataSeeder implements CommandLineRunner {
 
             try {
                 jdbcTemplate.update(
-                        "INSERT INTO users (id, username, status, last_active)"
+                        "INSERT INTO users (id, username, status, lastactive)"
                                 + " VALUES (?, ?, ?, ?) "
                                 + "ON CONFLICT (id) DO NOTHING",
                         id,
