@@ -72,7 +72,6 @@ public class ChatspaceConfig {
     }
 
     @Bean(name = "chatspaceTransactionManager")
-    @Primary
     public PlatformTransactionManager chatspaceTransactionManager(
             @Qualifier("chatspaceEmf") LocalContainerEntityManagerFactoryBean chatspaceEmf) {
         return new org.springframework.orm.jpa.JpaTransactionManager(

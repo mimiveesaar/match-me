@@ -1,6 +1,6 @@
 "use client";
 
-import { Background, Header } from "@atoms";
+import { ConnectionsMenuBackground, ConnectionsMenuHeader } from "@atoms";
 import { PhotoBubbleWithUsername } from "@molecules";
 
 interface UserConnection {
@@ -18,10 +18,8 @@ interface ConnectionsMenuProps {
 
 export const ConnectionsMenu = ({ users, onSelectUser }: ConnectionsMenuProps) => {
   return (
-    <Background value={""} onChange={function (e: React.ChangeEvent<HTMLTextAreaElement>): void {
-      throw new Error("Function not implemented.");
-    }}>
-      <Header />
+    <ConnectionsMenuBackground>
+      <ConnectionsMenuHeader />
       {users.map((user) => (
         <PhotoBubbleWithUsername
           key={user.id}
@@ -32,6 +30,6 @@ export const ConnectionsMenu = ({ users, onSelectUser }: ConnectionsMenuProps) =
           onClick={() => onSelectUser(user.id)} // forward the click
         />
       ))}
-    </Background>
+    </ConnectionsMenuBackground>
   );
 };

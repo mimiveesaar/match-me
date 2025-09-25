@@ -1,6 +1,6 @@
 "use client";
 
-export const Header = () => {
+export const ConnectionsMenuHeader = () => {
   
   return (
     <div className="text-ivory chakra-petch text-xl font-medium px-5 pt-7 pb-5">

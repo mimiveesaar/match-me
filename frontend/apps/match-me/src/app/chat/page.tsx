@@ -8,8 +8,7 @@ import { MessageInput } from "components/organisms";
 import { useChat } from "./hooks/useChat";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import SockJS from "sockjs-client";
-import { Client } from "@stomp/stompjs";
+import { getStompClient } from "./utils/stompClient";
 
 
 export default function Chatspace() {
@@ -20,49 +19,56 @@ export default function Chatspace() {
 
   const search = typeof window !== 'undefined' ? window.location.search.toLowerCase() : '';
   const userId = search.includes('userb')
-    ? '33333333-3333-3333-3333-333333333333'
+    ? '22222222-2222-2222-2222-222222222222'
     : '11111111-1111-1111-1111-111111111111';
 
-  const senderUsername = search.includes('userb') ? 'mike' : 'Henry';
+  const senderUsername = search.includes('userb') ? 'bob_cosmic' : 'alice_space';
 
-  useEffect(() => {
-    const socket = new SockJS("http://localhost:8080/ws");
+    useEffect(() => {
+        const client = getStompClient(userId);
 
-    const stompClient = new Client({
-      webSocketFactory: () => socket,
-      reconnectDelay: 5000,
-      connectHeaders: { userId },
-      onConnect: () => {
-        console.log("Connected as user:", userId);
+        const onConnect = () => {
+            console.log("✅ STOMP connected, subscribing for", userId);
 
-        stompClient.subscribe(`/topic/status/${userId}`, (message) => {
-          console.log("Status update:", message.body);
-        });
+            const statusSub = client.subscribe(`/topic/status/${userId}`, (message) => {
+                console.log("Status update:", message.body);
+            });
 
-        stompClient.subscribe(`/topic/unread/${userId}`, (msg) => {
-          const payload = JSON.parse(msg.body);
-          console.log("🔴 STOMP /topic/unread payload:", payload);
+            const unreadSub = client.subscribe(`/topic/unread/${userId}`, (msg) => {
+                const payload = JSON.parse(msg.body);
+                console.log("🔴 STOMP /topic/unread payload:", payload);
 
-          // If the user is already viewing this conversation, skip the dot
-          if (payload.conversationId === conversationId) {
-            console.log("✅ Skipping dot because user is already in this conversation");
-            return;
-          }
+                if (payload.conversationId === conversationId) {
+                    console.log("✅ Skipping dot because user is already in this conversation");
+                    return;
+                }
 
-          setHasUnread(payload.hasUnread);
-        });
-      },
-      onStompError: (frame) => {
-        console.error("STOMP error:", frame.headers["message"], frame.body);
-      },
-    });
+                setHasUnread(payload.hasUnread);
+            });
 
-    stompClient.activate();
+            // Optional: clean up subs on unmount
+            cleanup = () => {
+                console.log("[STOMP CLEANUP] Unsubscribing from global topics");
+                statusSub.unsubscribe();
+                unreadSub.unsubscribe();
+            };
+        };
 
-    return () => {
-      stompClient.deactivate();
-    };
-  }, [userId]); // runs once per userId
+        // Register connect callback
+        client.onConnect = onConnect;
+
+        // Optional error logging
+        client.onStompError = (frame) => {
+            console.error("STOMP error:", frame.headers['message'], frame.body);
+        };
+
+        let cleanup = () => {};
+
+        return () => {
+            cleanup();
+        };
+    }, [userId, conversationId]);
+// runs once per userId
 
 
   const { messages, setMessages, sendMessage, handleTyping, otherUserTyping } = useChat(conversationId ?? '', userId, senderUsername);
@@ -108,8 +114,8 @@ export default function Chatspace() {
         // Fallback: mock connections
         const mockConnections =
           userId === "11111111-1111-1111-1111-111111111111"
-            ? [{ id: "33333333-3333-3333-3333-333333333333", username: "mike", isOnline: true }]
-            : [{ id: "11111111-1111-1111-1111-111111111111", username: "Henry", isOnline: true }];
+            ? [{ id: "22222222-2222-2222-2222-222222222222", username: "bob_cosmic", isOnline: true }]
+            : [{ id: "11111111-1111-1111-1111-111111111111", username: "alice_space", isOnline: true }];
         setUsers(mockConnections);
       }
     }

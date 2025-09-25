@@ -2,7 +2,7 @@
 
 
 import { useState, useRef } from 'react';
-import { Background, SendButton } from 'src/atoms';
+import { MessageInputBackground, MessageInputSendButton} from 'src/atoms';
 
 
 interface MessageInputProps {
@@ -48,12 +48,12 @@ export const MessageInput = ({
 
   return (
     <div className="w-full flex justify-center items-center py-4">
-      <Background
+      <MessageInputBackground
         value={value}
         onChange={handleChange}
         placeholder="Type your message..."
         rightElement={
-          <SendButton
+          <MessageInputSendButton
             onClick={handleSend}
             disabled={disabled || value.trim() === ''}
           />
