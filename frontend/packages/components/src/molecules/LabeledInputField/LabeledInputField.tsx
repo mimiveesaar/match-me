@@ -35,7 +35,7 @@ export function LabeledInputField({ label, placeholder, disabled, error, type, i
         disabled={disabled}
       />
       {error && (
-        <div className="text-sm text-left text-red-500 mt-1 ml-">{error}</div>
+        <div className="text-sm text-left max-w-full break-words text-red-500 mt-1 ml-">{error}</div>
       )}
     </div>
   );

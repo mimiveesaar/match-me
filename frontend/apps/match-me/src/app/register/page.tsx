@@ -3,9 +3,12 @@
 import axios from "axios";
 import { UserSignUpForm } from "components/organisms"
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export default function RegisterPage() {
 
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -16,7 +19,7 @@ export default function RegisterPage() {
         confirmPasswordError: ""
     });
 
-    function handleRegister() {
+    async function handleRegister(router: AppRouterInstance) {
         let hasErrors = false;
         console.log("Registering user with email:", email);
 
@@ -46,18 +49,46 @@ export default function RegisterPage() {
             return;
         }
 
+        var url = `${process.env.NEXT_PUBLIC_API_HOST}/api/v1/user-management/register`;
         axios(
             {
                 method: 'post',
-                url: '/api/v1/user-management/register',
+                url: url,
                 data: {
                     email,
                     password
                 }
             }
-        )
+        ).then(response => {
+            console.log("Registration successful:", response.data);
+            router.push('/login');
+        }).catch(error => {
+            console.error("Registration error:", error.response.data);
 
-        // Proceed with registration logic (e.g., API call)
+            var responseData = error.response.data;
+            if (responseData.type === "INVALID_REQUEST") {
+                responseData.data.errors.forEach((err: { field: string; message: string; rejected_value: string }) => {
+
+                    if (err.field === "email.value") {
+                        setErrors((prev) => ({ ...prev, emailError: err.message }));
+                    }
+
+                    if (err.field === "password.value") {
+                        setErrors((prev) => ({ ...prev, passwordError: err.message, confirmPasswordError: err.message }));
+                    }
+                });
+
+                return;
+            }
+
+            if (responseData.type === "EMAIL_EXISTS") {
+                setErrors((prev) => ({ ...prev, emailError: "Email already exists!" }));
+                return;
+            }
+
+            var errorData = error.response.data.data;
+
+        });
     }
 
     return (
@@ -69,6 +100,6 @@ export default function RegisterPage() {
             confirmPassword={confirmPassword}
             setConfirmPassword={setConfirmPassword}
             errors={errors}
-            onSubmit={handleRegister} />
+            onSubmit={() => handleRegister(router)} />
     );
 }

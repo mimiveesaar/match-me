@@ -36,20 +36,30 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
         if (password == null) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Password cannot be null").addConstraintViolation();
             return false;
         }
 
-        if (password.length() <= minLength || password.length() >= maxLength) {
+        if (password.length() < minLength || password.length() > maxLength) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(
+                "Password must be between " + minLength + " and " + maxLength + " characters long"
+            ).addConstraintViolation();
             return false;
         }
 
         boolean hasUpper = password.chars().anyMatch(Character::isUpperCase);
         if (requireUpperCase && !hasUpper) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Password must contain at least one uppercase letter").addConstraintViolation();
             return false;
         }
 
         boolean hasSpecial = password.chars().anyMatch(c -> !Character.isLetterOrDigit(c));
         if (requireSpecial && !hasSpecial) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Password must contain at least one special character").addConstraintViolation();
             return false;
         }
 
