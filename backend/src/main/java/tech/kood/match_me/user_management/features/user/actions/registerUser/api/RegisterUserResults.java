@@ -34,23 +34,15 @@ public sealed interface RegisterUserResults permits
         RegisterUserResults.InvalidRequest,
         RegisterUserResults.SystemError {
 
-    record Success(@NotNull @JsonProperty("request_id") UUID requestId,
-                   @NotNull @JsonProperty("user_id") UserIdDTO userId,
-                   @Nullable @JsonProperty("tracing_id") String tracingId) implements RegisterUserResults {
+    record Success(@NotNull @JsonProperty("user_id") UserIdDTO userId) implements RegisterUserResults {
     }
 
-    record EmailExists(@NotNull @JsonProperty("request_id") UUID requestId,
-                       @NotNull @JsonProperty("email") EmailDTO email,
-                       @Nullable @JsonProperty("tracing_id") String tracingId) implements RegisterUserResults {
+    record EmailExists(@NotNull @JsonProperty("email") EmailDTO email) implements RegisterUserResults {
     }
 
-    record InvalidRequest(@NotNull @JsonProperty("request_id") UUID requestId,
-                          @NotNull @Valid @JsonProperty("error") InvalidInputErrorDTO error,
-                          @Nullable @JsonProperty("tracing_id") String tracingId) implements RegisterUserResults {
+    record InvalidRequest(@NotNull @Valid @JsonProperty("data") InvalidInputErrorDTO error) implements RegisterUserResults {
     }
 
-    record SystemError(@NotNull @JsonProperty("request_id") UUID requestId,
-                       @NotEmpty @JsonProperty("message") String message,
-                       @Nullable @JsonProperty("tracing_id") String tracingId) implements RegisterUserResults {
+    record SystemError(@NotEmpty @JsonProperty("message") String message) implements RegisterUserResults {
     }
 }

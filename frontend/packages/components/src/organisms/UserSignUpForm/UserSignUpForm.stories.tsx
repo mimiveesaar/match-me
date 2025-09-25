@@ -13,10 +13,26 @@ type Story = StoryObj<typeof UserSignUpForm>;
 import React, { useState } from "react";
 
 export const Default: Story = {
+  args: {
+    errors: {
+      emailError: '',
+      passwordError: '',
+      confirmPasswordError: '',
+    },
+  },
+  argTypes: {
+    errors: {
+      control: 'object',
+      description: 'Error messages for each field',
+    },
+    email: { control: 'text' },
+    password: { control: 'text' },
+    confirmPassword: { control: 'text' },
+  },
   render: (args) => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    const [email, setEmail] = useState(args.email || "");
+    const [password, setPassword] = useState(args.password || "");
+    const [confirmPassword, setConfirmPassword] = useState(args.confirmPassword || "");
     return (
       <UserSignUpForm
         email={email}
@@ -25,6 +41,7 @@ export const Default: Story = {
         setPassword={setPassword}
         confirmPassword={confirmPassword}
         setConfirmPassword={setConfirmPassword}
+        errors={args.errors}
         {...args}
       />
     );

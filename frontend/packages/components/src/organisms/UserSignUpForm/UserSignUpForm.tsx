@@ -12,14 +12,19 @@ export interface UserSignUpFormProps {
   setPassword: (password: string) => void;
   confirmPassword: string;
   setConfirmPassword: (confirmPassword: string) => void;
+  errors?: {
+    emailError?: string;
+    passwordError?: string;
+    confirmPasswordError?: string;
+  }
   onSubmit?: () => void;
 }
 
-export const UserSignUpForm = ({ email, password, confirmPassword, setEmail, setPassword, setConfirmPassword, onSubmit }: UserSignUpFormProps) => {
+export const UserSignUpForm = ({ email, password, confirmPassword, setEmail, setPassword, setConfirmPassword, errors, onSubmit }: UserSignUpFormProps) => {
 
   return (
     <CircleWrapper className="bg-minty max-md:rounded-none rounded-2xl md:w-xl xl:w-xl aspect-square text-center">
-      <div className="flex flex-col items-center py-10 md:p-20 ">
+      <div className="flex flex-col items-center py-10 ">
         <h2 className="text-2xl mb-5 font-semibold md:mt-2 md:text-3xl">
           New Account
         </h2>
@@ -27,6 +32,7 @@ export const UserSignUpForm = ({ email, password, confirmPassword, setEmail, set
           label="Email"
           placeholder="Email"
           value={email}
+          error={errors?.emailError}
           onChange={(e) => setEmail(e.target.value)}
         />
         <LabeledInputField
@@ -34,6 +40,7 @@ export const UserSignUpForm = ({ email, password, confirmPassword, setEmail, set
           placeholder="Password"
           type="password"
           value={password}
+          error={errors?.passwordError}
           onChange={(e) => setPassword(e.target.value)}
         />
         <LabeledInputField
@@ -41,6 +48,7 @@ export const UserSignUpForm = ({ email, password, confirmPassword, setEmail, set
           placeholder="Confirm Password"
           value={confirmPassword}
           type="password"
+          error={errors?.confirmPasswordError}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
 

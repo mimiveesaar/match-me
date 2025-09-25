@@ -18,7 +18,7 @@ public class RegisterUserRequestMocker {
         var requestId = UUID.randomUUID();
         var emailDto = new EmailDTO(faker.internet().emailAddress());
         var passwordDto = new PasswordDTO(PasswordFaker.generatePassword(8,16,true,true));
-        return new RegisterUserRequest(requestId, emailDto, passwordDto, null);
+        return new RegisterUserRequest(emailDto, passwordDto);
     }
 
     public RegisterUserRequest createInvalidPasswordRequest() {
