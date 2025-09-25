@@ -32,6 +32,11 @@ public class WebSocketPresenceListener {
         String sessionId = event.getMessage().getHeaders().get("simpSessionId").toString();
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
 
+        System.out.println("[CONNECT] Full headers:");
+        accessor.toNativeHeaderMap().forEach((key, value) -> {
+            System.out.println("  " + key + ": " + value);
+        });
+
         String userId = accessor.getFirstNativeHeader("userId"); // <-- passed from frontend
         System.out.println("[CONNECT] sessionId=" + sessionId + ", userId=" + userId);
 

@@ -1,6 +1,7 @@
 import { Client, StompSubscription, IMessage } from "@stomp/stompjs";
 import { useState, useRef, useEffect } from "react";
 import SockJS from "sockjs-client";
+import { getStompClient } from "../utils/stompClient";
 
 export const usePresence = (userId: string) => {
   const [status, setStatus] = useState<'ONLINE' | 'OFFLINE'>('OFFLINE');
@@ -8,10 +9,9 @@ export const usePresence = (userId: string) => {
   const subRef = useRef<StompSubscription | null>(null);
 
   useEffect(() => {
-    const client = new Client({
-      webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
-      reconnectDelay: 5000,
-    });
+
+      const client = getStompClient(userId);
+      clientRef.current = client;
 
     client.onConnect = () => {
       subRef.current = client.subscribe(`/topic/status/${userId}`, (msg: IMessage) => {
@@ -20,12 +20,10 @@ export const usePresence = (userId: string) => {
       });
     };
 
-    client.activate();
     clientRef.current = client;
 
     return () => {
       subRef.current?.unsubscribe();
-      client.deactivate();
     };
   }, [userId]);
 

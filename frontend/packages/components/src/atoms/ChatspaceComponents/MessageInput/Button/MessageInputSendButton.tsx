@@ -7,7 +7,7 @@ interface SendButtonProps {
     disabled?: boolean;
 }
 
-export const SendButton = ({ onClick, disabled = false }: SendButtonProps) => {
+export const MessageInputSendButton = ({ onClick, disabled = false }: SendButtonProps) => {
     return (
         <button
             onClick={onClick}

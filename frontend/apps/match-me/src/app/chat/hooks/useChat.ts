@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Client, IMessage, StompSubscription } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
-import { ChatMessage } from '@hooks/types';
+import { ChatMessage } from "./types";
+import { getStompClient } from "../utils/stompClient";
+
 
 export const useChat = (conversationId: string, userId: string, senderUsername: string) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -21,13 +23,11 @@ export const useChat = (conversationId: string, userId: string, senderUsername: 
 
     console.log(`Connecting WebSocket for ${senderUsername} to conversation ${conversationId}`);
 
-    const client = new Client({
-      webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
-      debug: (str) => console.log(str),
-      reconnectDelay: 5000,
-    });
+      const client = getStompClient(userId); // ✅ singleton
+      clientRef.current = client;
 
-    client.onConnect = () => {
+
+      client.onConnect = () => {
       console.log(`WebSocket connected for ${senderUsername}`);
 
       // Subscribe to messages
@@ -55,16 +55,15 @@ export const useChat = (conversationId: string, userId: string, senderUsername: 
       );
     };
 
-    client.activate();
     clientRef.current = client;
 
-    return () => {
-      console.log(`Disconnecting WebSocket for ${senderUsername}`);
-      messagesSubRef.current?.unsubscribe();
-      typingSubRef.current?.unsubscribe();
-      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
-      client.deactivate();
-    };
+      return () => {
+          console.log(`Disconnecting conversation subs for ${senderUsername}`);
+          messagesSubRef.current?.unsubscribe();
+          typingSubRef.current?.unsubscribe();
+          if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+      };
+
   }, [conversationId, userId, senderUsername]); // Added senderUsername to deps
 
   const sendMessage = (content: string) => {
