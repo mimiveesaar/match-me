@@ -1,10 +1,12 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 export interface ProfileData {
-  planet: string;
-  lookingFor: string;
-  interests: string;
+  homeplanetId: number;
+  bodyformId: number;
+  lookingForId: number;
   bio: string;
+  interestIds: number[];
+  profilePic: string;
 }
 
 export interface Profile extends ProfileData {
@@ -32,36 +34,24 @@ class ApiService {
     return response.json();
   }
 
-  // Create a new profile
-  async createProfile(data: ProfileData): Promise<Profile> {
-    return this.fetchApi('/api/profiles', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
+  // Get current user's profile
+  async getCurrentProfile(): Promise<Profile> {
+    return this.fetchApi('/api/profiles/me');
   }
 
-  // Get all profiles
-  async getProfiles(): Promise<Profile[]> {
-    return this.fetchApi('/api/profiles');
-  }
-
-  // Get a specific profile
-  async getProfile(id: string): Promise<Profile> {
-    return this.fetchApi(`/api/profiles/${id}`);
-  }
-
-  // Update a profile
-  async updateProfile(id: string, data: Partial<ProfileData>): Promise<Profile> {
-    return this.fetchApi(`/api/profiles/${id}`, {
+  // Update current user's profile
+  async updateCurrentProfile(data: ProfileData): Promise<Profile> {
+    return this.fetchApi('/api/profiles/me', {
       method: 'PUT',
       body: JSON.stringify(data),
     });
   }
 
-  // Delete a profile
-  async deleteProfile(id: string): Promise<void> {
-    return this.fetchApi(`/api/profiles/${id}`, {
-      method: 'DELETE',
+  // Create a new profile (for signup flow)
+  async createProfile(data: ProfileData): Promise<Profile> {
+    return this.fetchApi('/api/profiles', {
+      method: 'POST',
+      body: JSON.stringify(data),
     });
   }
 }
