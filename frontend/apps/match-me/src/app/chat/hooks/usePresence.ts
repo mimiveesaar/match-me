@@ -1,31 +1,16 @@
-import { Client, StompSubscription, IMessage } from "@stomp/stompjs";
-import { useState, useRef, useEffect } from "react";
-import SockJS from "sockjs-client";
-import { getStompClient } from "../utils/stompClient";
+import { useEffect, useState } from "react";
+import { useWebSocket } from "../utils/WebSocketContext";
+
 
 export const usePresence = (userId: string) => {
-  const [status, setStatus] = useState<'ONLINE' | 'OFFLINE'>('OFFLINE');
-  const clientRef = useRef<Client | null>(null);
-  const subRef = useRef<StompSubscription | null>(null);
+    const { isUserOnline, isConnected } = useWebSocket();
+    const [status, setStatus] = useState<'ONLINE' | 'OFFLINE'>('OFFLINE');
 
-  useEffect(() => {
+    useEffect(() => {
+        if (!userId || !isConnected) return;
 
-      const client = getStompClient(userId);
-      clientRef.current = client;
+        setStatus(isUserOnline(userId) ? 'ONLINE' : 'OFFLINE');
+    }, [userId, isConnected, isUserOnline]);
 
-    client.onConnect = () => {
-      subRef.current = client.subscribe(`/topic/status/${userId}`, (msg: IMessage) => {
-        setStatus(msg.body as 'ONLINE' | 'OFFLINE');
-        console.log(`User ${userId} is now ${msg.body}`);
-      });
-    };
-
-    clientRef.current = client;
-
-    return () => {
-      subRef.current?.unsubscribe();
-    };
-  }, [userId]);
-
-  return { status };
+    return { status };
 };

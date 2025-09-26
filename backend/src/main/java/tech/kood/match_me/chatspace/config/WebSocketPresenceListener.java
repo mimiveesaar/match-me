@@ -1,6 +1,9 @@
 package tech.kood.match_me.chatspace.config;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,6 +28,10 @@ public class WebSocketPresenceListener {
     public WebSocketPresenceListener(SimpMessagingTemplate messagingTemplate, ChatUserRepository chatUserRepository) {
         this.messagingTemplate = messagingTemplate;
         this.chatUserRepository = chatUserRepository;
+    }
+
+    public Set<String> getOnlineUserIds() {
+        return new HashSet<>(onlineUsers.values());
     }
 
     @EventListener
@@ -60,10 +67,12 @@ public class WebSocketPresenceListener {
             e.printStackTrace();
         }
 
-        // Broadcast online status
-        messagingTemplate.convertAndSend("/topic/status/" + userId, "ONLINE");
+        // Broadcast online status to common topic
+        messagingTemplate.convertAndSend("/topic/status", Map.of(
+                "userId", userId,
+                "status", "ONLINE"
+        ));
         System.out.println("[CONNECT] Broadcast ONLINE for userId=" + userId);
-
     }
 
     @EventListener
@@ -89,7 +98,10 @@ public class WebSocketPresenceListener {
                     e.printStackTrace();
                 }
 
-                messagingTemplate.convertAndSend("/topic/status/" + userId, "OFFLINE");
+                messagingTemplate.convertAndSend("/topic/status", Map.of(
+                        "userId", userId,
+                        "status", "OFFLINE"
+                ));
                 System.out.println("[DISCONNECT] Broadcast OFFLINE for userId=" + userId);
             } else {
                 System.out.println("[DISCONNECT] User " + userId + " still has active sessions. Skipping offline update.");

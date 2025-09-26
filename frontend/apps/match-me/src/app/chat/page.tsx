@@ -6,7 +6,7 @@ import { ConnectionsMenu } from 'components/organisms';
 import { ChatWindow } from 'components/organisms';
 import { MessageInput } from 'components/organisms';
 import { useChat } from './hooks/useChat';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { useWebSocket, WebSocketProvider } from './utils/WebSocketContext';
 
@@ -24,13 +24,12 @@ export default function ChatspaceWrapper() {
     );
 }
 
-// Separated inner component to safely use context
 function Chatspace({ userId }: { userId: string }) {
     const [users, setUsers] = useState<
         Array<{ id: string; username: string; isOnline: boolean }>
     >([]);
     const [conversationId, setConversationId] = useState<string | null>(null);
-    const { setHasUnread, subscribeToUnread, hasUnread, isConnected } = useWebSocket(); // ✅ now safe
+    const { setHasUnread, subscribeToUnread, hasUnread, isConnected } = useWebSocket();
     const senderUsername = userId === '22222222-2222-2222-2222-222222222222'
         ? 'bob_cosmic'
         : 'alice_space';
@@ -58,7 +57,24 @@ function Chatspace({ userId }: { userId: string }) {
                     username: user.username,
                 }));
 
-                setUsers(connections); // ✅ Only save ID + username, no isOnline here
+                try {
+                    const onlineRes = await axios.get(`http://localhost:8080/api/presence/online-users`);
+                    const onlineUserIds: string[] = onlineRes.data;
+                    const connections = (response.data as UserConnection[]).map((user) => ({
+                        id: user.id,
+                        username: user.username,
+                    }));
+                    const enrichedConnections = connections.map((user) => ({
+                        ...user,
+                        isOnline: onlineUserIds.includes(user.id),
+                    }));
+
+                    console.log("Enriched users:", enrichedConnections);
+                    setUsers(enrichedConnections);
+                } catch (err) {
+                    console.error("Failed to fetch online users", err);
+                    setUsers(connections); // fallback if presence API fails
+                }
 
                 const convosRes = await axios.get(
                     `http://localhost:8080/api/conversations/user/${userId}`,
@@ -80,12 +96,14 @@ function Chatspace({ userId }: { userId: string }) {
                             {
                                 id: '22222222-2222-2222-2222-222222222222',
                                 username: 'bob_cosmic',
+                                isOnline: false,
                             },
                         ]
                         : [
                             {
                                 id: '11111111-1111-1111-1111-111111111111',
                                 username: 'alice_space',
+                                isOnline: false,
                             },
                         ];
                 setUsers(mockConnections);
@@ -132,6 +150,20 @@ function Chatspace({ userId }: { userId: string }) {
         };
     }, [userId, conversationId, isConnected]);
 
+    const { onlineUsers, isUserOnline } = useWebSocket();
+
+    const enrichedUsers = useMemo(() => {
+        console.log("Users array:", users);
+        return users.map((u) => ({
+            ...u,
+            isOnline: isUserOnline(u.id),
+        }));
+    }, [users, onlineUsers]);
+
+    useEffect(() => {
+        console.log("Enriched users:", enrichedUsers);
+    }, [enrichedUsers]);
+
     return (
         <div className="flex flex-col h-screen bg-ivory">
             <header className="flex justify-center py-4 flex-shrink-0">
@@ -167,7 +199,7 @@ function Chatspace({ userId }: { userId: string }) {
 
                 <aside className="w-72 mt-32 flex flex-col">
                     <ConnectionsMenu
-                        users={users}
+                        users={enrichedUsers}
                         onSelectUser={async (otherUserId) => {
                             try {
                                 const response = await axios.post(
