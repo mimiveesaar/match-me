@@ -165,7 +165,7 @@ function Chatspace({ userId }: { userId: string }) {
     }, [enrichedUsers]);
 
     return (
-        <div className="flex flex-col h-screen bg-ivory">
+        <div className="flex flex-col min-h-screen bg-ivory">
             <header className="flex justify-center py-4 flex-shrink-0">
                 <AlienMeetLogo />
             </header>
