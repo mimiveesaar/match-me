@@ -102,7 +102,30 @@ public class MatchingDataSeeder implements CommandLineRunner {
             {"7c9e4e62-7e32-4ce3-872b-78370839d0f2", "nova_nate", 34, "/images/profiles/nova-nate.png", 11, 4, 4, "Burn bright, love brighter."},
             {"e4e7a4e1-4ab0-406c-b6c4-7c6cbd28f671", "solarys", 29, "/images/profiles/solarys.png", 12, 5, 1, "Daylight dreamer, starlight lover."},
             {"bfd6b738-6c58-4b77-8aa2-dce297fa23b5", "wormholewendy", 26, "/images/profiles/wormholewendy.png", 13, 6, 2, "Faster than light, slower to trust."},
-            {"0b2e39ea-d1ef-4b6c-93b6-1d0ff861197e", "kepler_kai", 37, "/images/profiles/kepler-kai.png", 14, 1, 3, "Mapping hearts like exoplanets."}
+            {"0b2e39ea-d1ef-4b6c-93b6-1d0ff861197e", "kepler_kai", 37, "/images/profiles/kepler-kai.png", 14, 1, 3, "Mapping hearts like exoplanets."},
+
+                {"e2d1c9f6-758f-4e5f-b2a4-249d7b09aa62", "khebab", 47, "/images/profiles/khebab.png", 1, 2, 6, "47 in human years."},
+                {"6b9f12d4-9245-4634-a8b7-3aa0c1eae7fc", "goldie_brains", 121, "/images/profiles/goldie-brains.png", 2, 1, 5, "Knows 47 ways to win at chess but forgets her keys every day."},
+                {"ae2a1129-0d15-4fa4-bdb4-fd4893a6d9b9", "gong", 107, "/images/profiles/gong.png", 3, 2, 4, "Speaks only in haikus and kitchen metaphors."},
+                {"b0d105c1-48ef-4bba-8b52-d4d4e338e25f", "Krik", 19, "/images/profiles/krik.png", 4, 3, 3, "I have a twin brother. He’s slightly less cool."},
+                {"43f82453-8aaf-4b3a-83f9-8e56c5ac1779", "Krak", 19, "/images/profiles/krak.png", 4, 3, 3, "I have a twin brother. He thinks he’s cooler."},
+                {"13fd2ec7-e1f1-462e-bae7-404ae8a5151f", "siip", 78, "/images/profiles/siip.png", 6, 5, 1, "Retired pirate, current sudoku champion."},
+                {"d5d92180-5041-48aa-bbc7-d5d2274cb192", "potaroo", 40, "/images/profiles/potaroo.png", 7, 2, 6, "Allergic to drama, addicted to hummus."},
+                {"e7f153bd-fb89-4959-8d5b-798b7d7298e5", "loonToon", 150, "/images/profiles/loontoon.png", 8, 7, 3, "Still waiting for their cartoon royalty checks."},
+                {"f3b6e36f-e4e2-4983-a2c5-d51cbf6f2a94", "Bünf", 32, "/images/profiles/bunf.png", 9, 8, 4, "Collects spoons. Not ironically."},
+                {"a4b63de0-42cb-44ae-9251-7982355a1574", "Grong", 79, "/images/profiles/grong.png", 10, 9, 5, "Built like a tank, cries during baking shows."},
+                {"b5fe450c-1db5-4643-95ea-8bb2dd2822a1", "LupiLuu", 80, "/images/profiles/lupiluu.png", 11, 10, 6, "Can out-sing a canary and out-nap a cat."},
+                {"da8c5916-dc38-40f0-a5bb-6590aa06650c", "Krox", 59, "/images/profiles/krox.png", 12, 9, 5, "Gym rat in the streets, poet in the tweets."},
+                {"f0e27dd2-7fc6-4e56-a4fa-3bc00f1ad70e", "Paxy", 67, "/images/profiles/paxy.png", 13, 8, 4, "Thinks space is cool, still afraid of elevators."},
+                {"cf1eeb2a-e816-4982-a34f-2b29c7721d96", "Spongey", 68, "/images/profiles/spongey.png", 14, 7, 3, "Absorbs vibes and conspiracy theories."},
+                {"7ce6d285-1b27-466e-a06f-31596efeb317", "Seesamike", 33, "/images/profiles/seesamike.png", 15, 6, 2, "Knows the secret recipe, won’t tell a soul."},
+                {"379e84b3-df3d-4fae-832e-98f92e9732a5", "Zobra", 99, "/images/profiles/zobra.png", 1, 5, 1, "Once won a staring contest with a statue."},
+                {"be0bd7df-8488-4c6f-b3cf-379c78f9a52b", "Cafu", 75, "/images/profiles/cafu.png", 2, 4, 2, "Retired time traveler. Not allowed near microwaves."},
+                {"c83b4dc9-2e49-4b9a-800f-929b5f2187b0", "Bermylla", 88, "/images/profiles/bermylla.png", 3, 3, 3, "Got lost in a hedge maze in 1973. Still not sure if out."},
+                {"44fd1dc6-fcf3-4e49-87e9-d9c8aa1be265", "Bebiku", 93, "/images/profiles/bebiku.png", 4, 2, 4, "Dances like everyone’s watching. And charges admission."},
+                {"c66b0f7b-7484-4f2e-83cb-254019f2fe9e", "Sepik", 29, "/images/profiles/sepik.png", 5, 1, 5, "Once sneezed and invented a new form of jazz."},
+
+
         };
 
         for (Object[] user : users) {
