@@ -52,7 +52,7 @@ export const MyProfilePage = ({
     };
 
     setIsLoading(true);
-    
+
     try {
       if (onSave) {
         await onSave(fullProfile);
@@ -78,9 +78,8 @@ export const MyProfilePage = ({
             placeholder="Bio (optional)"
             value={bio}
             onChange={(e) => setBio(e.target.value)}
-            id="bio" setValue={function (value: string): void {
-              throw new Error("Function not implemented.");
-            } }          />
+            id="bio"
+          />
         </div>
 
         <InterestsSection
@@ -92,9 +91,8 @@ export const MyProfilePage = ({
           <button
             onClick={handleSave}
             disabled={isLoading}
-            className={`flex items-center gap-2 bg-olive hover:bg-amberglow text-white font-semibold py-2 px-4 rounded-xl shadow-md transition-all duration-200 ${
-              isLoading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+            className={`flex items-center gap-2 bg-olive hover:bg-amberglow text-white font-semibold py-2 px-4 rounded-xl shadow-md transition-all duration-200 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
           >
             {isLoading ? 'Saving...' : 'Save Changes'}
           </button>

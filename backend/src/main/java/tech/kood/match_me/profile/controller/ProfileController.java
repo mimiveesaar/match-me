@@ -13,7 +13,7 @@ import tech.kood.match_me.profile.service.ProfileService;
 
 @RestController
 @RequestMapping("/api/profiles")
-@CrossOrigin(origins = {"http://localhost:3002", "http://localhost:3000"})
+@CrossOrigin(origins = {"http://localhost:3002", "http://localhost:3000", "http://localhost:3003"})
 public class ProfileController {
 
     private final ProfileService service;

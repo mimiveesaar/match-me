@@ -62,10 +62,8 @@ public class ProfileDataSeeder implements CommandLineRunner {
 
     private void seedBodyforms() {
         // Updated to match MatchingDataSeeder options
-        String[] bodyforms = {
-            "Gelatinous", "Tentacled", "Humanoid", "Energy-Based", "Mechanical",
-            "Insectoid", "Reptilian", "Gas Cloud", "Crystalline", "Mimetic Blob"
-        };
+        String[] bodyforms = {"Gelatinous", "Tentacled", "Humanoid", "Energy-Based", "Mechanical",
+                "Insectoid", "Reptilian", "Gas Cloud", "Crystalline", "Mimetic Blob"};
         for (String bodyform : bodyforms) {
             jdbcTemplate.update(
                     "INSERT INTO bodyforms (name) VALUES (?) ON CONFLICT (name) DO NOTHING",
@@ -76,11 +74,9 @@ public class ProfileDataSeeder implements CommandLineRunner {
 
     private void seedHomeplanets() {
         // Updated to match MatchingDataSeeder options
-        String[] homeplanets = {
-            "Xeron-5", "Draknor", "Vega Prime", "Bloop-X12", "Zal'Tek Major",
-            "Nimbus-9", "Krylon Beta", "Nova Eden", "Tharnis", "Quarnyx Delta", 
-            "Glooporia", "Skarn", "Uvuul-4", "Oortania", "Vrexalon"
-        };
+        String[] homeplanets = {"Xeron-5", "Draknor", "Vega Prime", "Bloop-X12", "Zal'Tek Major",
+                "Nimbus-9", "Krylon Beta", "Nova Eden", "Tharnis", "Quarnyx Delta", "Glooporia",
+                "Skarn", "Uvuul-4", "Oortania", "Vrexalon"};
         for (String homeplanet : homeplanets) {
             jdbcTemplate.update(
                     "INSERT INTO homeplanets (name) VALUES (?) ON CONFLICT (name) DO NOTHING",
@@ -91,10 +87,8 @@ public class ProfileDataSeeder implements CommandLineRunner {
 
     private void seedLookingFor() {
         // Updated to match MatchingDataSeeder options
-        String[] lookingFor = {
-            "Friendship", "Romance", "Strategic Alliance", 
-            "Co-parenting Hatchlings", "Host Symbiosis", "Chtulhu"
-        };
+        String[] lookingFor = {"Friendship", "Romance", "Strategic Alliance",
+                "Co-parenting Hatchlings", "Host Symbiosis", "Chtulhu"};
         for (String item : lookingFor) {
             jdbcTemplate.update(
                     "INSERT INTO looking_for (name) VALUES (?) ON CONFLICT (name) DO NOTHING",
@@ -105,17 +99,16 @@ public class ProfileDataSeeder implements CommandLineRunner {
 
     private void seedInterests() {
         // Updated to match MatchingDataSeeder expanded options
-        String[] interests = {
-            "Telepathic Chess", "Black Hole Karaoke", "Baking", "Binary Poetry", "Painting",
-            "Parallel Parking", "Reading", "Collecting Rocks", "Butterfly watching", "Plasma Sculpting",
-            "Terraforming", "Zero-G Yoga", "Fishing", "Galactic Geocaching", "Nebula Photography",
-            "Starship Racing", "Archaeology", "Cooking", "Light-speed Surfing", "Wormhole Navigation",
-            "Cryo-sleep", "Martian Mining", "Solar Wind Sailing", "Meditation", "Opera Singing",
-            "Ballet", "Fashion Design", "Black Market Trading", "Cosmic Comics", "Meteorite Hunting",
-            "Exoplanet Exploration", "Star Map Reading", "Galactic Diplomacy", "Gardening", 
-            "Interstellar DJing", "Teleportation Tricks", "Brewing", "Droid Repair", 
-            "Cryptography", "Wormhole Jumping"
-        };
+        String[] interests = {"Telepathic Chess", "Black Hole Karaoke", "Baking", "Binary Poetry",
+                "Painting", "Parallel Parking", "Reading", "Collecting Rocks", "Butterfly watching",
+                "Plasma Sculpting", "Terraforming", "Zero-G Yoga", "Fishing", "Galactic Geocaching",
+                "Nebula Photography", "Starship Racing", "Archaeology", "Cooking",
+                "Light-speed Surfing", "Wormhole Navigation", "Cryo-sleep", "Martian Mining",
+                "Solar Wind Sailing", "Meditation", "Opera Singing", "Ballet", "Fashion Design",
+                "Black Market Trading", "Cosmic Comics", "Meteorite Hunting",
+                "Exoplanet Exploration", "Star Map Reading", "Galactic Diplomacy", "Gardening",
+                "Interstellar DJing", "Teleportation Tricks", "Brewing", "Droid Repair",
+                "Cryptography", "Wormhole Jumping"};
 
         for (String interest : interests) {
             jdbcTemplate.update(
@@ -133,4 +126,28 @@ public class ProfileDataSeeder implements CommandLineRunner {
             System.out.println("Table " + table + " has " + count + " rows");
         }
     }
+
+    //hardcoded user for testing purposes
+
+    private void seedDefaultUserAndProfile() {
+        // Insert user
+        jdbcTemplate.update(
+                "INSERT INTO users (username, password) VALUES (?, ?) ON CONFLICT (username) DO NOTHING",
+                "testuser", "{noop}password" // {noop} means plain-text in Spring Security
+        );
+
+        // Fetch user_id
+        Long userId = jdbcTemplate.queryForObject("SELECT id FROM users WHERE username = ?",
+                Long.class, "testuser");
+
+        // Insert profile (only if it doesn’t exist yet)
+        jdbcTemplate.update(
+                "INSERT INTO profiles (user_id, bio, homeplanet_id, bodyform_id, looking_for_id, profile_pic) "
+                        + "VALUES (?, ?, NULL, NULL, NULL, NULL) "
+                        + "ON CONFLICT (user_id) DO NOTHING",
+                userId, "This is a seeded bio");
+
+        System.out.println("Default user + profile seeded (username: testuser)");
+    }
 }
+

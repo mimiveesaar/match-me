@@ -7,12 +7,19 @@ export interface ProfileData {
   bio: string;
   interestIds: number[];
   profilePic: string;
+  username?: string;
+  age?: number;
 }
 
 export interface Profile extends ProfileData {
   id: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ReferenceDataOption {
+  id: number;
+  name: string;
 }
 
 class ApiService {
@@ -39,20 +46,29 @@ class ApiService {
     return this.fetchApi('/api/profiles/me');
   }
 
-  // Update current user's profile
+  // Update current user's profile (use POST since your backend expects it)
   async updateCurrentProfile(data: ProfileData): Promise<Profile> {
     return this.fetchApi('/api/profiles/me', {
-      method: 'PUT',
+      method: 'POST', // Changed from PUT to POST
       body: JSON.stringify(data),
     });
   }
 
-  // Create a new profile (for signup flow)
-  async createProfile(data: ProfileData): Promise<Profile> {
-    return this.fetchApi('/api/profiles', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
+  // Reference data endpoints
+  async getInterests(): Promise<ReferenceDataOption[]> {
+    return this.fetchApi('/api/interests');
+  }
+
+  async getHomeplanets(): Promise<ReferenceDataOption[]> {
+    return this.fetchApi('/api/homeplanets');
+  }
+
+  async getBodyforms(): Promise<ReferenceDataOption[]> {
+    return this.fetchApi('/api/bodyforms');
+  }
+
+  async getLookingFor(): Promise<ReferenceDataOption[]> {
+    return this.fetchApi('/api/looking-for');
   }
 }
 
