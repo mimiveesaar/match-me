@@ -10,7 +10,7 @@ export const SpeechBubble = ({ children, color = "bg-ivory" }: SpeechBubbleProps
 
     return (
         <div className="flex justify-center items-center px-4">
-            <div className="relative w-full max-w-[257px]">
+            <div className="relative w-fit break-words max-w-[257px]">
                 {/* Bubble */}
                 <div className={`rounded-xl p-4 ${bgColor} text-black/80 chakra-petch font-bold drop-shadow-custom-2 text-xs`}>
                     {children}
