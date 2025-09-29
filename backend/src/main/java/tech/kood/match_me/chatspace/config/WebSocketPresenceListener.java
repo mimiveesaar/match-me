@@ -44,7 +44,7 @@ public class WebSocketPresenceListener {
             System.out.println("  " + key + ": " + value);
         });
 
-        String userId = accessor.getFirstNativeHeader("userId"); // <-- passed from frontend
+        String userId = accessor.getFirstNativeHeader("userId");
         System.out.println("[CONNECT] sessionId=" + sessionId + ", userId=" + userId);
 
         if (userId == null) {

@@ -84,7 +84,7 @@ public class MatchingDataSeeder implements CommandLineRunner {
     private void seedUsers() {
         Object[][] users = {
             {"3fa85f64-5717-4562-b3fc-2c963f66afa1", "starhopper42", 27, "/images/profiles/starhopper.png", 1, 1, 1, "Explorer of galaxies and maker of maps."},
-            {"c9a6463d-5e4b-43ef-924e-25d7a9e8e6c2", "nebular_nikki", 31, "/images/profiles/nebular_nikki.png", 2, 2, 2, "Dreaming beyond the stars."},
+            {"c9a6463d-5e4b-43ef-924e-25d7a9e8e6c2", "nebular_nikki", 31, "/images/profiles/nebular-nikki.png", 2, 2, 2, "Dreaming beyond the stars."},
             {"f2d45e1c-4d9c-4a5a-b2fa-1f55e720347a", "cosmicjoe", 35, "/images/profiles/cosmic-joe.png", 1, 1, 1, "Looking for a co-pilot in life."},
             {"23dc80aa-01ae-4cf3-93c0-60b3846ef1e5", "gravitygal", 29, "/images/profiles/gravitygal.png", 3, 3, 3, "I never fall... unless it’s for someone."},
             {"d87e7304-7bfb-4bfb-9318-52c58f3c1036", "andromedaboy", 22, "/images/profiles/andromedaboy.png", 2, 3, 3, "Just a guy with a telescope and big dreams."},

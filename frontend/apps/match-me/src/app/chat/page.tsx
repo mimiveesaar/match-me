@@ -26,7 +26,7 @@ export default function ChatspaceWrapper() {
 
 function Chatspace({ userId }: { userId: string }) {
     const [users, setUsers] = useState<
-        Array<{ id: string; username: string; isOnline: boolean }>
+        Array<{ id: string; username: string; src?: string; isOnline: boolean }>
     >([]);
     const [conversationId, setConversationId] = useState<string | null>(null);
     const { setHasUnread, subscribeToUnread, hasUnread, isConnected } = useWebSocket();
@@ -43,6 +43,7 @@ function Chatspace({ userId }: { userId: string }) {
         id: string;
         username: string;
         status: string;
+        profilePicSrc: string;
     }
 
     useEffect(() => {
@@ -52,9 +53,15 @@ function Chatspace({ userId }: { userId: string }) {
                     `http://localhost:8080/api/users/${userId}/connections`,
                 );
 
+                console.log("[Frontend] Raw API response:", response.data);
+                response.data.forEach((user: UserConnection) => {
+                    console.log(`  - ${user.username}: profilePicSrc = ${user.profilePicSrc}`);
+                });
+
                 const connections = response.data.map((user: UserConnection) => ({
                     id: user.id,
                     username: user.username,
+                    src: user.profilePicSrc,
                 }));
 
                 try {
@@ -63,6 +70,7 @@ function Chatspace({ userId }: { userId: string }) {
                     const connections = (response.data as UserConnection[]).map((user) => ({
                         id: user.id,
                         username: user.username,
+                        src: user.profilePicSrc,
                     }));
                     const enrichedConnections = connections.map((user) => ({
                         ...user,
@@ -80,6 +88,8 @@ function Chatspace({ userId }: { userId: string }) {
                     `http://localhost:8080/api/conversations/user/${userId}`,
                 );
 
+
+
                 const conversations = convosRes.data;
 
                 if (conversations.length > 0) {
@@ -89,24 +99,6 @@ function Chatspace({ userId }: { userId: string }) {
                 }
             } catch (err) {
                 console.error('Failed to fetch connections or conversations:', err);
-
-                const mockConnections =
-                    userId === '11111111-1111-1111-1111-111111111111'
-                        ? [
-                            {
-                                id: '22222222-2222-2222-2222-222222222222',
-                                username: 'bob_cosmic',
-                                isOnline: false,
-                            },
-                        ]
-                        : [
-                            {
-                                id: '11111111-1111-1111-1111-111111111111',
-                                username: 'alice_space',
-                                isOnline: false,
-                            },
-                        ];
-                setUsers(mockConnections);
             }
         }
 

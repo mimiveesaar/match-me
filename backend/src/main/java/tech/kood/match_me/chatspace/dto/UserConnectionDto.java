@@ -6,5 +6,6 @@ import java.util.UUID;
 public record UserConnectionDto(
         UUID id,
         String username,
-        String status
+        String status,
+        String profilePicSrc
 ) {}

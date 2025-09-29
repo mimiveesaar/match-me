@@ -9,6 +9,9 @@ interface PhotoBubbleWithUsernameProps {
   onClick: () => void; // required
 }
 
+const BACKEND_URL = "http://localhost:8080";
+const DEFAULT_AVATAR = `${BACKEND_URL}/images/profiles/default-avatar.png`;
+
 export const PhotoBubbleWithUsername = ({
   src,
   alt,
@@ -16,6 +19,15 @@ export const PhotoBubbleWithUsername = ({
   isOnline = false,
   onClick,
 }: PhotoBubbleWithUsernameProps) => {
+
+    const handleError = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
+        event.currentTarget.src = DEFAULT_AVATAR;
+    };
+
+    const imageUrl = src
+        ? (src.startsWith('http') ? src : `${BACKEND_URL}${src}`)
+        : DEFAULT_AVATAR;
+
   return (
     <button
       onClick={onClick}
@@ -23,8 +35,8 @@ export const PhotoBubbleWithUsername = ({
     >
       <div className="relative">
         <img
-          src={src || '/default-avatar.png'}
-          alt={alt || username}
+          src={imageUrl}
+          alt={alt}
           className="w-10 h-10 rounded-full object-cover"
         />
         {isOnline && (

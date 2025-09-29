@@ -38,6 +38,9 @@ public class UserConnectionService {
                         : conn.getUser();
                     
                     UUID otherUserId = otherUser.getId();
+
+                    System.out.println("[UserConnectionService] User: " + otherUser.getUsername()
+                            + ", profilePicSrc: " + otherUser.getProfilePicSrc());
                     
                     // Get last conversation update with this other user
                     LocalDateTime lastUpdated = conversationRepository
@@ -48,8 +51,11 @@ public class UserConnectionService {
                     UserConnectionDto dto = new UserConnectionDto(
                             otherUserId,
                             otherUser.getUsername(),
-                            otherUser.getStatus().name()
+                            otherUser.getStatus().name(),
+                            otherUser.getProfilePicSrc()
                     );
+
+                    System.out.println("[UserConnectionService] Created DTO: " + dto);
 
                     return new AbstractMap.SimpleEntry<>(lastUpdated, dto);
                 })
