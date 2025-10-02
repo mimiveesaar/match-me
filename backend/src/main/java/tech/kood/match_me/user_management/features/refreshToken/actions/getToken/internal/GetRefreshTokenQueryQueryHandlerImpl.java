@@ -2,6 +2,7 @@ package tech.kood.match_me.user_management.features.refreshToken.actions.getToke
 
 import jakarta.validation.Validator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.features.refreshToken.actions.getToken.api.GetRefreshTokenQueryHandler;
 import tech.kood.match_me.user_management.features.refreshToken.actions.getToken.api.GetRefreshTokenRequest;
@@ -12,7 +13,7 @@ import tech.kood.match_me.user_management.features.refreshToken.internal.persist
 import java.time.Instant;
 
 @Service
-public final class GetRefreshTokenQueryQueryHandlerImpl implements GetRefreshTokenQueryHandler {
+public class GetRefreshTokenQueryQueryHandlerImpl implements GetRefreshTokenQueryHandler {
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final RefreshTokenMapper refreshTokenMapper;
@@ -26,6 +27,7 @@ public final class GetRefreshTokenQueryQueryHandlerImpl implements GetRefreshTok
     }
 
     @Override
+    @Transactional
     public GetRefreshTokenResults handle(GetRefreshTokenRequest request) {
 
         var validationResults = validator.validate(request);

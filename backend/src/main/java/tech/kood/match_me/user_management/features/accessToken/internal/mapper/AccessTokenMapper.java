@@ -3,8 +3,8 @@ package tech.kood.match_me.user_management.features.accessToken.internal.mapper;
 
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.stereotype.Component;
-import tech.kood.match_me.user_management.features.accessToken.domain.api.AccessTokenDTO;
-import tech.kood.match_me.user_management.features.accessToken.domain.internal.AccessToken;
+import tech.kood.match_me.user_management.common.domain.api.AccessTokenDTO;
+import tech.kood.match_me.user_management.common.domain.internal.accessToken.AccessToken;
 
 @Component
 @ApplicationLayer

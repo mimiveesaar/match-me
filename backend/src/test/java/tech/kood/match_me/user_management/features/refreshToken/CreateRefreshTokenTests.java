@@ -12,14 +12,13 @@ import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.RefreshTokenRepository;
+import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
 import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdQueryHandler;
 import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdRequest;
 import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdResults;
 import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenCommandHandler;
 import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenRequest;
 import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenResults;
-import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserCommandHandler;
-import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserResults;
 import tech.kood.match_me.user_management.features.user.actions.registerUser.RegisterUserRequestMocker;
 
 @SpringBootTest
@@ -28,7 +27,7 @@ import tech.kood.match_me.user_management.features.user.actions.registerUser.Reg
 public class CreateRefreshTokenTests extends UserManagementTestBase {
 
     @Autowired
-    RegisterUserCommandHandler registerUserHandler;
+    RegisterUser.Handler registerUserHandler;
 
     @Autowired
     RefreshTokenRepository refreshTokenRepository;
@@ -47,9 +46,9 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
     void shouldCreateRefreshTokenForValidUser() throws CheckedConstraintViolationException {
         var registerRequest = registerUserRequestMocker.createValidRequest();
         var registerResult = registerUserHandler.handle(registerRequest);
-        assert registerResult instanceof RegisterUserResults.Success;
+        assert registerResult instanceof RegisterUser.Result.Success;
 
-        var userId = ((RegisterUserResults.Success) registerResult).userId();
+        var userId = ((RegisterUser.Result.Success) registerResult).userId();
 
         var getUserResult = getUserByIdQueryHandler.handle(new GetUserByIdRequest(userId));
 

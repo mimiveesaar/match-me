@@ -6,34 +6,33 @@ import org.springframework.stereotype.Component;
 import com.github.javafaker.Faker;
 import tech.kood.match_me.user_management.common.domain.api.EmailDTO;
 import tech.kood.match_me.user_management.common.domain.api.PasswordDTO;
+import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
 import tech.kood.match_me.user_management.features.user.utils.passwordFaker.PasswordFaker;
-import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserRequest;
 
 @Component
 public class RegisterUserRequestMocker {
 
     public static Faker faker = new Faker();
 
-    public RegisterUserRequest createValidRequest() {
-        var requestId = UUID.randomUUID();
+    public RegisterUser.Request createValidRequest() {
         var emailDto = new EmailDTO(faker.internet().emailAddress());
         var passwordDto = new PasswordDTO(PasswordFaker.generatePassword(8,16,true,true));
-        return new RegisterUserRequest(emailDto, passwordDto);
+        return new RegisterUser.Request(emailDto, passwordDto);
     }
 
-    public RegisterUserRequest createInvalidPasswordRequest() {
+    public RegisterUser.Request createInvalidPasswordRequest() {
         return createValidRequest().withPassword(new PasswordDTO("s"));
     }
 
-    public RegisterUserRequest createNullRequest() {
+    public RegisterUser.Request createNullRequest() {
         return createValidRequest().withPassword(null).withEmail(null);
     }
 
-    public RegisterUserRequest createInvalidEmailRequest() {
+    public RegisterUser.Request createInvalidEmailRequest() {
         return createValidRequest().withEmail(new EmailDTO("invalid-email"));
     }
 
-    public RegisterUserRequest createLongPasswordRequest() {
+    public RegisterUser.Request createLongPasswordRequest() {
         String longPassword = "p".repeat(300);
         return createValidRequest().withPassword(new PasswordDTO(longPassword));
     }

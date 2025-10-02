@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
-import tech.kood.match_me.user_management.features.accessToken.domain.api.AccessTokenDTO;
+import tech.kood.match_me.user_management.common.domain.api.AccessTokenDTO;
 
 
 @ApplicationLayer

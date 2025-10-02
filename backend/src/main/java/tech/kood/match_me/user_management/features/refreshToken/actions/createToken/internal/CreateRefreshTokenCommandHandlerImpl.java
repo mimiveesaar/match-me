@@ -4,6 +4,7 @@ import jakarta.validation.Validator;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.user_management.features.refreshToken.domain.internal.refreshToken.RefreshToken;
@@ -43,6 +44,7 @@ public class CreateRefreshTokenCommandHandlerImpl implements CreateRefreshTokenC
     }
 
     @Override
+    @Transactional
     public CreateRefreshTokenResults handle(CreateRefreshTokenRequest request) {
 
         var validationResults = validator.validate(request);

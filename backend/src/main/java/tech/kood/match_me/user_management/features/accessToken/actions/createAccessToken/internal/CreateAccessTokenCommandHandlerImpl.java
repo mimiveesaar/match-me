@@ -15,7 +15,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import tech.kood.match_me.user_management.UserManagementConfig;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
-import tech.kood.match_me.user_management.features.accessToken.domain.internal.AccessTokenFactory;
+import tech.kood.match_me.user_management.common.domain.internal.accessToken.AccessTokenFactory;
 import tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api.AccessTokenCreatedEvent;
 import tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api.CreateAccessTokenCommandHandler;
 import tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api.CreateAccessTokenRequest;

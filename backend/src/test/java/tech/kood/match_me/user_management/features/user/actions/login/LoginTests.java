@@ -8,11 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.user_management.features.user.actions.login.api.LoginCommandHandler;
-import tech.kood.match_me.user_management.features.user.actions.login.api.LoginRequest;
-import tech.kood.match_me.user_management.features.user.actions.login.api.LoginResults;
-import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserCommandHandler;
-import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserResults;
+import tech.kood.match_me.user_management.features.user.actions.LoginUser;
+import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
 import tech.kood.match_me.user_management.features.user.actions.registerUser.RegisterUserRequestMocker;
 
 @SpringBootTest
@@ -21,10 +18,10 @@ import tech.kood.match_me.user_management.features.user.actions.registerUser.Reg
 public class LoginTests extends UserManagementTestBase {
 
     @Autowired
-    RegisterUserCommandHandler registerUserHandler;
+    RegisterUser.Handler registerUserHandler;
 
     @Autowired
-    LoginCommandHandler loginRequestHandler;
+    LoginUser.Handler loginRequestHandler;
 
     @Autowired
     RegisterUserRequestMocker registerUserRequestMocker;
@@ -35,11 +32,11 @@ public class LoginTests extends UserManagementTestBase {
         var registerUserRequest = registerUserRequestMocker.createValidRequest();
 
         var registerResult = registerUserHandler.handle(registerUserRequest);
-        assert registerResult instanceof RegisterUserResults.Success;
+        assert registerResult instanceof RegisterUser.Result.Success;
 
-        var loginRequest = new LoginRequest(registerUserRequest.email(), registerUserRequest.password());
+        var loginRequest = new LoginUser.Request(registerUserRequest.email(), registerUserRequest.password());
 
         var loginResult = loginRequestHandler.handle(loginRequest);
-        assert loginResult instanceof LoginResults.Success;
+        assert loginResult instanceof LoginUser.Result.Success;
     }
 }

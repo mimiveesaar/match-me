@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.features.user.actions.registerUser.internal;
+package tech.kood.match_me.user_management.features.user.actions.internal;
 
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
@@ -7,28 +7,26 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
-import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserCommandHandler;
-import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserRequest;
-import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserResults;
-import tech.kood.match_me.user_management.features.user.actions.registerUser.api.UserRegisteredEvent;
+import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
 import tech.kood.match_me.user_management.features.user.domain.internal.user.UserFactory;
 import tech.kood.match_me.user_management.features.user.internal.mapper.UserMapper;
 import tech.kood.match_me.user_management.features.user.internal.persistance.UserRepository;
 
 @Service
 @ApplicationLayer
-public final class RegisterUserCommandHandlerImpl implements RegisterUserCommandHandler {
+public class RegisterUserImpl implements RegisterUser.Handler {
 
-    private static final Logger logger = LoggerFactory.getLogger(RegisterUserCommandHandlerImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(RegisterUserImpl.class);
     private final UserRepository userRepository;
     private final UserFactory userFactory;
     private final ApplicationEventPublisher events;
     private final UserMapper userMapper;
     private final Validator validator;
 
-    public RegisterUserCommandHandlerImpl(UserRepository userRepository, UserFactory userFactory, ApplicationEventPublisher events,
+    public RegisterUserImpl(UserRepository userRepository, UserFactory userFactory, ApplicationEventPublisher events,
                                           UserMapper userMapper, Validator validator) {
         this.userRepository = userRepository;
         this.userFactory = userFactory;
@@ -38,17 +36,21 @@ public final class RegisterUserCommandHandlerImpl implements RegisterUserCommand
     }
 
     @Override
-    public RegisterUserResults handle(RegisterUserRequest request) {
-
+    @Transactional
+    public RegisterUser.Result handle(RegisterUser.Request request) {
+        logger.info("Handling user registration for email: {}", request.email());
         var validationResults = validator.validate(request);
         if (!validationResults.isEmpty()) {
-            return new RegisterUserResults.InvalidRequest(InvalidInputErrorDTO.from(validationResults));
+            logger.warn("Validation failed for registration request: {}", validationResults);
+            return new RegisterUser.Result.InvalidRequest(InvalidInputErrorDTO.from(validationResults));
         }
 
         try {
+
             // Check for email uniqueness.
             if (userRepository.emailExists(request.email().toString())) {
-                return new RegisterUserResults.EmailExists(request.email());
+                logger.info("Registration failed: email already exists: {}", request.email());
+                return new RegisterUser.Result.EmailExists(request.email());
             }
 
             var user = userFactory.newUser(request.email().value(), request.password().value());
@@ -56,14 +58,17 @@ public final class RegisterUserCommandHandlerImpl implements RegisterUserCommand
 
             // Save the userId entity to the database.
             userRepository.saveUser(userEntity);
+            logger.info("User saved successfully: {}", user.getId());
 
-            var result = new RegisterUserResults.Success(UserIdDTO.of(user.getId().toString()));
+            var result = new  RegisterUser.Result.Success(UserIdDTO.of(user.getId().toString()));
 
-            events.publishEvent(new UserRegisteredEvent(result.userId()));
+            events.publishEvent(new RegisterUser.UserRegistered(result.userId()));
+            logger.info("Published UserRegisteredEvent for userId: {}", result.userId());
             return result;
 
         } catch (Exception e) {
-            return new RegisterUserResults.SystemError(e.getMessage());
+            logger.error("System error during user registration: {}", e.getMessage(), e);
+            return new RegisterUser.Result.SystemError(e.getMessage());
         }
     }
 }

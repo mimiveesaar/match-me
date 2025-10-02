@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.features.accessToken.domain.internal;
+package tech.kood.match_me.user_management.common.domain.internal.accessToken;
 
 import jakarta.validation.Validator;
 import org.jmolecules.ddd.annotation.Factory;

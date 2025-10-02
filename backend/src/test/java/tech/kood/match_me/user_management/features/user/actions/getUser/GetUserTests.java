@@ -10,9 +10,8 @@ import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.common.domain.api.EmailDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
+import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
 import tech.kood.match_me.user_management.features.user.actions.getUser.api.*;
-import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserCommandHandler;
-import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserResults;
 import tech.kood.match_me.user_management.features.user.actions.registerUser.RegisterUserRequestMocker;
 
 import java.util.UUID;
@@ -23,7 +22,7 @@ import java.util.UUID;
 public class GetUserTests extends UserManagementTestBase {
 
     @Autowired
-    RegisterUserCommandHandler registerUserHandler;
+    RegisterUser.Handler registerUserHandler;
 
     @Autowired
     GetUserByEmailQueryHandler getUserByEmailHandler;
@@ -39,9 +38,9 @@ public class GetUserTests extends UserManagementTestBase {
     void shouldGetUserById() throws CheckedConstraintViolationException {
         var registerRequest = registerUserRequestMocker.createValidRequest();
         var registerResult = registerUserHandler.handle(registerRequest);
-        assert registerResult instanceof RegisterUserResults.Success;
+        assert registerResult instanceof RegisterUser.Result.Success;
 
-        var userId = ((RegisterUserResults.Success) registerResult).userId();
+        var userId = ((RegisterUser.Result.Success) registerResult).userId();
 
         var getRequest = new GetUserByIdRequest(userId);
 
@@ -53,7 +52,7 @@ public class GetUserTests extends UserManagementTestBase {
     void shouldGetUserByEmail() throws CheckedConstraintViolationException {
         var registerRequest = registerUserRequestMocker.createValidRequest();
         var registerResult = registerUserHandler.handle(registerRequest);
-        assert registerResult instanceof RegisterUserResults.Success;
+        assert registerResult instanceof RegisterUser.Result.Success;
 
         var email = registerRequest.email();
         var getRequest = new GetUserByEmailRequest(email);
@@ -83,8 +82,8 @@ public class GetUserTests extends UserManagementTestBase {
         var req2 = registerUserRequestMocker.createValidRequest();
         var res1 = registerUserHandler.handle(req1);
         var res2 = registerUserHandler.handle(req2);
-        assert res1 instanceof RegisterUserResults.Success;
-        assert res2 instanceof RegisterUserResults.Success;
+        assert res1 instanceof RegisterUser.Result.Success;
+        assert res2 instanceof RegisterUser.Result.Success;
         var email1 = req1.email();
         var email2 = req2.email();
         var getRequest1 = new GetUserByEmailRequest(email1);
@@ -101,10 +100,10 @@ public class GetUserTests extends UserManagementTestBase {
         var req2 = registerUserRequestMocker.createValidRequest();
         var res1 = registerUserHandler.handle(req1);
         var res2 = registerUserHandler.handle(req2);
-        assert res1 instanceof RegisterUserResults.Success;
-        assert res2 instanceof RegisterUserResults.Success;
-        var userId1 = ((RegisterUserResults.Success) res1).userId();
-        var userId2 = ((RegisterUserResults.Success) res2).userId();
+        assert res1 instanceof RegisterUser.Result.Success;
+        assert res2 instanceof RegisterUser.Result.Success;
+        var userId1 = ((RegisterUser.Result.Success) res1).userId();
+        var userId2 = ((RegisterUser.Result.Success) res2).userId();
         var getRequest1 = new GetUserByIdRequest(userId1);
         var getRequest2 = new GetUserByIdRequest(userId2);
         var getResult1 = getUserByIdHandler.handle(getRequest1);

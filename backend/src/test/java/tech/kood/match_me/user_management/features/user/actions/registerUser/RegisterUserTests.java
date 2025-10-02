@@ -8,8 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserCommandHandler;
-import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserResults;
+import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -17,7 +16,7 @@ import tech.kood.match_me.user_management.features.user.actions.registerUser.api
 public class RegisterUserTests extends UserManagementTestBase {
 
     @Autowired
-    RegisterUserCommandHandler registerUserHandler;
+    RegisterUser.Handler registerUserHandler;
 
     @Autowired
     RegisterUserRequestMocker registerUserRequestMocker;
@@ -27,7 +26,7 @@ public class RegisterUserTests extends UserManagementTestBase {
         var request = registerUserRequestMocker.createValidRequest();
         var result = registerUserHandler.handle(request);
         System.out.println(result);
-        assert result instanceof RegisterUserResults.Success;
+        assert result instanceof RegisterUser.Result.Success;
     }
 
     @Test
@@ -38,28 +37,27 @@ public class RegisterUserTests extends UserManagementTestBase {
         registerUserHandler.handle(request);
         var result = registerUserHandler.handle(request2);
         System.out.println(result);
-        assert result instanceof RegisterUserResults.EmailExists;
+        assert result instanceof RegisterUser.Result.EmailExists;
     }
 
     @Test
     void shouldNotCreateUserWithInvalidPassword() throws CheckedConstraintViolationException {
         var request = registerUserRequestMocker.createInvalidPasswordRequest();
         var result = registerUserHandler.handle(request);
-        assert result instanceof RegisterUserResults.InvalidRequest;
+        assert result instanceof RegisterUser.Result.InvalidRequest;
     }
 
     @Test
     void shouldNotCreateUserWithNullRequest() throws CheckedConstraintViolationException {
         var request = registerUserRequestMocker.createNullRequest();
         var result = registerUserHandler.handle(request);
-        assert !(result instanceof RegisterUserResults.Success);
+        assert !(result instanceof RegisterUser.Result.Success);
     }
-
 
     @Test
     void shouldNotCreateUserWithLongPassword() throws CheckedConstraintViolationException {
         var request = registerUserRequestMocker.createLongPasswordRequest();
         var result = registerUserHandler.handle(request);
-        assert result instanceof RegisterUserResults.InvalidRequest;
+        assert result instanceof RegisterUser.Result.InvalidRequest;
     }
 }

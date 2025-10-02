@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.features.accessToken.domain.api;
+package tech.kood.match_me.user_management.common.domain.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;

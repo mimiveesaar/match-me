@@ -17,8 +17,7 @@ import tech.kood.match_me.user_management.features.accessToken.actions.createAcc
 import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenCommandHandler;
 import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenRequest;
 import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenResults;
-import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserCommandHandler;
-import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserResults;
+import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
 import tech.kood.match_me.user_management.features.user.actions.registerUser.RegisterUserRequestMocker;
 
 @SpringBootTest
@@ -27,7 +26,7 @@ import tech.kood.match_me.user_management.features.user.actions.registerUser.Reg
 public class GetAccessTokenTests extends UserManagementTestBase {
 
     @Autowired
-    RegisterUserCommandHandler registerUserHandler;
+    RegisterUser.Handler registerUserHandler;
 
     @Autowired
     CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler;
@@ -43,9 +42,9 @@ public class GetAccessTokenTests extends UserManagementTestBase {
     public void shouldGetAccessTokenForValidRefreshToken() throws CheckedConstraintViolationException {
         var registerRequest = registerUserRequestMocker.createValidRequest();
         var registerResult = registerUserHandler.handle(registerRequest);
-        assert registerResult instanceof RegisterUserResults.Success;
+        assert registerResult instanceof RegisterUser.Result.Success;
 
-        var user = ((RegisterUserResults.Success) registerResult).userId();
+        var user = ((RegisterUser.Result.Success) registerResult).userId();
         var createTokenRequest = new CreateRefreshTokenRequest(user);
         var createTokenResult = createRefreshTokenCommandHandler.handle(createTokenRequest);
         assert createTokenResult instanceof CreateRefreshTokenResults.Success;

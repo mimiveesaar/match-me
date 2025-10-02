@@ -17,8 +17,7 @@ import tech.kood.match_me.user_management.features.refreshToken.actions.createTo
 import tech.kood.match_me.user_management.features.refreshToken.actions.invalidateToken.api.InvalidateRefreshTokenCommandHandler;
 import tech.kood.match_me.user_management.features.refreshToken.actions.invalidateToken.api.InvalidateRefreshTokenRequest;
 import tech.kood.match_me.user_management.features.refreshToken.actions.invalidateToken.api.InvalidateRefreshTokenResults;
-import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserCommandHandler;
-import tech.kood.match_me.user_management.features.user.actions.registerUser.api.RegisterUserResults;
+import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
 import tech.kood.match_me.user_management.features.user.actions.registerUser.RegisterUserRequestMocker;
 
 @SpringBootTest
@@ -30,7 +29,7 @@ public class InvalidateRefreshTokenTests extends UserManagementTestBase {
     RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
-    RegisterUserCommandHandler registerUserHandler;
+    RegisterUser.Handler registerUserHandler;
 
     @Autowired
     CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler;
@@ -45,9 +44,9 @@ public class InvalidateRefreshTokenTests extends UserManagementTestBase {
     void shouldInvalidateRefreshToken() throws CheckedConstraintViolationException {
         var registerRequest = registerUserRequestMocker.createValidRequest();
         var registerResult = registerUserHandler.handle(registerRequest);
-        assert registerResult instanceof RegisterUserResults.Success;
+        assert registerResult instanceof RegisterUser.Result.Success;
 
-        var userId = ((RegisterUserResults.Success) registerResult).userId();
+        var userId = ((RegisterUser.Result.Success) registerResult).userId();
         var createTokenRequest = new CreateRefreshTokenRequest(userId);
         var createTokenResult = createRefreshTokenCommandHandler.handle(createTokenRequest);
 
