@@ -26,6 +26,9 @@ public class User {
     @Column(nullable = false, unique = true, length = 50)
     private String username;
 
+    @Column(name = "profile_pic_src", length = 500)
+    private String profilePicSrc;
+
     @Enumerated(EnumType.STRING)
     private UserStatus status; // ONLINE, OFFLINE
 
@@ -42,6 +45,8 @@ public class User {
     public String getUsername() {
         return username;
     }
+    public void setProfilePicSrc(String profilePicSrc) {this.profilePicSrc = profilePicSrc;}
+    public String getProfilePicSrc() {return profilePicSrc;}
     public UserStatus getStatus() {
         return status;
     }

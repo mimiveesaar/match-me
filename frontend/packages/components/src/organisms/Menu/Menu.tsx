@@ -1,8 +1,9 @@
 "use client";
 
+import { usePathname, useRouter } from "next/navigation"; // <-- needed
 import { MenuBase, MenuHeader, PageLink, SignOutButton } from "@atoms";
 import { FilteringDropdown } from "@molecules";
-import React, { useState } from "react";
+import React, {useEffect, useState } from "react";
 
 interface MenuProps {
     hasUnread: boolean;
@@ -11,12 +12,24 @@ interface MenuProps {
     className?: string;
 }
 
-export const Menu = ({filters, setFilters, hasUnread, className}): MenuProps => {
+export const Menu = ({ filters, setFilters, hasUnread, className }: MenuProps) => {
     const [showDropdown, setShowDropdown] = useState(false);
+    const pathname = usePathname();
+    const router = useRouter();
 
     const handleMatchesClick = () => {
-        setShowDropdown(prev => !prev);
+        if (pathname === "/matches") {
+            setShowDropdown(prev => !prev);
+        } else {
+            router.push("/matches");
+        }
     };
+
+    useEffect(() => {
+        if (pathname !== "/matches") {
+            setShowDropdown(false);
+        }
+    }, [pathname]);
 
     return (
         <MenuBase className="flex flex-col h-full p-7 py-3">
@@ -27,15 +40,15 @@ export const Menu = ({filters, setFilters, hasUnread, className}): MenuProps => 
             <div className="flex flex-col gap-1 items-start w-full">
                 <PageLink label="Matches" onClick={handleMatchesClick} />
 
-                {showDropdown && (
+                {pathname === "/matches" && showDropdown && (
                     <div className="w-full">
                         <FilteringDropdown filters={filters} setFilters={setFilters} />
                     </div>
                 )}
 
-                <PageLink label="My Profile" />
-                <PageLink label="My Connections" />
-                <PageLink label="Chatspace" dot={hasUnread} />
+                <PageLink label="My Profile" href="/profile" />
+                <PageLink label="My Connections" href="/connections" />
+                <PageLink label="Chatspace" href="/chat" dot={hasUnread} />
             </div>
 
             <div className="flex-1" />

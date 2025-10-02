@@ -60,29 +60,29 @@ public class ChatspaceDataSeeder implements CommandLineRunner {
                         "ALTER SEQUENCE %s_id_seq OWNED BY %s.id",
                         table, table
                 ));
-                System.out.println("✅ Fixed sequence for " + table);
+                System.out.println("Fixed sequence for " + table);
             } catch (Exception e) {
-                System.out.println("❌ Error fixing sequence for " + table + ": " + e.getMessage());
+                System.out.println("Error fixing sequence for " + table + ": " + e.getMessage());
             }
         }
     }
 
     private void seedAllData() throws SQLException {
         // Seed data in dependency order
-        seedUsers();         // Core entities first
-        seedConversations(); // Independent of users initially
-        seedConversationParticipants(); // Junction table after both users and conversations
+        seedUsers();
+        seedConversations();
+        seedConversationParticipants();
         seedUserConnections();
-        seedMessages();      // Dependent on users and conversations
+        seedMessages();
 
         verifyData();
     }
 
     private void seedUsers() throws SQLException {
         Object[][] users = {
-                {"11111111-1111-1111-1111-111111111111", "alice_space", "ONLINE"},
-                {"22222222-2222-2222-2222-222222222222", "bob_cosmic", "OFFLINE"},
-                {"33333333-3333-3333-3333-333333333333", "charlie_stellar", "OFFLINE"}
+                {"11111111-1111-1111-1111-111111111111", "alice_space", "ONLINE", "/images/profiles/starhopper.png"},
+                {"22222222-2222-2222-2222-222222222222", "bob_cosmic", "OFFLINE", "/images/profiles/nebular-nikki.png"},
+                {"33333333-3333-3333-3333-333333333333", "charlie_stellar", "OFFLINE", "/images/profiles/cosmic-joe.png"}
         };
 
         for (Object[] user : users) {
@@ -91,20 +91,21 @@ public class ChatspaceDataSeeder implements CommandLineRunner {
 
             try {
                 jdbcTemplate.update(
-                        "INSERT INTO users (id, username, status, lastactive)"
-                                + " VALUES (?, ?, ?, ?) "
+                        "INSERT INTO users (id, username, status, lastactive, profile_pic_src)"
+                                + " VALUES (?, ?, ?, ?, ?) "
                                 + "ON CONFLICT (id) DO NOTHING",
                         id,
                         user[1],
                         user[2],
-                        java.time.LocalDateTime.now().minusMinutes(10)
+                        java.time.LocalDateTime.now().minusMinutes(10),
+                        user[3]
                 );
             } catch (Exception e) {
-                System.out.println("❌ Error seeding user " + id + ": " + e.getMessage());
+                System.out.println("Error seeding user " + id + ": " + e.getMessage());
             }
         }
 
-        System.out.println("✅ Users seeded");
+        System.out.println("Users seeded");
     }
 
     private void seedConversations() {
@@ -139,12 +140,12 @@ public class ChatspaceDataSeeder implements CommandLineRunner {
                             createdAt
                     );
                 } catch (Exception e2) {
-                    System.out.println("❌ Error seeding conversation " + id + ": " + e2.getMessage());
+                    System.out.println("Error seeding conversation " + id + ": " + e2.getMessage());
                 }
             }
         }
 
-        System.out.println("✅ Conversations seeded");
+        System.out.println("Conversations seeded");
     }
 
     private void seedConversationParticipants() {
@@ -167,11 +168,11 @@ public class ChatspaceDataSeeder implements CommandLineRunner {
                         userId
                 );
             } catch (Exception e) {
-                System.out.println("❌ Error seeding participant " + userId + " for conversation " + conversationId + ": " + e.getMessage());
+                System.out.println("Error seeding participant " + userId + " for conversation " + conversationId + ": " + e.getMessage());
             }
         }
 
-        System.out.println("✅ Conversation participants seeded");
+        System.out.println("Conversation participants seeded");
     }
 
     private void seedMessages() {
@@ -207,11 +208,11 @@ public class ChatspaceDataSeeder implements CommandLineRunner {
                         status // Remove ::message_status casting
                 );
             } catch (Exception e) {
-                System.out.println("❌ Error seeding message " + messageId + ": " + e.getMessage());
+                System.out.println("Error seeding message " + messageId + ": " + e.getMessage());
             }
         }
 
-        System.out.println("✅ Messages seeded");
+        System.out.println("Messages seeded");
     }
 
     private void seedUserConnections() throws SQLException {
@@ -220,7 +221,7 @@ public class ChatspaceDataSeeder implements CommandLineRunner {
                         UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), // id
                         UUID.fromString("11111111-1111-1111-1111-111111111111"), // user_id
                         UUID.fromString("22222222-2222-2222-2222-222222222222"), // connected_user_id
-                        java.time.LocalDateTime.now().minusHours(1)             // created_at
+                        java.time.LocalDateTime.now().minusHours(1)                    // created_at
                 },
                 {
                         UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
@@ -228,7 +229,6 @@ public class ChatspaceDataSeeder implements CommandLineRunner {
                         UUID.fromString("33333333-3333-3333-3333-333333333333"),
                         java.time.LocalDateTime.now().minusHours(2)
                 }
-                // Add more connections as needed
         };
 
         for (Object[] conn : connections) {
@@ -240,11 +240,11 @@ public class ChatspaceDataSeeder implements CommandLineRunner {
                         conn[0], conn[1], conn[2], conn[3]
                 );
             } catch (Exception e) {
-                System.out.println("❌ Error seeding user_connection " + conn[0] + ": " + e.getMessage());
+                System.out.println("Error seeding user_connection " + conn[0] + ": " + e.getMessage());
             }
         }
 
-        System.out.println("✅ User connections seeded");
+        System.out.println("User connections seeded");
     }
 
     private void verifyData() {
@@ -260,7 +260,7 @@ public class ChatspaceDataSeeder implements CommandLineRunner {
                 Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM " + table, Integer.class);
                 System.out.println("Table " + table + " has " + count + " rows");
             } catch (Exception e) {
-                System.out.println("❌ Error counting rows in " + table + ": " + e.getMessage());
+                System.out.println("Error counting rows in " + table + ": " + e.getMessage());
             }
         }
     }

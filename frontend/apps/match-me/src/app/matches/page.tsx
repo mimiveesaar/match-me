@@ -133,7 +133,7 @@ export default function Matches() {
           <Menu
               filters={filters}
               setFilters={setFilters}
-              hasUnread={true}
+              hasUnread={false}
               className={undefined} />
         </div>
 
