@@ -14,12 +14,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdQueryHandler;
-import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdRequest;
-import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdResults;
 import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenHandler;
 import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenRequest;
 import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenResults;
+import tech.kood.match_me.user_management.features.user.actions.GetUserById;
 
 @ApplicationLayer
 @Service
@@ -28,9 +26,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     private final ValidateAccessTokenHandler validateAccessTokenHandler;
-    private final GetUserByIdQueryHandler getUserByIdQueryHandler;
+    private final GetUserById.Handler getUserByIdQueryHandler;
 
-    public JwtAuthenticationFilter(ValidateAccessTokenHandler validateAccessTokenHandler, GetUserByIdQueryHandler getUserByIdQueryHandler) {
+    public JwtAuthenticationFilter(ValidateAccessTokenHandler validateAccessTokenHandler, GetUserById.Handler getUserByIdQueryHandler) {
         this.validateAccessTokenHandler = validateAccessTokenHandler;
         this.getUserByIdQueryHandler = getUserByIdQueryHandler;
     }
@@ -57,24 +55,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (validationResult instanceof ValidateAccessTokenResults.Success successResult) {
                 var userId = successResult.userId();
 
-                var getUserByIdRequest = new GetUserByIdRequest(userId);
+                var getUserByIdRequest = new GetUserById.Request(userId);
                 var userResult = getUserByIdQueryHandler.handle(getUserByIdRequest);
 
-                if (userResult instanceof GetUserByIdResults.Success user) {
+                if (userResult instanceof GetUserById.Result.Success user) {
                     UsernamePasswordAuthenticationToken auth =
                             new UsernamePasswordAuthenticationToken(user, null, null);
 
                     auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(auth);
-                } else if (userResult instanceof GetUserByIdResults.UserNotFound) {
+                } else if (userResult instanceof GetUserById.Result.UserNotFound) {
                     logger.warn("User not found for ID: {} during JWT authentication", userId.toString());
 
-                } else if (userResult instanceof GetUserByIdResults.SystemError systemError) {
+                } else if (userResult instanceof GetUserById.Result.SystemError systemError) {
                     logger.error("System error while fetching userId by ID: {} during JWT authentication. Error: {}", userId.toString(), systemError.message());
                 }
-                } else if (validationResult instanceof ValidateAccessTokenResults.InvalidToken) {
-                    logger.debug("Invalid JWT token provided for authentication");
-                }
+            } else if (validationResult instanceof ValidateAccessTokenResults.InvalidToken) {
+                logger.debug("Invalid JWT token provided for authentication");
+            }
         } catch (Exception e) {
             logger.error("Unexpected error during JWT authentication", e);
         }

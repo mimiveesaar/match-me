@@ -17,17 +17,17 @@ import tech.kood.match_me.user_management.features.user.internal.persistance.Use
 
 @Service
 @ApplicationLayer
-public class RegisterUserImpl implements RegisterUser.Handler {
+public class RegisterUserHandlerImpl implements RegisterUser.Handler {
 
-    private static final Logger logger = LoggerFactory.getLogger(RegisterUserImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(RegisterUserHandlerImpl.class);
     private final UserRepository userRepository;
     private final UserFactory userFactory;
     private final ApplicationEventPublisher events;
     private final UserMapper userMapper;
     private final Validator validator;
 
-    public RegisterUserImpl(UserRepository userRepository, UserFactory userFactory, ApplicationEventPublisher events,
-                                          UserMapper userMapper, Validator validator) {
+    public RegisterUserHandlerImpl(UserRepository userRepository, UserFactory userFactory, ApplicationEventPublisher events,
+                                   UserMapper userMapper, Validator validator) {
         this.userRepository = userRepository;
         this.userFactory = userFactory;
         this.events = events;

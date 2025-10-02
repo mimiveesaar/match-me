@@ -12,10 +12,8 @@ import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.RefreshTokenRepository;
+import tech.kood.match_me.user_management.features.user.actions.GetUserById;
 import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
-import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdQueryHandler;
-import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdRequest;
-import tech.kood.match_me.user_management.features.user.actions.getUser.api.GetUserByIdResults;
 import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenCommandHandler;
 import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenRequest;
 import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenResults;
@@ -39,8 +37,7 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
     RegisterUserRequestMocker registerUserRequestMocker;
 
     @Autowired
-    GetUserByIdQueryHandler getUserByIdQueryHandler;
-
+    GetUserById.Handler getUserById;
 
     @Test
     void shouldCreateRefreshTokenForValidUser() throws CheckedConstraintViolationException {
@@ -50,10 +47,10 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
 
         var userId = ((RegisterUser.Result.Success) registerResult).userId();
 
-        var getUserResult = getUserByIdQueryHandler.handle(new GetUserByIdRequest(userId));
+        var getUserResult = getUserById.handle(new GetUserById.Request(userId));
 
-        assert getUserResult instanceof GetUserByIdResults.Success;
-        var user = ((GetUserByIdResults.Success) getUserResult).user();
+        assert getUserResult instanceof GetUserById.Result.Success;
+        var user = ((GetUserById.Result.Success) getUserResult).user();
 
         var createTokenRequest = new CreateRefreshTokenRequest(user.id());
         var createTokenResult = createRefreshTokenCommandHandler.handle(createTokenRequest);

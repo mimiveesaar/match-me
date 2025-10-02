@@ -1,8 +1,7 @@
 package tech.kood.match_me.user_management.features.user.actions.internal;
 
-
-
 import jakarta.validation.Validator;
+import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,8 @@ import tech.kood.match_me.user_management.features.refreshToken.actions.createTo
 import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenResults;
 
 @Service
-public class LoginUserImpl implements LoginUser.Handler {
+@ApplicationLayer
+public class LoginUserHandlerImpl implements LoginUser.Handler {
 
     private final UserRepository userRepository;
     private final CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler;
@@ -30,9 +30,9 @@ public class LoginUserImpl implements LoginUser.Handler {
     private final UserMapper userMapper;
     private final Validator validator;
 
-    public LoginUserImpl(UserRepository userRepository,
-                         CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler, CreateAccessTokenCommandHandler createAccessTokenCommandHandler,
-                         ApplicationEventPublisher events, HashedPasswordFactory hashedPasswordFactory, PasswordFactory passwordFactory, UserMapper userMapper, Validator validator) {
+    public LoginUserHandlerImpl(UserRepository userRepository,
+                                CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler, CreateAccessTokenCommandHandler createAccessTokenCommandHandler,
+                                ApplicationEventPublisher events, HashedPasswordFactory hashedPasswordFactory, PasswordFactory passwordFactory, UserMapper userMapper, Validator validator) {
         this.userRepository = userRepository;
         this.createRefreshTokenCommandHandler = createRefreshTokenCommandHandler;
         this.createAccessTokenCommandHandler = createAccessTokenCommandHandler;
