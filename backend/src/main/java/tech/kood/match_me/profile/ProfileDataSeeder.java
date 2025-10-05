@@ -1,7 +1,6 @@
 package tech.kood.match_me.profile;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -10,95 +9,51 @@ import org.springframework.stereotype.Component;
 public class ProfileDataSeeder implements CommandLineRunner {
 
     @Autowired
-    @Qualifier("profileManagementJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public void run(String... args) throws Exception {
         System.out.println("=== SEEDING PROFILE DATA ===");
 
-        // First, fix the table structure and sequences
-        createSequencesAndFixTables();
-
-        // Then seed data
-        seedAllData();
-
-        System.out.println("=== PROFILE DATA SEEDING COMPLETE ===");
-    }
-
-    private void createSequencesAndFixTables() {
-        String[] tables = {"bodyforms", "homeplanets", "looking_for", "interests"};
-
-        for (String table : tables) {
-            try {
-                // Create sequence if it doesn't exist
-                jdbcTemplate
-                        .execute(String.format("CREATE SEQUENCE IF NOT EXISTS %s_id_seq", table));
-
-                // Set the column default to use the sequence
-                jdbcTemplate.execute(String.format(
-                        "ALTER TABLE %s ALTER COLUMN id SET DEFAULT nextval('%s_id_seq')", table,
-                        table));
-
-                // Make the sequence owned by the table
-                jdbcTemplate.execute(
-                        String.format("ALTER SEQUENCE %s_id_seq OWNED BY %s.id", table, table));
-
-                System.out.println("Fixed sequence for " + table);
-
-            } catch (Exception e) {
-                System.out.println("Error fixing sequence for " + table + ": " + e.getMessage());
-            }
-        }
-    }
-
-    private void seedAllData() {
         seedBodyforms();
         seedHomeplanets();
         seedLookingFor();
         seedInterests();
+        seedTestProfiles();
         verifyData();
+
+        System.out.println("=== PROFILE DATA SEEDING COMPLETE ===");
     }
 
     private void seedBodyforms() {
-        // Updated to match MatchingDataSeeder options
         String[] bodyforms = {"Gelatinous", "Tentacled", "Humanoid", "Energy-Based", "Mechanical",
                 "Insectoid", "Reptilian", "Gas Cloud", "Crystalline", "Mimetic Blob"};
-        for (String bodyform : bodyforms) {
+        for (String b : bodyforms) {
             jdbcTemplate.update(
-                    "INSERT INTO bodyforms (name) VALUES (?) ON CONFLICT (name) DO NOTHING",
-                    bodyform);
+                    "INSERT INTO bodyforms (name) VALUES (?) ON CONFLICT (name) DO NOTHING", b);
         }
-        System.out.println("Bodyforms seeded");
     }
 
     private void seedHomeplanets() {
-        // Updated to match MatchingDataSeeder options
         String[] homeplanets = {"Xeron-5", "Draknor", "Vega Prime", "Bloop-X12", "Zal'Tek Major",
                 "Nimbus-9", "Krylon Beta", "Nova Eden", "Tharnis", "Quarnyx Delta", "Glooporia",
                 "Skarn", "Uvuul-4", "Oortania", "Vrexalon"};
-        for (String homeplanet : homeplanets) {
+        for (String h : homeplanets) {
             jdbcTemplate.update(
-                    "INSERT INTO homeplanets (name) VALUES (?) ON CONFLICT (name) DO NOTHING",
-                    homeplanet);
+                    "INSERT INTO homeplanets (name) VALUES (?) ON CONFLICT (name) DO NOTHING", h);
         }
-        System.out.println("Homeplanets seeded");
     }
 
     private void seedLookingFor() {
-        // Updated to match MatchingDataSeeder options
         String[] lookingFor = {"Friendship", "Romance", "Strategic Alliance",
                 "Co-parenting Hatchlings", "Host Symbiosis", "Chtulhu"};
-        for (String item : lookingFor) {
+        for (String l : lookingFor) {
             jdbcTemplate.update(
-                    "INSERT INTO looking_for (name) VALUES (?) ON CONFLICT (name) DO NOTHING",
-                    item);
+                    "INSERT INTO looking_for (name) VALUES (?) ON CONFLICT (name) DO NOTHING", l);
         }
-        System.out.println("Looking_for seeded");
     }
 
     private void seedInterests() {
-        // Updated to match MatchingDataSeeder expanded options
         String[] interests = {"Telepathic Chess", "Black Hole Karaoke", "Baking", "Binary Poetry",
                 "Painting", "Parallel Parking", "Reading", "Collecting Rocks", "Butterfly watching",
                 "Plasma Sculpting", "Terraforming", "Zero-G Yoga", "Fishing", "Galactic Geocaching",
@@ -109,91 +64,39 @@ public class ProfileDataSeeder implements CommandLineRunner {
                 "Exoplanet Exploration", "Star Map Reading", "Galactic Diplomacy", "Gardening",
                 "Interstellar DJing", "Teleportation Tricks", "Brewing", "Droid Repair",
                 "Cryptography", "Wormhole Jumping"};
-
-        for (String interest : interests) {
+        for (String i : interests) {
             jdbcTemplate.update(
-                    "INSERT INTO interests (name) VALUES (?) ON CONFLICT (name) DO NOTHING",
-                    interest);
+                    "INSERT INTO interests (name) VALUES (?) ON CONFLICT (name) DO NOTHING", i);
         }
-        System.out.println("Interests seeded");
+    }
+
+    private void seedTestProfiles() {
+        // Add multiple test profiles directly into profiles table
+        for (int i = 1; i <= 5; i++) {
+            String username = "testuser" + i;
+            String bio = "This is a test bio for " + username;
+            String profilePic = "https://example.com/" + username + ".jpg";
+
+            try {
+                jdbcTemplate.update(
+                        "INSERT INTO profiles (username, age, bio, profile_pic, homeplanet_id, bodyform_id, looking_for_id) " +
+                                "VALUES (?, ?, ?, ?, 1, 1, 1) ON CONFLICT (username) DO NOTHING",
+                        username, 20 + i, bio, profilePic);
+            } catch (Exception e) {
+                System.out.println("Failed to insert profile " + username + ": " + e.getMessage());
+            }
+        }
     }
 
     private void verifyData() {
-        String[] tables = {"bodyforms", "homeplanets", "looking_for", "interests"};
+        String[] tables = {"bodyforms", "homeplanets", "looking_for", "interests", "profiles"};
         for (String table : tables) {
-            Integer count =
-                    jdbcTemplate.queryForObject("SELECT COUNT(*) FROM " + table, Integer.class);
-            System.out.println("Table " + table + " has " + count + " rows");
-        }
-    }
-
-    // hardcoded user for testing purposes
-
-    private void seedDefaultUserAndProfile() {
-        final String username = "testuser";
-        final String password = "{noop}password"; // only for local testing
-
-        try {
-            // Try Postgres-style insert (ON CONFLICT)
-            int rows = jdbcTemplate.update(
-                    "INSERT INTO users (username, password) VALUES (?, ?) ON CONFLICT (username) DO NOTHING",
-                    username, password);
-            System.out.println("User insert affected rows (Postgres attempt): " + rows);
-        } catch (Exception pgEx) {
-            System.out.println("Postgres-style INSERT failed: " + pgEx.getMessage());
             try {
-                // Try MySQL-style insert (INSERT IGNORE)
-                int rows = jdbcTemplate.update(
-                        "INSERT IGNORE INTO users (username, password) VALUES (?, ?)", username,
-                        password);
-                System.out.println("User insert affected rows (MySQL attempt): " + rows);
-            } catch (Exception myEx) {
-                System.out.println("MySQL-style INSERT also failed: " + myEx.getMessage());
-                return; // give up and log error
+                Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM " + table, Integer.class);
+                System.out.println("Table " + table + " has " + count + " rows");
+            } catch (Exception e) {
+                System.out.println("Cannot count rows in " + table + ": " + e.getMessage());
             }
         }
-
-        // Fetch the id (could be numeric or UUID string depending on schema)
-        Object userIdObj;
-        try {
-            userIdObj = jdbcTemplate.queryForObject("SELECT id FROM users WHERE username = ?",
-                    Object.class, username);
-        } catch (Exception e) {
-            System.out.println("Could not read user id after insert: " + e.getMessage());
-            return;
-        }
-
-        if (userIdObj == null) {
-            System.out.println("User id is null after insert — weird.");
-            return;
-        }
-
-        System.out.println(
-                "Found user id (class=" + userIdObj.getClass().getName() + "): " + userIdObj);
-
-        // Insert profile: adapt to numeric or UUID type automatically by passing the same object.
-        try {
-            int inserted = jdbcTemplate.update(
-                    "INSERT INTO profiles (user_id, bio, homeplanet_id, bodyform_id, looking_for_id, profile_pic) "
-                            + "VALUES (?, ?, NULL, NULL, NULL, NULL) ON CONFLICT (user_id) DO NOTHING",
-                    userIdObj, "This is a seeded bio");
-
-            System.out.println("Profile insert affected rows: " + inserted);
-        } catch (Exception e) {
-            System.out.println("Profile insert failed (trying fallback without ON CONFLICT): "
-                    + e.getMessage());
-            try {
-                // fallback for MySQL: use INSERT IGNORE if ON CONFLICT failed
-                int inserted = jdbcTemplate.update(
-                        "INSERT IGNORE INTO profiles (user_id, bio) VALUES (?, ?)", userIdObj,
-                        "This is a seeded bio");
-                System.out.println("Fallback profile insert affected rows: " + inserted);
-            } catch (Exception ex) {
-                System.out.println("Fallback profile insert also failed: " + ex.getMessage());
-            }
-        }
-
-        System.out.println("Default user + profile seeding finished for username: " + username);
     }
 }
-
