@@ -15,85 +15,34 @@ public class ProfileDTO {
     private Set<Long> interestIds;
     private String profilePic;
 
-    // getters & setters
-    public UUID getId() {
-        return id;
-    }
+    // Getters & setters
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public String getUsername() {
-        return username;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public Integer getAge() { return age; }
+    public void setAge(Integer age) { this.age = age; }
 
-    public String getName() {
-        return name;
-    }
+    public Long getHomeplanetId() { return homeplanetId; }
+    public void setHomeplanetId(Long homeplanetId) { this.homeplanetId = homeplanetId; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public Long getBodyformId() { return bodyformId; }
+    public void setBodyformId(Long bodyformId) { this.bodyformId = bodyformId; }
 
-    public Integer getAge() {
-        return age;
-    }
+    public Long getLookingForId() { return lookingForId; }
+    public void setLookingForId(Long lookingForId) { this.lookingForId = lookingForId; }
 
-    public void setAge(Integer age) {
-        this.age = age;
-    }
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
 
-    public Long getHomeplanetId() {
-        return homeplanetId;
-    }
+    public Set<Long> getInterestIds() { return interestIds; }
+    public void setInterestIds(Set<Long> interestIds) { this.interestIds = interestIds; }
 
-    public void setHomeplanetId(Long homeplanetId) {
-        this.homeplanetId = homeplanetId;
-    }
-
-    public Long getBodyformId() {
-        return bodyformId;
-    }
-
-    public void setBodyformId(Long bodyformId) {
-        this.bodyformId = bodyformId;
-    }
-
-    public Long getLookingForId() {
-        return lookingForId;
-    }
-
-    public void setLookingForId(Long lookingForId) {
-        this.lookingForId = lookingForId;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
-
-    public Set<Long> getInterestIds() {
-        return interestIds;
-    }
-
-    public void setInterestIds(Set<Long> interestIds) {
-        this.interestIds = interestIds;
-    }
-
-    public String getProfilePic() {
-        return profilePic;
-    }
-
-    public void setProfilePic(String profilePic) {
-        this.profilePic = profilePic;
-    }
-
+    public String getProfilePic() { return profilePic; }
+    public void setProfilePic(String profilePic) { this.profilePic = profilePic; }
 }

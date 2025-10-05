@@ -127,27 +127,73 @@ public class ProfileDataSeeder implements CommandLineRunner {
         }
     }
 
-    //hardcoded user for testing purposes
+    // hardcoded user for testing purposes
 
     private void seedDefaultUserAndProfile() {
-        // Insert user
-        jdbcTemplate.update(
-                "INSERT INTO users (username, password) VALUES (?, ?) ON CONFLICT (username) DO NOTHING",
-                "testuser", "{noop}password" // {noop} means plain-text in Spring Security
-        );
+        final String username = "testuser";
+        final String password = "{noop}password"; // only for local testing
 
-        // Fetch user_id
-        Long userId = jdbcTemplate.queryForObject("SELECT id FROM users WHERE username = ?",
-                Long.class, "testuser");
+        try {
+            // Try Postgres-style insert (ON CONFLICT)
+            int rows = jdbcTemplate.update(
+                    "INSERT INTO users (username, password) VALUES (?, ?) ON CONFLICT (username) DO NOTHING",
+                    username, password);
+            System.out.println("User insert affected rows (Postgres attempt): " + rows);
+        } catch (Exception pgEx) {
+            System.out.println("Postgres-style INSERT failed: " + pgEx.getMessage());
+            try {
+                // Try MySQL-style insert (INSERT IGNORE)
+                int rows = jdbcTemplate.update(
+                        "INSERT IGNORE INTO users (username, password) VALUES (?, ?)", username,
+                        password);
+                System.out.println("User insert affected rows (MySQL attempt): " + rows);
+            } catch (Exception myEx) {
+                System.out.println("MySQL-style INSERT also failed: " + myEx.getMessage());
+                return; // give up and log error
+            }
+        }
 
-        // Insert profile (only if it doesn’t exist yet)
-        jdbcTemplate.update(
-                "INSERT INTO profiles (user_id, bio, homeplanet_id, bodyform_id, looking_for_id, profile_pic) "
-                        + "VALUES (?, ?, NULL, NULL, NULL, NULL) "
-                        + "ON CONFLICT (user_id) DO NOTHING",
-                userId, "This is a seeded bio");
+        // Fetch the id (could be numeric or UUID string depending on schema)
+        Object userIdObj;
+        try {
+            userIdObj = jdbcTemplate.queryForObject("SELECT id FROM users WHERE username = ?",
+                    Object.class, username);
+        } catch (Exception e) {
+            System.out.println("Could not read user id after insert: " + e.getMessage());
+            return;
+        }
 
-        System.out.println("Default user + profile seeded (username: testuser)");
+        if (userIdObj == null) {
+            System.out.println("User id is null after insert — weird.");
+            return;
+        }
+
+        System.out.println(
+                "Found user id (class=" + userIdObj.getClass().getName() + "): " + userIdObj);
+
+        // Insert profile: adapt to numeric or UUID type automatically by passing the same object.
+        try {
+            int inserted = jdbcTemplate.update(
+                    "INSERT INTO profiles (user_id, bio, homeplanet_id, bodyform_id, looking_for_id, profile_pic) "
+                            + "VALUES (?, ?, NULL, NULL, NULL, NULL) ON CONFLICT (user_id) DO NOTHING",
+                    userIdObj, "This is a seeded bio");
+
+            System.out.println("Profile insert affected rows: " + inserted);
+        } catch (Exception e) {
+            System.out.println("Profile insert failed (trying fallback without ON CONFLICT): "
+                    + e.getMessage());
+            try {
+                // fallback for MySQL: use INSERT IGNORE if ON CONFLICT failed
+                int inserted = jdbcTemplate.update(
+                        "INSERT IGNORE INTO profiles (user_id, bio) VALUES (?, ?)", userIdObj,
+                        "This is a seeded bio");
+                System.out.println("Fallback profile insert affected rows: " + inserted);
+            } catch (Exception ex) {
+                System.out.println("Fallback profile insert also failed: " + ex.getMessage());
+            }
+        }
+
+        System.out.println("Default user + profile seeding finished for username: " + username);
     }
 }
 

@@ -11,8 +11,9 @@ import tech.kood.match_me.profile.model.Profile;
 @Repository
 public interface ProfileRepository extends JpaRepository<Profile, UUID> {
 
-    @Query("SELECT p FROM Profile p " + "LEFT JOIN FETCH p.homeplanet "
+    @Query("SELECT DISTINCT p FROM Profile p " + "LEFT JOIN FETCH p.homeplanet "
             + "LEFT JOIN FETCH p.bodyform " + "LEFT JOIN FETCH p.lookingFor "
-            + "LEFT JOIN FETCH p.interests")
-    List<Profile> findAllWithRelations();
+            + "LEFT JOIN FETCH p.interests " + "WHERE p.id = :id")
+    Profile findByIdWithRelations(UUID id);
+
 }

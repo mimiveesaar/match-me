@@ -67,7 +67,7 @@ export const MyProfilePage = ({
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 p-4 sm:p-6 lg:p-8 bg-neutral-50 min-h-screen">
+    <div className="flex flex-col lg:flex-row gap-8">
       <div className="flex flex-col gap-4">
         <ProfileCard profile={profile} setProfile={setProfile} />
       </div>

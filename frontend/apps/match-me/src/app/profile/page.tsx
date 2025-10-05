@@ -70,11 +70,15 @@ export default function MyProfile() {
   }
 
   return (
-    <div>
-      <MyProfilePage
-        initialProfile={profile}
-        onSave={handleSaveProfile}
-      />
+
+    <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col gap-4">
+
+        <MyProfilePage
+          initialProfile={profile}
+          onSave={handleSaveProfile}
+        />
+      </div>
     </div>
   );
 }
