@@ -1,6 +1,7 @@
 package tech.kood.match_me.profile;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 public class ProfileDataSeeder implements CommandLineRunner {
 
     @Autowired
+    @Qualifier("profileManagementJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
 
     @Override
