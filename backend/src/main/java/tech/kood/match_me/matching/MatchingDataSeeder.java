@@ -63,21 +63,21 @@ public class MatchingDataSeeder implements CommandLineRunner {
                         table, table
                 ));
 
-                System.out.println("✅ Fixed sequence for " + table);
+                System.out.println("Fixed sequence for " + table);
 
             } catch (Exception e) {
-                System.out.println("❌ Error fixing sequence for " + table + ": " + e.getMessage());
+                System.out.println("Error fixing sequence for " + table + ": " + e.getMessage());
             }
         }
     }
 
     private void seedAllData() {
-        seedBodyforms();     // must come before users
-        seedHomeplanets();   // must come before users
-        seedLookingFor();    // must come before users
-        seedInterests();     // not referenced by users but needed for user_interests
-        seedUsers();         // now safe to seed users
-        seedUserInterests(); // after both users and interests are seeded
+        seedBodyforms();
+        seedHomeplanets();
+        seedLookingFor();
+        seedInterests();
+        seedUsers();
+        seedUserInterests();
         verifyData();
     }
 
