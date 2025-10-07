@@ -45,7 +45,7 @@ export default function Matches() {
 
   const [visibleUsers, setVisibleUsers] = useState<MatchUser[]>([]);
   const [remainingUsers, setRemainingUsers] = useState<MatchUser[]>([]);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
 
   // When filters change → update local state
   useEffect(() => {
@@ -120,42 +120,45 @@ export default function Matches() {
     removeUserAndRefill(id);
   };
 
-  return (
-    <div className="flex flex-col items-center pt-4 px-4 min-h-screen">
-      {/* Logo */}
-      <div>
-        <AlienMeetLogo />
-      </div>
+    return (
+        <div className="flex flex-col items-center pt-4 px-4 min-h-screen bg-ivory">
 
-      {/* Content row */}
-        <div className="flex w-full max-w-7xl gap-2">
+            {/* Header row: burger + logo */}
+            <div className="flex w-full max-w-7xl items-center justify-between relative">
 
-            <button
-                className="block md:hidden p-2"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-6 h-6"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
+                {/* Burger icon */}
+                <button
+                    className="p-2"
+                    onClick={() => setMenuOpen(!menuOpen)}
                 >
-                    <path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z" />
-                </svg>
-            </button>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-7 h-7"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                    >
+                        <path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z" />
+                    </svg>
+                </button>
 
-            {/* Left: Filter menu */}
-            <div className={`max-h-screen md:max-h-[80vh] mt-34 
-                      ${mobileMenuOpen ? "block" : "hidden"} md:block`}>
-
-                <Menu
-                    filters={filters}
-                    setFilters={setFilters}
-                    hasUnread={false}
-                    className={undefined}
-                />
-
+                {/* Logo centered */}
+                <div className="absolute left-1/2 transform -translate-x-1/2">
+                    <AlienMeetLogo />
+                </div>
             </div>
+
+            <div className="flex w-full max-w-7xl gap-4">
+
+            {/* Toggleable menu */}
+            {menuOpen && (
+                <div className="w-full max-w-xs bg-ivory mt-32 p-4 z-50">
+                    <Menu
+                        filters={filters}
+                        setFilters={setFilters}
+                        hasUnread={false}
+                    />
+                </div>
+            )}
 
             {/* Right: dynamic content */}
             <div className="flex-1 flex items-center justify-center">
@@ -259,7 +262,7 @@ export default function Matches() {
                     </div>
                 )}
             </div>
+            </div>
         </div>
-    </div>
   );
 }
