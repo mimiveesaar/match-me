@@ -1,5 +1,6 @@
-import { Filters, MatchUser } from "../../types";
+
 import { useEffect, useState } from "react";
+import {Filters, MatchUser } from "../types";
 
 
 interface MatchResponse {
@@ -22,6 +23,8 @@ export function useUserSearch(userId: string, filters: Filters) {
     const [isLoading, setLoading] = useState(false);
 
     useEffect(() => {
+
+        console.log("useUserSearch effect triggered with filters:", filters);
 
         setLoading(true);
 
@@ -55,12 +58,12 @@ export function useUserSearch(userId: string, filters: Filters) {
                 return res.json() as Promise<MatchResponse>;
             })
             .then((data) => {
+                console.log("API Response - Matches count:", data.matches.length);
+                console.log("Request body sent:", requestBody);
                 console.log("Raw response from backend:", data);
 
-                // set current user
                 setCurrentUser(data.currentUser);
 
-                // set matches
                 setUsers(data.matches);
             })
             .catch((err) => console.error("Search failed", err))

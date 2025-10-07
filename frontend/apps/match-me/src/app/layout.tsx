@@ -1,17 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname } from "next/navigation";
 import "@styles/globals.css";
 import "components/styles";
 import { AlienMeetLogo } from "components/atoms";
 import { Menu } from "components/organisms";
+import { useFiltersStore } from "./stores/matchStore";
 
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 
+    //from layout i need to trigger setting the filter, but the state will live in zustand and
+    // tle logic of how to rect will live on the page but it will use the state form the zustand store
+
     const [menuOpen, setMenuOpen] = useState(false);
-    const [filters, setFilters] = useState<any[]>([]); // only used on Matches page
+
+    // grab state + updater from zustand
+    const { filters, setFilters } = useFiltersStore();
+
 
     return (
         <html lang="en">

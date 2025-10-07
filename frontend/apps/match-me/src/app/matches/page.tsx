@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {  FlipCard, MatchCardFront, MatchCardFrontProps, MatchCardBack } from "components/organisms";
 import { useUserSearch } from "./hooks/useUserSearch";
 import { MatchUser, Filters } from "./types";
-
+import { useFiltersStore } from "../stores/matchStore";
 
 
 const lookingForColors: Record<string, MatchCardFrontProps["cardColor"]> = {
@@ -20,15 +20,8 @@ export default function Matches() {
 
     const userId = "3fa85f64-5717-4562-b3fc-2c963f66afa1"; // Dummy user from mock data
 
-  const [filters, setFilters] = useState<Filters>({
-    minAge: 18,
-    maxAge: 150,
-    maxDistanceLy: 340,
-    bodyform: "",
-    interests: [],
-    lookingFor: "",
-    homeplanet: "",
-  } as Filters);
+    const { filters, initFromUser } = useFiltersStore();
+    const initialized = useRef(false);
 
   // Fetch matches + currentUser in one hook
   const { users: fetchedUsers, currentUser, isLoading } = useUserSearch(
@@ -37,14 +30,16 @@ export default function Matches() {
   );
 
   // Initialize homeplanet once currentUser is available
-  useEffect(() => {
-    if (currentUser?.homeplanet && !filters.homeplanet) {
-      setFilters((f) => ({ ...f, homeplanet: currentUser.homeplanet }));
-    }
-  }, [currentUser, filters.homeplanet]);
+    useEffect(() => {
+        if (!initialized.current && currentUser) {
+            initFromUser(currentUser);
+            initialized.current = true;
+        }
+    }, []);
 
-  const [visibleUsers, setVisibleUsers] = useState<MatchUser[]>([]);
-  const [remainingUsers, setRemainingUsers] = useState<MatchUser[]>([]);
+
+    const [visibleUsers, setVisibleUsers] = useState<MatchUser[]>([]);
+    const [remainingUsers, setRemainingUsers] = useState<MatchUser[]>([]);
 
   // When filters change → update local state
   useEffect(() => {
