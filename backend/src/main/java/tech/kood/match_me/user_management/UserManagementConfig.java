@@ -117,6 +117,7 @@ public class UserManagementConfig {
     public Flyway userManagementFlyway(
             @Qualifier("userManagementDataSource") DataSource dataSource) {
         var flyway = Flyway.configure().dataSource(dataSource)
+                .executeInTransaction(true)
                 .locations("classpath:/user_management/database/flyway")        
                 .load();
         return flyway;
