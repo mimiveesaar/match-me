@@ -32,7 +32,7 @@ export const Menu = ({ filters, setFilters, hasUnread, className }: MenuProps) =
     }, [pathname]);
 
     return (
-        <MenuBase className="flex flex-col h-full p-7 py-3">
+        <MenuBase className="flex flex-col p-7 py-3 min-h-[750px]">
             <div className="w-full flex justify-center mb-5">
                 <MenuHeader header="Menu" />
             </div>

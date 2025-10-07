@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {  FlipCard, MatchCardFront, MatchCardFrontProps, MatchCardBack, Menu } from "components/organisms";
-import { AlienMeetLogo } from "components/atoms";
+import {  FlipCard, MatchCardFront, MatchCardFrontProps, MatchCardBack } from "components/organisms";
 import { useUserSearch } from "./hooks/useUserSearch";
 import { MatchUser, Filters } from "./types";
 
@@ -18,7 +17,8 @@ const lookingForColors: Record<string, MatchCardFrontProps["cardColor"]> = {
 };
 
 export default function Matches() {
-  const userId = "3fa85f64-5717-4562-b3fc-2c963f66afa1"; // Dummy user from mock data
+
+    const userId = "3fa85f64-5717-4562-b3fc-2c963f66afa1"; // Dummy user from mock data
 
   const [filters, setFilters] = useState<Filters>({
     minAge: 18,
@@ -45,7 +45,6 @@ export default function Matches() {
 
   const [visibleUsers, setVisibleUsers] = useState<MatchUser[]>([]);
   const [remainingUsers, setRemainingUsers] = useState<MatchUser[]>([]);
-    const [menuOpen, setMenuOpen] = useState(false);
 
   // When filters change → update local state
   useEffect(() => {
@@ -121,44 +120,7 @@ export default function Matches() {
   };
 
     return (
-        <div className="flex flex-col items-center pt-4 px-4 min-h-screen bg-ivory">
-
-            {/* Header row: burger + logo */}
-            <div className="flex w-full max-w-7xl items-center justify-between relative">
-
-                {/* Burger icon */}
-                <button
-                    className="p-2"
-                    onClick={() => setMenuOpen(!menuOpen)}
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-7 h-7"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                    >
-                        <path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z" />
-                    </svg>
-                </button>
-
-                {/* Logo centered */}
-                <div className="absolute left-1/2 transform -translate-x-1/2">
-                    <AlienMeetLogo />
-                </div>
-            </div>
-
-            <div className="flex w-full max-w-7xl gap-4">
-
-            {/* Toggleable menu */}
-            {menuOpen && (
-                <div className="w-full max-w-xs bg-ivory mt-32 p-4 z-50">
-                    <Menu
-                        filters={filters}
-                        setFilters={setFilters}
-                        hasUnread={false}
-                    />
-                </div>
-            )}
+        <div className="flex flex-col items-center pt-4 px-4 bg-ivory">
 
             {/* Right: dynamic content */}
             <div className="flex-1 flex items-center justify-center">
@@ -171,7 +133,7 @@ export default function Matches() {
                         No matches found.
                     </div>
                 ) : (
-                    <div className="w-full pt-28 pl-4 md:pl-10 mt-6">
+                    <div className="w-full pl-4 md:pl-10 mt-6">
                         {/* Mobile: Horizontal scrolling */}
                         <div className="md:hidden overflow-x-auto pb-4">
                             <div className="flex gap-4 w-max">
@@ -219,7 +181,7 @@ export default function Matches() {
 
                         {/* Desktop: Grid layout */}
                         <div
-                            className="hidden md:grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 justify-items-center">
+                            className="hidden md:grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 justify-items-center pb-4">
                             {visibleUsers.map((user) => (
                                 <FlipCard
                                     key={user.id}
@@ -261,7 +223,6 @@ export default function Matches() {
                         </div>
                     </div>
                 )}
-            </div>
             </div>
         </div>
   );
