@@ -7,6 +7,7 @@ import { useUserSearch } from "./hooks/useUserSearch";
 import { MatchUser, Filters } from "./types";
 
 
+
 const lookingForColors: Record<string, MatchCardFrontProps["cardColor"]> = {
   Friendship: "amberglow",
   Romance: "coral",
@@ -44,7 +45,7 @@ export default function Matches() {
 
   const [visibleUsers, setVisibleUsers] = useState<MatchUser[]>([]);
   const [remainingUsers, setRemainingUsers] = useState<MatchUser[]>([]);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // When filters change → update local state
   useEffect(() => {
@@ -126,119 +127,139 @@ export default function Matches() {
         <AlienMeetLogo />
       </div>
 
-      {/* Content row: always has Menu on left */}
-      <div className="flex w-full max-w-7xl gap-2">
-        {/* Left: Filter menu */}
-        <div className="max-h-screen md:max-h-[80vh] mt-34">
-          <Menu
-              filters={filters}
-              setFilters={setFilters}
-              hasUnread={false}
-              className={undefined} />
-        </div>
+      {/* Content row */}
+        <div className="flex w-full max-w-7xl gap-2">
 
-        {/* Right: dynamic content */}
-        <div className="flex-1 flex items-center justify-center">
-          {isLoading ? (
-            <div className="text-center text-lg text-gray-400 font-serif">
-              Loading...
+            <button
+                className="block md:hidden p-2"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-6 h-6"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                >
+                    <path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z" />
+                </svg>
+            </button>
+
+            {/* Left: Filter menu */}
+            <div className={`max-h-screen md:max-h-[80vh] mt-34 
+                      ${mobileMenuOpen ? "block" : "hidden"} md:block`}>
+
+                <Menu
+                    filters={filters}
+                    setFilters={setFilters}
+                    hasUnread={false}
+                    className={undefined}
+                />
+
             </div>
-          ) : visibleUsers.length === 0 ? (
-            <div className="text-center text-lg text-gray-400 font-serif">
-              No matches found.
-            </div>
-          ) : (
-            <div className="w-full pt-28 pl-4 md:pl-10 mt-6">
-              {/* Mobile: Horizontal scrolling */}
-              <div className="md:hidden overflow-x-auto pb-4">
-                <div className="flex gap-4 w-max">
-                  {visibleUsers.map((user) => (
-                    <div key={user.id} className="flex-shrink-0 w-80">
-                      <FlipCard
-                        front={
-                          <MatchCardFront
-                            profilepicSrc={user.profilepicSrc}
-                            username={user.username}
-                            age={user.age}
-                            location={user.homeplanet}
-                            lookingFor={user.lookingFor}
-                            bio={user.bio ?? "..."}
-                            cardColor={
-                              lookingForColors[user.lookingFor] || "olive"
-                            }
-                            userId={user.id}
-                            onReject={handleReject}
-                            onConnectionRequest={handleConnectionRequest}
-                            supermatch={user.supermatch}
-                          />
-                        }
-                        back={
-                          <MatchCardBack
-                            username={user.username}
-                            age={user.age}
-                            location={user.homeplanet}
-                            lookingFor={user.lookingFor}
-                            bodyform={user.bodyform}
-                            bio={user.bio ?? "..."}
-                            interests={user.interests ?? []}
-                            onHide={() => handleHideUser(user.id)}
-                            cardColor={
-                              lookingForColors[user.lookingFor] || "olive"
-                            }
-                            supermatch={user.supermatch}
-                          />
-                        }
-                      />
+
+            {/* Right: dynamic content */}
+            <div className="flex-1 flex items-center justify-center">
+                {isLoading ? (
+                    <div className="text-center text-lg text-gray-400 font-serif">
+                        Loading...
                     </div>
-                  ))}
-                </div>
-              </div>
+                ) : visibleUsers.length === 0 ? (
+                    <div className="text-center text-lg text-gray-400 font-serif">
+                        No matches found.
+                    </div>
+                ) : (
+                    <div className="w-full pt-28 pl-4 md:pl-10 mt-6">
+                        {/* Mobile: Horizontal scrolling */}
+                        <div className="md:hidden overflow-x-auto pb-4">
+                            <div className="flex gap-4 w-max">
+                                {visibleUsers.map((user) => (
+                                    <div key={user.id} className="flex-shrink-0 w-80">
+                                        <FlipCard
+                                            front={
+                                                <MatchCardFront
+                                                    profilepicSrc={user.profilepicSrc}
+                                                    username={user.username}
+                                                    age={user.age}
+                                                    location={user.homeplanet}
+                                                    lookingFor={user.lookingFor}
+                                                    bio={user.bio ?? "..."}
+                                                    cardColor={
+                                                        lookingForColors[user.lookingFor] || "olive"
+                                                    }
+                                                    userId={user.id}
+                                                    onReject={handleReject}
+                                                    onConnectionRequest={handleConnectionRequest}
+                                                    supermatch={user.supermatch}
+                                                />
+                                            }
+                                            back={
+                                                <MatchCardBack
+                                                    username={user.username}
+                                                    age={user.age}
+                                                    location={user.homeplanet}
+                                                    lookingFor={user.lookingFor}
+                                                    bodyform={user.bodyform}
+                                                    bio={user.bio ?? "..."}
+                                                    interests={user.interests ?? []}
+                                                    onHide={() => handleHideUser(user.id)}
+                                                    cardColor={
+                                                        lookingForColors[user.lookingFor] || "olive"
+                                                    }
+                                                    supermatch={user.supermatch}
+                                                />
+                                            }
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
 
-              {/* Desktop: Grid layout */}
-              <div className="hidden md:grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 justify-items-center">
-                {visibleUsers.map((user) => (
-                  <FlipCard
-                    key={user.id}
-                    front={
-                      <MatchCardFront
-                        profilepicSrc={user.profilepicSrc}
-                        username={user.username}
-                        age={user.age}
-                        location={user.homeplanet}
-                        lookingFor={user.lookingFor}
-                        bio={user.bio ?? "..."}
-                        cardColor={
-                          lookingForColors[user.lookingFor] || "olive"
-                        }
-                        userId={user.id}
-                        onReject={handleReject}
-                        onConnectionRequest={handleConnectionRequest}
-                        supermatch={user.supermatch}
-                      />
-                    }
-                    back={
-                      <MatchCardBack
-                        username={user.username}
-                        age={user.age}
-                        location={user.homeplanet}
-                        lookingFor={user.lookingFor}
-                        bodyform={user.bodyform}
-                        bio={user.bio ?? "..."}
-                        interests={user.interests ?? []}
-                        onHide={() => handleHideUser(user.id)}
-                        cardColor={
-                          lookingForColors[user.lookingFor] || "olive"
-                        }
-                        supermatch={user.supermatch}
-                      />
-                    }
-                  />
-                ))}
-              </div>
+                        {/* Desktop: Grid layout */}
+                        <div
+                            className="hidden md:grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 justify-items-center">
+                            {visibleUsers.map((user) => (
+                                <FlipCard
+                                    key={user.id}
+                                    front={
+                                        <MatchCardFront
+                                            profilepicSrc={user.profilepicSrc}
+                                            username={user.username}
+                                            age={user.age}
+                                            location={user.homeplanet}
+                                            lookingFor={user.lookingFor}
+                                            bio={user.bio ?? "..."}
+                                            cardColor={
+                                                lookingForColors[user.lookingFor] || "olive"
+                                            }
+                                            userId={user.id}
+                                            onReject={handleReject}
+                                            onConnectionRequest={handleConnectionRequest}
+                                            supermatch={user.supermatch}
+                                        />
+                                    }
+                                    back={
+                                        <MatchCardBack
+                                            username={user.username}
+                                            age={user.age}
+                                            location={user.homeplanet}
+                                            lookingFor={user.lookingFor}
+                                            bodyform={user.bodyform}
+                                            bio={user.bio ?? "..."}
+                                            interests={user.interests ?? []}
+                                            onHide={() => handleHideUser(user.id)}
+                                            cardColor={
+                                                lookingForColors[user.lookingFor] || "olive"
+                                            }
+                                            supermatch={user.supermatch}
+                                        />
+                                    }
+                                />
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
-          )}
         </div>
-      </div>
     </div>
   );
 }
