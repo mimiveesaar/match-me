@@ -1,7 +1,5 @@
 'use client';
 
-import { AlienMeetLogo } from 'components';
-import { Menu } from 'components/organisms';
 import { ConnectionsMenu } from 'components/organisms';
 import { ChatWindow } from 'components/organisms';
 import { MessageInput } from 'components/organisms';
@@ -158,17 +156,13 @@ function Chatspace({ userId }: { userId: string }) {
 
     return (
         <div className="flex flex-col min-h-screen bg-ivory">
-            <header className="flex justify-center py-4 flex-shrink-0">
-                <AlienMeetLogo />
-            </header>
+
 
             <main className="flex w-full max-w-7xl mx-auto">
-                <aside className="w-80 flex items-center justify-center mt-20">
-                    <Menu hasUnread={hasUnread} />
-                </aside>
+
 
                 <section className="flex flex-col flex-1 relative">
-                    <div className="flex-1 mt-32">
+                    <div className="flex-1 mt-24">
                         <ChatWindow
                             messages={messages}
                             currentUserId={userId}
@@ -189,7 +183,7 @@ function Chatspace({ userId }: { userId: string }) {
                     </div>
                 </section>
 
-                <aside className="w-72 mt-32 flex flex-col">
+                <aside className="w-72 mt-24 flex flex-col">
                     <ConnectionsMenu
                         users={enrichedUsers}
                         onSelectUser={async (otherUserId) => {
