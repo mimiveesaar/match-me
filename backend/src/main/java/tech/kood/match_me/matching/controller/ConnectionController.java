@@ -10,24 +10,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import tech.kood.match_me.matching.model.ConnectionRequest;
-import tech.kood.match_me.matching.repository.ConnectionRequestRepository;
-
+import tech.kood.match_me.matching.service.UserConnectionRequestService;
 
 @RestController
 @RequestMapping("/api/connections")
 public class ConnectionController {
 
-    private final ConnectionRequestRepository connectionRequestRepository;
+    private final UserConnectionRequestService userConnectionRequestService;
 
-    public ConnectionController(ConnectionRequestRepository connectionRequestRepository) {
-        this.connectionRequestRepository = connectionRequestRepository;
+    public ConnectionController(UserConnectionRequestService userConnectionRequestService) {
+        this.userConnectionRequestService = userConnectionRequestService;
     }
-    
+
     @PostMapping("/{requesterId}")
     public ResponseEntity<?> sendConnectionRequest(
-        @PathVariable UUID requesterId,
-        @RequestBody Map<String, UUID> body) {
+            @PathVariable UUID requesterId,
+            @RequestBody Map<String, UUID> body) {
 
         UUID requestedId = body.get("requested_id");
         if (requestedId == null) {
@@ -35,13 +33,14 @@ public class ConnectionController {
         }
 
         try {
-            ConnectionRequest connectionRequest = new ConnectionRequest(requesterId, requestedId);
-            connectionRequestRepository.save(connectionRequest);
+            // Delegate business logic to service
+            userConnectionRequestService.sendConnectionRequest(requesterId, requestedId);
 
             return ResponseEntity.ok(Map.of("success", true));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error sending connection request: " + e.getMessage());
+            return ResponseEntity
+                    .status(500)
+                    .body("Error sending connection request: " + e.getMessage());
         }
     }
-    
 }
