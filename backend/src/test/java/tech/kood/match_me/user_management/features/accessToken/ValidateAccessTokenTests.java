@@ -14,9 +14,7 @@ import tech.kood.match_me.user_management.features.accessToken.actions.createAcc
 import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenHandler;
 import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenRequest;
 import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenResults;
-import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenCommandHandler;
-import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenRequest;
-import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenResults;
+import tech.kood.match_me.user_management.features.refreshToken.actions.CreateRefreshToken;
 import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
 import tech.kood.match_me.user_management.features.user.actions.registerUser.RegisterUserRequestMocker;
 
@@ -29,7 +27,7 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
     RegisterUser.Handler registerUserHandler;
 
     @Autowired
-    CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler;
+    CreateRefreshToken.Handler createRefreshTokenCommandHandler;
 
     @Autowired
     CreateAccessTokenCommandHandler createAccessTokenHandler;
@@ -47,11 +45,11 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
         assert registerResult instanceof RegisterUser.Result.Success;
 
         var userId = ((RegisterUser.Result.Success) registerResult).userId();
-        var createTokenRequest = new CreateRefreshTokenRequest(userId);
+        var createTokenRequest = new CreateRefreshToken.Request(userId);
         var createTokenResult = createRefreshTokenCommandHandler.handle(createTokenRequest);
-        assert createTokenResult instanceof CreateRefreshTokenResults.Success;
+        assert createTokenResult instanceof CreateRefreshToken.Result.Success;
 
-        var refreshToken = ((CreateRefreshTokenResults.Success) createTokenResult).refreshToken();
+        var refreshToken = ((CreateRefreshToken.Result.Success) createTokenResult).refreshToken();
         var getAccessTokenRequest = new CreateAccessTokenRequest(refreshToken.secret());
         var getAccessTokenResult = createAccessTokenHandler.handle(getAccessTokenRequest);
 

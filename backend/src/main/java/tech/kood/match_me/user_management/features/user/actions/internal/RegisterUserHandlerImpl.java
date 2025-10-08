@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
-import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
+import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
 import tech.kood.match_me.user_management.features.user.domain.internal.user.UserFactory;
@@ -42,7 +42,7 @@ public class RegisterUserHandlerImpl implements RegisterUser.Handler {
         var validationResults = validator.validate(request);
         if (!validationResults.isEmpty()) {
             logger.warn("Validation failed for registration request: {}", validationResults);
-            return new RegisterUser.Result.InvalidRequest(InvalidInputErrorDTO.from(validationResults));
+            return new RegisterUser.Result.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {

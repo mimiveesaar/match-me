@@ -6,7 +6,7 @@ import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
-import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
+import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.features.user.actions.GetUserById;
 import tech.kood.match_me.user_management.features.user.internal.mapper.UserMapper;
 import tech.kood.match_me.user_management.features.user.internal.persistance.UserRepository;
@@ -35,7 +35,7 @@ public class GetUserByIdHandlerImpl implements GetUserById.Handler {
 
         // Handle input validation.
         if (!validationResults.isEmpty()) {
-            return new GetUserById.Result.InvalidRequest(InvalidInputErrorDTO.from(validationResults));
+            return new GetUserById.Result.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {

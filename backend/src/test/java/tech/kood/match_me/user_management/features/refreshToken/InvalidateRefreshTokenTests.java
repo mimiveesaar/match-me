@@ -10,13 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
+import tech.kood.match_me.user_management.features.refreshToken.actions.CreateRefreshToken;
+import tech.kood.match_me.user_management.features.refreshToken.actions.InvalidateRefreshToken;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.RefreshTokenRepository;
-import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenCommandHandler;
-import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenRequest;
-import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenResults;
-import tech.kood.match_me.user_management.features.refreshToken.actions.invalidateToken.api.InvalidateRefreshTokenCommandHandler;
-import tech.kood.match_me.user_management.features.refreshToken.actions.invalidateToken.api.InvalidateRefreshTokenRequest;
-import tech.kood.match_me.user_management.features.refreshToken.actions.invalidateToken.api.InvalidateRefreshTokenResults;
 import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
 import tech.kood.match_me.user_management.features.user.actions.registerUser.RegisterUserRequestMocker;
 
@@ -32,10 +28,10 @@ public class InvalidateRefreshTokenTests extends UserManagementTestBase {
     RegisterUser.Handler registerUserHandler;
 
     @Autowired
-    CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler;
+    CreateRefreshToken.Handler createRefreshTokenCommandHandler;
 
     @Autowired
-    InvalidateRefreshTokenCommandHandler invalidateRefreshTokenHandler;
+    InvalidateRefreshToken.Handler invalidateRefreshTokenHandler;
 
     @Autowired
     RegisterUserRequestMocker registerUserRequestMocker;
@@ -47,19 +43,17 @@ public class InvalidateRefreshTokenTests extends UserManagementTestBase {
         assert registerResult instanceof RegisterUser.Result.Success;
 
         var userId = ((RegisterUser.Result.Success) registerResult).userId();
-        var createTokenRequest = new CreateRefreshTokenRequest(userId);
+        var createTokenRequest = new CreateRefreshToken.Request(userId);
         var createTokenResult = createRefreshTokenCommandHandler.handle(createTokenRequest);
 
-        assert createTokenResult instanceof CreateRefreshTokenResults.Success;
+        assert createTokenResult instanceof CreateRefreshToken.Result.Success;
 
-        var successResult = (CreateRefreshTokenResults.Success) createTokenResult;
+        var successResult = (CreateRefreshToken.Result.Success) createTokenResult;
 
-        // Act: Invalidate the refresh token
-        var invalidateRequest = new InvalidateRefreshTokenRequest(successResult.refreshToken().secret());
+        var invalidateRequest = new InvalidateRefreshToken.Request(successResult.refreshToken().secret());
         var invalidateResult = invalidateRefreshTokenHandler.handle(invalidateRequest);
 
-        // Assert: Check if the token was invalidated successfully
-        assert invalidateResult instanceof InvalidateRefreshTokenResults.Success;
+        assert invalidateResult instanceof InvalidateRefreshToken.Result.Success;
 
         var tokenCheck = refreshTokenRepository.findToken(successResult.refreshToken().secret().toString());
         assert tokenCheck.isEmpty() : "The refresh token should be invalidated and not found in the repository";

@@ -11,12 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
+import tech.kood.match_me.user_management.features.refreshToken.actions.CreateRefreshToken;
 import tech.kood.match_me.user_management.features.refreshToken.internal.persistance.RefreshTokenRepository;
 import tech.kood.match_me.user_management.features.user.actions.GetUserById;
 import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
-import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenCommandHandler;
-import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenRequest;
-import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenResults;
 import tech.kood.match_me.user_management.features.user.actions.registerUser.RegisterUserRequestMocker;
 
 @SpringBootTest
@@ -31,7 +29,7 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
     RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
-    CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler;
+    CreateRefreshToken.Handler createRefreshTokenCommandHandler;
 
     @Autowired
     RegisterUserRequestMocker registerUserRequestMocker;
@@ -52,11 +50,11 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
         assert getUserResult instanceof GetUserById.Result.Success;
         var user = ((GetUserById.Result.Success) getUserResult).user();
 
-        var createTokenRequest = new CreateRefreshTokenRequest(user.id());
+        var createTokenRequest = new CreateRefreshToken.Request(user.id());
         var createTokenResult = createRefreshTokenCommandHandler.handle(createTokenRequest);
-        assert createTokenResult instanceof CreateRefreshTokenResults.Success;
+        assert createTokenResult instanceof CreateRefreshToken.Result.Success;
 
-        var token = refreshTokenRepository.findToken(((CreateRefreshTokenResults.Success) createTokenResult).refreshToken().secret().toString());
+        var token = refreshTokenRepository.findToken(((CreateRefreshToken.Result.Success) createTokenResult).refreshToken().secret().toString());
         assert token.isPresent() : "The refresh token should be created and found in the repository";
         assert token.get().getUserId().equals(user.id().value()) : "The refresh token should belong to the correct userId";
     }
@@ -65,10 +63,10 @@ public class CreateRefreshTokenTests extends UserManagementTestBase {
     void shouldHandleUserNotFound() {
 
         // Create a request with a non-existent userId ID to simulate userId not found
-        var createTokenRequest = new CreateRefreshTokenRequest(new UserIdDTO(UUID.randomUUID()));
+        var createTokenRequest = new CreateRefreshToken.Request(new UserIdDTO(UUID.randomUUID()));
         var result = createRefreshTokenCommandHandler.handle(createTokenRequest);
 
 
-        assert result instanceof CreateRefreshTokenResults.UserNotFound : "The handler should return a Success result for valid userId";
+        assert result instanceof CreateRefreshToken.Result.UserNotFound : "The handler should return a Success result for valid userId";
     }
 }

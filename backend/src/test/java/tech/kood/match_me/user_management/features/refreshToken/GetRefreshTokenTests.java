@@ -8,12 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.user_management.features.refreshToken.actions.getToken.api.GetRefreshTokenQueryHandler;
-import tech.kood.match_me.user_management.features.refreshToken.actions.getToken.api.GetRefreshTokenRequest;
-import tech.kood.match_me.user_management.features.refreshToken.actions.getToken.api.GetRefreshTokenResults;
-import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenCommandHandler;
-import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenRequest;
-import tech.kood.match_me.user_management.features.refreshToken.actions.createToken.api.CreateRefreshTokenResults;
+import tech.kood.match_me.user_management.features.refreshToken.actions.CreateRefreshToken;
+import tech.kood.match_me.user_management.features.refreshToken.actions.GetRefreshToken;
 import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
 import tech.kood.match_me.user_management.features.user.actions.registerUser.RegisterUserRequestMocker;
 
@@ -26,10 +22,10 @@ public class GetRefreshTokenTests extends UserManagementTestBase {
     RegisterUser.Handler registerUserHandler;
 
     @Autowired
-    CreateRefreshTokenCommandHandler createRefreshTokenCommandHandler;
+    CreateRefreshToken.Handler createRefreshTokenCommandHandler;
 
     @Autowired
-    GetRefreshTokenQueryHandler getRefreshTokenRequestHandler;
+    GetRefreshToken.Handler getRefreshTokenRequestHandler;
 
     @Autowired
     RegisterUserRequestMocker registerUserRequestMocker;
@@ -42,17 +38,17 @@ public class GetRefreshTokenTests extends UserManagementTestBase {
 
         var userId = ((RegisterUser.Result.Success) registerResult).userId();
 
-        var createTokenRequest = new CreateRefreshTokenRequest(userId);
+        var createTokenRequest = new CreateRefreshToken.Request(userId);
         var createTokenResult = createRefreshTokenCommandHandler.handle(createTokenRequest);
 
-        assert createTokenResult instanceof CreateRefreshTokenResults.Success;
-        var createdTokenResult = (CreateRefreshTokenResults.Success) createTokenResult;
+        assert createTokenResult instanceof CreateRefreshToken.Result.Success;
+        var createdTokenResult = (CreateRefreshToken.Result.Success) createTokenResult;
 
-        var getRefreshTokenRequest = new GetRefreshTokenRequest(createdTokenResult.refreshToken().secret());
+        var getRefreshTokenRequest = new GetRefreshToken.Request(createdTokenResult.refreshToken().secret());
         var getRefreshTokenResult = getRefreshTokenRequestHandler.handle(getRefreshTokenRequest);
-        assert getRefreshTokenResult instanceof GetRefreshTokenResults.Success;
+        assert getRefreshTokenResult instanceof GetRefreshToken.Result.Success;
 
-        var getTokenResult = (GetRefreshTokenResults.Success) getRefreshTokenResult;
+        var getTokenResult = (GetRefreshToken.Result.Success) getRefreshTokenResult;
         assert getTokenResult.refreshToken().equals(createdTokenResult.refreshToken());
     }
 }

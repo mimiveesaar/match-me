@@ -10,7 +10,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import org.springframework.transaction.annotation.Transactional;
-import tech.kood.match_me.user_management.common.api.InvalidInputErrorDTO;
+import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
@@ -52,7 +52,7 @@ public class ValidateAccessTokenHandlerImpl implements ValidateAccessTokenHandle
 
         var validationResults = validator.validate(request);
         if (!validationResults.isEmpty()) {
-            return new ValidateAccessTokenResults.InvalidRequest(InvalidInputErrorDTO.from(validationResults));
+            return new ValidateAccessTokenResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
