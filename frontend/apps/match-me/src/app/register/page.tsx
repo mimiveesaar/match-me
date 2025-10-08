@@ -2,11 +2,15 @@
 
 import axios from "axios";
 import { UserSignUpForm } from "components/organisms"
-import { useState } from "react";
+import {useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export default function RegisterPage() {
+
+    useEffect(() => {
+        document.title = 'Sign Up | alien.meet'
+    }, [])
 
     const router = useRouter();
     const [email, setEmail] = useState("");

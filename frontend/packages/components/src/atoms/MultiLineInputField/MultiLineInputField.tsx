@@ -19,7 +19,7 @@ export function MultiLineInputField({ id, placeholder, value, onChange, maxLengt
       onChange={onChange}
       maxLength={maxLength}
       rows={rows}
-      className="w-full px-4 py-2 border-gray-300 rounded shadow-md shadow-gray-400 focus:outline-none resize-none bg-accent-light"
+      className="w-full h-full px-4 py-2 rounded-custom-8 drop-shadow-custom-2 focus:outline-none resize-none bg-accent-light"
     />
   );
 }

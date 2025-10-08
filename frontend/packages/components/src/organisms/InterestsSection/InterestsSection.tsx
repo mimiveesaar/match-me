@@ -102,12 +102,15 @@ export const InterestsSection = ({
   const selectedInterests = getSelectedInterests();
 
   return (
-    <div className="rounded border border-gray-300 p-6 flex flex-col lg:flex-row gap-6 w-full">
-      <div className="lg:w-1/2 w-full text-l">
-        /my interests
-        <div className="w-full border border-gray-300 rounded p-4">
-          <p className="font-semibold text-gray-700 mb-2">Pick up to 8</p>
-          
+    <div className="rounded-custom-16 border border-black/70 h-full p-6 flex flex-col lg:flex-row gap-6 w-full">
+      <div className="lg:w-1/2 w-full text-l flex flex-col">
+        <span className="text-base italic mb-2">/my interests</span>
+        <div className="w-full border border-gray-300 rounded-custom-8 p-2 mb-2 flex-grow box-border">
+          <div className="flex items-center justify-between mb-2">
+              <p className="font-semibold text-gray-700 mb-2">Pick up to 8</p>
+              <CharacterCounter current={selected.length} max={8} />
+          </div>
+
           <ul className="space-y-2">
             {selectedInterests.map((interest) => (
               <li key={interest.id} className="text-sm flex items-center gap-2">
@@ -118,7 +121,7 @@ export const InterestsSection = ({
                 {interest.name}
               </li>
             ))}
-            <CharacterCounter current={selected.length} max={8} />
+
           </ul>
         </div>
       </div>

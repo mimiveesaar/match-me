@@ -23,6 +23,11 @@ export default function ChatspaceWrapper() {
 }
 
 function Chatspace({ userId }: { userId: string }) {
+
+    useEffect(() => {
+        document.title = 'Chatspace | alien.meet'
+    }, [])
+
     const [users, setUsers] = useState<
         Array<{ id: string; username: string; src?: string; isOnline: boolean }>
     >([]);

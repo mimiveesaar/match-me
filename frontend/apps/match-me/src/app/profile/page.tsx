@@ -15,6 +15,11 @@ interface ProfileData {
 }
 
 export default function MyProfile() {
+
+    useEffect(() => {
+        document.title = 'My Profile | alien.meet'
+    }, [])
+
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -71,7 +76,7 @@ export default function MyProfile() {
 
   return (
 
-    <div className="flex flex-col lg:flex-row gap-8">
+    <div className="flex flex-col lg:flex-row gap-8 mt-24">
       <div className="flex flex-col gap-4">
 
         <MyProfilePage

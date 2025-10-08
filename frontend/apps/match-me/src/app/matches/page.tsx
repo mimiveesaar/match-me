@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import {  FlipCard, MatchCardFront, MatchCardFrontProps, MatchCardBack } from "components/organisms";
 import { useUserSearch } from "./hooks/useUserSearch";
-import { MatchUser, Filters } from "./types";
+import { MatchUser } from "./types";
 import { useFiltersStore } from "../stores/matchStore";
 
 
@@ -17,6 +17,10 @@ const lookingForColors: Record<string, MatchCardFrontProps["cardColor"]> = {
 };
 
 export default function Matches() {
+
+    useEffect(() => {
+        document.title = 'Matches | alien.meet'
+    }, [])
 
     const userId = "3fa85f64-5717-4562-b3fc-2c963f66afa1"; // Dummy user from mock data
 
@@ -113,6 +117,7 @@ export default function Matches() {
   };
 
     return (
+
         <div className="flex flex-col items-center pt-4 px-4 bg-ivory">
 
             {/* Right: dynamic content */}

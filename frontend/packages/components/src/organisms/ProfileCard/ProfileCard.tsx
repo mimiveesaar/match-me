@@ -49,11 +49,11 @@ export const ProfileCard = ({
   ];
 
   return (
-    <div className="bg-amberglow rounded p-6 shadow-md w-80">
+    <div className="bg-amberglow rounded-custom-16 p-6 drop-shadow-custom w-80">
       <img
         src="https://i.imgur.com/0y8Ftya.png"
         alt="alien"
-        className="rounded mb-4 w-full object-cover h-40"
+        className="rounded-custom-16 drop-shadow-custom-2 mb-4 w-full object-cover h-40 "
       />
 
       <LabeledInputField

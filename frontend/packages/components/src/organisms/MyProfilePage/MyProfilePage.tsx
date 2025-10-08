@@ -67,13 +67,15 @@ export const MyProfilePage = ({
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8">
-      <div className="flex flex-col gap-4">
+    <div className="flex flex-col lg:flex-row gap-10">
+
+        <div className="flex flex-col gap-4">
         <ProfileCard profile={profile} setProfile={setProfile} />
       </div>
-      <div className="flex flex-col gap-4">
-        <div className="bg-olive rounded p-6 shadow-md min-h-[12rem] flex flex-col justify-start">
-          <span className="mb-2 text-xs italic">/bio</span>
+
+        <div className="flex flex-col gap-4 w-[500px]">
+          <div className="bg-olive rounded-custom-16 p-6 drop-shadow-custom min-h-[18rem] flex flex-col justify-start">
+          <span className="mb-2 text-base italic text-ivory">/bio</span>
           <MultiLineInputField
             placeholder="Bio (optional)"
             value={bio}
@@ -91,7 +93,7 @@ export const MyProfilePage = ({
           <button
             onClick={handleSave}
             disabled={isLoading}
-            className={`flex items-center gap-2 bg-olive hover:bg-amberglow text-white font-semibold py-2 px-4 rounded-xl shadow-md transition-all duration-200 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''
+            className={`flex items-center gap-2 bg-olive hover:bg-peony text-white font-semibold py-2 px-4 rounded-xl shadow-md transition-all duration-200 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
           >
             {isLoading ? 'Saving...' : 'Save Changes'}
