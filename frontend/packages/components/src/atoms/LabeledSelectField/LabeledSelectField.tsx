@@ -32,7 +32,7 @@ export function LabeledSelectField({
         id={id}
         value={value}
         onChange={handleChange}
-        className="w-full px-4 py-2 border border-gray-300 rounded shadow-md focus:outline-none bg-accent-light"
+        className="w-full px-4 py-2 rounded-custom-8 drop-shadow-custom bg-ivory focus:outline-none"
       >
         <option value="" disabled>Select {label}</option>
         {options.map(opt => (

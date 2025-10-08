@@ -18,7 +18,7 @@ export const InputField = ({ id, placeholder, value, onChange, type, disabled }:
     placeholder={placeholder}
     value={value}
     onChange={onChange}
-    className="w-full px-4 py-2 border-gray-300 rounded shadow-md shadow-gray-400 focus:outline-none resize-none bg-accent-light"
+    className="w-full px-4 py-2 border-gray-300 rounded-custom-8 drop-shadow-custom focus:outline-none resize-none bg-ivory"
     disabled={disabled}
   />
 );
