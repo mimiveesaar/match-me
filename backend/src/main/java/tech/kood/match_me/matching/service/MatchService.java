@@ -10,27 +10,27 @@ import org.springframework.stereotype.Service;
 import tech.kood.match_me.matching.dto.MatchFilterDto;
 import tech.kood.match_me.matching.dto.MatchResultsDto;
 import tech.kood.match_me.matching.model.ConnectionRequest;
+import tech.kood.match_me.matching.model.RejectionRequest;
 import tech.kood.match_me.matching.model.User;
-import tech.kood.match_me.matching.model.UserRejection;
 import tech.kood.match_me.matching.repository.ConnectionRequestRepository;
 import tech.kood.match_me.matching.repository.MatchUserRepository;
-import tech.kood.match_me.matching.repository.UserRejectionRepository;
+import tech.kood.match_me.matching.repository.RejectionRequestRepository;
 
 @Service
 public class MatchService {
 
     private final MatchUserRepository userRepository;
     private final MatchScoringService scoringService;
-    private final UserRejectionRepository rejectionRepository;
+    private final RejectionRequestRepository rejectionRequestRepository;
     private final ConnectionRequestRepository connectionRequestRepository;
 
     public MatchService(MatchUserRepository userRepository,
                         MatchScoringService scoringService,
-                        UserRejectionRepository rejectionRepository,
+                        RejectionRequestRepository rejectionRequestRepository,
                         ConnectionRequestRepository connectionRequestRepository) {
         this.userRepository = userRepository;
         this.scoringService = scoringService;
-        this.rejectionRepository = rejectionRepository;
+        this.rejectionRequestRepository = rejectionRequestRepository;
         this.connectionRequestRepository = connectionRequestRepository;
     }
 
@@ -39,9 +39,9 @@ public class MatchService {
         List<User> candidates = userRepository.findByFilter(filter);
 
         // Step 2: Fetch all users rejected by the current user
-        Set<UUID> rejectedIds = rejectionRepository.findAllByRejecterId(currentUser.getId())
+        Set<UUID> rejectedIds = rejectionRequestRepository.findAllByRequesterId(currentUser.getId())
                                                     .stream()
-                                                    .map(UserRejection::getRejectedId)
+                                                    .map(RejectionRequest::getRequestedId)
                                                     .collect(Collectors.toSet());
 
         // Step 2.5: Fetch all users who have already been sent a connection request by the current user

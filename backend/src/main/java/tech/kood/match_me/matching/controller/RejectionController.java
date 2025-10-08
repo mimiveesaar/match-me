@@ -9,37 +9,34 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import tech.kood.match_me.matching.model.UserRejection;
-import tech.kood.match_me.matching.repository.UserRejectionRepository;
+import tech.kood.match_me.matching.service.UserRejectionRequestService;
 
 @RestController
 @RequestMapping("/api/rejections")
 public class RejectionController {
 
-    private final UserRejectionRepository rejectionRepository;
+    private final UserRejectionRequestService userRejectionRequestService;
 
-    public RejectionController(UserRejectionRepository rejectionRepository) {
-        this.rejectionRepository = rejectionRepository;
+    public RejectionController(UserRejectionRequestService userRejectionRequestService) {
+        this.userRejectionRequestService = userRejectionRequestService;
     }
 
-    @PostMapping("/{rejecterId}")
-    public ResponseEntity<?> rejectUser(
-            @PathVariable UUID rejecterId,
+    @PostMapping("/{requesterId}")
+    public ResponseEntity<?> sendRejectionRequest(
+            @PathVariable UUID requesterId,
             @RequestBody Map<String, UUID> body) {
 
-        UUID rejectedId = body.get("rejected_id");
-        if (rejectedId == null) {
-            return ResponseEntity.badRequest().body("Missing rejected_id");
+        UUID requestedId = body.get("requested_id"); // matches frontend key
+        if (requestedId == null) {
+            return ResponseEntity.badRequest().body("Missing requested_id");
         }
 
         try {
-            UserRejection rejection = new UserRejection(rejecterId, rejectedId);
-            rejectionRepository.save(rejection);
-
+            userRejectionRequestService.sendRejectionRequest(requesterId, requestedId);
             return ResponseEntity.ok(Map.of("success", true));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Server error: " + e.getMessage());
+            return ResponseEntity.status(500)
+                    .body("Error sending rejection request: " + e.getMessage());
         }
     }
 }

@@ -68,28 +68,26 @@ export default function Matches() {
     });
   };
 
-  const handleReject = async (rejectedId: string) => {
-    try {
-      const res = await fetch(
-        `http://localhost:8080/api/rejections/${userId}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ rejected_id: rejectedId }),
+    const handleReject = async (requestedId: string) => {
+        try {
+            const res = await fetch(`http://localhost:8080/api/rejections/${userId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ requested_id: requestedId }), // matches backend
+            });
+
+            if (!res.ok) throw new Error("Failed to reject user");
+
+            console.log("User rejected:", requestedId);
+            removeUserAndRefill(requestedId);
+        } catch (err) {
+            console.error(err);
+            alert("Something went wrong. Try again.");
         }
-      );
+    };
 
-      if (!res.ok) throw new Error("Failed to reject user");
 
-      console.log("User rejected:", rejectedId);
-      removeUserAndRefill(rejectedId);
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong. Try again.");
-    }
-  };
-
-  const handleConnectionRequest = async (requestedId: string) => {
+    const handleConnectionRequest = async (requestedId: string) => {
     try {
       const res = await fetch(
         `http://localhost:8080/api/connections/${userId}`,
