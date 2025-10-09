@@ -1,12 +1,10 @@
-package tech.kood.match_me.common.dto;
+package tech.kood.match_me.matching.dto;
 
-import java.util.UUID;
-
-public class BodyformDTO {
+public class LookingForDTO {
     private final Integer id;
     private final String name;
 
-    public BodyformDTO(Integer id, String name) {
+    public LookingForDTO(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -14,3 +12,4 @@ public class BodyformDTO {
     public Integer getId() { return id; }
     public String getName() { return name; }
 }
+

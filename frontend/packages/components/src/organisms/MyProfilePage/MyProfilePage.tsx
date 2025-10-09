@@ -73,8 +73,8 @@ export const MyProfilePage = ({
         <ProfileCard profile={profile} setProfile={setProfile} />
       </div>
 
-        <div className="flex flex-col gap-4 w-[500px]">
-          <div className="bg-olive rounded-custom-16 p-6 drop-shadow-custom min-h-[18rem] flex flex-col justify-start">
+        <div className="flex flex-col gap-4 w-full lg:w-[500px]">
+          <div className="bg-olive rounded-custom-16 p-6 drop-shadow-custom lg:min-h-[18rem] flex flex-col justify-start">
           <span className="mb-2 text-base italic text-ivory">/bio</span>
           <MultiLineInputField
             placeholder="Bio (optional)"

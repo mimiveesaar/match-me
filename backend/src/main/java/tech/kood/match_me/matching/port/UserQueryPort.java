@@ -1,6 +1,6 @@
-package tech.kood.match_me.common.port;
+package tech.kood.match_me.matching.port;
 
-import tech.kood.match_me.common.dto.UserDTO;
+import tech.kood.match_me.matching.dto.UserDTO;
 
 import java.util.Optional;
 import java.util.UUID;

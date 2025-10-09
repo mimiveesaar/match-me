@@ -1,8 +1,8 @@
 package tech.kood.match_me.matching.adapter;
 
 import org.springframework.stereotype.Component;
-import tech.kood.match_me.common.dto.*;
-import tech.kood.match_me.common.port.UserQueryPort;
+import tech.kood.match_me.matching.port.UserQueryPort;
+import tech.kood.match_me.matching.dto.*;
 import tech.kood.match_me.matching.repository.MatchUserRepository;
 
 import java.util.Optional;

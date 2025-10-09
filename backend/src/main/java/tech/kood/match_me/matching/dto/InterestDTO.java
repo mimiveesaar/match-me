@@ -1,6 +1,4 @@
-package tech.kood.match_me.common.dto;
-
-import java.util.UUID;
+package tech.kood.match_me.matching.dto;
 
 public class InterestDTO {
     private final Long id;

@@ -102,14 +102,17 @@ export const InterestsSection = ({
   const selectedInterests = getSelectedInterests();
 
   return (
-    <div className="rounded-custom-16 border border-black/70 h-full p-6 flex flex-col lg:flex-row gap-6 w-full">
-      <div className="lg:w-1/2 w-full text-l flex flex-col">
-        <span className="text-base italic mb-2">/my interests</span>
-        <div className="w-full border border-gray-300 rounded-custom-8 p-2 mb-2 flex-grow box-border">
-          <div className="flex items-center justify-between mb-2">
-              <p className="font-semibold text-gray-700 mb-2">Pick up to 8</p>
-              <CharacterCounter current={selected.length} max={8} />
-          </div>
+    <div className="rounded-custom-16 border border-black/70 h-full p-6 flex flex-col lg:flex-row gap-6 lg:w-full">
+
+        <div className="lg:w-1/2 w-full text-l flex flex-col">
+            <span className="text-base italic mb-2">/my interests</span>
+
+            <div className="w-full border border-gray-300 rounded-custom-8 p-2 mb-2 flex-grow box-border">
+
+                <div className="flex items-center justify-between mb-2">
+                  <p className="font-semibold text-gray-700 mb-2">Pick up to 8</p>
+                  <CharacterCounter current={selected.length} max={8} />
+                </div>
 
           <ul className="space-y-2">
             {selectedInterests.map((interest) => (
@@ -126,7 +129,7 @@ export const InterestsSection = ({
         </div>
       </div>
 
-      <div className="lg:w-1/2 w-full flex flex-wrap gap-2 items-start content-start">
+      <div className="lg:w-1/2 w-full flex flex-wrap gap-2 items-start content-start overflow-auto max-h-[25vh]">
         {interests.map((interest) => {
           const isSelected = selected.includes(interest.id.toString());
           return (

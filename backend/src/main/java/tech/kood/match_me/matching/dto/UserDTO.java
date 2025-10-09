@@ -1,4 +1,4 @@
-package tech.kood.match_me.common.dto;
+package tech.kood.match_me.matching.dto;
 
 import java.util.Set;
 import java.util.UUID;
