@@ -35,7 +35,7 @@ export const ChatWindow = ({
     <Background value={""} onChange={function (e: React.ChangeEvent<HTMLTextAreaElement>): void {
       throw new Error("Function not implemented.");
     }}>
-      <div className="flex flex-col space-y-2 p-4 overflow-y-auto h-full pb-16">
+      <div className="flex flex-col space-y-2 p-1 lg:p-4 overflow-y-auto h-full pb-16">
         {messages.map((msg) => {
           const isCurrentUser = msg.senderId === currentUserId;
           const { time, date } = parseTimestampArray(msg.timestamp);

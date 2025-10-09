@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 export interface DropdownSelectorProps {
     header?: string;
@@ -11,13 +11,14 @@ export interface DropdownSelectorProps {
 }
 
 export const DropdownSelector: React.FC<DropdownSelectorProps> = ({
-    header,
-    options = [],
-    selectedOptions,
-    onSelect,
-    mode = "multiple",
-}) => {
+                                                                      header,
+                                                                      options = [],
+                                                                      selectedOptions,
+                                                                      onSelect,
+                                                                      mode = "multiple",
+                                                                  }) => {
     const [isOpen, setIsOpen] = React.useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     const toggleDropdown = () => setIsOpen((prev) => !prev);
 
@@ -29,7 +30,7 @@ export const DropdownSelector: React.FC<DropdownSelectorProps> = ({
                 newSelection = []; // Deselect if already selected
             } else {
                 newSelection = [option]; // Select new one
-                setIsOpen(false); // Optional: auto-close after selecting
+                setIsOpen(false); // Auto-close after selecting
             }
         } else {
             newSelection = selectedOptions.includes(option)
@@ -47,16 +48,31 @@ export const DropdownSelector: React.FC<DropdownSelectorProps> = ({
                 ? selectedOptions[0]
                 : `${selectedOptions.length} selected`;
 
+    // Close dropdown if clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     return (
-        <div className="relative font-serif text-base mb-6">
+        <div ref={dropdownRef} className="relative font-serif text-base mb-6">
             {header && <div className="w-full text-center text-sm mb-1">{header}</div>}
             <button
                 className="w-[147px] h-[25px] text-left flex items-center bg-ivory p-2 rounded-lg drop-shadow-custom-2"
                 onClick={toggleDropdown}
             >
-                <span className="overflow-hidden whitespace-nowrap text-ellipsis block w-full">
-                    {buttonLabel}
-                </span>
+        <span className="overflow-hidden whitespace-nowrap text-ellipsis block w-full">
+          {buttonLabel}
+        </span>
             </button>
 
             {isOpen && (
@@ -66,8 +82,9 @@ export const DropdownSelector: React.FC<DropdownSelectorProps> = ({
                         return (
                             <li
                                 key={option}
-                                className={`p-2 cursor-pointer ${isSelected ? "bg-limeburst/40" : "hover:bg-limeburst/20"
-                                    }`}
+                                className={`p-2 cursor-pointer ${
+                                    isSelected ? "bg-limeburst/40" : "hover:bg-limeburst/20"
+                                }`}
                                 onClick={() => handleOptionClick(option)}
                             >
                                 {option}
