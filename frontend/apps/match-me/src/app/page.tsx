@@ -12,7 +12,7 @@ export default function Home() {
     }, [])
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-ivory">
+        <div className="flex h-full items-center justify-center bg-ivory">
             <CircleWrapper className="bg-olive/95 max-md:rounded-custom-16 rounded-2xl md:w-xl xl:w-xl aspect-square text-center mt-4 flex flex-col">
 
                 {/* Centered text */}

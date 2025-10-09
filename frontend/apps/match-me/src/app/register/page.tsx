@@ -6,6 +6,7 @@ import {useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
+
 export default function RegisterPage() {
 
     useEffect(() => {
@@ -96,7 +97,7 @@ export default function RegisterPage() {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-ivory">
+        <div className="flex h-full items-center justify-center bg-ivory">
             <UserSignUpForm
                 email={email}
                 setEmail={setEmail}

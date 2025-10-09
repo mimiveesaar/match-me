@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.11",
+    "@types/howler": "^2.2.12",
     "@types/react": "^19.1.12",
     "prettier": "^3.5.3",
     "turbo": "^2.5.4",

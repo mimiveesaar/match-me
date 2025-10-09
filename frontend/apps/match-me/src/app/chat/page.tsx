@@ -160,8 +160,7 @@ function Chatspace({ userId }: { userId: string }) {
     }, [enrichedUsers]);
 
     return (
-        <div className="flex flex-col min-h-screen bg-ivory">
-
+        <div className="flex flex-col h-full bg-ivory">
 
             <main className="flex flex-col md:flex-row md:mx-auto lg:flex-row w-full max-w-7xl lg:mx-auto">
 

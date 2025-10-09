@@ -12,7 +12,7 @@ import { usePathname } from "next/navigation";
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 
     const pathname = usePathname();
-    const noMenuPages = ['/register'];
+    const noMenuPages = ['/register','/'];
     const shouldShowMenu = !noMenuPages.includes(pathname);
 
     const [menuOpen, setMenuOpen] = useState(false);
