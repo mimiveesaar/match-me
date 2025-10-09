@@ -15,7 +15,7 @@ export const Background = ({ children,
   return (
     <div className="flex justify-center items-center px-4">
       <div
-        className="w-[643px] h-[542px] rounded-custom-16 inner-shadow-custom bg-peony/90 overflow-auto"
+        className="w-full lg:w-[643px] h-[60vh] lg:h-[542px] rounded-custom-16 inner-shadow-custom bg-peony/90 overflow-auto"
       >
         {children}
       </div>

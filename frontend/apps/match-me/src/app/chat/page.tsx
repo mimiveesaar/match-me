@@ -163,11 +163,11 @@ function Chatspace({ userId }: { userId: string }) {
         <div className="flex flex-col min-h-screen bg-ivory">
 
 
-            <main className="flex w-full max-w-7xl mx-auto">
+            <main className="flex flex-col md:flex-row md:mx-auto lg:flex-row w-full max-w-7xl lg:mx-auto">
 
 
-                <section className="flex flex-col flex-1 relative">
-                    <div className="flex-1 mt-24">
+                <section className="flex flex-col flex-1 relative w-full">
+                    <div className="flex-1 px-4 md:mt-24 lg:mt-24 w-full">
                         <ChatWindow
                             messages={messages}
                             currentUserId={userId}
@@ -175,7 +175,7 @@ function Chatspace({ userId }: { userId: string }) {
                         />
                     </div>
 
-                    <div className="p-4 flex-shrink-0">
+                    <div className="py-2 px-8 lg:px-4 w-full">
                         <MessageInput
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
@@ -188,7 +188,7 @@ function Chatspace({ userId }: { userId: string }) {
                     </div>
                 </section>
 
-                <aside className="w-72 mt-24 flex flex-col">
+                <aside className="px-4 lg:w-72 md:mt-24 lg:mt-24 lg:flex lg:flex-col">
                     <ConnectionsMenu
                         users={enrichedUsers}
                         onSelectUser={async (otherUserId) => {

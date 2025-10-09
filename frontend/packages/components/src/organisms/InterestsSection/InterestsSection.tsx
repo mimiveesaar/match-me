@@ -107,14 +107,14 @@ export const InterestsSection = ({
         <div className="lg:w-1/2 w-full text-l flex flex-col">
             <span className="text-base italic mb-2">/my interests</span>
 
-            <div className="w-full border border-gray-300 rounded-custom-8 p-2 mb-2 flex-grow box-border">
+            <div className="w-full border border-gray-300 rounded-custom-8 p-2 mb-2 box-border">
 
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between mb-2 overflow-auto">
                   <p className="font-semibold text-gray-700 mb-2">Pick up to 8</p>
                   <CharacterCounter current={selected.length} max={8} />
                 </div>
 
-          <ul className="space-y-2">
+          <ul className="space-y-2 min-h-35 max-h-35 overflow-y-auto pr-2">
             {selectedInterests.map((interest) => (
               <li key={interest.id} className="text-sm flex items-center gap-2">
                 <span
@@ -129,7 +129,7 @@ export const InterestsSection = ({
         </div>
       </div>
 
-      <div className="lg:w-1/2 w-full flex flex-wrap gap-2 items-start content-start overflow-auto max-h-[25vh]">
+      <div className="lg:w-1/2 w-full flex flex-wrap gap-2 items-start content-start overflow-auto max-h-[25vh] mt-8">
         {interests.map((interest) => {
           const isSelected = selected.includes(interest.id.toString());
           return (

@@ -49,7 +49,7 @@ export const ProfileCard = ({
   ];
 
   return (
-    <div className="bg-amberglow rounded-custom-16 p-6 drop-shadow-custom w-80">
+    <div className="bg-amberglow rounded-custom-16 p-6 drop-shadow-custom w-full lg:w-80">
       <img
         src="https://i.imgur.com/0y8Ftya.png"
         alt="alien"
@@ -57,13 +57,13 @@ export const ProfileCard = ({
       />
 
       <LabeledInputField
-        label="/name"
+        label="name"
         value={profile.name}
         onChange={handleInputChange("name")}
         placeholder=""
       />
       <LabeledInputField
-        label="/age"
+        label="age"
         value={profile.age}
         onChange={handleInputChange("age")}
         placeholder=""
@@ -79,7 +79,7 @@ export const ProfileCard = ({
         } }      />
 
       <LabeledSelectField
-        id="lookingfor"
+        id="looking for"
         label="/lookingfor"
         value={profile.lookingfor}
         onChange={handleSelectChange("lookingfor")}

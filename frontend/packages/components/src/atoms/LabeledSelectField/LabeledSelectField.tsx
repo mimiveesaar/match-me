@@ -25,7 +25,7 @@ export function LabeledSelectField({
 
   return (
     <div className="mb-4">
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
+      <label htmlFor={id} className="block text-sm font-medium text-ivory mb-1">
         {label}
       </label>
       <select

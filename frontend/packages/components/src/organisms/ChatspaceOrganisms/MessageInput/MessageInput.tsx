@@ -57,11 +57,11 @@ export const MessageInput = ({
     };
 
     return (
-        <div className="w-full flex justify-center items-center py-4">
+        <div className="w-full flex justify-center items-center py-2 lg:py-4">
             <MessageInputBackground
                 value={value}
                 onChange={handleChange}
-                onKeyDown={handleKeyDown}  // <-- add handler here
+                onKeyDown={handleKeyDown}
                 placeholder="Type your message..."
                 rightElement={
                     <MessageInputSendButton

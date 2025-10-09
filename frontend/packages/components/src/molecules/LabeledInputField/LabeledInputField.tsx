@@ -22,7 +22,7 @@ export function LabeledInputField({ label, placeholder, disabled, error, type, i
     <div className="mb-4">
       <label
         htmlFor={inputId}
-        className="block text-sm text-left font-medium text-gray-700 mb-1"
+        className="block text-sm text-left font-medium text-ivory mb-1"
       >
         /{label.toLowerCase()}
       </label>
