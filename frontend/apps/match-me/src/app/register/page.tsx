@@ -96,7 +96,7 @@ export default function RegisterPage() {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="flex min-h-screen items-center justify-center bg-ivory">
             <UserSignUpForm
                 email={email}
                 setEmail={setEmail}

@@ -48,3 +48,4 @@ export * from './MultiLineInputField/MultiLineInputField';
 export * from './NextPageIconButton/NextPageIconButton';
 export * from './ProfilePicture/ProfilePicture';
 export * from './SignUpOrLogInButton/SignUpOrLogInButton';
+export * from './WelcomePage/SignUpButton';

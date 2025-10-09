@@ -84,6 +84,10 @@ body {
     box-shadow: inset -4px 4px 4px rgba(0, 0, 0, 0.25);
   }
 
+    .drop-shadow-custom-3 {
+        filter: drop-shadow(-10px 10px 3px rgba(0, 0, 0, 0.35));
+    }
+
 
   @keyframes animation-scroll {
 

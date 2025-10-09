@@ -9,9 +9,9 @@ interface NextPageIconButtonProps {
 export const NextPageIconButton = ({ onClick, disabled }: NextPageIconButtonProps) => (
   <button
     onClick={onClick}
-    className="mt-4 cursor-pointer rounded-full p-3 shadow-md transition hover:shadow-lg hover:brightness-10"
+    className="mt-4 cursor-pointer p-3 transition hover:scale-125"
     disabled={disabled}
   >
-    <ChevronRight className="h-6 w-6 text-gray-700" />
+    <ChevronRight className="h-8 w-8 text-gray-700" />
   </button>
 );

@@ -23,13 +23,13 @@ export interface UserSignUpFormProps {
 export const UserSignUpForm = ({ email, password, confirmPassword, setEmail, setPassword, setConfirmPassword, errors, onSubmit }: UserSignUpFormProps) => {
 
   return (
-    <CircleWrapper className="bg-minty max-md:rounded-none rounded-2xl md:w-xl xl:w-xl aspect-square text-center">
+    <CircleWrapper className="bg-minty/95 max-md:rounded-custom-16 rounded-2xl md:w-xl xl:w-xl aspect-square text-center mt-4">
       <div className="flex flex-col items-center py-10 w-full">
-        <h2 className="text-2xl mb-5 font-semibold md:mt-2 md:text-3xl">
+        <h2 className="text-2xl mb-5 font-serif md:mt-2 md:text-3xl">
           New Account
         </h2>
 
-        <div className="md:w-96 w-full px-4">
+        <div className="md:w-96 w-full px-4 font-serif">
           <LabeledInputField
             label="Email"
             placeholder="Email"
