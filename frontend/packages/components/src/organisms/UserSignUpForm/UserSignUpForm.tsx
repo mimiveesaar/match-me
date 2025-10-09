@@ -23,22 +23,35 @@ export interface UserSignUpFormProps {
 export const UserSignUpForm = ({ email, password, confirmPassword, setEmail, setPassword, setConfirmPassword, errors, onSubmit }: UserSignUpFormProps) => {
 
   return (
-    <CircleWrapper className="bg-minty/95 max-md:rounded-custom-16 rounded-2xl md:w-xl xl:w-xl aspect-square text-center mt-4">
+    <CircleWrapper
+        className="bg-olive/95 max-md:rounded-custom-16 rounded-2xl md:w-xl xl:w-xl aspect-square text-center mt-4"
+        animate={{
+            scale: [1, 0.97, 1],
+            opacity: [1, 1, 1],
+        }}
+        transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+        }}
+
+
+    >
       <div className="flex flex-col items-center py-10 w-full">
         <h2 className="text-2xl mb-5 font-serif md:mt-2 md:text-3xl">
           New Account
         </h2>
 
-        <div className="md:w-96 w-full px-4 font-serif">
+        <div className="md:w-96 w-full px-4 font-serif pt-6">
           <LabeledInputField
-            label="Email"
+            label=""
             placeholder="Email"
             value={email}
             error={errors?.emailError}
             onChange={(e) => setEmail(e.target.value)}
           />
           <LabeledInputField
-            label="Password"
+            label=""
             placeholder="Password"
             type="password"
             value={password}
@@ -47,7 +60,7 @@ export const UserSignUpForm = ({ email, password, confirmPassword, setEmail, set
           />
 
           <LabeledInputField
-            label="Password"
+            label=""
             placeholder="Confirm Password"
             value={confirmPassword}
             type="password"
