@@ -1,12 +1,10 @@
-package tech.kood.match_me.connections.features.pendingConnection.actions.getPendingRequests.internal;
+package tech.kood.match_me.connections.features.pendingConnection.actions.internal;
 
 import jakarta.validation.Validator;
 import org.springframework.stereotype.Service;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.connections.features.pendingConnection.actions.getPendingRequests.api.GetPendingConnectionsQueryHandler;
-import tech.kood.match_me.connections.features.pendingConnection.actions.getPendingRequests.api.GetPendingConnectionsRequest;
-import tech.kood.match_me.connections.features.pendingConnection.actions.getPendingRequests.api.GetPendingConnectionsResults;
+import tech.kood.match_me.connections.features.pendingConnection.actions.GetPendingRequests;
 import tech.kood.match_me.connections.features.pendingConnection.domain.api.PendingConnectionDTO;
 import tech.kood.match_me.connections.features.pendingConnection.internal.mapper.PendingConnectionMapper;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.PendingConnectionRepository;
@@ -15,7 +13,7 @@ import tech.kood.match_me.connections.features.pendingConnection.internal.persis
 import java.util.List;
 
 @Service
-public class GetPendingConnectionsQueryHandlerImpl implements GetPendingConnectionsQueryHandler {
+public class GetPendingConnectionsQueryHandlerImpl implements GetPendingRequests.Handler {
 
     private final Validator validator;
     private final PendingConnectionRepository pendingConnectionRepository;
@@ -28,11 +26,11 @@ public class GetPendingConnectionsQueryHandlerImpl implements GetPendingConnecti
     }
 
     @Override
-    public GetPendingConnectionsResults handle(GetPendingConnectionsRequest request) {
+    public GetPendingRequests.Result handle(GetPendingRequests.Request request) {
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new GetPendingConnectionsResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
+            return new GetPendingRequests.Result.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
@@ -44,9 +42,9 @@ public class GetPendingConnectionsQueryHandlerImpl implements GetPendingConnecti
             var outgoingRequests = pendingConnectionRepository.findBySender(request.userId().value());
             List<PendingConnectionDTO> outgoingRequestsMapped = mapEntityListToDTOList(outgoingRequests);
 
-            return new GetPendingConnectionsResults.Success(incomingRequestsMapped, outgoingRequestsMapped);
+            return new GetPendingRequests.Result.Success(incomingRequestsMapped, outgoingRequestsMapped);
         } catch (Exception e) {
-            return new GetPendingConnectionsResults.SystemError("An unexpected error occurred while processing the request.");
+            return new GetPendingRequests.Result.SystemError("An unexpected error occurred while processing the request.");
         }
     }
     

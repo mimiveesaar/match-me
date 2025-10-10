@@ -1,17 +1,15 @@
-package tech.kood.match_me.connections.features.pendingConnection.actions.getIncomingRequests.internal;
+package tech.kood.match_me.connections.features.pendingConnection.actions.internal;
 
 import jakarta.validation.Validator;
 import org.springframework.stereotype.Service;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.connections.features.pendingConnection.actions.getIncomingRequests.api.GetIncomingConnectionQueryHandler;
-import tech.kood.match_me.connections.features.pendingConnection.actions.getIncomingRequests.api.GetIncomingConnectionsRequest;
-import tech.kood.match_me.connections.features.pendingConnection.actions.getIncomingRequests.api.GetIncomingConnectionsResults;
+import tech.kood.match_me.connections.features.pendingConnection.actions.GetIncomingRequests;
 import tech.kood.match_me.connections.features.pendingConnection.internal.mapper.PendingConnectionMapper;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.PendingConnectionRepository;
 
 @Service
-public class GetIncomingConnectionQueryHandlerImpl implements GetIncomingConnectionQueryHandler {
+public class GetIncomingConnectionQueryHandlerImpl implements GetIncomingRequests.Handler {
 
     private final Validator validator;
     private final PendingConnectionRepository pendingConnectionRepository;
@@ -24,11 +22,11 @@ public class GetIncomingConnectionQueryHandlerImpl implements GetIncomingConnect
     }
 
     @Override
-    public GetIncomingConnectionsResults handle(GetIncomingConnectionsRequest request) {
+    public GetIncomingRequests.Result handle(GetIncomingRequests.Request request) {
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new GetIncomingConnectionsResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
+            return new GetIncomingRequests.Result.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
@@ -45,9 +43,9 @@ public class GetIncomingConnectionQueryHandlerImpl implements GetIncomingConnect
                     })
                     .toList();
 
-            return new GetIncomingConnectionsResults.Success(incomingRequestsMapped);
+            return new GetIncomingRequests.Result.Success(incomingRequestsMapped);
         } catch (Exception e) {
-            return new GetIncomingConnectionsResults.SystemError("An unexpected error occurred while processing the request.");
+            return new GetIncomingRequests.Result.SystemError("An unexpected error occurred while processing the request.");
         }
     }
 }

@@ -1,11 +1,9 @@
-package tech.kood.match_me.connections.features.pendingConnection.actions.getOutgoingRequests.internal;
+package tech.kood.match_me.connections.features.pendingConnection.actions.internal;
 
 import jakarta.validation.Validator;
 import org.springframework.stereotype.Service;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
-import tech.kood.match_me.connections.features.pendingConnection.actions.getOutgoingRequests.api.GetOutgoingConnectionQueryHandler;
-import tech.kood.match_me.connections.features.pendingConnection.actions.getOutgoingRequests.api.GetOutgoingConnectionsRequest;
-import tech.kood.match_me.connections.features.pendingConnection.actions.getOutgoingRequests.api.GetOutgoingConnectionsResults;
+import tech.kood.match_me.connections.features.pendingConnection.actions.GetOutgoingRequests;
 import tech.kood.match_me.connections.features.pendingConnection.domain.api.PendingConnectionDTO;
 import tech.kood.match_me.connections.features.pendingConnection.internal.mapper.PendingConnectionMapper;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.PendingConnectionRepository;
@@ -14,7 +12,7 @@ import tech.kood.match_me.connections.features.pendingConnection.internal.persis
 import java.util.ArrayList;
 
 @Service
-public class GetOutgoingConnectionQueryHandlerImpl implements GetOutgoingConnectionQueryHandler {
+public class GetOutgoingConnectionQueryHandlerImpl implements GetOutgoingRequests.Handler {
 
     private final Validator validator;
     private final PendingConnectionRepository pendingConnectionRepository;
@@ -27,11 +25,11 @@ public class GetOutgoingConnectionQueryHandlerImpl implements GetOutgoingConnect
     }
 
     @Override
-    public GetOutgoingConnectionsResults handle(GetOutgoingConnectionsRequest request) {
+    public GetOutgoingRequests.Result handle(GetOutgoingRequests.Request request) {
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new GetOutgoingConnectionsResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
+            return new GetOutgoingRequests.Result.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
@@ -42,9 +40,9 @@ public class GetOutgoingConnectionQueryHandlerImpl implements GetOutgoingConnect
                 outgoingRequestsMapped.add(dto);
             }
 
-            return new GetOutgoingConnectionsResults.Success(outgoingRequestsMapped);
+            return new GetOutgoingRequests.Result.Success(outgoingRequestsMapped);
         } catch (Exception e) {
-            return new GetOutgoingConnectionsResults.SystemError("An unexpected error occurred while processing the request.");
+            return new GetOutgoingRequests.Result.SystemError("An unexpected error occurred while processing the request.");
         }
     }
 }
