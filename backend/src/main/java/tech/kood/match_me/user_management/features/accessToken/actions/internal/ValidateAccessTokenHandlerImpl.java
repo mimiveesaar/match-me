@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.internal;
+package tech.kood.match_me.user_management.features.accessToken.actions.internal;
 
 import jakarta.validation.Validator;
 import org.slf4j.Logger;
@@ -15,15 +15,13 @@ import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.common.domain.internal.accessToken.AccessTokenFactory;
-import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenHandler;
-import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenRequest;
-import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenResults;
+import tech.kood.match_me.user_management.features.accessToken.actions.ValidateAccessToken;
 import tech.kood.match_me.user_management.features.accessToken.internal.mapper.AccessTokenMapper;
 
 import java.util.UUID;
 
 @Service
-public class ValidateAccessTokenHandlerImpl implements ValidateAccessTokenHandler {
+public class ValidateAccessTokenHandlerImpl implements ValidateAccessToken.Handler {
 
     private static final Logger logger = LoggerFactory.getLogger(ValidateAccessTokenHandlerImpl.class);
     private final JWTVerifier jwtVerifier;
@@ -48,11 +46,11 @@ public class ValidateAccessTokenHandlerImpl implements ValidateAccessTokenHandle
 
     @Override
     @Transactional
-    public ValidateAccessTokenResults handle(ValidateAccessTokenRequest request) {
+    public ValidateAccessToken.Result handle(ValidateAccessToken.Request request) {
 
         var validationResults = validator.validate(request);
         if (!validationResults.isEmpty()) {
-            return new ValidateAccessTokenResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
+            return new ValidateAccessToken.Result.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
@@ -68,14 +66,14 @@ public class ValidateAccessTokenHandlerImpl implements ValidateAccessTokenHandle
             var accessToken = accessTokenFactory.create(request.jwtToken(), userId);
             var accessTokenDTO = accessTokenMapper.toDTO(accessToken);
 
-            return new ValidateAccessTokenResults.Success(accessTokenDTO, userIdDto);
+            return new ValidateAccessToken.Result.Success(accessTokenDTO, userIdDto);
 
         } catch (JWTVerificationException | IllegalArgumentException e) {
             logger.warn("Invalid JWT: {}", e.getMessage());
-            return new ValidateAccessTokenResults.InvalidToken();
+            return new ValidateAccessToken.Result.InvalidToken();
         } catch (CheckedConstraintViolationException e) {
             logger.error("Invalid signed JWT: {}", e.getMessage());
-            return new ValidateAccessTokenResults.SystemError(e.getMessage());
+            return new ValidateAccessToken.Result.SystemError(e.getMessage());
         }
     }
 }

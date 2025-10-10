@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.internal;
+package tech.kood.match_me.user_management.features.accessToken.actions.internal;
 
 import java.time.Instant;
 
@@ -16,17 +16,14 @@ import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.UserManagementConfig;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.user_management.common.domain.internal.accessToken.AccessTokenFactory;
-import tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api.AccessTokenCreatedEvent;
-import tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api.CreateAccessTokenCommandHandler;
-import tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api.CreateAccessTokenRequest;
-import tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api.CreateAccessTokenResults;
+import tech.kood.match_me.user_management.features.accessToken.actions.CreateAccessToken;
 import tech.kood.match_me.user_management.features.accessToken.internal.mapper.AccessTokenMapper;
 import tech.kood.match_me.user_management.features.refreshToken.actions.GetRefreshToken;
 import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenDTO;
 
 @Service
 @ApplicationLayer
-public class CreateAccessTokenCommandHandlerImpl implements CreateAccessTokenCommandHandler {
+public class CreateAccessTokenCommandHandlerImpl implements CreateAccessToken.Handler {
 
     private static final Logger logger = LoggerFactory.getLogger(CreateAccessTokenCommandHandlerImpl.class);
     private final ApplicationEventPublisher events;
@@ -58,12 +55,12 @@ public class CreateAccessTokenCommandHandlerImpl implements CreateAccessTokenCom
 
     @Transactional
     @Override
-    public CreateAccessTokenResults handle(CreateAccessTokenRequest request) {
+    public CreateAccessToken.Result handle(CreateAccessToken.Request request) {
         try {
 
             var validationResults = validator.validate(request);
             if (!validationResults.isEmpty()) {
-                return new CreateAccessTokenResults.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
+                return new CreateAccessToken.Result.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
             }
 
             var refreshTokenRequest = new GetRefreshToken.Request(request.secret());
@@ -71,7 +68,7 @@ public class CreateAccessTokenCommandHandlerImpl implements CreateAccessTokenCom
 
             if (refreshTokenResult instanceof GetRefreshToken.Result.InvalidRequest invalidRequest) {
                 //This should never run. But for application correctness, we return an error.
-                var error = new CreateAccessTokenResults.SystemError("Unexpected result from refresh token handler");
+                var error = new CreateAccessToken.Result.SystemError("Unexpected result from refresh token handler");
                 logger.error(error.message());
                 return error;
             }
@@ -82,13 +79,13 @@ public class CreateAccessTokenCommandHandlerImpl implements CreateAccessTokenCom
                 //Return an error.
 
                 logger.error(systemError.message());
-                return new CreateAccessTokenResults.SystemError(systemError.message());
+                return new CreateAccessToken.Result.SystemError(systemError.message());
 
             }
 
             if (refreshTokenResult instanceof GetRefreshToken.Result.InvalidSecret invalidSecret) {
                 // Return an error if the refresh token is invalid.
-                return new CreateAccessTokenResults.InvalidToken();
+                return new CreateAccessToken.Result.InvalidToken();
             }
 
 
@@ -109,17 +106,17 @@ public class CreateAccessTokenCommandHandlerImpl implements CreateAccessTokenCom
                 var accessToken = accessTokenFactory.create(jwt, userId);
                 var accessTokenDTO = accessTokenMapper.toDTO(accessToken);
 
-                var result = new CreateAccessTokenResults.Success(jwt);
+                var result = new CreateAccessToken.Result.Success(jwt);
 
-                events.publishEvent(new AccessTokenCreatedEvent(accessTokenDTO));
+                events.publishEvent(new CreateAccessToken.AccessTokenCreated(accessTokenDTO));
                 return result;
             }
 
         } catch (Exception e) {
-            return new CreateAccessTokenResults.SystemError(e.getMessage());
+            return new CreateAccessToken.Result.SystemError(e.getMessage());
         }
 
         //This should never run. But for application correctness, we return an error.
-        return new CreateAccessTokenResults.SystemError("Unexpected error");
+        return new CreateAccessToken.Result.SystemError("Unexpected error");
     }
 }
