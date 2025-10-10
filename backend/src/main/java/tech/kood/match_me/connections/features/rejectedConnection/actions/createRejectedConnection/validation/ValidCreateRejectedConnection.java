@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.validation;
+package tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

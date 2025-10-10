@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.internal;
+package tech.kood.match_me.connections.features.rejectedConnection.actions.internal;
 
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
@@ -7,9 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionCommandHandler;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionRequest;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionResults;
+import tech.kood.match_me.connections.features.rejectedConnection.actions.CreateRejectedConnection;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.internal.RejectedConnection;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.internal.RejectedConnectionFactory;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.internal.RejectedConnectionReason;
@@ -21,8 +19,8 @@ import java.util.Optional;
 
 @Component
 @ApplicationLayer
-public class CreateRejectedConnectionCommandHandlerImpl
-        implements CreateRejectedConnectionCommandHandler {
+public class CreateRejectedConnectionHandlerImpl
+        implements CreateRejectedConnection.Handler {
 
     private final RejectedConnectionFactory rejectedConnectionFactory;
     private final RejectedConnectionRepository rejectedConnectionRepository;
@@ -30,7 +28,7 @@ public class CreateRejectedConnectionCommandHandlerImpl
     private final UserIdFactory userIdFactory;
     private final Validator validator;
 
-    public CreateRejectedConnectionCommandHandlerImpl(
+    public CreateRejectedConnectionHandlerImpl(
             RejectedConnectionFactory rejectedConnectionFactory,
             RejectedConnectionRepository rejectedConnectionRepository,
             RejectedConnectionMapper rejectedConnectionMapper, UserIdFactory userIdFactory, Validator validator) {
@@ -43,12 +41,12 @@ public class CreateRejectedConnectionCommandHandlerImpl
 
     @Override
     @Transactional
-    public CreateRejectedConnectionResults handle(CreateRejectedConnectionRequest request) {
+    public CreateRejectedConnection.Result handle(CreateRejectedConnection.Request request) {
 
 
         var validationErrors = validator.validate(request);
         if (!validationErrors.isEmpty()) {
-            return new CreateRejectedConnectionResults.InvalidRequest(
+            return new CreateRejectedConnection.Result.InvalidRequest(
                     InvalidInputErrorDTO.fromValidation(validationErrors));
         }
 
@@ -61,7 +59,7 @@ public class CreateRejectedConnectionCommandHandlerImpl
                     .findBetweenUsers(rejectedByUserId.getValue(), rejectedUserId.getValue());
 
             if (existingRejection.isPresent()) {
-                return new CreateRejectedConnectionResults.AlreadyExists();
+                return new CreateRejectedConnection.Result.AlreadyExists();
             }
 
             RejectedConnection rejectedConnection = rejectedConnectionFactory.createNew(
@@ -71,12 +69,12 @@ public class CreateRejectedConnectionCommandHandlerImpl
             RejectedConnectionEntity entity = rejectedConnectionMapper.toEntity(rejectedConnection);
             rejectedConnectionRepository.save(entity);
 
-            return new CreateRejectedConnectionResults.Success(
+            return new CreateRejectedConnection.Result.Success(
                     new ConnectionIdDTO(
                             rejectedConnection.getId().getValue()));
 
         } catch (Exception e) {
-            return new CreateRejectedConnectionResults.SystemError(
+            return new CreateRejectedConnection.Result.SystemError(
                     "Failed to create rejected connection: " + e.getMessage());
         }
     }

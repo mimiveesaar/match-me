@@ -6,9 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.connections.common.ConnectionsTestBase;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionCommandHandler;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionRequest;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionResults;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.api.RejectedConnectionReasonDTO;
 import tech.kood.match_me.connections.features.rejectedConnection.internal.persistance.RejectedConnectionRepository;
 

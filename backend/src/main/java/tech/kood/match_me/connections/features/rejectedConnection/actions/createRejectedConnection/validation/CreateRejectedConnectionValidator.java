@@ -1,8 +1,7 @@
-package tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.validation;
+package tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.createRejectedConnection.api.CreateRejectedConnectionRequest;
 
 public class CreateRejectedConnectionValidator implements ConstraintValidator<ValidCreateRejectedConnection, CreateRejectedConnectionRequest> {
 
