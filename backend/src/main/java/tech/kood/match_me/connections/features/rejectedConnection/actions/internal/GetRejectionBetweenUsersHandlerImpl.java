@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectionBetweenUsers.internal;
+package tech.kood.match_me.connections.features.rejectedConnection.actions.internal;
 
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
@@ -6,9 +6,7 @@ import org.springframework.stereotype.Component;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectionBetweenUsers.api.GetRejectionBetweenUsersQueryHandler;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectionBetweenUsers.api.GetRejectionBetweenUsersRequest;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectionBetweenUsers.api.GetRejectionBetweenUsersResults;
+import tech.kood.match_me.connections.features.rejectedConnection.actions.GetRejectionBetweenUsers;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.api.RejectedConnectionDTO;
 import tech.kood.match_me.connections.features.rejectedConnection.internal.mapper.RejectedConnectionMapper;
 import tech.kood.match_me.connections.features.rejectedConnection.internal.persistance.RejectedConnectionRepository;
@@ -18,15 +16,15 @@ import java.util.Optional;
 
 @Component
 @ApplicationLayer
-public class GetRejectionBetweenUsersQueryHandlerImpl
-        implements GetRejectionBetweenUsersQueryHandler {
+public class GetRejectionBetweenUsersHandlerImpl
+        implements GetRejectionBetweenUsers.Handler {
 
     private final RejectedConnectionRepository rejectedConnectionRepository;
     private final RejectedConnectionMapper rejectedConnectionMapper;
     private final UserIdFactory userIdFactory;
     private final Validator validator;
 
-    public GetRejectionBetweenUsersQueryHandlerImpl(
+    public GetRejectionBetweenUsersHandlerImpl(
             RejectedConnectionRepository rejectedConnectionRepository,
             RejectedConnectionMapper rejectedConnectionMapper, UserIdFactory userIdFactory,
             Validator validator) {
@@ -37,11 +35,11 @@ public class GetRejectionBetweenUsersQueryHandlerImpl
     }
 
     @Override
-    public GetRejectionBetweenUsersResults handle(GetRejectionBetweenUsersRequest request) {
+    public GetRejectionBetweenUsers.Result handle(GetRejectionBetweenUsers.Request request) {
         var validationErrors = validator.validate(request);
 
         if (!validationErrors.isEmpty()) {
-            return new GetRejectionBetweenUsersResults.InvalidRequest(
+            return new GetRejectionBetweenUsers.Result.InvalidRequest(
                     InvalidInputErrorDTO.fromValidation(validationErrors));
         }
 
@@ -54,7 +52,7 @@ public class GetRejectionBetweenUsersQueryHandlerImpl
                             user2Id.getValue());
 
             if (rejectionEntity.isEmpty()) {
-                return new GetRejectionBetweenUsersResults.NotFound();
+                return new GetRejectionBetweenUsers.Result.NotFound();
             }
 
             RejectedConnectionDTO rejectionDTO;
@@ -64,10 +62,10 @@ public class GetRejectionBetweenUsersQueryHandlerImpl
                 throw new RuntimeException("Failed to map rejected connection entity to DTO", e);
             }
 
-            return new GetRejectionBetweenUsersResults.Success(rejectionDTO);
+            return new GetRejectionBetweenUsers.Result.Success(rejectionDTO);
 
         } catch (Exception e) {
-            return new GetRejectionBetweenUsersResults.SystemError(
+            return new GetRejectionBetweenUsers.Result.SystemError(
                     "Failed to get rejection between users: " + e.getMessage());
         }
     }

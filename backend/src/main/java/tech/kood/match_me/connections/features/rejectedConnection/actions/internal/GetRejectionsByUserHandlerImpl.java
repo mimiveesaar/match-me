@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectedUsersByUser.internal;
+package tech.kood.match_me.connections.features.rejectedConnection.actions.internal;
 
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
@@ -6,9 +6,7 @@ import org.springframework.stereotype.Component;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectedUsersByUser.api.GetRejectedUsersByUserQueryHandler;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectedUsersByUser.api.GetRejectedUsersByUserRequest;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectedUsersByUser.api.GetRejectedUsersByUserResults;
+import tech.kood.match_me.connections.features.rejectedConnection.actions.GetRejectionsByUser;
 import tech.kood.match_me.connections.features.rejectedConnection.internal.mapper.RejectedConnectionMapper;
 import tech.kood.match_me.connections.features.rejectedConnection.internal.persistance.RejectedConnectionRepository;
 
@@ -16,15 +14,14 @@ import java.util.stream.Collectors;
 
 @Component
 @ApplicationLayer
-public class GetRejectedUsersByUserQueryHandlerImpl
-        implements GetRejectedUsersByUserQueryHandler {
+public class GetRejectionsByUserHandlerImpl implements GetRejectionsByUser.Handler {
 
     private final RejectedConnectionRepository rejectedConnectionRepository;
     private final RejectedConnectionMapper rejectedConnectionMapper;
     private final UserIdFactory userIdFactory;
     private final Validator validator;
 
-    public GetRejectedUsersByUserQueryHandlerImpl(
+    public GetRejectionsByUserHandlerImpl(
             RejectedConnectionRepository rejectedConnectionRepository,
             RejectedConnectionMapper rejectedConnectionMapper, UserIdFactory userIdFactory,
             Validator validator) {
@@ -35,18 +32,18 @@ public class GetRejectedUsersByUserQueryHandlerImpl
     }
 
     @Override
-    public GetRejectedUsersByUserResults handle(GetRejectedUsersByUserRequest request) {
+    public GetRejectionsByUser.Result handle(GetRejectionsByUser.Request request) {
+
         var validationErrors = validator.validate(request);
         if (!validationErrors.isEmpty()) {
-            return new GetRejectedUsersByUserResults.InvalidRequest(
+            return new GetRejectionsByUser.Result.InvalidRequest(
                     InvalidInputErrorDTO.fromValidation(validationErrors));
         }
 
         try {
-            var rejectedByUserId = userIdFactory.create(request.rejectedByUser().value());
+            var rejectedUserId = userIdFactory.create(request.rejectedUser().value());
 
-            var rejectedConnections =
-                    rejectedConnectionRepository.findByRejectedByUser(rejectedByUserId.getValue());
+            var rejectedConnections = rejectedConnectionRepository.findByRejectedUser(rejectedUserId.getValue());
 
             var rejectionDTOs = rejectedConnections.stream().map(entity -> {
                 try {
@@ -57,11 +54,11 @@ public class GetRejectedUsersByUserQueryHandlerImpl
                 }
             }).collect(Collectors.toList());
 
-            return new GetRejectedUsersByUserResults.Success(rejectionDTOs);
+            return new GetRejectionsByUser.Result.Success(rejectionDTOs);
 
         } catch (Exception e) {
-            return new GetRejectedUsersByUserResults.SystemError(
-                    "Failed to get rejected users by user: " + e.getMessage());
+            return new GetRejectionsByUser.Result.SystemError(
+                    "Failed to get rejections by user: " + e.getMessage());
         }
     }
 }

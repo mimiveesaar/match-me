@@ -1,4 +1,4 @@
-package tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectionBetweenUsers.api.validation;
+package tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectionBetweenUsers.validation;
 
 
 import jakarta.validation.Constraint;
