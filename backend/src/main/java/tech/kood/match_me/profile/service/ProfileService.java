@@ -8,6 +8,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -29,15 +30,18 @@ public class ProfileService {
     private final BodyformRepository bodyformRepo;
     private final LookingForRepository lookingForRepo;
     private final InterestRepository interestRepo;
+    
+    public ApplicationEventPublisher eventPublisher;
 
     public ProfileService(ProfileRepository profileRepo, HomeplanetRepository homeplanetRepo,
             BodyformRepository bodyformRepo, LookingForRepository lookingForRepo,
-            InterestRepository interestRepo) {
+            InterestRepository interestRepo, ApplicationEventPublisher eventPublisher) {
         this.profileRepo = profileRepo;
         this.homeplanetRepo = homeplanetRepo;
         this.bodyformRepo = bodyformRepo;
         this.lookingForRepo = lookingForRepo;
         this.interestRepo = interestRepo;
+        this.eventPublisher = eventPublisher;
     }
 
     // -------------------- PROFILE CRUD --------------------
@@ -87,6 +91,31 @@ public class ProfileService {
     @Transactional(value = "profileManagementTransactionManager", readOnly = true)
     public ProfileViewDTO getMyProfileDTO() {
         return toViewDTO(getMyProfile());
+    }
+
+    @Transactional("profileManagementTransactionManager")
+    public Profile getOrCreateProfile(UUID userId, String username) {
+        return profileRepo.findByUserId(userId).orElseGet(() -> {
+            System.out.println("Creating new profile for userId: " + userId);
+
+            var homeplanet = homeplanetRepo.findAll().stream().findFirst().orElse(null);
+            var bodyform = bodyformRepo.findAll().stream().findFirst().orElse(null);
+            var lookingFor = lookingForRepo.findAll().stream().findFirst().orElse(null);
+            var interests = interestRepo.findAll().stream().limit(2).collect(Collectors.toSet());
+
+            Profile newProfile = new Profile();
+            newProfile.setUserId(userId);
+            newProfile.setUsername(username);
+            newProfile.setAge(20);
+            newProfile.setHomeplanet(homeplanet);
+            newProfile.setBodyform(bodyform);
+            newProfile.setLookingFor(lookingFor);
+            newProfile.setBio("Auto-created user profile.");
+            newProfile.setInterests(interests);
+            newProfile.setProfilePic("default-profile.png");
+
+            return profileRepo.saveAndFlush(newProfile);
+        });
     }
 
     /**
@@ -188,7 +217,7 @@ public class ProfileService {
 
     // -------------------- DTO Conversion --------------------
 
-    private ProfileViewDTO toViewDTO(Profile profile) {
+    public ProfileViewDTO toViewDTO(Profile profile) {
         ProfileViewDTO dto = new ProfileViewDTO();
         dto.setId(profile.getId());
         dto.setUsername(profile.getUsername());

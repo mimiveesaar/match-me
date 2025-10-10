@@ -5,9 +5,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.UUID;
 import org.springframework.core.io.Resource;
 import tech.kood.match_me.profile.dto.ProfileDTO;
 import tech.kood.match_me.profile.dto.ProfileViewDTO;
+import tech.kood.match_me.profile.model.Profile;
 import tech.kood.match_me.profile.service.ProfileService;
 
 @RestController
@@ -68,11 +70,25 @@ public class ProfileController {
     public ResponseEntity<Resource> getProfileImage() {
         try {
             Resource imageResource = service.getProfileImage();
-            return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_JPEG) // could be dynamically detected
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG) // could be dynamically
+                                                                         // detected
                     .body(imageResource);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+
+
+    
+// endpoint that external modules can call:
+//      The other module can POST:
+//      POST /api/profiles/sync?userId=<uuid>&username=JohnDoe
+
+    @PostMapping("/sync")
+    public ResponseEntity<ProfileViewDTO> syncUser(@RequestParam UUID userId,
+            @RequestParam String username) {
+        Profile profile = service.getOrCreateProfile(userId, username);
+        return ResponseEntity.ok(service.toViewDTO(profile));
     }
 }

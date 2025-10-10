@@ -17,6 +17,9 @@ public class Profile {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
     private UUID id;
 
+    @Column(name = "user_id", nullable = false, unique = true)
+    private UUID userId; // 👈 from user management modul 
+
     @Column(nullable = false, unique = true)
     private String username;
 
@@ -71,6 +74,14 @@ public class Profile {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
