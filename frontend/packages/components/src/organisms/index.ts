@@ -16,4 +16,5 @@ export * from './ProfileCard/ProfileCard';
 export * from './UserLogInForm/UserLogInForm';
 export * from './UserSignUpForm/UserSignUpForm';
 export * from './WelcomePage/WelcomePage';
+export * from './MobileMenu/MobileMenu';
 
