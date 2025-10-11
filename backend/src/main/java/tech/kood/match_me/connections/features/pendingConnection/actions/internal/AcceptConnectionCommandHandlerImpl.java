@@ -9,6 +9,8 @@ import tech.kood.match_me.common.api.InputFieldErrorDTO;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.CreateAcceptedConnection;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.internal.CreateAcceptedConnectionHandlerImpl;
 import tech.kood.match_me.connections.features.pendingConnection.actions.AcceptConnection;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.PendingConnectionRepository;
 
@@ -19,18 +21,17 @@ import java.util.List;
 public class AcceptConnectionCommandHandlerImpl implements AcceptConnection.Handler {
 
     private final Validator validator;
-    private final AcceptConnection.Handler createAcceptedConnectionCommandHandler;
     private final PendingConnectionRepository pendingConnectionRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final CreateAcceptedConnection.Handler createAcceptedConnectionCommandHandler;
 
     public AcceptConnectionCommandHandlerImpl(Validator validator,
-                                              AcceptConnection.Handler createAcceptedConnectionCommandHandler,
                                               PendingConnectionRepository pendingConnectionRepository,
-                                              ApplicationEventPublisher eventPublisher) {
+                                              ApplicationEventPublisher eventPublisher, CreateAcceptedConnection.Handler createAcceptedConnectionCommandHandler1) {
         this.validator = validator;
-        this.createAcceptedConnectionCommandHandler = createAcceptedConnectionCommandHandler;
         this.pendingConnectionRepository = pendingConnectionRepository;
         this.eventPublisher = eventPublisher;
+        this.createAcceptedConnectionCommandHandler = createAcceptedConnectionCommandHandler1;
     }
 
     @Transactional
@@ -62,13 +63,13 @@ public class AcceptConnectionCommandHandlerImpl implements AcceptConnection.Hand
 
 
         var connectionId = new ConnectionIdDTO(pendingConnectionEntity.getId());
-        var createAcceptedConnectionRequest = new AcceptConnection.Request(connectionId, request.acceptedByUser(), new UserIdDTO(pendingConnectionEntity.getSenderId()));
 
+        var createAcceptedConnectionRequest = new CreateAcceptedConnection.Request(connectionId, UserIdDTO.from(pendingConnectionEntity.getTargetId()), UserIdDTO.from(pendingConnectionEntity.getSenderId()));
         var result = createAcceptedConnectionCommandHandler.handle(createAcceptedConnectionRequest);
 
-        if (result instanceof AcceptConnection.Result.AlreadyAccepted) {
+        if (result instanceof CreateAcceptedConnection.Result.AlreadyExists) {
             return new AcceptConnection.Result.AlreadyAccepted();
-        } else if (!(result instanceof AcceptConnection.Result.Success)) {
+        } else if (!(result instanceof CreateAcceptedConnection.Result.Success)) {
             return new AcceptConnection.Result.SystemError("Something went wrong");
         }
 

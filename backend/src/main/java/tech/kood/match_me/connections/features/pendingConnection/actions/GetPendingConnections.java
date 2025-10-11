@@ -6,11 +6,11 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
-import tech.kood.match_me.connections.features.pendingConnection.domain.api.PendingConnectionDTO;
+import tech.kood.match_me.connections.features.pendingConnection.domain.PendingConnectionDTO;
 
 import java.util.List;
 
-public class GetPendingRequests {
+public class GetPendingConnections {
 
     public record Request(
             @NotNull @Valid @JsonProperty("user_id") UserIdDTO userId

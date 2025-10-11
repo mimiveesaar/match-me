@@ -9,13 +9,13 @@ import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 import tech.kood.match_me.connections.common.domain.connectionId.ConnectionIdFactory;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.CreateConnection;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.CreateAcceptedConnection;
 import tech.kood.match_me.connections.features.acceptedConnection.domain.internal.AcceptedConnectionFactory;
 import tech.kood.match_me.connections.features.acceptedConnection.internal.mapper.AcceptedConnectionMapper;
 import tech.kood.match_me.connections.features.acceptedConnection.internal.persistance.AcceptedConnectionRepository;
 
 @Service
-public class CreateConnectionHandlerImpl implements CreateConnection.Handler {
+public class CreateAcceptedConnectionHandlerImpl implements CreateAcceptedConnection.Handler {
 
     private final Validator validator;
 
@@ -31,7 +31,7 @@ public class CreateConnectionHandlerImpl implements CreateConnection.Handler {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public CreateConnectionHandlerImpl(Validator validator, AcceptedConnectionRepository acceptedConnectionRepository, AcceptedConnectionFactory acceptedConnectionFactory, UserIdFactory userIdFactory, ConnectionIdFactory connectionIdFactory, AcceptedConnectionMapper acceptedConnectionMapper, ApplicationEventPublisher applicationEventPublisher) {
+    public CreateAcceptedConnectionHandlerImpl(Validator validator, AcceptedConnectionRepository acceptedConnectionRepository, AcceptedConnectionFactory acceptedConnectionFactory, UserIdFactory userIdFactory, ConnectionIdFactory connectionIdFactory, AcceptedConnectionMapper acceptedConnectionMapper, ApplicationEventPublisher applicationEventPublisher) {
         this.validator = validator;
         this.acceptedConnectionRepository = acceptedConnectionRepository;
         this.acceptedConnectionFactory = acceptedConnectionFactory;
@@ -43,16 +43,16 @@ public class CreateConnectionHandlerImpl implements CreateConnection.Handler {
 
     @Override
     @Transactional
-    public CreateConnection.Result handle(CreateConnection.Request request) {
+    public CreateAcceptedConnection.Result handle(CreateAcceptedConnection.Request request) {
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new CreateConnection.Result.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
+            return new CreateAcceptedConnection.Result.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         var existingConnection = acceptedConnectionRepository.findBetweenUsers(request.acceptedByUser().value(), request.acceptedUser().value());
         if (existingConnection.isPresent()) {
-            return new CreateConnection.Result.AlreadyExists();
+            return new CreateAcceptedConnection.Result.AlreadyExists();
         }
 
         try {
@@ -63,14 +63,14 @@ public class CreateConnectionHandlerImpl implements CreateConnection.Handler {
             var acceptedConnectionEntity = acceptedConnectionMapper.toEntity(acceptedConnection);
 
             acceptedConnectionRepository.save(acceptedConnectionEntity);
-            applicationEventPublisher.publishEvent(new CreateConnection.AcceptedConnectionCreated(acceptedConnectionMapper.toDTO(acceptedConnection)));
-            return new CreateConnection.Result.Success(new ConnectionIdDTO(acceptedConnection.getId().getValue()));
+            applicationEventPublisher.publishEvent(new CreateAcceptedConnection.AcceptedConnectionCreated(acceptedConnectionMapper.toDTO(acceptedConnection)));
+            return new CreateAcceptedConnection.Result.Success(new ConnectionIdDTO(acceptedConnection.getId().getValue()));
         }
         catch (CheckedConstraintViolationException e) {
-            return new CreateConnection.Result.InvalidRequest(InvalidInputErrorDTO.fromException(e));
+            return new CreateAcceptedConnection.Result.InvalidRequest(InvalidInputErrorDTO.fromException(e));
         }
         catch (Exception e) {
-            return new CreateConnection.Result.SystemError("An unexpected error occurred while processing the request.");
+            return new CreateAcceptedConnection.Result.SystemError("An unexpected error occurred while processing the request.");
         }
     }
 }

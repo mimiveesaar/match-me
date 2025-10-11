@@ -2,11 +2,11 @@ package tech.kood.match_me.connections.features.rejectedConnection.actions.getRe
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectionBetweenUsers.api.GetRejectionBetweenUsersRequest;
+import tech.kood.match_me.connections.features.rejectedConnection.actions.GetRejectionBetweenUsers;
 
-public class GetRejectionBetweenUsersValidator implements ConstraintValidator<ValidGetRejectionBetweenUsers, GetRejectionBetweenUsersRequest> {
+public class GetRejectionBetweenUsersValidator implements ConstraintValidator<ValidGetRejectionBetweenUsers, GetRejectionBetweenUsers.Request> {
     @Override
-    public boolean isValid(GetRejectionBetweenUsersRequest value, ConstraintValidatorContext context) {
+    public boolean isValid(GetRejectionBetweenUsers.Request value, ConstraintValidatorContext context) {
 
         if (value == null || value.user1() == null || value.user2() == null || value.user1().value() == null || value.user2().value() == null) {
             return false;
@@ -25,6 +25,5 @@ public class GetRejectionBetweenUsersValidator implements ConstraintValidator<Va
         }
 
         return true;
-
     }
 }

@@ -10,7 +10,7 @@ import tech.kood.match_me.connections.features.acceptedConnection.domain.api.Acc
 
 import java.util.List;
 
-public class GetConnections {
+public class GetAcceptedConnections {
 
     public record Request(
             @NotNull @Valid @JsonProperty("user_id") UserIdDTO userId

@@ -17,6 +17,10 @@ public record UserIdDTO(@NotNull UUID value) {
         return new UserIdDTO(UUID.fromString(value));
     }
 
+    public static UserIdDTO from(UUID value) {
+        return new UserIdDTO(value);
+    }
+
     @Override
     @JsonValue
     public String toString() {

@@ -2,11 +2,12 @@ package tech.kood.match_me.connections.features.rejectedConnection.actions.creat
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import tech.kood.match_me.connections.features.rejectedConnection.actions.CreateRejectedConnection;
 
-public class CreateRejectedConnectionValidator implements ConstraintValidator<ValidCreateRejectedConnection, CreateRejectedConnectionRequest> {
+public class CreateRejectedConnectionValidator implements ConstraintValidator<ValidCreateRejectedConnection, CreateRejectedConnection.Request> {
 
     @Override
-    public boolean isValid(CreateRejectedConnectionRequest value, ConstraintValidatorContext context) {
+    public boolean isValid(CreateRejectedConnection.Request value, ConstraintValidatorContext context) {
 
         // Spring runs class level validations before nested validations, why I don't know, sounds pretty dumb.
         if (

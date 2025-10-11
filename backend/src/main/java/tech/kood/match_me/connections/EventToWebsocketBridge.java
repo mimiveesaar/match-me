@@ -7,9 +7,7 @@ import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
-import tech.kood.match_me.connections.features.pendingConnection.actions.createRequest.api.ConnectionRequestCreatedEvent;
-import tech.kood.match_me.connections.features.pendingConnection.actions.declineRequest.api.ConnectionRequestDeclinedEvent;
-import tech.kood.match_me.connections.features.pendingConnection.actions.declineRequest.api.ConnectionRequestUndoEvent;
+import tech.kood.match_me.connections.features.acceptedConnection.domain.internal.AcceptedConnection;
 
 @Controller
 public class EventToWebsocketBridge {
@@ -22,8 +20,8 @@ public class EventToWebsocketBridge {
         this.userRegistry = userRegistry;
     }
 
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void onConnectionAccepted(AcceptedConnectionCreatedEvent event) {
+    /*@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void onConnectionAccepted(AcceptedConnection event) {
         var sender = event.acceptedConnectionDTO().acceptedUserId();
         var receiver = event.acceptedConnectionDTO().acceptedByUserId();
 
@@ -86,5 +84,5 @@ public class EventToWebsocketBridge {
         if (senderRegistryUser != null) {
             messaging.convertAndSendToUser(senderId.value().toString(), "/queue/connections/requests/declined", event);
         }
-    }
+    }*/
 }

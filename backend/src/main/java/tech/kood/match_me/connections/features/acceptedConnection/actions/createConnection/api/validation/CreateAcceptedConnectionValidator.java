@@ -2,12 +2,12 @@ package tech.kood.match_me.connections.features.acceptedConnection.actions.creat
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.CreateConnection;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.CreateAcceptedConnection;
 
-public class CreateAcceptedConnectionValidator implements ConstraintValidator<ValidCreateAcceptedConnection, CreateConnection.Request> {
+public class CreateAcceptedConnectionValidator implements ConstraintValidator<ValidCreateAcceptedConnection, CreateAcceptedConnection.Request> {
 
     @Override
-    public boolean isValid(CreateConnection.Request value, ConstraintValidatorContext context) {
+    public boolean isValid(CreateAcceptedConnection.Request value, ConstraintValidatorContext context) {
 
         if (
                 value == null

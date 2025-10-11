@@ -6,8 +6,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.RejectConnection;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.RejectAcceptedConnection;
 import tech.kood.match_me.connections.features.acceptedConnection.internal.persistance.AcceptedConnectionRepository;
+import tech.kood.match_me.connections.features.rejectedConnection.actions.CreateRejectedConnection;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.api.RejectedConnectionReasonDTO;
 
 import java.util.UUID;
@@ -15,14 +16,14 @@ import java.util.UUID;
 @Component
 @ApplicationLayer
 public class RejectAcceptedConnectionCommandHandlerImpl
-        implements RejectConnection.Handler {
+        implements RejectAcceptedConnection.Handler {
 
     private final AcceptedConnectionRepository acceptedConnectionRepository;
-    private final RejectConnection.Handler createRejectedConnectionCommandHandler;
+    private final CreateRejectedConnection.Handler createRejectedConnectionCommandHandler;
     private final Validator validator;
 
     public RejectAcceptedConnectionCommandHandlerImpl(
-            AcceptedConnectionRepository acceptedConnectionRepository, RejectConnection.Handler createRejectedConnectionCommandHandler, Validator validator) {
+            AcceptedConnectionRepository acceptedConnectionRepository, CreateRejectedConnection.Handler createRejectedConnectionCommandHandler, Validator validator) {
         this.acceptedConnectionRepository = acceptedConnectionRepository;
         this.createRejectedConnectionCommandHandler = createRejectedConnectionCommandHandler;
         this.validator = validator;
@@ -30,11 +31,11 @@ public class RejectAcceptedConnectionCommandHandlerImpl
 
     @Override
     @Transactional
-    public RejectConnection.Result handle(RejectConnection.Request request) {
+    public RejectAcceptedConnection.Result handle(RejectAcceptedConnection.Request request) {
 
         var validationResults = validator.validate(request);
         if (!validationResults.isEmpty()) {
-            return new RejectConnection.Result.InvalidRequest(
+            return new RejectAcceptedConnection.Result.InvalidRequest(
                     InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
@@ -45,7 +46,7 @@ public class RejectAcceptedConnectionCommandHandlerImpl
             var existingAcceptedConnectionQueryResult = acceptedConnectionRepository.findById(connectionId);
 
             if (existingAcceptedConnectionQueryResult.isEmpty()) {
-                return new RejectConnection.Result.NotFound();
+                return new RejectAcceptedConnection.Result.NotFound();
             }
 
             var acceptedConnection = existingAcceptedConnectionQueryResult.get();
@@ -54,28 +55,28 @@ public class RejectAcceptedConnectionCommandHandlerImpl
                     acceptedConnection.getAcceptedUserId() : acceptedConnection.getAcceptedByUserId());
 
 
-            var createRejectedConnectionRequest = new RejectConnection.Request(rejectedByUserId, rejectedUser, RejectedConnectionReasonDTO.CONNECTION_REMOVED);
+            var createRejectedConnectionRequest = new CreateRejectedConnection.Request(rejectedByUserId, rejectedUser, RejectedConnectionReasonDTO.CONNECTION_REMOVED);
             var createRejectedConnectionResult = createRejectedConnectionCommandHandler.handle(createRejectedConnectionRequest);
 
-            if (createRejectedConnectionResult instanceof RejectConnection.Result.SystemError systemError) {
-                return new RejectConnection.Result.SystemError(systemError.message());
+            if (createRejectedConnectionResult instanceof CreateRejectedConnection.Result.SystemError systemError) {
+                return new RejectAcceptedConnection.Result.SystemError(systemError.message());
             }
 
-            if (createRejectedConnectionResult instanceof RejectConnection.Result.InvalidRequest invalidRequest) {
-                return new RejectConnection.Result.InvalidRequest(invalidRequest.error());
+            if (createRejectedConnectionResult instanceof CreateRejectedConnection.Result.InvalidRequest invalidRequest) {
+                return new RejectAcceptedConnection.Result.InvalidRequest(invalidRequest.error());
             }
 
-            if (createRejectedConnectionResult instanceof RejectConnection.Result.AlreadyRejected) {
-                return new RejectConnection.Result.AlreadyRejected();
+            if (createRejectedConnectionResult instanceof CreateRejectedConnection.Result.AlreadyExists alreadyExists) {
+                return new RejectAcceptedConnection.Result.AlreadyRejected();
             }
 
             // Delete the accepted connection (rejecting it)
             acceptedConnectionRepository.deleteById(connectionId);
 
-            return new RejectConnection.Result.Success();
+            return new RejectAcceptedConnection.Result.Success();
 
         } catch (Exception e) {
-            return new RejectConnection.Result.SystemError(e.getMessage());
+            return new RejectAcceptedConnection.Result.SystemError(e.getMessage());
         }
     }
 }

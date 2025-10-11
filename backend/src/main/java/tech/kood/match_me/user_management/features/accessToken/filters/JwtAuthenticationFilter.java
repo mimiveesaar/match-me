@@ -14,9 +14,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenHandler;
-import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenRequest;
-import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenResults;
+import tech.kood.match_me.user_management.features.accessToken.actions.ValidateAccessToken;
 import tech.kood.match_me.user_management.features.user.actions.GetUserById;
 
 @ApplicationLayer
@@ -25,10 +23,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
-    private final ValidateAccessTokenHandler validateAccessTokenHandler;
+    private final ValidateAccessToken.Handler validateAccessTokenHandler;
     private final GetUserById.Handler getUserByIdQueryHandler;
 
-    public JwtAuthenticationFilter(ValidateAccessTokenHandler validateAccessTokenHandler, GetUserById.Handler getUserByIdQueryHandler) {
+    public JwtAuthenticationFilter(ValidateAccessToken.Handler validateAccessTokenHandler, GetUserById.Handler getUserByIdQueryHandler) {
         this.validateAccessTokenHandler = validateAccessTokenHandler;
         this.getUserByIdQueryHandler = getUserByIdQueryHandler;
     }
@@ -49,10 +47,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
-            var validationRequest = new ValidateAccessTokenRequest(jwt);
+            var validationRequest = new ValidateAccessToken.Request(jwt);
             var validationResult = validateAccessTokenHandler.handle(validationRequest);
 
-            if (validationResult instanceof ValidateAccessTokenResults.Success successResult) {
+            if (validationResult instanceof ValidateAccessToken.Result.Success successResult) {
                 var userId = successResult.userId();
 
                 var getUserByIdRequest = new GetUserById.Request(userId);
@@ -70,7 +68,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 } else if (userResult instanceof GetUserById.Result.SystemError systemError) {
                     logger.error("System error while fetching userId by ID: {} during JWT authentication. Error: {}", userId.toString(), systemError.message());
                 }
-            } else if (validationResult instanceof ValidateAccessTokenResults.InvalidToken) {
+            } else if (validationResult instanceof ValidateAccessToken.Result.InvalidToken) {
                 logger.debug("Invalid JWT token provided for authentication");
             }
         } catch (Exception e) {

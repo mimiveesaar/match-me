@@ -10,7 +10,7 @@ import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 
-public class RejectConnection {
+public class RejectAcceptedConnection {
 
     @Command
     public record Request(@NotNull @Valid @JsonProperty("connection_id") ConnectionIdDTO connectionId,
@@ -56,7 +56,4 @@ public class RejectConnection {
     public interface Handler {
         Result handle(Request request);
     }
-
-
-
 }

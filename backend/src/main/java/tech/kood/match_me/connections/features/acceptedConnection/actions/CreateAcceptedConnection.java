@@ -13,7 +13,7 @@ import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.createConnection.api.validation.ValidCreateAcceptedConnection;
 import tech.kood.match_me.connections.features.acceptedConnection.domain.api.AcceptedConnectionDTO;
 
-public class CreateConnection {
+public class CreateAcceptedConnection {
 
     @DomainEvent
     public record AcceptedConnectionCreated(@NotNull @Valid AcceptedConnectionDTO acceptedConnectionDTO) {

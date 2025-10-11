@@ -9,6 +9,7 @@ import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.connections.features.pendingConnection.actions.DeclineRequest;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.PendingConnectionRepository;
+import tech.kood.match_me.connections.features.rejectedConnection.actions.CreateRejectedConnection;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.api.RejectedConnectionReasonDTO;
 
 
@@ -17,13 +18,13 @@ import tech.kood.match_me.connections.features.rejectedConnection.domain.api.Rej
 public class DeclineConnectionCommandHandlerImpl implements DeclineRequest.Handler {
 
     private final Validator validator;
-    private final DeclineRequest.Handler createRejectedConnectionCommandHandler;
+    private final CreateRejectedConnection.Handler createRejectedConnectionHandler;
     private final PendingConnectionRepository pendingConnectionRepository;
     private final ApplicationEventPublisher eventPublisher;
 
-    public DeclineConnectionCommandHandlerImpl(Validator validator, DeclineRequest.Handler createRejectedConnectionCommandHandler, PendingConnectionRepository pendingConnectionRepository, ApplicationEventPublisher eventPublisher) {
+    public DeclineConnectionCommandHandlerImpl(Validator validator, CreateRejectedConnection.Handler createRejectedConnectionHandler, PendingConnectionRepository pendingConnectionRepository, ApplicationEventPublisher eventPublisher) {
         this.validator = validator;
-        this.createRejectedConnectionCommandHandler = createRejectedConnectionCommandHandler;
+        this.createRejectedConnectionHandler = createRejectedConnectionHandler;
         this.pendingConnectionRepository = pendingConnectionRepository;
         this.eventPublisher = eventPublisher;
     }
@@ -58,12 +59,12 @@ public class DeclineConnectionCommandHandlerImpl implements DeclineRequest.Handl
         }
         //Decline the pending connection request and create a rejected connection.
         else {
-            var createRejectedConnectionRequest = new DeclineRequest.Request(request.declinedByUser(), new UserIdDTO(pendingConnectionEntity.getSenderId()), RejectedConnectionReasonDTO.CONNECTION_DECLINED);
+            var createRejectedConnectionRequest = new CreateRejectedConnection.Request(request.declinedByUser(), new UserIdDTO(pendingConnectionEntity.getSenderId()), RejectedConnectionReasonDTO.CONNECTION_DECLINED);
 
-            var result = createRejectedConnectionCommandHandler.handle(createRejectedConnectionRequest);
+            var result = createRejectedConnectionHandler.handle(createRejectedConnectionRequest);
 
             //Handle errors, in real application we would handle retries.
-            if (!(result instanceof DeclineRequest.Result.Success success)) {
+            if (!(result instanceof CreateRejectedConnection.Result.Success success)) {
                 return new DeclineRequest.Result.SystemError("Something went wrong");
             }
 

@@ -7,7 +7,7 @@ import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 import tech.kood.match_me.connections.common.domain.connectionId.ConnectionIdFactory;
-import tech.kood.match_me.connections.features.pendingConnection.domain.api.PendingConnectionDTO;
+import tech.kood.match_me.connections.features.pendingConnection.domain.PendingConnectionDTO;
 import tech.kood.match_me.connections.features.pendingConnection.domain.internal.PendingConnection;
 import tech.kood.match_me.connections.features.pendingConnection.domain.internal.PendingConnectionFactory;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.pendingConnectionEntity.PendingConnectionEntity;

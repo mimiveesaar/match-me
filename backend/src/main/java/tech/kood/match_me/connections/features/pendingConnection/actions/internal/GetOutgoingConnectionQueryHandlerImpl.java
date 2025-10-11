@@ -4,7 +4,7 @@ import jakarta.validation.Validator;
 import org.springframework.stereotype.Service;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.connections.features.pendingConnection.actions.GetOutgoingRequests;
-import tech.kood.match_me.connections.features.pendingConnection.domain.api.PendingConnectionDTO;
+import tech.kood.match_me.connections.features.pendingConnection.domain.PendingConnectionDTO;
 import tech.kood.match_me.connections.features.pendingConnection.internal.mapper.PendingConnectionMapper;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.PendingConnectionRepository;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.pendingConnectionEntity.PendingConnectionEntity;

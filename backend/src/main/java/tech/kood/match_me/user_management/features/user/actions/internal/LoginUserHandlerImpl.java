@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.common.domain.internal.password.PasswordFactory;
-import tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api.CreateAccessTokenCommandHandler;
+import tech.kood.match_me.user_management.features.accessToken.actions.CreateAccessToken;
 import tech.kood.match_me.user_management.features.refreshToken.actions.CreateRefreshToken;
 import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenDTO;
 import tech.kood.match_me.user_management.features.user.actions.LoginUser;
@@ -29,7 +29,7 @@ public class LoginUserHandlerImpl implements LoginUser.Handler {
 
     public LoginUserHandlerImpl(UserRepository userRepository,
                                 CreateRefreshToken.Handler createRefreshTokenCommandHandler,
-                                CreateAccessTokenCommandHandler createAccessTokenCommandHandler,
+                                CreateAccessToken.Handler createAccessTokenCommandHandler,
                                 ApplicationEventPublisher events,
                                 HashedPasswordFactory hashedPasswordFactory,
                                 PasswordFactory passwordFactory,
