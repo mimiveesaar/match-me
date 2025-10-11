@@ -67,13 +67,13 @@ export const MyProfilePage = ({
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-10">
+    <div className="flex flex-col lg:flex-row gap-5">
 
-        <div className="flex flex-col gap-4 px-2">
+        <div className="flex flex-col gap-4 px-6">
         <ProfileCard profile={profile} setProfile={setProfile} />
       </div>
 
-        <div className="flex flex-col gap-4 w-full lg:w-[500px] px-2">
+        <div className="flex flex-col gap-4 w-full lg:w-[500px] px-6">
           <div className="bg-olive rounded-custom-16 p-6 drop-shadow-custom lg:min-h-[18rem] flex flex-col justify-start">
           <span className="mb-2 text-base italic text-ivory">/bio</span>
           <MultiLineInputField
@@ -89,7 +89,7 @@ export const MyProfilePage = ({
           setSelected={setSelectedInterests}
         />
 
-        <div className="flex items-center justify-center mt-4">
+        <div className="flex items-center justify-center mt-4 mb-4">
           <button
             onClick={handleSave}
             disabled={isLoading}
