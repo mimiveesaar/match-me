@@ -187,7 +187,7 @@ function Chatspace({ userId }: { userId: string }) {
                     </div>
                 </section>
 
-                <aside className="px-4 lg:w-72 md:mt-24 lg:mt-24 lg:flex lg:flex-col">
+                <aside className="px-4 mb-4 lg:w-72 md:mt-24 lg:mt-24 lg:flex lg:flex-col">
                     <ConnectionsMenu
                         users={enrichedUsers}
                         onSelectUser={async (otherUserId) => {

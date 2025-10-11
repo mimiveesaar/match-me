@@ -76,7 +76,7 @@ export default function MyProfile() {
 
   return (
 
-    <div className="flex flex-col lg:flex-row gap-8 mt-24">
+    <div className="flex flex-col lg:flex-row gap-8 mt-2 lg:mt-24">
       <div className="flex flex-col gap-4">
 
         <MyProfilePage
