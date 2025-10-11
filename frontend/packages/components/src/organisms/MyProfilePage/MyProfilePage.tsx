@@ -19,58 +19,112 @@ export const MyProfilePage = ({
   );
 
   const [selectedInterests, setSelectedInterests] = useState<string[]>(
-    initialProfile?.interestIds?.map(String) || []
+    initialProfile?.interestIds || []
   );
 
   const [profile, setProfile] = useState({
-    name: "Xylar of Nebulon-5",
-    age: "458",
-    bodyform: "Spherioformes",
-    lookingfor: "Romance",
-    planet: "Nebulon-5",
-    ...initialProfile
+    name: initialProfile?.name || initialProfile?.username || "Xylar of Nebulon-5",
+    age: initialProfile?.age || "458",
+    bodyformId: initialProfile?.bodyformId || "",
+    lookingForId: initialProfile?.lookingForId || "",
+    homeplanetId: initialProfile?.homeplanetId || "",
+    profilePic: initialProfile?.profilePic || "https://example.com/default.jpg"
   });
 
   const [isLoading, setIsLoading] = useState(false);
 
+  // Update local state when initialProfile changes
   useEffect(() => {
     if (initialProfile) {
-      setBio(initialProfile.bio || bio);
-      setSelectedInterests(initialProfile.interestIds?.map(String) || []);
-      setProfile(prev => ({ ...prev, ...initialProfile }));
+      console.log("MyProfilePage: Received initialProfile:", initialProfile);
+      
+      const newProfile = {
+        name: initialProfile.name || initialProfile.username || "",
+        age: String(initialProfile.age || ""),
+        bodyformId: initialProfile.bodyformId || "",
+        lookingForId: initialProfile.lookingForId || "",
+        homeplanetId: initialProfile.homeplanetId || "",
+        profilePic: initialProfile.profilePic || "https://example.com/default.jpg"
+      };
+
+      console.log("MyProfilePage: Setting profile to:", newProfile);
+      setProfile(newProfile);
+      setBio(initialProfile.bio || "");
+      setSelectedInterests(initialProfile.interestIds || []);
     }
-  }, [initialProfile]);
+  }, [initialProfile?.id]); // Only re-run when the profile ID changes
 
   const handleSave = async () => {
+    console.log("\n=== MyProfilePage: handleSave clicked ===");
+    console.log("Current profile state:", profile);
+    console.log("Current bio:", bio);
+    console.log("Current selectedInterests:", selectedInterests);
+
     const fullProfile = {
-      homeplanetId: profile.homeplanetId || 1,
-      bodyformId: profile.bodyformId || 1,
-      lookingForId: profile.lookingForId || 1,
-      bio,
-      interestIds: selectedInterests.map(Number),
-      profilePic: profile.profilePic || "https://example.com/default.jpg"
+      name: profile.name,
+      age: profile.age ? Number(profile.age) : null,
+      homeplanetId: profile.homeplanetId || null,
+      bodyformId: profile.bodyformId || null,
+      lookingForId: profile.lookingForId || null,
+      bio: bio,
+      interestIds: selectedInterests.filter(id => id != null),
+      profilePic: profile.profilePic
     };
+
+    console.log("Prepared profile data to save:", JSON.stringify(fullProfile, null, 2));
 
     setIsLoading(true);
 
     try {
       if (onSave) {
+        console.log("Calling onSave handler...");
         await onSave(fullProfile);
+        console.log("✓ onSave completed");
       } else {
-        console.log("Saving profile:", fullProfile);
+        console.warn("⚠ No onSave handler provided");
       }
     } catch (error) {
-      console.error("Error saving profile:", error);
+      console.error("❌ Error in handleSave:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Log whenever profile changes
+  useEffect(() => {
+    console.log("Profile state changed:", profile);
+  }, [profile]);
+
+  useEffect(() => {
+    console.log("Bio changed:", bio);
+  }, [bio]);
+
+  useEffect(() => {
+    console.log("Selected interests changed:", selectedInterests);
+  }, [selectedInterests]);
+
+  console.log("MyProfilePage render - current states:", {
+    profile,
+    bio: bio.substring(0, 50) + "...",
+    interestCount: selectedInterests.length
+  });
 
   return (
     <div className="flex flex-col lg:flex-row gap-5">
 
         <div className="flex flex-col gap-4 px-6">
         <ProfileCard profile={profile} setProfile={setProfile} />
+        
+        {/* Debug info - remove in production */}
+        <div className="bg-gray-100 p-4 rounded text-xs">
+          <div className="font-bold mb-2">Debug Info:</div>
+          <div>Name: {profile.name}</div>
+          <div>Age: {profile.age}</div>
+          <div>BodyformId: {profile.bodyformId || "(empty)"}</div>
+          <div>LookingForId: {profile.lookingForId || "(empty)"}</div>
+          <div>HomeplanetId: {profile.homeplanetId || "(empty)"}</div>
+          <div>Interests: {selectedInterests.length}</div>
+        </div>
       </div>
 
         <div className="flex flex-col gap-4 w-full lg:w-[500px] px-6">
@@ -79,7 +133,10 @@ export const MyProfilePage = ({
           <MultiLineInputField
             placeholder="Bio (optional)"
             value={bio}
-            onChange={(e) => setBio(e.target.value)}
+            onChange={(e) => {
+              console.log("Bio changing to:", e.target.value);
+              setBio(e.target.value);
+            }}
             id="bio"
           />
         </div>
@@ -91,10 +148,14 @@ export const MyProfilePage = ({
 
         <div className="flex items-center justify-center mt-4 mb-4">
           <button
-            onClick={handleSave}
+            onClick={() => {
+              console.log("Save button clicked!");
+              handleSave();
+            }}
             disabled={isLoading}
-            className={`flex items-center gap-2 bg-olive hover:bg-amberglow text-white font-semibold py-2 px-4 rounded-xl shadow-md transition-all duration-200 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+            className={`flex items-center gap-2 bg-olive hover:bg-amberglow text-white font-semibold py-2 px-4 rounded-xl shadow-md transition-all duration-200 ${
+              isLoading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
             {isLoading ? 'Saving...' : 'Save Changes'}
           </button>

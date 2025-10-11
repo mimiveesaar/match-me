@@ -1,100 +1,138 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LabeledInputField } from "../../molecules/LabeledInputField/LabeledInputField";
 import { LabeledSelectField } from "../../atoms/LabeledSelectField/LabeledSelectField";
 
-export const ProfileCard = ({
-  profile,
-  setProfile,
-}: {
-  profile: {
-    name: string;
-    age: string;
-    bodyform: string;
-    lookingfor: string;
-    planet: string;
+interface Option {
+  id: string;
+  name: string;
+}
+
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
+export const ProfileCard = ({ profile, setProfile }: any) => {
+  const [bodyformOptions, setBodyformOptions] = useState<SelectOption[]>([]);
+  const [lookingforOptions, setLookingforOptions] = useState<SelectOption[]>([]);
+  const [planetOptions, setPlanetOptions] = useState<SelectOption[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const API_BASE_URL = "http://localhost:8080/api";
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        setLoading(true);
+        
+        const [bodyformsRes, lookingForRes, planetsRes] = await Promise.all([
+          fetch(`${API_BASE_URL}/bodyforms`),
+          fetch(`${API_BASE_URL}/looking-for`),
+          fetch(`${API_BASE_URL}/homeplanets`),
+        ]);
+
+        const bodyforms: Option[] = await bodyformsRes.json();
+        const lookingFor: Option[] = await lookingForRes.json();
+        const planets: Option[] = await planetsRes.json();
+
+        setBodyformOptions(bodyforms.map(item => ({ value: item.id, label: item.name })));
+        setLookingforOptions(lookingFor.map(item => ({ value: item.id, label: item.name })));
+        setPlanetOptions(planets.map(item => ({ value: item.id, label: item.name })));
+      } catch (err) {
+        console.error("Error fetching options:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOptions();
+  }, []);
+
+  const handleInputChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    console.log(`ProfileCard: Updating ${field} to "${newValue}"`);
+    setProfile({ ...profile, [field]: newValue });
   };
-  setProfile: (p: typeof profile) => void;
-}) => {
-  const handleInputChange = (field: keyof typeof profile) => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setProfile({ ...profile, [field]: e.target.value });
+
+  const handleSelectChange = (field: string) => (value: string) => {
+    console.log(`ProfileCard: Updating ${field} to "${value}"`);
+    setProfile({ ...profile, [field]: value });
   };
 
-  const handleSelectChange = (field: keyof typeof profile) => (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setProfile({ ...profile, [field]: e.target.value });
-  };
+  if (loading) {
+    return (
+      <div className="bg-amberglow rounded-custom-16 p-6 drop-shadow-custom w-full lg:w-80">
+        <div className="flex items-center justify-center h-64">
+          <p className="text-center text-lg">Loading options...</p>
+        </div>
+      </div>
+    );
+  }
 
-  const bodyformOptions = [
-    { value: "humanoid", label: "Humanoid" },
-    { value: "gelatinous", label: "Gelatinous" },
-    { value: "tentacled", label: "Tentacled" },
-    { value: "other", label: "Other" },
-  ];
+  // Get values with fallbacks
+  const displayName = profile?.name || profile?.username || "";
+  const displayAge = String(profile?.age || "");
+  const displayBodyform = profile?.bodyformId || "";
+  const displayLookingFor = profile?.lookingForId || "";
+  const displayPlanet = profile?.homeplanetId || "";
 
-  const lookingforOptions = [
-    { value: "friendship", label: "Friendship" },
-    { value: "love", label: "Love" },
-    { value: "adventure", label: "Adventure" },
-  ];
-
-  const planetOptions = [
-    { value: "earth", label: "Earth" },
-    { value: "mars", label: "Mars" },
-    { value: "venus", label: "Venus" },
-    { value: "kepler22b", label: "Kepler-22b" },
-  ];
+  console.log("ProfileCard: Current display values:", {
+    name: displayName,
+    age: displayAge,
+    bodyformId: displayBodyform,
+    lookingForId: displayLookingFor,
+    homeplanetId: displayPlanet,
+  });
 
   return (
     <div className="bg-amberglow rounded-custom-16 p-6 drop-shadow-custom w-full lg:w-80">
       <img
         src="https://i.imgur.com/0y8Ftya.png"
         alt="alien"
-        className="rounded-custom-16 drop-shadow-custom-2 mb-4 w-full object-cover h-40 "
+        className="rounded-custom-16 drop-shadow-custom-2 mb-4 w-full object-cover h-40"
       />
 
       <LabeledInputField
         label="name"
-        value={profile.name}
+        value={displayName}
         onChange={handleInputChange("name")}
-        placeholder=""
+        placeholder="Enter your name"
       />
+      
       <LabeledInputField
         label="age"
-        value={profile.age}
+        value={displayAge}
         onChange={handleInputChange("age")}
-        placeholder=""
+        placeholder="Enter your age"
       />
 
       <LabeledSelectField
         id="bodyform"
         label="/bodyform"
-        value={profile.bodyform}
-        onChange={handleSelectChange("bodyform")}
-        options={bodyformOptions} setValue={function (value: string): void {
-          throw new Error("Function not implemented.");
-        } }      />
+        value={displayBodyform}
+        onChange={(e) => handleSelectChange("bodyformId")(e.target.value)}
+        options={bodyformOptions}
+        setValue={handleSelectChange("bodyformId")}
+      />
 
       <LabeledSelectField
-        id="looking for"
+        id="lookingfor"
         label="/lookingfor"
-        value={profile.lookingfor}
-        onChange={handleSelectChange("lookingfor")}
-        options={lookingforOptions} setValue={function (value: string): void {
-          throw new Error("Function not implemented.");
-        } }      />
+        value={displayLookingFor}
+        onChange={(e) => handleSelectChange("lookingForId")(e.target.value)}
+        options={lookingforOptions}
+        setValue={handleSelectChange("lookingForId")}
+      />
 
       <LabeledSelectField
         id="planet"
         label="/planet"
-        value={profile.planet}
-        onChange={handleSelectChange("planet")}
-        options={planetOptions} setValue={function (value: string): void {
-          throw new Error("Function not implemented.");
-        } }      />
+        value={displayPlanet}
+        onChange={(e) => handleSelectChange("homeplanetId")(e.target.value)}
+        options={planetOptions}
+        setValue={handleSelectChange("homeplanetId")}
+      />
     </div>
   );
 };

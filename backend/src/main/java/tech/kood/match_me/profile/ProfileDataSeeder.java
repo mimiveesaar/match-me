@@ -1,39 +1,42 @@
 package tech.kood.match_me.profile;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import tech.kood.match_me.profile.model.*;
+import tech.kood.match_me.profile.repository.*;
+
+import java.util.UUID;
 
 @Component
 public class ProfileDataSeeder implements CommandLineRunner {
 
     @Autowired
-    @Qualifier("profileManagementJdbcTemplate")
-    private JdbcTemplate jdbcTemplate;
+    private BodyformRepository bodyformRepository;
+    
+    @Autowired
+    private HomeplanetRepository homeplanetRepository;
+    
+    @Autowired
+    private LookingForRepository lookingForRepository;
+    
+    @Autowired
+    private InterestRepository interestRepository;
+    
+    @Autowired
+    private ProfileRepository profileRepository;
 
     @Override
     public void run(String... args) throws Exception {
         System.out.println("\n=== SEEDING PROFILE DATA ===");
-        System.out.println("Seeder is running with args: " + String.join(", ", args));
         
         try {
-            // Test database connection first
-            testConnection();
-            
-            // Check if tables exist
-            verifyTablesExist();
-            
-            // Seed data
-            ensureUserIdColumnExists();
             seedBodyforms();
             seedHomeplanets();
             seedLookingFor();
             seedInterests();
             seedTestProfiles();
             
-            // Verify results
             verifyData();
             
             System.out.println("=== PROFILE DATA SEEDING COMPLETE ===\n");
@@ -44,76 +47,30 @@ public class ProfileDataSeeder implements CommandLineRunner {
         }
     }
 
-    private void testConnection() {
-        try {
-            String dbName = jdbcTemplate.queryForObject("SELECT current_database()", String.class);
-            System.out.println("✅ Connected to database: " + dbName);
-            
-            String user = jdbcTemplate.queryForObject("SELECT current_user", String.class);
-            System.out.println("✅ Connected as user: " + user);
-        } catch (Exception e) {
-            System.err.println("❌ Database connection failed: " + e.getMessage());
-            throw new RuntimeException("Cannot connect to database", e);
-        }
-    }
-
-    private void verifyTablesExist() {
-        System.out.println("\n--- Verifying Tables ---");
-        String[] tables = {"bodyforms", "homeplanets", "looking_for", "interests", "profiles"};
-        boolean allExist = true;
-        
-        for (String table : tables) {
-            try {
-                jdbcTemplate.queryForObject("SELECT COUNT(*) FROM " + table, Integer.class);
-                System.out.println("✅ Table exists: " + table);
-            } catch (Exception e) {
-                System.err.println("❌ Table missing or inaccessible: " + table);
-                System.err.println("   Error: " + e.getMessage());
-                allExist = false;
-            }
-        }
-        
-        if (!allExist) {
-            throw new RuntimeException("Some required tables are missing. Check your schema creation.");
-        }
-        System.out.println("--- All Required Tables Exist ---\n");
-    }
-
-    private void ensureUserIdColumnExists() {
-        System.out.println("--- Ensuring user_id column ---");
-        try {
-            jdbcTemplate.execute(
-                "ALTER TABLE profiles ADD COLUMN IF NOT EXISTS user_id uuid UNIQUE NOT NULL DEFAULT gen_random_uuid()"
-            );
-            System.out.println("✅ Ensured user_id column exists on profiles table\n");
-        } catch (Exception e) {
-            System.err.println("⚠️ Could not add user_id column: " + e.getMessage() + "\n");
-        }
-    }
-
     private void seedBodyforms() {
         System.out.println("🌱 Seeding bodyforms...");
         String[] bodyforms = {"Gelatinous", "Tentacled", "Humanoid", "Energy-Based", "Mechanical",
                 "Insectoid", "Reptilian", "Gas Cloud", "Crystalline", "Mimetic Blob"};
+        
         int inserted = 0;
         int skipped = 0;
         
-        for (String b : bodyforms) {
+        for (String name : bodyforms) {
             try {
-                int rows = jdbcTemplate.update(
-                    "INSERT INTO bodyforms (name) VALUES (?) ON CONFLICT (name) DO NOTHING", b
-                );
-                if (rows > 0) {
+                if (!bodyformRepository.existsByName(name)) {
+                    Bodyform bodyform = new Bodyform();
+                    bodyform.setName(name);
+                    bodyformRepository.save(bodyform);
                     inserted++;
-                    System.out.println("  ✅ Inserted: " + b);
+                    System.out.println("  ✅ Inserted: " + name);
                 } else {
                     skipped++;
                 }
             } catch (Exception e) {
-                System.err.println("  ❌ Failed to insert " + b + ": " + e.getMessage());
+                System.err.println("  ❌ Failed to insert " + name + ": " + e.getMessage());
             }
         }
-        System.out.println("📊 Bodyforms: " + inserted + " inserted, " + skipped + " skipped (already exist)\n");
+        System.out.println("📊 Bodyforms: " + inserted + " inserted, " + skipped + " skipped\n");
     }
 
     private void seedHomeplanets() {
@@ -121,22 +78,23 @@ public class ProfileDataSeeder implements CommandLineRunner {
         String[] homeplanets = {"Xeron-5", "Draknor", "Vega Prime", "Bloop-X12", "Zal'Tek Major",
                 "Nimbus-9", "Krylon Beta", "Nova Eden", "Tharnis", "Quarnyx Delta", "Glooporia",
                 "Skarn", "Uvuul-4", "Oortania", "Vrexalon"};
+        
         int inserted = 0;
         int skipped = 0;
         
-        for (String h : homeplanets) {
+        for (String name : homeplanets) {
             try {
-                int rows = jdbcTemplate.update(
-                    "INSERT INTO homeplanets (name) VALUES (?) ON CONFLICT (name) DO NOTHING", h
-                );
-                if (rows > 0) {
+                if (!homeplanetRepository.existsByName(name)) {
+                    Homeplanet homeplanet = new Homeplanet();
+                    homeplanet.setName(name);
+                    homeplanetRepository.save(homeplanet);
                     inserted++;
-                    System.out.println("  ✅ Inserted: " + h);
+                    System.out.println("  ✅ Inserted: " + name);
                 } else {
                     skipped++;
                 }
             } catch (Exception e) {
-                System.err.println("  ❌ Failed to insert " + h + ": " + e.getMessage());
+                System.err.println("  ❌ Failed to insert " + name + ": " + e.getMessage());
             }
         }
         System.out.println("📊 Homeplanets: " + inserted + " inserted, " + skipped + " skipped\n");
@@ -146,22 +104,23 @@ public class ProfileDataSeeder implements CommandLineRunner {
         System.out.println("💕 Seeding looking_for...");
         String[] lookingFor = {"Friendship", "Romance", "Strategic Alliance",
                 "Co-parenting Hatchlings", "Host Symbiosis", "Chtulhu"};
+        
         int inserted = 0;
         int skipped = 0;
         
-        for (String l : lookingFor) {
+        for (String name : lookingFor) {
             try {
-                int rows = jdbcTemplate.update(
-                    "INSERT INTO looking_for (name) VALUES (?) ON CONFLICT (name) DO NOTHING", l
-                );
-                if (rows > 0) {
+                if (!lookingForRepository.existsByName(name)) {
+                    LookingFor lf = new LookingFor();
+                    lf.setName(name);
+                    lookingForRepository.save(lf);
                     inserted++;
-                    System.out.println("  ✅ Inserted: " + l);
+                    System.out.println("  ✅ Inserted: " + name);
                 } else {
                     skipped++;
                 }
             } catch (Exception e) {
-                System.err.println("  ❌ Failed to insert " + l + ": " + e.getMessage());
+                System.err.println("  ❌ Failed to insert " + name + ": " + e.getMessage());
             }
         }
         System.out.println("📊 Looking_for: " + inserted + " inserted, " + skipped + " skipped\n");
@@ -179,21 +138,22 @@ public class ProfileDataSeeder implements CommandLineRunner {
                 "Exoplanet Exploration", "Star Map Reading", "Galactic Diplomacy", "Gardening",
                 "Interstellar DJing", "Teleportation Tricks", "Brewing", "Droid Repair",
                 "Cryptography", "Wormhole Jumping"};
+        
         int inserted = 0;
         int skipped = 0;
         
-        for (String i : interests) {
+        for (String name : interests) {
             try {
-                int rows = jdbcTemplate.update(
-                    "INSERT INTO interests (name) VALUES (?) ON CONFLICT (name) DO NOTHING", i
-                );
-                if (rows > 0) {
+                if (!interestRepository.existsByName(name)) {
+                    Interest interest = new Interest();
+                    interest.setName(name);
+                    interestRepository.save(interest);
                     inserted++;
                 } else {
                     skipped++;
                 }
             } catch (Exception e) {
-                System.err.println("  ❌ Failed to insert " + i + ": " + e.getMessage());
+                System.err.println("  ❌ Failed to insert " + name + ": " + e.getMessage());
             }
         }
         System.out.println("📊 Interests: " + inserted + " inserted, " + skipped + " skipped\n");
@@ -204,20 +164,37 @@ public class ProfileDataSeeder implements CommandLineRunner {
         int inserted = 0;
         int failed = 0;
         
+        // Get first entities to use as references
+        Homeplanet homeplanet = homeplanetRepository.findAll().stream().findFirst().orElse(null);
+        Bodyform bodyform = bodyformRepository.findAll().stream().findFirst().orElse(null);
+        LookingFor lookingFor = lookingForRepository.findAll().stream().findFirst().orElse(null);
+        
+        if (homeplanet == null || bodyform == null || lookingFor == null) {
+            System.err.println("❌ Cannot seed profiles: missing reference data");
+            System.err.println("   Make sure bodyforms, homeplanets, and looking_for are seeded first");
+            return;
+        }
+        
         for (int i = 1; i <= 5; i++) {
             String username = "testuser" + i;
-            String bio = "This is a test bio for " + username;
-            String profilePic = "https://example.com/" + username + ".jpg";
-
+            
             try {
-                int rows = jdbcTemplate.update(
-                    "INSERT INTO profiles (user_id, username, age, bio, profile_pic, homeplanet_id, bodyform_id, looking_for_id) " +
-                    "VALUES (gen_random_uuid(), ?, ?, ?, ?, 1, 1, 1) ON CONFLICT (username) DO NOTHING",
-                    username, 20 + i, bio, profilePic
-                );
-                if (rows > 0) {
+                if (!profileRepository.existsByUsername(username)) {
+                    Profile profile = new Profile();
+                    profile.setUserId(UUID.randomUUID());
+                    profile.setUsername(username);
+                    profile.setAge(20 + i);
+                    profile.setBio("This is a test bio for " + username);
+                    profile.setProfilePic("https://example.com/" + username + ".jpg");
+                    profile.setHomeplanet(homeplanet);
+                    profile.setBodyform(bodyform);
+                    profile.setLookingFor(lookingFor);
+                    
+                    profileRepository.save(profile);
                     inserted++;
                     System.out.println("  ✅ Inserted profile: " + username);
+                } else {
+                    System.out.println("  ⏭️  Profile already exists: " + username);
                 }
             } catch (Exception e) {
                 failed++;
@@ -229,16 +206,24 @@ public class ProfileDataSeeder implements CommandLineRunner {
 
     private void verifyData() {
         System.out.println("--- Final Data Verification ---");
-        String[] tables = {"bodyforms", "homeplanets", "looking_for", "interests", "profiles"};
         
-        for (String table : tables) {
-            try {
-                Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM " + table, Integer.class);
-                System.out.println("📊 Table " + table + " has " + count + " rows");
-            } catch (Exception e) {
-                System.err.println("⚠️ Cannot count rows in " + table + ": " + e.getMessage());
-            }
+        try {
+            long bodyformCount = bodyformRepository.count();
+            long homeplanetCount = homeplanetRepository.count();
+            long lookingForCount = lookingForRepository.count();
+            long interestCount = interestRepository.count();
+            long profileCount = profileRepository.count();
+            
+            System.out.println("📊 Table bodyforms has " + bodyformCount + " rows");
+            System.out.println("📊 Table homeplanets has " + homeplanetCount + " rows");
+            System.out.println("📊 Table looking_for has " + lookingForCount + " rows");
+            System.out.println("📊 Table interests has " + interestCount + " rows");
+            System.out.println("📊 Table profiles has " + profileCount + " rows");
+            
+        } catch (Exception e) {
+            System.err.println("⚠️ Cannot verify data: " + e.getMessage());
         }
+        
         System.out.println("--- Verification Complete ---\n");
     }
 }

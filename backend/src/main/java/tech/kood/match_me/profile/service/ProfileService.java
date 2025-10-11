@@ -30,7 +30,7 @@ public class ProfileService {
     private final BodyformRepository bodyformRepo;
     private final LookingForRepository lookingForRepo;
     private final InterestRepository interestRepo;
-    
+
     public ApplicationEventPublisher eventPublisher;
 
     public ProfileService(ProfileRepository profileRepo, HomeplanetRepository homeplanetRepo,
@@ -48,44 +48,95 @@ public class ProfileService {
 
     @Transactional("profileManagementTransactionManager")
     public ProfileViewDTO saveOrUpdateProfile(ProfileDTO dto) {
-        Profile profile = getMyProfile(); // get or create current user's profile
+        System.out.println("=== SERVICE: saveOrUpdateProfile called ===");
+        System.out.println("DTO received: " + dto);
 
-        if (dto.getUsername() != null)
+        Profile profile = getMyProfile();
+        System.out.println("Current profile ID: " + profile.getId());
+        System.out.println("Current profile bodyform: " + (profile.getBodyform() != null ? profile.getBodyform().getName() : "null"));
+        System.out.println("Current profile homeplanet: " + (profile.getHomeplanet() != null ? profile.getHomeplanet().getName() : "null"));
+        System.out.println("Current profile lookingFor: " + (profile.getLookingFor() != null ? profile.getLookingFor().getName() : "null"));
+
+        if (dto.getUsername() != null) {
             profile.setUsername(dto.getUsername());
-        else if (dto.getName() != null)
+            System.out.println("✓ Updated username to: " + dto.getUsername());
+        } else if (dto.getName() != null) {
             profile.setUsername(dto.getName());
-
-        if (dto.getAge() != null)
-            profile.setAge(dto.getAge());
-
-        if (dto.getHomeplanetId() != null)
-            profile.setHomeplanet(homeplanetRepo.findById(dto.getHomeplanetId())
-                    .orElseThrow(() -> new RuntimeException("Homeplanet not found")));
-
-        if (dto.getBodyformId() != null)
-            profile.setBodyform(bodyformRepo.findById(dto.getBodyformId())
-                    .orElseThrow(() -> new RuntimeException("Bodyform not found")));
-
-        if (dto.getLookingForId() != null)
-            profile.setLookingFor(lookingForRepo.findById(dto.getLookingForId())
-                    .orElseThrow(() -> new RuntimeException("LookingFor not found")));
-
-        if (dto.getBio() != null)
-            profile.setBio(dto.getBio());
-
-        if (dto.getInterestIds() != null && !dto.getInterestIds().isEmpty()) {
-            profile.getInterests().clear();
-            profile.setInterests(dto.getInterestIds().stream()
-                    .map(id -> interestRepo.findById(id)
-                            .orElseThrow(() -> new RuntimeException("Interest not found: " + id)))
-                    .collect(Collectors.toSet()));
+            System.out.println("✓ Updated username from name field to: " + dto.getName());
         }
 
-        if (dto.getProfilePic() != null)
-            profile.setProfilePic(dto.getProfilePic());
+        if (dto.getAge() != null) {
+            profile.setAge(dto.getAge());
+            System.out.println("✓ Updated age to: " + dto.getAge());
+        }
 
+        if (dto.getHomeplanetId() != null) {
+            System.out.println("Attempting to update homeplanet with ID: " + dto.getHomeplanetId());
+            var homeplanet = homeplanetRepo.findById(dto.getHomeplanetId())
+                    .orElseThrow(() -> new RuntimeException("Homeplanet not found: " + dto.getHomeplanetId()));
+            profile.setHomeplanet(homeplanet);
+            System.out.println("✓ Updated homeplanet to: " + homeplanet.getName() + " (ID: " + homeplanet.getId() + ")");
+        }
+
+        if (dto.getBodyformId() != null) {
+            System.out.println("Attempting to update bodyform with ID: " + dto.getBodyformId());
+            var bodyform = bodyformRepo.findById(dto.getBodyformId())
+                    .orElseThrow(() -> new RuntimeException("Bodyform not found: " + dto.getBodyformId()));
+            profile.setBodyform(bodyform);
+            System.out.println("✓ Updated bodyform to: " + bodyform.getName() + " (ID: " + bodyform.getId() + ")");
+        }
+
+        if (dto.getLookingForId() != null) {
+            System.out.println("Attempting to update lookingFor with ID: " + dto.getLookingForId());
+            var lookingFor = lookingForRepo.findById(dto.getLookingForId())
+                    .orElseThrow(() -> new RuntimeException("LookingFor not found: " + dto.getLookingForId()));
+            profile.setLookingFor(lookingFor);
+            System.out.println("✓ Updated lookingFor to: " + lookingFor.getName() + " (ID: " + lookingFor.getId() + ")");
+        }
+
+        if (dto.getBio() != null) {
+            profile.setBio(dto.getBio());
+            System.out.println("✓ Updated bio (length: " + dto.getBio().length() + ")");
+        }
+
+        if (dto.getInterestIds() != null) {
+            System.out.println("Processing interests, received count: " + dto.getInterestIds().size());
+            profile.getInterests().clear();
+            if (!dto.getInterestIds().isEmpty()) {
+                var interests = dto.getInterestIds().stream()
+                        .filter(id -> id != null)
+                        .map(id -> {
+                            System.out.println("  Looking up interest with ID: " + id);
+                            return interestRepo.findById(id)
+                                    .orElseThrow(() -> new RuntimeException("Interest not found: " + id));
+                        })
+                        .collect(Collectors.toSet());
+                profile.setInterests(interests);
+                System.out.println("✓ Updated interests, count: " + interests.size());
+            } else {
+                System.out.println("✓ Cleared all interests (empty list received)");
+            }
+        }
+
+        if (dto.getProfilePic() != null) {
+            profile.setProfilePic(dto.getProfilePic());
+            System.out.println("✓ Updated profilePic to: " + dto.getProfilePic());
+        }
+
+        System.out.println("\n=== Saving profile to database ===");
         Profile saved = profileRepo.saveAndFlush(profile);
-        return toViewDTO(saved);
+        System.out.println("✓ Profile saved with ID: " + saved.getId());
+        System.out.println("Saved bodyform: " + (saved.getBodyform() != null ? saved.getBodyform().getName() : "null"));
+        System.out.println("Saved homeplanet: " + (saved.getHomeplanet() != null ? saved.getHomeplanet().getName() : "null"));
+        System.out.println("Saved lookingFor: " + (saved.getLookingFor() != null ? saved.getLookingFor().getName() : "null"));
+        
+        ProfileViewDTO result = toViewDTO(saved);
+        System.out.println("\n=== Returning ProfileViewDTO ===");
+        System.out.println("DTO bodyformId: " + result.getBodyformId());
+        System.out.println("DTO homeplanetId: " + result.getHomeplanetId());
+        System.out.println("DTO lookingForId: " + result.getLookingForId());
+        
+        return result;
     }
 
     @Transactional(value = "profileManagementTransactionManager", readOnly = true)
@@ -226,17 +277,17 @@ public class ProfileService {
 
         if (profile.getHomeplanet() != null) {
             dto.setHomeplanet(profile.getHomeplanet().getName());
-            dto.setHomeplanetId(profile.getHomeplanet().getId().intValue());
+            dto.setHomeplanetId(profile.getHomeplanet().getId());
         }
 
         if (profile.getBodyform() != null) {
             dto.setBodyform(profile.getBodyform().getName());
-            dto.setBodyformId(profile.getBodyform().getId().intValue());
+            dto.setBodyformId(profile.getBodyform().getId());
         }
 
         if (profile.getLookingFor() != null) {
             dto.setLookingFor(profile.getLookingFor().getName());
-            dto.setLookingForId(profile.getLookingFor().getId().intValue());
+            dto.setLookingForId(profile.getLookingFor().getId());
         }
 
         dto.setBio(profile.getBio());
@@ -247,7 +298,8 @@ public class ProfileService {
 
         dto.setInterests(
                 sortedInterests.stream().map(Interest::getName).collect(Collectors.toSet()));
-        dto.setInterestIds(sortedInterests.stream().map(i -> i.getId().intValue())
+        dto.setInterestIds(sortedInterests.stream()
+                .map(Interest::getId)
                 .collect(Collectors.toList()));
 
         dto.setProfilePic(profile.getProfilePic());

@@ -1,33 +1,34 @@
 package tech.kood.match_me.profile.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.UUID;
 
 @Entity
 @Table(name = "homeplanets")
 public class Homeplanet {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @Id
+    @GeneratedValue
+    @UuidGenerator
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
+    private UUID id;
+
     @Column(nullable = false, unique = true)
     private String name;
-    public Homeplanet() {
-    }
 
-    public Homeplanet(Long id, String name) {
-        this.id = id;
+    public Homeplanet() {}
+
+    public Homeplanet(String name) {
         this.name = name;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -38,5 +39,4 @@ public class Homeplanet {
     public void setName(String name) {
         this.name = name;
     }
-
 }

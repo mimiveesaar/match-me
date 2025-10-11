@@ -1,24 +1,25 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 export interface ProfileData {
-  homeplanetId: number;
-  bodyformId: number;
-  lookingForId: number;
-  bio: string;
-  interestIds: number[];
-  profilePic: string;
+  homeplanetId?: string;  // Changed to string (UUID)
+  bodyformId?: string;     // Changed to string (UUID)
+  lookingForId?: string;   // Changed to string (UUID)
+  bio?: string;
+  interestIds?: string[];  // Changed to string[] (UUIDs)
+  profilePic?: string;
   username?: string;
+  name?: string;
   age?: number;
 }
 
 export interface Profile extends ProfileData {
   id: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ReferenceDataOption {
-  id: number;
+  id: string;  // Changed to string (UUID)
   name: string;
 }
 
@@ -41,20 +42,17 @@ class ApiService {
     return response.json();
   }
 
-  // Get current user's profile
   async getCurrentProfile(): Promise<Profile> {
     return this.fetchApi('/api/profiles/me');
   }
 
-  // Update current user's profile (use POST since your backend expects it)
   async updateCurrentProfile(data: ProfileData): Promise<Profile> {
     return this.fetchApi('/api/profiles/me', {
-      method: 'POST', // Changed from PUT to POST
+      method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
-  // Reference data endpoints
   async getInterests(): Promise<ReferenceDataOption[]> {
     return this.fetchApi('/api/interests');
   }

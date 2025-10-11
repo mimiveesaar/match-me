@@ -8,58 +8,128 @@ public class ProfileViewDTO {
     private UUID id;
     private String username;
     private String name;
-    private int age;
+    private Integer age;
     private String homeplanet;
+    private UUID homeplanetId; // Changed from Integer to UUID
     private String bodyform;
+    private UUID bodyformId; // Changed from Integer to UUID
     private String lookingFor;
+    private UUID lookingForId; // Changed from Integer to UUID
     private String bio;
     private Set<String> interests;
+    private List<UUID> interestIds; // Changed from Integer to UUID
     private String profilePic;
-    private List<Integer> interestIds;
-    private Integer homeplanetId;
-    private Integer bodyformId;
-    private Integer lookingForId;
 
-    // Getters & setters
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    // Getters and Setters
+    public UUID getId() {
+        return id;
+    }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getUsername() {
+        return username;
+    }
 
-    public int getAge() { return age; }
-    public void setAge(int age) { this.age = age; }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    public String getHomeplanet() { return homeplanet; }
-    public void setHomeplanet(String homeplanet) { this.homeplanet = homeplanet; }
+    public String getName() {
+        return name;
+    }
 
-    public String getBodyform() { return bodyform; }
-    public void setBodyform(String bodyform) { this.bodyform = bodyform; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getLookingFor() { return lookingFor; }
-    public void setLookingFor(String lookingFor) { this.lookingFor = lookingFor; }
+    public Integer getAge() {
+        return age;
+    }
 
-    public String getBio() { return bio; }
-    public void setBio(String bio) { this.bio = bio; }
+    public void setAge(Integer age) {
+        this.age = age;
+    }
 
-    public Set<String> getInterests() { return interests; }
-    public void setInterests(Set<String> interests) { this.interests = interests; }
+    public String getHomeplanet() {
+        return homeplanet;
+    }
 
-    public String getProfilePic() { return profilePic; }
-    public void setProfilePic(String profilePic) { this.profilePic = profilePic; }
+    public void setHomeplanet(String homeplanet) {
+        this.homeplanet = homeplanet;
+    }
 
-    public List<Integer> getInterestIds() { return interestIds; }
-    public void setInterestIds(List<Integer> interestIds) { this.interestIds = interestIds; }
+    public UUID getHomeplanetId() {
+        return homeplanetId;
+    }
 
-    public Integer getHomeplanetId() { return homeplanetId; }
-    public void setHomeplanetId(Integer homeplanetId) { this.homeplanetId = homeplanetId; }
+    public void setHomeplanetId(UUID homeplanetId) {
+        this.homeplanetId = homeplanetId;
+    }
 
-    public Integer getBodyformId() { return bodyformId; }
-    public void setBodyformId(Integer bodyformId) { this.bodyformId = bodyformId; }
+    public String getBodyform() {
+        return bodyform;
+    }
 
-    public Integer getLookingForId() { return lookingForId; }
-    public void setLookingForId(Integer lookingForId) { this.lookingForId = lookingForId; }
+    public void setBodyform(String bodyform) {
+        this.bodyform = bodyform;
+    }
+
+    public UUID getBodyformId() {
+        return bodyformId;
+    }
+
+    public void setBodyformId(UUID bodyformId) {
+        this.bodyformId = bodyformId;
+    }
+
+    public String getLookingFor() {
+        return lookingFor;
+    }
+
+    public void setLookingFor(String lookingFor) {
+        this.lookingFor = lookingFor;
+    }
+
+    public UUID getLookingForId() {
+        return lookingForId;
+    }
+
+    public void setLookingForId(UUID lookingForId) {
+        this.lookingForId = lookingForId;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public Set<String> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(Set<String> interests) {
+        this.interests = interests;
+    }
+
+    public List<UUID> getInterestIds() {
+        return interestIds;
+    }
+
+    public void setInterestIds(List<UUID> interestIds) {
+        this.interestIds = interestIds;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
 }

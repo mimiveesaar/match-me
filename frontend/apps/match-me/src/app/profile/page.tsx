@@ -1,24 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import { MyProfilePage } from "components/organisms";
 
-
 interface ProfileData {
-  homeplanetId: number;
-  bodyformId: number;
-  lookingForId: number;
-  bio: string;
-  interestIds: number[];
-  profilePic: string;
+  id?: string;
+  username?: string;
+  name?: string;
+  age?: number;
+  homeplanetId?: string;
+  bodyformId?: string;
+  lookingForId?: string;
+  bio?: string;
+  interestIds?: string[];
+  profilePic?: string;
 }
 
 export default function MyProfile() {
-
-    useEffect(() => {
-        document.title = 'My Profile | alien.meet'
-    }, [])
+  useEffect(() => {
+    document.title = 'My Profile | alien.meet'
+  }, [])
 
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,44 +30,65 @@ export default function MyProfile() {
 
   const fetchProfile = async () => {
     try {
+      console.log("=== FETCHING PROFILE ===");
       const response = await fetch('http://localhost:8080/api/profiles/me');
       if (response.ok) {
         const data = await response.json();
+        console.log("✓ Fetched profile from backend:", data);
         setProfile(data);
       } else {
-        console.error('Failed to fetch profile');
+        console.error('❌ Failed to fetch profile, status:', response.status);
       }
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      console.error('❌ Error fetching profile:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSaveProfile = async (updatedData: any) => {
-    console.log("=== FRONTEND: Raw updatedData ===");
-    console.log(JSON.stringify(updatedData, null, 2));
+  const handleSaveProfile = async (updatedData: ProfileData) => {
+    console.log("\n=== SAVING PROFILE ===");
+    console.log("1. Raw data received from form:", updatedData);
 
     try {
+      // Clean the data before sending
+      const dataToSend = {
+        name: updatedData.name || updatedData.username || null,
+        age: updatedData.age ? Number(updatedData.age) : null,
+        homeplanetId: updatedData.homeplanetId || null,
+        bodyformId: updatedData.bodyformId || null,
+        lookingForId: updatedData.lookingForId || null,
+        bio: updatedData.bio || null,
+        interestIds: (updatedData.interestIds || []).filter(id => id != null),
+        profilePic: updatedData.profilePic || null,
+      };
+
+      console.log("2. Cleaned data to send:", JSON.stringify(dataToSend, null, 2));
+
       const response = await fetch('http://localhost:8080/api/profiles/me', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(updatedData),
+        body: JSON.stringify(dataToSend),
       });
 
-      console.log("=== FRONTEND: What we actually sent ===");
-      console.log(JSON.stringify(updatedData, null, 2));
+      console.log("3. Response status:", response.status);
 
       if (response.ok) {
-        console.log('Profile updated successfully');
-        fetchProfile();
+        const result = await response.json();
+        console.log("✓ Profile saved successfully!");
+        console.log("4. Response from backend:", result);
+        
+        // Update local state with backend response
+        setProfile(result);
       } else {
-        console.error('Failed to update profile');
+        const errorText = await response.text();
+        console.error('❌ Failed to save profile');
+        console.error('Error response:', errorText);
       }
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error('❌ Error saving profile:', error);
     }
   };
 
@@ -78,7 +100,6 @@ export default function MyProfile() {
 
     <div className="flex flex-col lg:flex-row gap-8 mt-2 lg:mt-24">
       <div className="flex flex-col gap-4">
-
         <MyProfilePage
           initialProfile={profile}
           onSave={handleSaveProfile}

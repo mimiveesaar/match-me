@@ -24,7 +24,7 @@ public class ProfileController {
     }
 
     @PostMapping("/me")
-    public ResponseEntity<ProfileViewDTO> saveMyProfile(@RequestBody ProfileDTO dto) {
+    public ResponseEntity<?> saveMyProfile(@RequestBody ProfileDTO dto) {
         System.out.println("=== POST /api/profiles/me called ===");
         System.out.println("Received DTO: " + dto);
 
@@ -32,10 +32,15 @@ public class ProfileController {
             ProfileViewDTO savedProfileDTO = service.saveOrUpdateProfile(dto);
             System.out.println("Profile saved successfully");
             return ResponseEntity.ok(savedProfileDTO);
-        } catch (Exception e) {
-            System.out.println("Error saving profile: " + e.getMessage());
+        } catch (RuntimeException e) {
+            System.err.println("Error saving profile: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Unexpected error saving profile: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Internal server error: " + e.getMessage());
         }
     }
 
@@ -80,10 +85,9 @@ public class ProfileController {
 
 
 
-    
-// endpoint that external modules can call:
-//      The other module can POST:
-//      POST /api/profiles/sync?userId=<uuid>&username=JohnDoe
+    // endpoint that external modules can call:
+    // The other module can POST:
+    // POST /api/profiles/sync?userId=<uuid>&username=JohnDoe
 
     @PostMapping("/sync")
     public ResponseEntity<ProfileViewDTO> syncUser(@RequestParam UUID userId,
