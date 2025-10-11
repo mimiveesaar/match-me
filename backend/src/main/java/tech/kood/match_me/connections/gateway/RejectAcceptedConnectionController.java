@@ -15,50 +15,56 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
-import tech.kood.match_me.connections.features.pendingConnection.actions.AcceptConnectionRequest;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.RejectAcceptedConnection;
 import tech.kood.match_me.user_management.features.user.domain.api.UserDTO;
-
 
 @RestController
 @RequestMapping("/api/v1/connections")
 @Tag(name = "Connections", description = "API for managing user connections")
-public class AcceptConnectionsRequestController {
+public class RejectAcceptedConnectionController {
 
-    private final AcceptConnectionRequest.Handler acceptConnectionCommandHandler;
+    private final RejectAcceptedConnection.Handler rejectAcceptedConnectionCommandHandler;
 
-    public AcceptConnectionsRequestController(AcceptConnectionRequest.Handler acceptConnectionCommandHandler) {
-        this.acceptConnectionCommandHandler = acceptConnectionCommandHandler;
+    public RejectAcceptedConnectionController(RejectAcceptedConnection.Handler rejectAcceptedConnectionCommandHandler) {
+        this.rejectAcceptedConnectionCommandHandler = rejectAcceptedConnectionCommandHandler;
     }
 
-    public sealed interface Response permits Response.Success,
-            Response.NotFound, Response.InvalidRequest,
-            Response.AlreadyAccepted, Response.SystemError {
+    public sealed interface Response permits
+            Response.Success,
+            Response.NotFound,
+            Response.AlreadyRejected,
+            Response.InvalidRequest,
+            Response.SystemError {
 
-        record Success() implements Response {
+        record Success()
+                implements Response {
+        }
+
+        record NotFound()
+                implements Response {
         }
 
         record InvalidRequest(@NotNull @JsonProperty("error") InvalidInputErrorDTO error)
                 implements Response {
         }
 
-        record NotFound() implements Response {
+        record AlreadyRejected()
+                implements Response {
         }
 
-        record AlreadyAccepted() implements Response {
-        }
-
-        record SystemError(@NotEmpty String message) implements Response {
+        record SystemError(@NotEmpty String message)
+                implements Response {
         }
     }
 
-    public record AcceptConnectionDTO(
-            @NotNull @JsonProperty("connection_id") ConnectionIdDTO connectionIdDTO
+    public record RejectConnectionDTO(
+            @NotNull @JsonProperty("connection_id") ConnectionIdDTO connectionId
     ) {}
 
-    @PostMapping("/accept-request")
+    @PostMapping("/reject")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Connection request accepted successfully.",
+                    description = "Accepted connection rejected successfully.",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(
                                     discriminatorProperty = "type",
@@ -68,44 +74,43 @@ public class AcceptConnectionsRequestController {
                     schema = @Schema(
                             discriminatorProperty = "type",
                             implementation = Response.InvalidRequest.class))),
-            @ApiResponse(responseCode = "404", description = "Connection request not found.",
+            @ApiResponse(responseCode = "404", description = "Accepted connection not found.",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(
                                     discriminatorProperty = "type",
                                     implementation = Response.NotFound.class))),
-            @ApiResponse(responseCode = "409", description = "Connection request already accepted.",
+            @ApiResponse(responseCode = "409", description = "Accepted connection already rejected.",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(
                                     discriminatorProperty = "type",
-                                    implementation = Response.AlreadyAccepted.class))),
+                                    implementation = Response.AlreadyRejected.class))),
             @ApiResponse(responseCode = "500", description = "Internal server error.",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(
                                     discriminatorProperty = "type",
-                                    implementation = Response.SystemError.class)))})
+                                    implementation = Response.SystemError.class)))
+    })
 
-    public ResponseEntity<Response> acceptConnectionRequest(AcceptConnectionDTO request) {
+    public ResponseEntity<Response> rejectAcceptedConnection(RejectConnectionDTO rejectConnection) {
 
         var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var userId = ((UserDTO) principal).id();
 
-        var internalRequest = new AcceptConnectionRequest.Request(request.connectionIdDTO(), userId);
-        var result = acceptConnectionCommandHandler.handle(internalRequest);
+        var request = new RejectAcceptedConnection.Request(rejectConnection.connectionId(), userId);
+        var result = rejectAcceptedConnectionCommandHandler.handle(request);
 
-        if (result instanceof AcceptConnectionRequest.Result.Success success) {
+        if (result instanceof RejectAcceptedConnection.Result.Success success) {
             return ResponseEntity.ok(new Response.Success());
-        } else if (result instanceof AcceptConnectionRequest.Result.InvalidRequest invalidRequest) {
+        } else if (result instanceof RejectAcceptedConnection.Result.InvalidRequest invalidRequest) {
             return ResponseEntity.badRequest().body(new Response.InvalidRequest(invalidRequest.error()));
-        } else if (result instanceof AcceptConnectionRequest.Result.NotFound notFound) {
+        } else if (result instanceof RejectAcceptedConnection.Result.NotFound notFound) {
             return ResponseEntity.status(404).body(new Response.NotFound());
-        } else if (result instanceof AcceptConnectionRequest.Result.AlreadyAccepted alreadyAccepted) {
-            return ResponseEntity.status(409).body(new Response.AlreadyAccepted());
-        } else if (result instanceof AcceptConnectionRequest.Result.SystemError systemError) {
+        } else if (result instanceof RejectAcceptedConnection.Result.AlreadyRejected alreadyRejected) {
+            return ResponseEntity.status(409).body(new Response.AlreadyRejected());
+        } else if (result instanceof  RejectAcceptedConnection.Result.SystemError systemError) {
             return ResponseEntity.status(500).body(new Response.SystemError(systemError.message()));
         } else {
-            // This should never happen, but just in case
-            return ResponseEntity.status(500)
-                    .body(new Response.SystemError("Unknown error"));
+            return ResponseEntity.status(500).build();
         }
     }
 }

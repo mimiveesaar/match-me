@@ -8,14 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
-import tech.kood.match_me.connections.features.pendingConnection.actions.CreateRequest;
+import tech.kood.match_me.connections.features.pendingConnection.actions.CreateConnectionRequest;
 import tech.kood.match_me.connections.features.pendingConnection.domain.internal.PendingConnectionFactory;
 import tech.kood.match_me.connections.features.pendingConnection.internal.mapper.PendingConnectionMapper;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.PendingConnectionRepository;
 
 @ApplicationLayer
 @Service
-public class ConnectionRequestCommandHandlerImpl implements CreateRequest.Handler {
+public class ConnectionRequestCommandHandlerImpl implements CreateConnectionRequest.Handler {
 
     private final Validator validator;
     private final PendingConnectionRepository pendingConnectionRepository;
@@ -35,18 +35,18 @@ public class ConnectionRequestCommandHandlerImpl implements CreateRequest.Handle
 
     @Override
     @Transactional
-    public CreateRequest.Result handle(CreateRequest.Request request) {
+    public CreateConnectionRequest.Result handle(CreateConnectionRequest.Request request) {
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new CreateRequest.Result.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
+            return new CreateConnectionRequest.Result.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
             var findBetweenUsers = pendingConnectionRepository.findBetweenUsers(request.senderId().value(), request.targetId().value());
 
             if (findBetweenUsers.isPresent()) {
-                return new CreateRequest.Result.AlreadyExists();
+                return new CreateConnectionRequest.Result.AlreadyExists();
             }
 
             var senderUserId = userIdFactory.from(request.senderId());
@@ -57,11 +57,11 @@ public class ConnectionRequestCommandHandlerImpl implements CreateRequest.Handle
             pendingConnectionRepository.save(pendingConnectionEntity);
 
             var connectionId = new ConnectionIdDTO(pendingConnection.getId().getValue());
-            eventPublisher.publishEvent(new CreateRequest.ConnectionRequestCreated(connectionId, request.senderId(), request.targetId()));
+            eventPublisher.publishEvent(new CreateConnectionRequest.ConnectionRequestCreated(connectionId, request.senderId(), request.targetId()));
 
-            return new CreateRequest.Result.Success(connectionId);
+            return new CreateConnectionRequest.Result.Success(connectionId);
         } catch (Exception ex) {
-            return new CreateRequest.Result.SystemError(ex.getMessage());
+            return new CreateConnectionRequest.Result.SystemError(ex.getMessage());
         }
     }
 }

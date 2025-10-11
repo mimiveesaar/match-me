@@ -10,59 +10,50 @@ import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 
-public class DeclineRequest {
+public class AcceptConnectionRequest {
 
     @DomainEvent
-    public record ConnectionRequestDeclined(
+    public record ConnectionRequestAccepted(
             @NotNull @Valid @JsonProperty("connection_id") ConnectionIdDTO connectionIdDTO,
             @NotNull @Valid @JsonProperty("sender_id") UserIdDTO senderId,
-            @NotNull @Valid @JsonProperty("target_id") UserIdDTO targetId
-    ) {
-    }
-
-    @DomainEvent
-    public record ConnectionRequestUndo(
-            @NotNull @Valid @JsonProperty("connection_id") ConnectionIdDTO connectionIdDTO,
-            @NotNull @Valid @JsonProperty("sender_id") UserIdDTO senderId,
-            @NotNull @Valid @JsonProperty("target_id") UserIdDTO targetId
-    ) {
-    }
-
-    public interface Handler {
-        Result handle(Request request);
+            @NotNull @Valid @JsonProperty("target_id") UserIdDTO targetId) {
     }
 
     @Command
     public record Request(
             @NotNull @Valid @JsonProperty("connection_id") ConnectionIdDTO connectionIdDTO,
-            @NotNull @Valid @JsonProperty("declined_by_user") UserIdDTO declinedByUser
-    ) {
+            @NotNull @Valid @JsonProperty("accepted_by_user") UserIdDTO acceptedByUser) {
         public Request withConnectionId(ConnectionIdDTO connectionIdDTO) {
-            return new Request(connectionIdDTO, declinedByUser);
+            return new Request(connectionIdDTO, acceptedByUser);
         }
-        public Request withDeclinedByUser(UserIdDTO declinedByUser) {
-            return new Request(connectionIdDTO, declinedByUser);
+
+        public Request withAcceptedByUser(UserIdDTO acceptedByUser) {
+            return new Request(connectionIdDTO, acceptedByUser);
         }
     }
 
-    public sealed interface Result permits
-            Result.Success, Result.NotFound, Result.InvalidRequest,
-            Result.AlreadyDeclined, Result.SystemError {
-
+    public sealed interface Result permits Result.Success,
+            Result.NotFound, Result.InvalidRequest,
+            Result.AlreadyAccepted, Result.SystemError {
 
         record Success() implements Result {
         }
 
-        record InvalidRequest(@NotNull @JsonProperty("error") InvalidInputErrorDTO error) implements Result {
+        record InvalidRequest(@NotNull @JsonProperty("error") InvalidInputErrorDTO error)
+                implements Result {
         }
 
         record NotFound() implements Result {
         }
 
-        record AlreadyDeclined() implements Result {
+        record AlreadyAccepted() implements Result {
         }
 
         record SystemError(@NotEmpty String message) implements Result {
         }
+    }
+
+    public interface Handler {
+        Result handle(Request request);
     }
 }

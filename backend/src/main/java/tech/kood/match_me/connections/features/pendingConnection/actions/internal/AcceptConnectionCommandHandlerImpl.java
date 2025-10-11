@@ -10,15 +10,14 @@ import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.CreateAcceptedConnection;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.internal.CreateAcceptedConnectionHandlerImpl;
-import tech.kood.match_me.connections.features.pendingConnection.actions.AcceptConnection;
+import tech.kood.match_me.connections.features.pendingConnection.actions.AcceptConnectionRequest;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.PendingConnectionRepository;
 
 import java.util.List;
 
 @ApplicationLayer
 @Service
-public class AcceptConnectionCommandHandlerImpl implements AcceptConnection.Handler {
+public class AcceptConnectionCommandHandlerImpl implements AcceptConnectionRequest.Handler {
 
     private final Validator validator;
     private final PendingConnectionRepository pendingConnectionRepository;
@@ -36,11 +35,11 @@ public class AcceptConnectionCommandHandlerImpl implements AcceptConnection.Hand
 
     @Transactional
     @Override
-    public AcceptConnection.Result handle(AcceptConnection.Request request) {
+    public AcceptConnectionRequest.Result handle(AcceptConnectionRequest.Request request) {
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new AcceptConnection.Result.InvalidRequest(
+            return new AcceptConnectionRequest.Result.InvalidRequest(
                     InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
@@ -48,7 +47,7 @@ public class AcceptConnectionCommandHandlerImpl implements AcceptConnection.Hand
                 pendingConnectionRepository.findById(request.connectionIdDTO().value());
 
         if (pendingConnectionEntityQueryResult.isEmpty()) {
-            return new AcceptConnection.Result.NotFound();
+            return new AcceptConnectionRequest.Result.NotFound();
         }
 
         var pendingConnectionEntity = pendingConnectionEntityQueryResult.get();
@@ -57,7 +56,7 @@ public class AcceptConnectionCommandHandlerImpl implements AcceptConnection.Hand
             var fieldError =
                     new InputFieldErrorDTO("acceptedByUserId", request.acceptedByUser().value(),
                             "Only the target user can accept a connection request");
-            return new AcceptConnection.Result.InvalidRequest(
+            return new AcceptConnectionRequest.Result.InvalidRequest(
                     new InvalidInputErrorDTO(List.of(fieldError)));
         }
 
@@ -68,22 +67,22 @@ public class AcceptConnectionCommandHandlerImpl implements AcceptConnection.Hand
         var result = createAcceptedConnectionCommandHandler.handle(createAcceptedConnectionRequest);
 
         if (result instanceof CreateAcceptedConnection.Result.AlreadyExists) {
-            return new AcceptConnection.Result.AlreadyAccepted();
+            return new AcceptConnectionRequest.Result.AlreadyAccepted();
         } else if (!(result instanceof CreateAcceptedConnection.Result.Success)) {
-            return new AcceptConnection.Result.SystemError("Something went wrong");
+            return new AcceptConnectionRequest.Result.SystemError("Something went wrong");
         }
 
         var pendingConnectionDeleted =
                 pendingConnectionRepository.deleteById(pendingConnectionEntity.getId());
 
         if (!pendingConnectionDeleted) {
-            return new AcceptConnection.Result.AlreadyAccepted();
+            return new AcceptConnectionRequest.Result.AlreadyAccepted();
         }
 
-        eventPublisher.publishEvent(new AcceptConnection.ConnectionRequestAccepted(request.connectionIdDTO(),
+        eventPublisher.publishEvent(new AcceptConnectionRequest.ConnectionRequestAccepted(request.connectionIdDTO(),
                 new UserIdDTO(pendingConnectionEntity.getSenderId()),
                 new UserIdDTO(pendingConnectionEntity.getTargetId())));
 
-        return new AcceptConnection.Result.Success();
+        return new AcceptConnectionRequest.Result.Success();
     }
 }

@@ -13,7 +13,7 @@ import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 
 import java.io.Serializable;
 
-public class CreateRequest {
+public class CreateConnectionRequest {
 
     @Command
     public record Request(@NotNull @Valid @JsonProperty("target_id") UserIdDTO targetId,

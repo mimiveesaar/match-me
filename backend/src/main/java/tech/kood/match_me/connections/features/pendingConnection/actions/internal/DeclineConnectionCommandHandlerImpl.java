@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
-import tech.kood.match_me.connections.features.pendingConnection.actions.DeclineRequest;
+import tech.kood.match_me.connections.features.pendingConnection.actions.DeclineConnectionRequest;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.PendingConnectionRepository;
 import tech.kood.match_me.connections.features.rejectedConnection.actions.CreateRejectedConnection;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.api.RejectedConnectionReasonDTO;
@@ -15,7 +15,7 @@ import tech.kood.match_me.connections.features.rejectedConnection.domain.api.Rej
 
 @ApplicationLayer
 @Service
-public class DeclineConnectionCommandHandlerImpl implements DeclineRequest.Handler {
+public class DeclineConnectionCommandHandlerImpl implements DeclineConnectionRequest.Handler {
 
     private final Validator validator;
     private final CreateRejectedConnection.Handler createRejectedConnectionHandler;
@@ -31,17 +31,17 @@ public class DeclineConnectionCommandHandlerImpl implements DeclineRequest.Handl
 
     @Transactional
     @Override
-    public DeclineRequest.Result handle(DeclineRequest.Request request) {
+    public DeclineConnectionRequest.Result handle(DeclineConnectionRequest.Request request) {
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new DeclineRequest.Result.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
+            return new DeclineConnectionRequest.Result.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         var pendingConnectionEntityQueryResult = pendingConnectionRepository.findById(request.connectionIdDTO().value());
 
         if (pendingConnectionEntityQueryResult.isEmpty()) {
-            return new DeclineRequest.Result.NotFound();
+            return new DeclineConnectionRequest.Result.NotFound();
         }
 
         var pendingConnectionEntity = pendingConnectionEntityQueryResult.get();
@@ -51,11 +51,11 @@ public class DeclineConnectionCommandHandlerImpl implements DeclineRequest.Handl
             var pendingConnectionDeleted = pendingConnectionRepository.deleteById(pendingConnectionEntity.getId());
 
             if (!pendingConnectionDeleted) {
-                return new DeclineRequest.Result.AlreadyDeclined();
+                return new DeclineConnectionRequest.Result.AlreadyDeclined();
             }
 
-            eventPublisher.publishEvent(new DeclineRequest.ConnectionRequestUndo(request.connectionIdDTO(), new UserIdDTO(pendingConnectionEntity.getSenderId()), new UserIdDTO(pendingConnectionEntity.getTargetId())));
-            return new DeclineRequest.Result.Success();
+            eventPublisher.publishEvent(new DeclineConnectionRequest.ConnectionRequestUndo(request.connectionIdDTO(), new UserIdDTO(pendingConnectionEntity.getSenderId()), new UserIdDTO(pendingConnectionEntity.getTargetId())));
+            return new DeclineConnectionRequest.Result.Success();
         }
         //Decline the pending connection request and create a rejected connection.
         else {
@@ -65,17 +65,17 @@ public class DeclineConnectionCommandHandlerImpl implements DeclineRequest.Handl
 
             //Handle errors, in real application we would handle retries.
             if (!(result instanceof CreateRejectedConnection.Result.Success success)) {
-                return new DeclineRequest.Result.SystemError("Something went wrong");
+                return new DeclineConnectionRequest.Result.SystemError("Something went wrong");
             }
 
             var pendingConnectionDeleted = pendingConnectionRepository.deleteById(pendingConnectionEntity.getId());
 
             if (!pendingConnectionDeleted) {
-                return new DeclineRequest.Result.AlreadyDeclined();
+                return new DeclineConnectionRequest.Result.AlreadyDeclined();
             }
 
-            eventPublisher.publishEvent(new DeclineRequest.ConnectionRequestDeclined(request.connectionIdDTO(), new UserIdDTO(pendingConnectionEntity.getSenderId()), new UserIdDTO(pendingConnectionEntity.getTargetId())));
-            return new DeclineRequest.Result.Success();
+            eventPublisher.publishEvent(new DeclineConnectionRequest.ConnectionRequestDeclined(request.connectionIdDTO(), new UserIdDTO(pendingConnectionEntity.getSenderId()), new UserIdDTO(pendingConnectionEntity.getTargetId())));
+            return new DeclineConnectionRequest.Result.Success();
         }
     }
 }

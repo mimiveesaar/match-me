@@ -39,5 +39,4 @@ public class GetOutgoingRequests {
     public interface Handler {
         Result handle(Request request);
     }
-
 }
