@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import tech.kood.match_me.common.constants.Bodyforms;
+import tech.kood.match_me.common.constants.Planets;
 
 import java.util.Map;
 import java.util.UUID;
@@ -373,24 +375,11 @@ public class MatchingDataSeeder implements CommandLineRunner {
     }
 
     private void seedBodyforms() {
-        // Each entry: {id, name}
-        Object[][] bodyforms = {
-            {1, "Gelatinous"},
-            {2, "Tentacled"},
-            {3, "Humanoid"},
-            {4, "Energy-Based"},
-            {5, "Mechanical"},
-            {6, "Insectoid"},
-            {7, "Reptilian"},
-            {8, "Gas Cloud"},
-            {9, "Crystalline"},
-            {10, "Mimetic Blob"}
-        };
-
-        for (Object[] bf : bodyforms) {
+        for (Bodyforms bodyform : Bodyforms.values()) {
             jdbcTemplate.update(
                     "INSERT INTO bodyforms (id, name) VALUES (?, ?) ON CONFLICT (id) DO NOTHING",
-                    bf[0], bf[1]
+                    bodyform.Code(),
+                    bodyform.DisplayName()
             );
         }
 
@@ -398,29 +387,13 @@ public class MatchingDataSeeder implements CommandLineRunner {
     }
 
     private void seedHomeplanets() {
-        // Each entry: {id, name, latitude, longitude}
-        Object[][] homeplanets = {
-            {1, "Xeron-5", 45.2, 130.5},
-            {2, "Draknor", -33.1, 102.9},
-            {3, "Vega Prime", 12.5, -45.0},
-            {4, "Bloop-X12", 78.3, 60.2},
-            {5, "Zal'Tek Major", -82.0, -135.7},
-            {6, "Nimbus-9", 5.4, 80.1},
-            {7, "Krylon Beta", -25.6, 145.3},
-            {8, "Nova Eden", 33.3, -73.2},
-            {9, "Tharnis", -47.8, 12.0},
-            {10, "Quarnyx Delta", 66.0, -88.8},
-            {11, "Glooporia", 15.2, 140.0},
-            {12, "Skarn", -10.5, -120.6},
-            {13, "Uvuul-4", 58.9, 170.0},
-            {14, "Oortania", -60.4, -40.1},
-            {15, "Vrexalon", 0.0, 0.0}
-        };
-
-        for (Object[] planet : homeplanets) {
+        for (Planets planet : Planets.values()) {
             jdbcTemplate.update(
                     "INSERT INTO homeplanets (id, name, latitude, longitude) VALUES (?, ?, ?, ?) ON CONFLICT (id) DO NOTHING",
-                    planet[0], planet[1], planet[2], planet[3]
+                    planet.Code(),
+                    planet.DisplayName(),
+                    planet.latitude(),
+                    planet.longitude()
             );
         }
 
