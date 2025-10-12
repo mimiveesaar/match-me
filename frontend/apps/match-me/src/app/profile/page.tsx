@@ -65,6 +65,9 @@ export default function MyProfile() {
 
       console.log("2. Cleaned data to send:", JSON.stringify(dataToSend, null, 2));
 
+      console.log("🚀 Final data being sent to backend:", JSON.stringify(dataToSend, null, 2));
+
+
       const response = await fetch('http://localhost:8080/api/profiles/me', {
         method: 'POST',
         headers: {
@@ -79,7 +82,7 @@ export default function MyProfile() {
         const result = await response.json();
         console.log("✓ Profile saved successfully!");
         console.log("4. Response from backend:", result);
-        
+
         // Update local state with backend response
         setProfile(result);
       } else {

@@ -115,16 +115,6 @@ export const MyProfilePage = ({
         <div className="flex flex-col gap-4 px-6">
         <ProfileCard profile={profile} setProfile={setProfile} />
         
-        {/* Debug info - remove in production */}
-        <div className="bg-gray-100 p-4 rounded text-xs">
-          <div className="font-bold mb-2">Debug Info:</div>
-          <div>Name: {profile.name}</div>
-          <div>Age: {profile.age}</div>
-          <div>BodyformId: {profile.bodyformId || "(empty)"}</div>
-          <div>LookingForId: {profile.lookingForId || "(empty)"}</div>
-          <div>HomeplanetId: {profile.homeplanetId || "(empty)"}</div>
-          <div>Interests: {selectedInterests.length}</div>
-        </div>
       </div>
 
         <div className="flex flex-col gap-4 w-full lg:w-[500px] px-6">
