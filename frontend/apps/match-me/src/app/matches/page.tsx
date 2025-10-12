@@ -122,14 +122,23 @@ export default function Matches() {
 
             {/* Right: dynamic content */}
             <div className="flex-1 flex items-center justify-center">
+
                 {isLoading ? (
                     <div className="text-center text-lg text-gray-400 font-serif">
                         Loading...
                     </div>
                 ) : visibleUsers.length === 0 ? (
-                    <div className="text-center text-lg text-gray-400 font-serif">
-                        No matches found.
-                    </div>
+                    <>
+                        {/* Mobile + Medium */}
+                        <div className="flex text-center justify-center items-center text-lg text-gray-400 font-serif lg:hidden h-[50vh]">
+                            No matches found
+                        </div>
+
+                        {/* Large screens */}
+                        <div className="hidden lg:flex justify-center items-center w-full h-[60vh] text-center text-lg text-gray-400 font-serif pr-71">
+                            No matches found
+                        </div>
+                    </>
                 ) : (
                     <div className="w-full pl-4 md:pl-10 mt-6">
                         {/* Mobile: Horizontal scrolling */}

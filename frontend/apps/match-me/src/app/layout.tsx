@@ -52,7 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <>
                         {/* Desktop menu */}
                         {!isMobile && (
-                            <div className="w-full bg-ivory p-4 z-50 mt-6">
+                            <div className=" bg-ivory p-4 z-50 mt-6">
                                 <Menu
                                     filters={filters}
                                     setFilters={setFilters}
