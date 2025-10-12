@@ -1,5 +1,6 @@
 package tech.kood.match_me.profile.dto;
 
+import java.net.Inet4Address;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,18 +12,18 @@ public class ProfileDTO {
     private Integer age;
     
     @JsonProperty("homeplanetId")
-    private UUID homeplanetId;
+    private Integer homeplanetId;
     
     @JsonProperty("bodyformId")
-    private UUID bodyformId;
+    private Integer bodyformId;
     
     @JsonProperty("lookingForId")
-    private UUID lookingForId;
+    private Integer lookingForId;
     
     private String bio;
     
     @JsonProperty("interestIds")
-    private List<UUID> interestIds;
+    private List<Integer> interestIds;
     
     @JsonProperty("profilePic")
     private String profilePic;
@@ -52,27 +53,27 @@ public class ProfileDTO {
         this.age = age;
     }
 
-    public UUID getHomeplanetId() {
+    public Integer getHomeplanetId() {
         return homeplanetId;
     }
 
-    public void setHomeplanetId(UUID homeplanetId) {
+    public void setHomeplanetId(Integer homeplanetId) {
         this.homeplanetId = homeplanetId;
     }
 
-    public UUID getBodyformId() {
+    public Integer getBodyformId() {
         return bodyformId;
     }
 
-    public void setBodyformId(UUID bodyformId) {
+    public void setBodyformId(Integer bodyformId) {
         this.bodyformId = bodyformId;
     }
 
-    public UUID getLookingForId() {
+    public Integer getLookingForId() {
         return lookingForId;
     }
 
-    public void setLookingForId(UUID lookingForId) {
+    public void setLookingForId(Integer lookingForId) {
         this.lookingForId = lookingForId;
     }
 
@@ -84,11 +85,11 @@ public class ProfileDTO {
         this.bio = bio;
     }
 
-    public List<UUID> getInterestIds() {
+    public List<Integer> getInterestIds() {
         return interestIds;
     }
 
-    public void setInterestIds(List<UUID> interestIds) {
+    public void setInterestIds(List<Integer> interestIds) {
         this.interestIds = interestIds;
     }
 

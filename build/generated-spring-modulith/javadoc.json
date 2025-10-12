@@ -1,1 +1,1 @@
-[]
+[{"name":"tech.kood.match_me.profile.service.ProfileService","methods":[{"name":"getMyProfile","signature":"getMyProfile()","comment":"TEMP: Returns a dummy or first profile for now. Later — replace this with: findByUserIdWithRelations(userId) using your teammate's authentication system."}]}]

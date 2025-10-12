@@ -5,6 +5,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import tech.kood.match_me.common.constants.Bodyforms;
+import tech.kood.match_me.common.constants.Interests;
+import tech.kood.match_me.common.constants.LookingFor;
+import tech.kood.match_me.common.constants.Planets;
 
 import java.util.Map;
 import java.util.UUID;
@@ -373,24 +377,11 @@ public class MatchingDataSeeder implements CommandLineRunner {
     }
 
     private void seedBodyforms() {
-        // Each entry: {id, name}
-        Object[][] bodyforms = {
-            {1, "Gelatinous"},
-            {2, "Tentacled"},
-            {3, "Humanoid"},
-            {4, "Energy-Based"},
-            {5, "Mechanical"},
-            {6, "Insectoid"},
-            {7, "Reptilian"},
-            {8, "Gas Cloud"},
-            {9, "Crystalline"},
-            {10, "Mimetic Blob"}
-        };
-
-        for (Object[] bf : bodyforms) {
+        for (Bodyforms bodyform : Bodyforms.values()) {
             jdbcTemplate.update(
                     "INSERT INTO bodyforms (id, name) VALUES (?, ?) ON CONFLICT (id) DO NOTHING",
-                    bf[0], bf[1]
+                    bodyform.Code(),
+                    bodyform.DisplayName()
             );
         }
 
@@ -398,29 +389,13 @@ public class MatchingDataSeeder implements CommandLineRunner {
     }
 
     private void seedHomeplanets() {
-        // Each entry: {id, name, latitude, longitude}
-        Object[][] homeplanets = {
-            {1, "Xeron-5", 45.2, 130.5},
-            {2, "Draknor", -33.1, 102.9},
-            {3, "Vega Prime", 12.5, -45.0},
-            {4, "Bloop-X12", 78.3, 60.2},
-            {5, "Zal'Tek Major", -82.0, -135.7},
-            {6, "Nimbus-9", 5.4, 80.1},
-            {7, "Krylon Beta", -25.6, 145.3},
-            {8, "Nova Eden", 33.3, -73.2},
-            {9, "Tharnis", -47.8, 12.0},
-            {10, "Quarnyx Delta", 66.0, -88.8},
-            {11, "Glooporia", 15.2, 140.0},
-            {12, "Skarn", -10.5, -120.6},
-            {13, "Uvuul-4", 58.9, 170.0},
-            {14, "Oortania", -60.4, -40.1},
-            {15, "Vrexalon", 0.0, 0.0}
-        };
-
-        for (Object[] planet : homeplanets) {
+        for (Planets planet : Planets.values()) {
             jdbcTemplate.update(
                     "INSERT INTO homeplanets (id, name, latitude, longitude) VALUES (?, ?, ?, ?) ON CONFLICT (id) DO NOTHING",
-                    planet[0], planet[1], planet[2], planet[3]
+                    planet.Code(),
+                    planet.DisplayName(),
+                    planet.Latitude(),
+                    planet.Longitude()
             );
         }
 
@@ -428,20 +403,11 @@ public class MatchingDataSeeder implements CommandLineRunner {
     }
 
     private void seedLookingFor() {
-        // Each entry: {id, name}
-        Object[][] lookingFor = {
-            {1, "Friendship"},
-            {2, "Romance"},
-            {3, "Strategic Alliance"},
-            {4, "Co-parenting Hatchlings"},
-            {5, "Host Symbiosis"},
-            {6, "Chtulhu"}
-        };
-
-        for (Object[] item : lookingFor) {
+        for (LookingFor lf : LookingFor.values()) {
             jdbcTemplate.update(
                     "INSERT INTO looking_for (id, name) VALUES (?, ?) ON CONFLICT (id) DO NOTHING",
-                    item[0], item[1]
+                    lf.Code(),
+                    lf.DisplayName()
             );
         }
 
@@ -449,54 +415,11 @@ public class MatchingDataSeeder implements CommandLineRunner {
     }
 
     private void seedInterests() {
-        // Each entry: {id, interest}
-        Object[][] interests = {
-            {1, "Telepathic Chess"},
-            {2, "Black Hole Karaoke"},
-            {3, "Baking"},
-            {4, "Binary Poetry"},
-            {5, "Painting"},
-            {6, "Parallel Parking"},
-            {7, "Reading"},
-            {8, "Collecting Rocks"},
-            {9, "Butterfly watching"},
-            {10, "Plasma Sculpting"},
-            {11, "Terraforming"},
-            {12, "Zero-G Yoga"},
-            {13, "Fishing"},
-            {14, "Galactic Geocaching"},
-            {15, "Nebula Photography"},
-            {16, "Starship Racing"},
-            {17, "Archaeology"},
-            {18, "Cooking"},
-            {19, "Light-speed Surfing"},
-            {20, "Wormhole Navigation"},
-            {21, "Cryo-sleep"},
-            {22, "Martian Mining"},
-            {23, "Solar Wind Sailing"},
-            {24, "Meditation"},
-            {25, "Opera Singing"},
-            {26, "Ballet"},
-            {27, "Fashion Design"},
-            {28, "Black Market Trading"},
-            {29, "Cosmic Comics"},
-            {30, "Meteorite Hunting"},
-            {31, "Exoplanet Exploration"},
-            {32, "Star Map Reading"},
-            {33, "Galactic Diplomacy"},
-            {34, "Gardening"},
-            {35, "Interstellar DJing"},
-            {36, "Teleportation Tricks"},
-            {37, "Brewing"},
-            {38, "Droid Repair"},
-            {39, "Cryptography"},
-            {40, "Wormhole Jumping"}
-        };
-
-        for (Object[] interest : interests) {
+        for (Interests interest : Interests.values()) {
             jdbcTemplate.update(
                     "INSERT INTO interests (id, interest) VALUES (?, ?) ON CONFLICT (id) DO NOTHING",
-                    interest[0], interest[1]
+                    interest.Code(),
+                    interest.DisplayName()
             );
         }
 
