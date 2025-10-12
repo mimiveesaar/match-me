@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface ProfileRepository extends JpaRepository<Profile, UUID> {
+public interface ProfileRepository extends JpaRepository<Profile, Integer> {
     boolean existsByUsername(String username);
     
     Optional<Profile> findByUserId(UUID userId);

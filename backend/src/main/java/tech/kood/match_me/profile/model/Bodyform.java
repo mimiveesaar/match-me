@@ -9,11 +9,10 @@ import java.util.UUID;
 @Table(name = "bodyforms")
 public class Bodyform {
 
-    @Id
-    @GeneratedValue
-    @UuidGenerator
-    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
-    private UUID id;
+@Id
+@Column(name = "id", nullable = false, unique = true)
+
+private Integer id;
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -24,11 +23,11 @@ public class Bodyform {
         this.name = name;
     }
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

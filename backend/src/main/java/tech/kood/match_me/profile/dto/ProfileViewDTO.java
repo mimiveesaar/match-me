@@ -3,6 +3,7 @@ package tech.kood.match_me.profile.dto;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 
 public class ProfileViewDTO {
     private UUID id;
@@ -10,14 +11,14 @@ public class ProfileViewDTO {
     private String name;
     private Integer age;
     private String homeplanet;
-    private UUID homeplanetId; // Changed from Integer to UUID
+    private Integer homeplanetId; // Changed from Integer to UUID
     private String bodyform;
-    private UUID bodyformId; // Changed from Integer to UUID
+    private Integer bodyformId; // Changed from Integer to UUID
     private String lookingFor;
-    private UUID lookingForId; // Changed from Integer to UUID
+    private Integer lookingForId; // Changed from Integer to UUID
     private String bio;
     private Set<String> interests;
-    private List<UUID> interestIds; // Changed from Integer to UUID
+    private List<Integer> interestIds; // Changed from Integer to UUID
     private String profilePic;
 
     // Getters and Setters
@@ -61,11 +62,11 @@ public class ProfileViewDTO {
         this.homeplanet = homeplanet;
     }
 
-    public UUID getHomeplanetId() {
+    public Integer getHomeplanetId() {
         return homeplanetId;
     }
 
-    public void setHomeplanetId(UUID homeplanetId) {
+    public void setHomeplanetId(Integer homeplanetId) {
         this.homeplanetId = homeplanetId;
     }
 
@@ -77,11 +78,11 @@ public class ProfileViewDTO {
         this.bodyform = bodyform;
     }
 
-    public UUID getBodyformId() {
+    public Integer getBodyformId() {
         return bodyformId;
     }
 
-    public void setBodyformId(UUID bodyformId) {
+    public void setBodyformId(Integer bodyformId) {
         this.bodyformId = bodyformId;
     }
 
@@ -93,11 +94,11 @@ public class ProfileViewDTO {
         this.lookingFor = lookingFor;
     }
 
-    public UUID getLookingForId() {
+    public Integer getLookingForId() {
         return lookingForId;
     }
 
-    public void setLookingForId(UUID lookingForId) {
+    public void setLookingForId(Integer lookingForId) {
         this.lookingForId = lookingForId;
     }
 
@@ -117,11 +118,11 @@ public class ProfileViewDTO {
         this.interests = interests;
     }
 
-    public List<UUID> getInterestIds() {
+    public List<Integer> getInterestIds() {
         return interestIds;
     }
 
-    public void setInterestIds(List<UUID> interestIds) {
+    public void setInterestIds(List<Integer> interestIds) {
         this.interestIds = interestIds;
     }
 
