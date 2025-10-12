@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
 
@@ -43,4 +44,12 @@ public class ConnectionsConfig {
      .locations("classpath:/connections/database/flyway").load();
      return flyway;
      }
+
+
+    @Bean
+    @Qualifier("connectionsTransactionManager")
+    public org.springframework.transaction.PlatformTransactionManager connectionsTransactionManager(
+            @Qualifier("connectionsDataSource") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
 }

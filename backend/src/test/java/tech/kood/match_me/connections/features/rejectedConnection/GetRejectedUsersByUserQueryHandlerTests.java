@@ -6,9 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.connections.common.ConnectionsTestBase;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectedUsersByUser.api.GetRejectedUsersByUserQueryHandler;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectedUsersByUser.api.GetRejectedUsersByUserRequest;
-import tech.kood.match_me.connections.features.rejectedConnection.actions.getRejectedUsersByUser.api.GetRejectedUsersByUserResults;
+import tech.kood.match_me.connections.features.rejectedConnection.actions.GetRejectedUsersByUser;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.internal.RejectedConnectionReason;
 import tech.kood.match_me.connections.features.rejectedConnection.internal.persistance.RejectedConnectionRepository;
 
@@ -17,11 +15,11 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
+@Transactional(transactionManager = "connectionsTransactionManager")
 public class GetRejectedUsersByUserQueryHandlerTests extends ConnectionsTestBase {
 
     @Autowired
-    private GetRejectedUsersByUserQueryHandler getRejectedUsersByUserHandler;
+    private GetRejectedUsersByUser.Handler getRejectedUsersByUserHandler;
 
     @Autowired
     private RejectedConnectionRepository repository;
@@ -47,14 +45,14 @@ public class GetRejectedUsersByUserQueryHandlerTests extends ConnectionsTestBase
         entity2 = rejectedConnectionEntityMother.withReason(entity2, RejectedConnectionReason.CONNECTION_REMOVED);
         repository.save(entity2);
 
-        var request = new GetRejectedUsersByUserRequest(new UserIdDTO(rejectedByUserId));
+        var request = new GetRejectedUsersByUser.Request(new UserIdDTO(rejectedByUserId));
 
         // Act
         var result = getRejectedUsersByUserHandler.handle(request);
 
         // Assert
-        assertInstanceOf(GetRejectedUsersByUserResults.Success.class, result);
-        var successResult = (GetRejectedUsersByUserResults.Success) result;
+        assertInstanceOf(GetRejectedUsersByUser.Result.Success.class, result);
+        var successResult = (GetRejectedUsersByUser.Result.Success) result;
         assertEquals(2, successResult.rejections().size());
 
         var rejections = successResult.rejections();
@@ -70,43 +68,41 @@ public class GetRejectedUsersByUserQueryHandlerTests extends ConnectionsTestBase
         // Arrange
         var rejectedByUserId = UUID.randomUUID();
 
-        var request = new GetRejectedUsersByUserRequest(new UserIdDTO(rejectedByUserId));
+        var request = new GetRejectedUsersByUser.Request(new UserIdDTO(rejectedByUserId));
 
         // Act
         var result = getRejectedUsersByUserHandler.handle(request);
 
         // Assert
-        assertInstanceOf(GetRejectedUsersByUserResults.Success.class, result);
-        var successResult = (GetRejectedUsersByUserResults.Success) result;
+        assertInstanceOf(GetRejectedUsersByUser.Result.Success.class, result);
+        var successResult = (GetRejectedUsersByUser.Result.Success) result;
         assertTrue(successResult.rejections().isEmpty());
     }
 
-
     @Test
     void testHandleRequest_InvalidRequest_NullRejectedByUser() {
-        var request = new GetRejectedUsersByUserRequest(null );
+        var request = new GetRejectedUsersByUser.Request(null);
 
         // Act
         var result = getRejectedUsersByUserHandler.handle(request);
 
         // Assert
-        assertInstanceOf(GetRejectedUsersByUserResults.InvalidRequest.class, result);
+        assertInstanceOf(GetRejectedUsersByUser.Result.InvalidRequest.class, result);
     }
 
     @Test
     void testHandleRequest_InvalidRequest_InvalidUserIdDTO() {
         // Arrange
-        var requestId = UUID.randomUUID();
         var rejectedByUserId = new UserIdDTO(null); // Invalid UserIdDTO
 
-        var request = new GetRejectedUsersByUserRequest(rejectedByUserId);
+        var request = new GetRejectedUsersByUser.Request(rejectedByUserId);
 
         // Act
         var result = getRejectedUsersByUserHandler.handle(request);
 
         // Assert
-        assertInstanceOf(GetRejectedUsersByUserResults.InvalidRequest.class, result);
-        var invalidResult = (GetRejectedUsersByUserResults.InvalidRequest) result;
+        assertInstanceOf(GetRejectedUsersByUser.Result.InvalidRequest.class, result);
+        var invalidResult = (GetRejectedUsersByUser.Result.InvalidRequest) result;
         assertNotNull(invalidResult.error());
     }
 
@@ -128,14 +124,14 @@ public class GetRejectedUsersByUserQueryHandlerTests extends ConnectionsTestBase
         otherEntity = rejectedConnectionEntityMother.withSpecificIds(otherEntity, otherUserId, rejectedUserId2);
         repository.save(otherEntity);
 
-        var request = new GetRejectedUsersByUserRequest(new UserIdDTO(targetUserId));
+        var request = new GetRejectedUsersByUser.Request(new UserIdDTO(targetUserId));
 
         // Act
         var result = getRejectedUsersByUserHandler.handle(request);
 
         // Assert
-        assertInstanceOf(GetRejectedUsersByUserResults.Success.class, result);
-        var successResult = (GetRejectedUsersByUserResults.Success) result;
+        assertInstanceOf(GetRejectedUsersByUser.Result.Success.class, result);
+        var successResult = (GetRejectedUsersByUser.Result.Success) result;
         assertEquals(1, successResult.rejections().size());
         assertEquals(rejectedUserId1, successResult.rejections().get(0).rejectedUser().value());
         assertEquals(targetUserId, successResult.rejections().get(0).rejectedByUser().value());
@@ -147,7 +143,6 @@ public class GetRejectedUsersByUserQueryHandlerTests extends ConnectionsTestBase
         var rejectedByUserId = UUID.randomUUID();
         var rejectedUserId1 = UUID.randomUUID();
         var rejectedUserId2 = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
 
         // Create rejection with CONNECTION_DECLINED reason
         var entity1 = rejectedConnectionEntityMother.createRejectedConnectionEntity();
@@ -161,14 +156,14 @@ public class GetRejectedUsersByUserQueryHandlerTests extends ConnectionsTestBase
         entity2 = rejectedConnectionEntityMother.withReason(entity2, RejectedConnectionReason.CONNECTION_REMOVED);
         repository.save(entity2);
 
-        var request = new GetRejectedUsersByUserRequest(new UserIdDTO(rejectedByUserId));
+        var request = new GetRejectedUsersByUser.Request(new UserIdDTO(rejectedByUserId));
 
         // Act
         var result = getRejectedUsersByUserHandler.handle(request);
 
         // Assert
-        assertInstanceOf(GetRejectedUsersByUserResults.Success.class, result);
-        var successResult = (GetRejectedUsersByUserResults.Success) result;
+        assertInstanceOf(GetRejectedUsersByUser.Result.Success.class, result);
+        var successResult = (GetRejectedUsersByUser.Result.Success) result;
         assertEquals(2, successResult.rejections().size());
 
         var reasons = successResult.rejections().stream()
@@ -187,7 +182,6 @@ public class GetRejectedUsersByUserQueryHandlerTests extends ConnectionsTestBase
         var rejectedUserId1 = UUID.randomUUID();
         var rejectedUserId2 = UUID.randomUUID();
         var rejectedUserId3 = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
 
         // Create multiple rejections
         var entity1 = rejectedConnectionEntityMother.createRejectedConnectionEntity();
@@ -202,14 +196,14 @@ public class GetRejectedUsersByUserQueryHandlerTests extends ConnectionsTestBase
         entity3 = rejectedConnectionEntityMother.withSpecificIds(entity3, rejectedByUserId, rejectedUserId3);
         repository.save(entity3);
 
-        var request = new GetRejectedUsersByUserRequest(new UserIdDTO(rejectedByUserId));
+        var request = new GetRejectedUsersByUser.Request(new UserIdDTO(rejectedByUserId));
 
         // Act
         var result = getRejectedUsersByUserHandler.handle(request);
 
         // Assert
-        assertInstanceOf(GetRejectedUsersByUserResults.Success.class, result);
-        var successResult = (GetRejectedUsersByUserResults.Success) result;
+        assertInstanceOf(GetRejectedUsersByUser.Result.Success.class, result);
+        var successResult = (GetRejectedUsersByUser.Result.Success) result;
         assertEquals(3, successResult.rejections().size());
 
         // All rejections should be for the correct rejecting user
@@ -223,21 +217,20 @@ public class GetRejectedUsersByUserQueryHandlerTests extends ConnectionsTestBase
         // Arrange
         var rejectedByUserId = UUID.randomUUID();
         var rejectedUserId = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
 
         // Create a rejection
         var entity = rejectedConnectionEntityMother.createRejectedConnectionEntity();
         entity = rejectedConnectionEntityMother.withSpecificIds(entity, rejectedByUserId, rejectedUserId);
         repository.save(entity);
 
-        var request = new GetRejectedUsersByUserRequest(new UserIdDTO(rejectedByUserId));
+        var request = new GetRejectedUsersByUser.Request(new UserIdDTO(rejectedByUserId));
 
         // Act
         var result = getRejectedUsersByUserHandler.handle(request);
 
         // Assert - should work correctly within transaction
-        assertInstanceOf(GetRejectedUsersByUserResults.Success.class, result);
-        var successResult = (GetRejectedUsersByUserResults.Success) result;
+        assertInstanceOf(GetRejectedUsersByUser.Result.Success.class, result);
+        var successResult = (GetRejectedUsersByUser.Result.Success) result;
         assertEquals(1, successResult.rejections().size());
     }
 
@@ -245,20 +238,19 @@ public class GetRejectedUsersByUserQueryHandlerTests extends ConnectionsTestBase
     void testHandleRequest_Success_EmptyResultForNonExistentUser() {
         // Arrange
         var nonExistentUserId = UUID.randomUUID();
-        var requestId = UUID.randomUUID();
 
         // Create some rejections for other users to ensure the query is selective
         var otherEntity = rejectedConnectionEntityMother.createRejectedConnectionEntity();
         repository.save(otherEntity);
 
-        var request = new GetRejectedUsersByUserRequest(new UserIdDTO(nonExistentUserId));
+        var request = new GetRejectedUsersByUser.Request(new UserIdDTO(nonExistentUserId));
 
         // Act
         var result = getRejectedUsersByUserHandler.handle(request);
 
         // Assert
-        assertInstanceOf(GetRejectedUsersByUserResults.Success.class, result);
-        var successResult = (GetRejectedUsersByUserResults.Success) result;
+        assertInstanceOf(GetRejectedUsersByUser.Result.Success.class, result);
+        var successResult = (GetRejectedUsersByUser.Result.Success) result;
         assertTrue(successResult.rejections().isEmpty());
     }
 }

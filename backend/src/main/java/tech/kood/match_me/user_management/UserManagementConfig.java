@@ -97,7 +97,6 @@ public class UserManagementConfig {
         return Executors.newScheduledThreadPool(2); // Define 2 threads to run in parallel.
     }
 
-
     @Bean
     @Qualifier("userManagementTaskScheduler")
     public TaskScheduler taskScheduler(
@@ -121,5 +120,12 @@ public class UserManagementConfig {
                 .locations("classpath:/user_management/database/flyway")        
                 .load();
         return flyway;
+    }
+
+    @Bean
+    @Qualifier("userManagementTransactionManager")
+    public org.springframework.transaction.PlatformTransactionManager userManagementTransactionManager(
+            @Qualifier("userManagementDataSource") DataSource dataSource) {
+        return new org.springframework.jdbc.datasource.DataSourceTransactionManager(dataSource);
     }
 }

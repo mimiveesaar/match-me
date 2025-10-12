@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.connections.common.ConnectionsTestBase;
+import tech.kood.match_me.connections.features.rejectedConnection.actions.CreateRejectedConnection;
 import tech.kood.match_me.connections.features.rejectedConnection.domain.api.RejectedConnectionReasonDTO;
 import tech.kood.match_me.connections.features.rejectedConnection.internal.persistance.RejectedConnectionRepository;
 
@@ -14,11 +15,11 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
+@Transactional(transactionManager = "connectionsTransactionManager")
 public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTestBase {
 
     @Autowired
-    private CreateRejectedConnectionCommandHandler createRejectedConnectionHandler;
+    private CreateRejectedConnection.Handler createRejectedConnectionHandler;
 
     @Autowired
     private RejectedConnectionRepository repository;
@@ -30,14 +31,12 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
     void testHandleValidRequest_Success() {
         var rejectedByUserId = new UserIdDTO(UUID.randomUUID());
         var rejectedUserId = new UserIdDTO(UUID.randomUUID());
-        var requestId = UUID.randomUUID();
-        var tracingId = "test-tracing-id";
 
-        var request = new CreateRejectedConnectionRequest(rejectedByUserId, rejectedUserId, RejectedConnectionReasonDTO.CONNECTION_DECLINED);
+        var request = new CreateRejectedConnection.Request(rejectedByUserId, rejectedUserId, RejectedConnectionReasonDTO.CONNECTION_DECLINED);
         var result = createRejectedConnectionHandler.handle(request);
 
-        assertInstanceOf(CreateRejectedConnectionResults.Success.class, result);
-        var successResult = (CreateRejectedConnectionResults.Success) result;
+        assertInstanceOf(CreateRejectedConnection.Result.Success.class, result);
+        var successResult = (CreateRejectedConnection.Result.Success) result;
         assertNotNull(successResult.connectionIdDTO());
         assertNotNull(successResult.connectionIdDTO().value());
 
@@ -53,12 +52,12 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedByUserId = new UserIdDTO(UUID.randomUUID());
         var rejectedUserId = new UserIdDTO(UUID.randomUUID());
 
-        var request = new CreateRejectedConnectionRequest(rejectedByUserId, rejectedUserId,
+        var request = new CreateRejectedConnection.Request(rejectedByUserId, rejectedUserId,
                 RejectedConnectionReasonDTO.CONNECTION_REMOVED);
         var result = createRejectedConnectionHandler.handle(request);
 
-        assertInstanceOf(CreateRejectedConnectionResults.Success.class, result);
-        var successResult = (CreateRejectedConnectionResults.Success) result;
+        assertInstanceOf(CreateRejectedConnection.Result.Success.class, result);
+        var successResult = (CreateRejectedConnection.Result.Success) result;
         assertNotNull(successResult.connectionIdDTO());
     }
 
@@ -71,12 +70,12 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedByUserId = new UserIdDTO(entity.getRejectedByUserId());
         var rejectedUserId = new UserIdDTO(entity.getRejectedUserId());
 
-        var request = new CreateRejectedConnectionRequest(rejectedByUserId, rejectedUserId,
+        var request = new CreateRejectedConnection.Request(rejectedByUserId, rejectedUserId,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED);
         var result = createRejectedConnectionHandler.handle(request);
 
-        assertInstanceOf(CreateRejectedConnectionResults.AlreadyExists.class, result);
-        var alreadyExistsResult = (CreateRejectedConnectionResults.AlreadyExists) result;
+        assertInstanceOf(CreateRejectedConnection.Result.AlreadyExists.class, result);
+        var alreadyExistsResult = (CreateRejectedConnection.Result.AlreadyExists) result;
 
         // Verify no duplicate was created
         var connections = repository.findBetweenUsers(entity.getRejectedByUserId(), entity.getRejectedUserId());
@@ -88,22 +87,22 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
     void testHandleRequest_InvalidRequest_NullRejectedByUserId() {
         var rejectedUserId = new UserIdDTO(UUID.randomUUID());
 
-        var request = new CreateRejectedConnectionRequest(null, rejectedUserId,
+        var request = new CreateRejectedConnection.Request(null, rejectedUserId,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED);
         var result = createRejectedConnectionHandler.handle(request);
 
-        assertInstanceOf(CreateRejectedConnectionResults.InvalidRequest.class, result);
+        assertInstanceOf(CreateRejectedConnection.Result.InvalidRequest.class, result);
     }
 
     @Test
     void testHandleRequest_InvalidRequest_NullRejectedUserId() {
         var rejectedByUserId = new UserIdDTO(UUID.randomUUID());
 
-        var request = new CreateRejectedConnectionRequest(rejectedByUserId, null,
+        var request = new CreateRejectedConnection.Request(rejectedByUserId, null,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED);
         var result = createRejectedConnectionHandler.handle(request);
 
-        assertInstanceOf(CreateRejectedConnectionResults.InvalidRequest.class, result);
+        assertInstanceOf(CreateRejectedConnection.Result.InvalidRequest.class, result);
     }
 
     @Test
@@ -111,10 +110,10 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedByUserId = new UserIdDTO(UUID.randomUUID());
         var rejectedUserId = new UserIdDTO(UUID.randomUUID());
 
-        var request = new CreateRejectedConnectionRequest(rejectedByUserId, rejectedUserId, null);
+        var request = new CreateRejectedConnection.Request(rejectedByUserId, rejectedUserId, null);
         var result = createRejectedConnectionHandler.handle(request);
 
-        assertInstanceOf(CreateRejectedConnectionResults.InvalidRequest.class, result);
+        assertInstanceOf(CreateRejectedConnection.Result.InvalidRequest.class, result);
     }
 
     @Test
@@ -122,20 +121,20 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedByUserId = new UserIdDTO(null); // Invalid UserIdDTO
         var rejectedUserId = new UserIdDTO(UUID.randomUUID());
 
-        var request = new CreateRejectedConnectionRequest(rejectedByUserId, rejectedUserId, RejectedConnectionReasonDTO.CONNECTION_DECLINED);
+        var request = new CreateRejectedConnection.Request(rejectedByUserId, rejectedUserId, RejectedConnectionReasonDTO.CONNECTION_DECLINED);
         var result = createRejectedConnectionHandler.handle(request);
 
-        assertInstanceOf(CreateRejectedConnectionResults.InvalidRequest.class, result);
+        assertInstanceOf(CreateRejectedConnection.Result.InvalidRequest.class, result);
     }
 
     @Test
     void testHandleRequest_SameRejectedByAndRejectedUser() {
         var userId = new UserIdDTO(UUID.randomUUID());
 
-        var request = new CreateRejectedConnectionRequest(userId, userId, RejectedConnectionReasonDTO.CONNECTION_DECLINED);
+        var request = new CreateRejectedConnection.Request(userId, userId, RejectedConnectionReasonDTO.CONNECTION_DECLINED);
         var result = createRejectedConnectionHandler.handle(request);
 
-        assertInstanceOf(CreateRejectedConnectionResults.InvalidRequest.class, result);
+        assertInstanceOf(CreateRejectedConnection.Result.InvalidRequest.class, result);
     }
 
     @Test
@@ -144,16 +143,16 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var userA = new UserIdDTO(UUID.randomUUID());
         var userB = new UserIdDTO(UUID.randomUUID());
 
-        var request1 = new CreateRejectedConnectionRequest(userA, userB, RejectedConnectionReasonDTO.CONNECTION_DECLINED);
+        var request1 = new CreateRejectedConnection.Request(userA, userB, RejectedConnectionReasonDTO.CONNECTION_DECLINED);
         var result1 = createRejectedConnectionHandler.handle(request1);
-        assertInstanceOf(CreateRejectedConnectionResults.Success.class, result1);
+        assertInstanceOf(CreateRejectedConnection.Result.Success.class, result1);
 
         // Try to create a rejection from B to A
-        var request2 = new CreateRejectedConnectionRequest(userB, userA,
+        var request2 = new CreateRejectedConnection.Request(userB, userA,
                 RejectedConnectionReasonDTO.CONNECTION_REMOVED);
         var result2 = createRejectedConnectionHandler.handle(request2);
 
-        assertInstanceOf(CreateRejectedConnectionResults.AlreadyExists.class, result2);
+        assertInstanceOf(CreateRejectedConnection.Result.AlreadyExists.class, result2);
     }
 
     @Test
@@ -164,16 +163,16 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedUserId2 = new UserIdDTO(UUID.randomUUID());
 
         // Test CONNECTION_DECLINED reason
-        var request1 = new CreateRejectedConnectionRequest(rejectedByUserId1, rejectedUserId1,
+        var request1 = new CreateRejectedConnection.Request(rejectedByUserId1, rejectedUserId1,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED);
         var result1 = createRejectedConnectionHandler.handle(request1);
-        assertInstanceOf(CreateRejectedConnectionResults.Success.class, result1);
+        assertInstanceOf(CreateRejectedConnection.Result.Success.class, result1);
 
         // Test CONNECTION_REMOVED reason
-        var request2 = new CreateRejectedConnectionRequest(rejectedByUserId2, rejectedUserId2,
+        var request2 = new CreateRejectedConnection.Request(rejectedByUserId2, rejectedUserId2,
                 RejectedConnectionReasonDTO.CONNECTION_REMOVED);
         var result2 = createRejectedConnectionHandler.handle(request2);
-        assertInstanceOf(CreateRejectedConnectionResults.Success.class, result2);
+        assertInstanceOf(CreateRejectedConnection.Result.Success.class, result2);
 
         // Verify both rejections were created with correct reasons
         var rejections1 = repository.findByRejectedByUser(rejectedByUserId1.value());
@@ -189,14 +188,14 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedByUserId = new UserIdDTO(UUID.randomUUID());
         var rejectedUserId = new UserIdDTO(UUID.randomUUID());
 
-        var request = new CreateRejectedConnectionRequest(rejectedByUserId, rejectedUserId,
+        var request = new CreateRejectedConnection.Request(rejectedByUserId, rejectedUserId,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED);
 
         // Count rejections before
         var initialCount = repository.findAll().size();
 
         var result = createRejectedConnectionHandler.handle(request);
-        assertInstanceOf(CreateRejectedConnectionResults.Success.class, result);
+        assertInstanceOf(CreateRejectedConnection.Result.Success.class, result);
 
         // Verify rejection was added
         var finalCount = repository.findAll().size();
@@ -209,14 +208,14 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedUserId1 = new UserIdDTO(UUID.randomUUID());
         var rejectedUserId2 = new UserIdDTO(UUID.randomUUID());
 
-        var request1 = new CreateRejectedConnectionRequest(rejectedByUserId, rejectedUserId1, RejectedConnectionReasonDTO.CONNECTION_DECLINED);
-        var request2 = new CreateRejectedConnectionRequest(rejectedByUserId, rejectedUserId2, RejectedConnectionReasonDTO.CONNECTION_REMOVED);
+        var request1 = new CreateRejectedConnection.Request(rejectedByUserId, rejectedUserId1, RejectedConnectionReasonDTO.CONNECTION_DECLINED);
+        var request2 = new CreateRejectedConnection.Request(rejectedByUserId, rejectedUserId2, RejectedConnectionReasonDTO.CONNECTION_REMOVED);
 
         var result1 = createRejectedConnectionHandler.handle(request1);
         var result2 = createRejectedConnectionHandler.handle(request2);
 
-        assertInstanceOf(CreateRejectedConnectionResults.Success.class, result1);
-        assertInstanceOf(CreateRejectedConnectionResults.Success.class, result2);
+        assertInstanceOf(CreateRejectedConnection.Result.Success.class, result1);
+        assertInstanceOf(CreateRejectedConnection.Result.Success.class, result2);
 
         var rejectionsFromUser = repository.findByRejectedByUser(rejectedByUserId.value());
         assertEquals(2, rejectionsFromUser.size());
@@ -228,16 +227,16 @@ public class CreateRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedByUserId2 = new UserIdDTO(UUID.randomUUID());
         var rejectedUserId = new UserIdDTO(UUID.randomUUID());
 
-        var request1 = new CreateRejectedConnectionRequest(rejectedByUserId1, rejectedUserId,
+        var request1 = new CreateRejectedConnection.Request(rejectedByUserId1, rejectedUserId,
                 RejectedConnectionReasonDTO.CONNECTION_DECLINED);
-        var request2 = new CreateRejectedConnectionRequest(rejectedByUserId2, rejectedUserId,
+        var request2 = new CreateRejectedConnection.Request(rejectedByUserId2, rejectedUserId,
                 RejectedConnectionReasonDTO.CONNECTION_REMOVED);
 
         var result1 = createRejectedConnectionHandler.handle(request1);
         var result2 = createRejectedConnectionHandler.handle(request2);
 
-        assertInstanceOf(CreateRejectedConnectionResults.Success.class, result1);
-        assertInstanceOf(CreateRejectedConnectionResults.Success.class, result2);
+        assertInstanceOf(CreateRejectedConnection.Result.Success.class, result1);
+        assertInstanceOf(CreateRejectedConnection.Result.Success.class, result2);
 
         var rejectionsToUser = repository.findByRejectedUser(rejectedUserId.value());
         assertEquals(2, rejectionsToUser.size());

@@ -10,17 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
+import tech.kood.match_me.user_management.features.accessToken.actions.CreateAccessToken;
 import tech.kood.match_me.user_management.features.refreshToken.actions.CreateRefreshToken;
 import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenSecretDTO;
-import tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api.CreateAccessTokenCommandHandler;
-import tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api.CreateAccessTokenRequest;
-import tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api.CreateAccessTokenResults;
 import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
 import tech.kood.match_me.user_management.features.user.actions.registerUser.RegisterUserRequestMocker;
 
 @SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Transactional
+@Transactional(transactionManager = "userManagementTransactionManager")
 public class GetAccessTokenTests extends UserManagementTestBase {
 
     @Autowired
@@ -30,7 +27,7 @@ public class GetAccessTokenTests extends UserManagementTestBase {
     CreateRefreshToken.Handler createRefreshTokenCommandHandler;
 
     @Autowired
-    CreateAccessTokenCommandHandler getAccessTokenHandler;
+    CreateAccessToken.Handler getAccessTokenHandler;
 
     @Autowired
     RegisterUserRequestMocker registerUserRequestMocker;
@@ -48,12 +45,12 @@ public class GetAccessTokenTests extends UserManagementTestBase {
         assert createTokenResult instanceof CreateRefreshToken.Result.Success;
 
         var refreshToken = ((CreateRefreshToken.Result.Success) createTokenResult).refreshToken();
-        var getAccessTokenRequest = new CreateAccessTokenRequest(refreshToken.secret());
+        var getAccessTokenRequest = new CreateAccessToken.Request(refreshToken.secret());
         var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
 
-        assert getAccessTokenResult instanceof CreateAccessTokenResults.Success;
+        assert getAccessTokenResult instanceof CreateAccessToken.Result.Success;
 
-        var accessToken = ((CreateAccessTokenResults.Success) getAccessTokenResult).jwt();
+        var accessToken = ((CreateAccessToken.Result.Success) getAccessTokenResult).jwt();
         assert accessToken != null;
     }
 
@@ -61,9 +58,9 @@ public class GetAccessTokenTests extends UserManagementTestBase {
     public void shouldHandleInvalidRefreshToken() {
 
         //Create a request with an invalid refresh token.
-        var getAccessTokenRequest = new CreateAccessTokenRequest(new RefreshTokenSecretDTO(UUID.randomUUID()));
+        var getAccessTokenRequest = new CreateAccessToken.Request(new RefreshTokenSecretDTO(UUID.randomUUID()));
         var getAccessTokenResult = getAccessTokenHandler.handle(getAccessTokenRequest);
 
-        assert getAccessTokenResult instanceof CreateAccessTokenResults.InvalidToken : "The handler should return an InvalidToken result for an invalid refresh token";
+        assert getAccessTokenResult instanceof CreateAccessToken.Result.InvalidToken : "The handler should return an InvalidToken result for an invalid refresh token";
     }
 }

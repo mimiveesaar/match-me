@@ -8,19 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tech.kood.match_me.user_management.common.UserManagementTestBase;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
-import tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api.CreateAccessTokenCommandHandler;
-import tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api.CreateAccessTokenRequest;
-import tech.kood.match_me.user_management.features.accessToken.actions.createAccessToken.api.CreateAccessTokenResults;
-import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenHandler;
-import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenRequest;
-import tech.kood.match_me.user_management.features.accessToken.actions.validateAccessToken.api.ValidateAccessTokenResults;
+import tech.kood.match_me.user_management.features.accessToken.actions.CreateAccessToken;
+import tech.kood.match_me.user_management.features.accessToken.actions.ValidateAccessToken;
 import tech.kood.match_me.user_management.features.refreshToken.actions.CreateRefreshToken;
 import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
 import tech.kood.match_me.user_management.features.user.actions.registerUser.RegisterUserRequestMocker;
 
 @SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Transactional
+@Transactional(transactionManager = "userManagementTransactionManager")
 public class ValidateAccessTokenTests extends UserManagementTestBase {
 
     @Autowired
@@ -30,10 +25,10 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
     CreateRefreshToken.Handler createRefreshTokenCommandHandler;
 
     @Autowired
-    CreateAccessTokenCommandHandler createAccessTokenHandler;
+    CreateAccessToken.Handler createAccessTokenHandler;
 
     @Autowired
-    ValidateAccessTokenHandler validateAccessTokenHandler;
+    ValidateAccessToken.Handler validateAccessTokenHandler;
 
     @Autowired
     RegisterUserRequestMocker registerUserRequestMocker;
@@ -50,25 +45,25 @@ public class ValidateAccessTokenTests extends UserManagementTestBase {
         assert createTokenResult instanceof CreateRefreshToken.Result.Success;
 
         var refreshToken = ((CreateRefreshToken.Result.Success) createTokenResult).refreshToken();
-        var getAccessTokenRequest = new CreateAccessTokenRequest(refreshToken.secret());
+        var getAccessTokenRequest = new CreateAccessToken.Request(refreshToken.secret());
         var getAccessTokenResult = createAccessTokenHandler.handle(getAccessTokenRequest);
 
-        assert getAccessTokenResult instanceof CreateAccessTokenResults.Success;
+        assert getAccessTokenResult instanceof CreateAccessToken.Result.Success;
 
-        var jwt = ((CreateAccessTokenResults.Success) getAccessTokenResult).jwt();
+        var jwt = ((CreateAccessToken.Result.Success) getAccessTokenResult).jwt();
         assert jwt != null;
 
-        var validateRequest = new ValidateAccessTokenRequest(jwt);
+        var validateRequest = new ValidateAccessToken.Request(jwt);
         var validateResult = validateAccessTokenHandler.handle(validateRequest);
 
-        assert validateResult instanceof ValidateAccessTokenResults.Success;
+        assert validateResult instanceof ValidateAccessToken.Result.Success;
     }
 
     @Test
     public void shouldHandleInvalidAccessToken() {
-        var validateRequest = new ValidateAccessTokenRequest("invalid-token");
+        var validateRequest = new ValidateAccessToken.Request("invalid-token");
         var validateResult = validateAccessTokenHandler.handle(validateRequest);
 
-        assert validateResult instanceof ValidateAccessTokenResults.InvalidToken : "The handler should return an InvalidToken result for an invalid access token";
+        assert validateResult instanceof ValidateAccessToken.Result.InvalidToken : "The handler should return an InvalidToken result for an invalid access token";
     }
 }

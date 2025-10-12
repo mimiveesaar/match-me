@@ -7,12 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.connections.common.ConnectionsTestBase;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.getConnections.api.GetAcceptedConnectionsQueryHandler;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.getConnections.api.GetAcceptedConnectionsRequest;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.getConnections.api.GetAcceptedConnectionsResults;
-import tech.kood.match_me.connections.features.pendingConnection.actions.acceptRequest.api.AcceptConnectionCommandHandler;
-import tech.kood.match_me.connections.features.pendingConnection.actions.acceptRequest.api.AcceptConnectionRequest;
-import tech.kood.match_me.connections.features.pendingConnection.actions.acceptRequest.api.AcceptConnectionResults;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.CreateAcceptedConnection;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.GetAcceptedConnections;
+import tech.kood.match_me.connections.features.pendingConnection.actions.AcceptConnectionRequest;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.PendingConnectionRepository;
 
 import java.util.UUID;
@@ -20,11 +17,11 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
+@Transactional(transactionManager = "connectionsTransactionManager")
 public class AcceptConnectionCommandHandlerTests extends ConnectionsTestBase {
 
     @Autowired
-    private AcceptConnectionCommandHandler acceptConnectionCommandHandler;
+    private AcceptConnectionRequest.Handler acceptConnectionHandler;
 
     @Autowired
     private PendingConnectionRepository pendingConnectionRepository;
@@ -33,10 +30,10 @@ public class AcceptConnectionCommandHandlerTests extends ConnectionsTestBase {
     private PendingConnectionEntityMother pendingConnectionEntityMother;
 
     @Autowired
-    private GetAcceptedConnectionsQueryHandler getAcceptedConnectionsQueryHandler;
+    private GetAcceptedConnections.Handler getAcceptedConnectionsHandler;
 
     @Autowired
-    private CreateAcceptedConnectionCommandHandler createAcceptedConnectionHandler;
+    private CreateAcceptedConnection.Handler createAcceptedConnectionHandler;
 
     @Test
     void testHandleValidRequest_Success() {
@@ -47,19 +44,19 @@ public class AcceptConnectionCommandHandlerTests extends ConnectionsTestBase {
         var targetId = new UserIdDTO(pendingConnection.getTargetId());
         var senderId = new UserIdDTO(pendingConnection.getSenderId());
 
-        var request = new AcceptConnectionRequest(connectionId, targetId);
+        var request = new AcceptConnectionRequest.Request(connectionId, targetId);
 
-        var result = acceptConnectionCommandHandler.handle(request);
+        var result = acceptConnectionHandler.handle(request);
 
-        assertInstanceOf(AcceptConnectionResults.Success.class, result);
+        assertInstanceOf(AcceptConnectionRequest.Result.Success.class, result);
 
         assertTrue(pendingConnectionRepository.findById(pendingConnection.getId()).isEmpty());
 
-        var getAcceptedConnectionsRequest = new GetAcceptedConnectionsRequest(new UserIdDTO(targetId.value()));
-        var acceptedConnectionsResults = getAcceptedConnectionsQueryHandler.handle(getAcceptedConnectionsRequest);
+        var getAcceptedConnectionsRequest = new GetAcceptedConnections.Request(new UserIdDTO(targetId.value()));
+        var acceptedConnectionsResults = getAcceptedConnectionsHandler.handle(getAcceptedConnectionsRequest);
 
-        assertInstanceOf(GetAcceptedConnectionsResults.Success.class, acceptedConnectionsResults);
-        var successResult = (GetAcceptedConnectionsResults.Success) acceptedConnectionsResults;
+        assertInstanceOf(GetAcceptedConnections.Result.Success.class, acceptedConnectionsResults);
+        var successResult = (GetAcceptedConnections.Result.Success) acceptedConnectionsResults;
         var acceptedConnections = successResult.acceptedConnections();
         assertFalse(acceptedConnections.isEmpty());
         var acceptedConnection = acceptedConnections.getFirst();
@@ -72,11 +69,11 @@ public class AcceptConnectionCommandHandlerTests extends ConnectionsTestBase {
         var connectionId = new ConnectionIdDTO(UUID.randomUUID());
         var acceptedByUserId = new UserIdDTO(UUID.randomUUID());
 
-        var request = new AcceptConnectionRequest(connectionId, acceptedByUserId);
+        var request = new AcceptConnectionRequest.Request(connectionId, acceptedByUserId);
 
-        var result = acceptConnectionCommandHandler.handle(request);
+        var result = acceptConnectionHandler.handle(request);
 
-        assertInstanceOf(AcceptConnectionResults.NotFound.class, result);
+        assertInstanceOf(AcceptConnectionRequest.Result.NotFound.class, result);
     }
 
     @Test
@@ -87,12 +84,12 @@ public class AcceptConnectionCommandHandlerTests extends ConnectionsTestBase {
         var connectionId = new ConnectionIdDTO(pendingConnection.getId());
         var invalidTargetId = new UserIdDTO(UUID.randomUUID()); // A different user than the target
 
-        var request = new AcceptConnectionRequest(connectionId, invalidTargetId);
+        var request = new AcceptConnectionRequest.Request(connectionId, invalidTargetId);
 
-        var result = acceptConnectionCommandHandler.handle(request);
+        var result = acceptConnectionHandler.handle(request);
 
-        assertInstanceOf(AcceptConnectionResults.InvalidRequest.class, result);
-        var invalidRequestResult = (AcceptConnectionResults.InvalidRequest) result;
+        assertInstanceOf(AcceptConnectionRequest.Result.InvalidRequest.class, result);
+        var invalidRequestResult = (AcceptConnectionRequest.Result.InvalidRequest) result;
         assertNotNull(invalidRequestResult.error());
         assertFalse(invalidRequestResult.error().errors().isEmpty());
         assertEquals("acceptedByUserId", invalidRequestResult.error().errors().get(0).field());
@@ -102,12 +99,12 @@ public class AcceptConnectionCommandHandlerTests extends ConnectionsTestBase {
     void testHandleInvalidRequest_NullConnectionId() {
         var acceptedByUserId = new UserIdDTO(UUID.randomUUID());
 
-        var request = new AcceptConnectionRequest(null, acceptedByUserId);
+        var request = new AcceptConnectionRequest.Request(null, acceptedByUserId);
 
-        var result = acceptConnectionCommandHandler.handle(request);
+        var result = acceptConnectionHandler.handle(request);
 
-        assertInstanceOf(AcceptConnectionResults.InvalidRequest.class, result);
-        var invalidRequestResult = (AcceptConnectionResults.InvalidRequest) result;
+        assertInstanceOf(AcceptConnectionRequest.Result.InvalidRequest.class, result);
+        var invalidRequestResult = (AcceptConnectionRequest.Result.InvalidRequest) result;
         assertNotNull(invalidRequestResult.error());
         assertFalse(invalidRequestResult.error().errors().isEmpty());
     }
@@ -116,12 +113,12 @@ public class AcceptConnectionCommandHandlerTests extends ConnectionsTestBase {
     void testHandleInvalidRequest_NullAcceptedByUser() {
         var connectionId = new ConnectionIdDTO(UUID.randomUUID());
 
-        var request = new AcceptConnectionRequest(connectionId, null);
+        var request = new AcceptConnectionRequest.Request(connectionId, null);
 
-        var result = acceptConnectionCommandHandler.handle(request);
+        var result = acceptConnectionHandler.handle(request);
 
-        assertInstanceOf(AcceptConnectionResults.InvalidRequest.class, result);
-        var invalidRequestResult = (AcceptConnectionResults.InvalidRequest) result;
+        assertInstanceOf(AcceptConnectionRequest.Result.InvalidRequest.class, result);
+        var invalidRequestResult = (AcceptConnectionRequest.Result.InvalidRequest) result;
         assertNotNull(invalidRequestResult.error());
         assertFalse(invalidRequestResult.error().errors().isEmpty());
     }
@@ -137,15 +134,15 @@ public class AcceptConnectionCommandHandlerTests extends ConnectionsTestBase {
         var senderId = new UserIdDTO(pendingConnection.getSenderId());
 
         // Create an accepted connection between the same users
-        var createAcceptedConnectionRequest = new CreateAcceptedConnectionRequest(connectionId, targetId, senderId);
+        var createAcceptedConnectionRequest = new CreateAcceptedConnection.Request(connectionId, targetId, senderId);
         var createResult = createAcceptedConnectionHandler.handle(createAcceptedConnectionRequest);
-        assertInstanceOf(CreateAcceptedConnectionResults.Success.class, createResult);
+        assertInstanceOf(CreateAcceptedConnection.Result.Success.class, createResult);
 
         // Now, attempt to accept the same pending connection
-        var request = new AcceptConnectionRequest(connectionId, targetId);
+        var request = new AcceptConnectionRequest.Request(connectionId, targetId);
 
-        var result = acceptConnectionCommandHandler.handle(request);
+        var result = acceptConnectionHandler.handle(request);
 
-        assertInstanceOf(AcceptConnectionResults.AlreadyAccepted.class, result);
+        assertInstanceOf(AcceptConnectionRequest.Result.AlreadyAccepted.class, result);
     }
 }

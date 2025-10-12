@@ -10,7 +10,7 @@ import tech.kood.match_me.connections.features.pendingConnection.domain.PendingC
 
 import java.util.List;
 
-public class GetOutgoingRequests {
+public class GetIncomingConnectionRequests {
 
     public record Request(
             @NotNull @Valid @JsonProperty("user_id") UserIdDTO userId
@@ -25,7 +25,7 @@ public class GetOutgoingRequests {
             Result.InvalidRequest,
             Result.SystemError {
         record Success(
-                @NotNull @JsonProperty("outgoing_requests") List<PendingConnectionDTO> outgoingRequests) implements Result {
+                @NotNull @JsonProperty("incoming_requests") List<PendingConnectionDTO> incomingRequests) implements Result {
         }
 
         record InvalidRequest(@NotNull @JsonProperty("error") InvalidInputErrorDTO error

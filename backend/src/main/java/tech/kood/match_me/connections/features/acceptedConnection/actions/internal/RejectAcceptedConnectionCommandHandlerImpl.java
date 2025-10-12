@@ -3,6 +3,7 @@ package tech.kood.match_me.connections.features.acceptedConnection.actions.inter
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
@@ -13,8 +14,8 @@ import tech.kood.match_me.connections.features.rejectedConnection.domain.api.Rej
 
 import java.util.UUID;
 
-@Component
 @ApplicationLayer
+@Service
 public class RejectAcceptedConnectionCommandHandlerImpl
         implements RejectAcceptedConnection.Handler {
 

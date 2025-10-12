@@ -13,7 +13,7 @@ import tech.kood.match_me.user_management.features.user.internal.persistance.Use
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@Transactional
+@Transactional(transactionManager = "userManagementTransactionManager")
 public class UserRepositoryTests extends UserManagementTestBase {
 
     @Autowired

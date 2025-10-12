@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.connections.common.ConnectionsTestBase;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
+import tech.kood.match_me.connections.features.rejectedConnection.actions.DeleteRejectedConnection;
 import tech.kood.match_me.connections.features.rejectedConnection.internal.persistance.RejectedConnectionRepository;
 
 import java.util.UUID;
@@ -13,11 +14,11 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
+@Transactional(transactionManager = "connectionsTransactionManager")
 public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTestBase {
 
     @Autowired
-    private DeleteRejectedConnectionCommandHandler deleteRejectedConnectionHandler;
+    private DeleteRejectedConnection.Handler deleteRejectedConnectionHandler;
 
     @Autowired
     private RejectedConnectionRepository repository;
@@ -33,13 +34,13 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
 
         var connectionId = new ConnectionIdDTO(rejectedConnectionEntity.getId());
 
-        var request = new DeleteRejectedConnectionRequest(connectionId);
+        var request = new DeleteRejectedConnection.Request(connectionId);
 
         // Act
         var result = deleteRejectedConnectionHandler.handle(request);
 
         // Assert
-        assertInstanceOf(DeleteRejectedConnectionResults.Success.class, result);
+        assertInstanceOf(DeleteRejectedConnection.Result.Success.class, result);
 
         // Verify the rejected connection was actually deleted from the repository
         var deletedConnection = repository.findById(rejectedConnectionEntity.getId());
@@ -51,13 +52,13 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         // Arrange: Use a non-existent connection ID
         var nonExistentConnectionId = new ConnectionIdDTO(UUID.randomUUID());
 
-        var request = new DeleteRejectedConnectionRequest(nonExistentConnectionId);
+        var request = new DeleteRejectedConnection.Request(nonExistentConnectionId);
 
         // Act
         var result = deleteRejectedConnectionHandler.handle(request);
 
         // Assert
-        assertInstanceOf(DeleteRejectedConnectionResults.NotFound.class, result);
+        assertInstanceOf(DeleteRejectedConnection.Result.NotFound.class, result);
     }
 
     @Test
@@ -66,13 +67,13 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         // For now, we'll test with a null connection ID to trigger validation error
 
         // Using null for connectionId should trigger a system error due to validation
-        var request = new DeleteRejectedConnectionRequest(new ConnectionIdDTO(null));
+        var request = new DeleteRejectedConnection.Request(new ConnectionIdDTO(null));
 
         // Act
         var result = deleteRejectedConnectionHandler.handle(request);
 
         // Assert
-        assertInstanceOf(DeleteRejectedConnectionResults.InvalidRequest.class, result);
+        assertInstanceOf(DeleteRejectedConnection.Result.InvalidRequest.class, result);
 
     }
 
@@ -84,21 +85,21 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
 
         var connectionId = new ConnectionIdDTO(rejectedConnectionEntity.getId());
 
-        var request1 = new DeleteRejectedConnectionRequest(connectionId);
-        var request2 = new DeleteRejectedConnectionRequest(connectionId);
+        var request1 = new DeleteRejectedConnection.Request(connectionId);
+        var request2 = new DeleteRejectedConnection.Request(connectionId);
 
         // Act: First deletion
         var result1 = deleteRejectedConnectionHandler.handle(request1);
 
         // Assert: First deletion succeeds
-        assertInstanceOf(DeleteRejectedConnectionResults.Success.class, result1);
+        assertInstanceOf(DeleteRejectedConnection.Result.Success.class, result1);
 
         // Act: Second deletion attempt
         var result2 = deleteRejectedConnectionHandler.handle(request2);
 
         // Assert: Second deletion returns NotFound
-        assertInstanceOf(DeleteRejectedConnectionResults.NotFound.class, result2);
-        var notFoundResult = (DeleteRejectedConnectionResults.NotFound) result2;
+        assertInstanceOf(DeleteRejectedConnection.Result.NotFound.class, result2);
+        var notFoundResult = (DeleteRejectedConnection.Result.NotFound) result2;
     }
 
     @Test
@@ -114,13 +115,13 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
 
         var connectionId1 = new ConnectionIdDTO(entity1.getId());
 
-        var request = new DeleteRejectedConnectionRequest(connectionId1);
+        var request = new DeleteRejectedConnection.Request(connectionId1);
 
         // Act
         var result = deleteRejectedConnectionHandler.handle(request);
 
         // Assert
-        assertInstanceOf(DeleteRejectedConnectionResults.Success.class, result);
+        assertInstanceOf(DeleteRejectedConnection.Result.Success.class, result);
 
         // Verify only one entity was deleted
         var finalCount = repository.findAll().size();
@@ -139,7 +140,7 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
 
         var connectionId = new ConnectionIdDTO(rejectedConnectionEntity.getId());
 
-        var request = new DeleteRejectedConnectionRequest(connectionId);
+        var request = new DeleteRejectedConnection.Request(connectionId);
 
         // Count before deletion
         var initialCount = repository.findAll().size();
@@ -148,7 +149,7 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var result = deleteRejectedConnectionHandler.handle(request);
 
         // Assert
-        assertInstanceOf(DeleteRejectedConnectionResults.Success.class, result);
+        assertInstanceOf(DeleteRejectedConnection.Result.Success.class, result);
 
         // Verify count decreased by 1
         var finalCount = repository.findAll().size();
@@ -166,16 +167,16 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var connectionId1 = new ConnectionIdDTO(entity1.getId());
         var connectionId2 = new ConnectionIdDTO(entity2.getId());
 
-        var request1 = new DeleteRejectedConnectionRequest(connectionId1);
-        var request2 = new DeleteRejectedConnectionRequest(connectionId2);
+        var request1 = new DeleteRejectedConnection.Request(connectionId1);
+        var request2 = new DeleteRejectedConnection.Request(connectionId2);
 
         // Act
         var result1 = deleteRejectedConnectionHandler.handle(request1);
         var result2 = deleteRejectedConnectionHandler.handle(request2);
 
         // Assert
-        assertInstanceOf(DeleteRejectedConnectionResults.Success.class, result1);
-        assertInstanceOf(DeleteRejectedConnectionResults.Success.class, result2);
+        assertInstanceOf(DeleteRejectedConnection.Result.Success.class, result1);
+        assertInstanceOf(DeleteRejectedConnection.Result.Success.class, result2);
 
         // Verify both entities were deleted
         assertTrue(repository.findById(entity1.getId()).isEmpty());
@@ -191,8 +192,8 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
         var connectionId = new ConnectionIdDTO(rejectedConnectionEntity.getId());
 
         // Simulate concurrent deletion requests
-        var request1 = new DeleteRejectedConnectionRequest(connectionId);
-        var request2 = new DeleteRejectedConnectionRequest(connectionId);
+        var request1 = new DeleteRejectedConnection.Request(connectionId);
+        var request2 = new DeleteRejectedConnection.Request(connectionId);
 
         // Act: Execute requests (in real concurrent scenario, timing would matter)
         var result1 = deleteRejectedConnectionHandler.handle(request1);
@@ -200,10 +201,10 @@ public class DeleteRejectedConnectionCommandHandlerTests extends ConnectionsTest
 
         // Assert: One should succeed, one should return NotFound
         assertTrue(
-            (result1 instanceof DeleteRejectedConnectionResults.Success &&
-             result2 instanceof DeleteRejectedConnectionResults.NotFound) ||
-            (result1 instanceof DeleteRejectedConnectionResults.NotFound &&
-             result2 instanceof DeleteRejectedConnectionResults.Success)
+            (result1 instanceof DeleteRejectedConnection.Result.Success &&
+             result2 instanceof DeleteRejectedConnection.Result.NotFound) ||
+            (result1 instanceof DeleteRejectedConnection.Result.NotFound &&
+             result2 instanceof DeleteRejectedConnection.Result.Success)
         );
 
         // Verify the connection is deleted

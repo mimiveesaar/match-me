@@ -16,10 +16,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
+@Transactional(transactionManager = "connectionsTransactionManager")
 public class PendingConnectionRepositoryTests extends ConnectionsTestBase {
-    @Autowired
-    private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
     private PendingConnectionRepository repository;

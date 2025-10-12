@@ -12,7 +12,7 @@ import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Transactional
+@Transactional(transactionManager = "userManagementTransactionManager")
 public class RegisterUserTests extends UserManagementTestBase {
 
     @Autowired

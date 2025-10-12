@@ -1,6 +1,7 @@
 package tech.kood.match_me.connections.features.pendingConnection.actions.internal;
 
 import jakarta.validation.Validator;
+import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.stereotype.Service;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
@@ -12,6 +13,7 @@ import tech.kood.match_me.connections.features.pendingConnection.internal.persis
 
 import java.util.List;
 
+@ApplicationLayer
 @Service
 public class GetPendingConnectionsQueryHandlerImpl implements GetPendingConnections.Handler {
 

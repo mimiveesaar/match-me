@@ -7,9 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.connections.common.ConnectionsTestBase;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.getConnections.api.GetAcceptedConnectionsQueryHandler;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.getConnections.api.GetAcceptedConnectionsRequest;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.getConnections.api.GetAcceptedConnectionsResults;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.GetAcceptedConnections;
 import tech.kood.match_me.connections.features.acceptedConnection.internal.persistance.AcceptedConnectionRepository;
 import tech.kood.match_me.connections.features.acceptedConnection.internal.persistance.acceptedConnectionEntity.AcceptedConnectionEntityFactory;
 
@@ -19,11 +17,11 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
+@Transactional(transactionManager = "connectionsTransactionManager")
 public class GetAcceptedConnectionsQueryHandlerTests extends ConnectionsTestBase {
 
     @Autowired
-    private GetAcceptedConnectionsQueryHandler queryHandler;
+    private GetAcceptedConnections.Handler queryHandler;
 
     @Autowired
     private AcceptedConnectionRepository repository;
@@ -48,12 +46,12 @@ public class GetAcceptedConnectionsQueryHandlerTests extends ConnectionsTestBase
         repository.save(connection2);
 
         // Act
-        var request = new GetAcceptedConnectionsRequest(userId);
+        var request = new GetAcceptedConnections.Request(userId);
         var result = queryHandler.handle(request);
 
         // Assert
-        assertInstanceOf(GetAcceptedConnectionsResults.Success.class, result);
-        var successResult = (GetAcceptedConnectionsResults.Success) result;
+        assertInstanceOf(GetAcceptedConnections.Result.Success.class, result);
+        var successResult = (GetAcceptedConnections.Result.Success) result;
         assertNotNull(successResult.acceptedConnections());
         assertEquals(2, successResult.acceptedConnections().size());
         
@@ -73,12 +71,12 @@ public class GetAcceptedConnectionsQueryHandlerTests extends ConnectionsTestBase
         var userId = new UserIdDTO(UUID.randomUUID());
 
         // Act
-        var request = new GetAcceptedConnectionsRequest(userId);
+        var request = new GetAcceptedConnections.Request(userId);
         var result = queryHandler.handle(request);
 
         // Assert
-        assertInstanceOf(GetAcceptedConnectionsResults.Success.class, result);
-        var successResult = (GetAcceptedConnectionsResults.Success) result;
+        assertInstanceOf(GetAcceptedConnections.Result.Success.class, result);
+        var successResult = (GetAcceptedConnections.Result.Success) result;
         assertNotNull(successResult.acceptedConnections());
         assertTrue(successResult.acceptedConnections().isEmpty());
     }
@@ -87,12 +85,12 @@ public class GetAcceptedConnectionsQueryHandlerTests extends ConnectionsTestBase
     void testHandleInvalidRequest_NullUserId_ReturnsInvalidRequest() {
 
         // Act - create request with null userId which should fail validation
-        var request = new GetAcceptedConnectionsRequest(null);
+        var request = new GetAcceptedConnections.Request(null);
         var result = queryHandler.handle(request);
 
         // Assert
-        assertInstanceOf(GetAcceptedConnectionsResults.InvalidRequest.class, result);
-        var invalidRequestResult = (GetAcceptedConnectionsResults.InvalidRequest) result;
+        assertInstanceOf(GetAcceptedConnections.Result.InvalidRequest.class, result);
+        var invalidRequestResult = (GetAcceptedConnections.Result.InvalidRequest) result;
         assertNotNull(invalidRequestResult.error());
         assertFalse(invalidRequestResult.error().errors().isEmpty());
     }
@@ -109,12 +107,12 @@ public class GetAcceptedConnectionsQueryHandlerTests extends ConnectionsTestBase
         repository.save(connection);
 
         // Act
-        var request = new GetAcceptedConnectionsRequest(userId);
+        var request = new GetAcceptedConnections.Request(userId);
         var result = queryHandler.handle(request);
 
         // Assert
-        assertInstanceOf(GetAcceptedConnectionsResults.Success.class, result);
-        var successResult = (GetAcceptedConnectionsResults.Success) result;
+        assertInstanceOf(GetAcceptedConnections.Result.Success.class, result);
+        var successResult = (GetAcceptedConnections.Result.Success) result;
         assertEquals(1, successResult.acceptedConnections().size());
         
         var connection1 = successResult.acceptedConnections().get(0);
@@ -134,12 +132,12 @@ public class GetAcceptedConnectionsQueryHandlerTests extends ConnectionsTestBase
         repository.save(connection);
 
         // Act
-        var request = new GetAcceptedConnectionsRequest(userId);
+        var request = new GetAcceptedConnections.Request(userId);
         var result = queryHandler.handle(request);
 
         // Assert
-        assertInstanceOf(GetAcceptedConnectionsResults.Success.class, result);
-        var successResult = (GetAcceptedConnectionsResults.Success) result;
+        assertInstanceOf(GetAcceptedConnections.Result.Success.class, result);
+        var successResult = (GetAcceptedConnections.Result.Success) result;
         assertEquals(1, successResult.acceptedConnections().size());
         
         var connection1 = successResult.acceptedConnections().get(0);

@@ -18,7 +18,7 @@ import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
 import tech.kood.match_me.user_management.features.user.actions.registerUser.RegisterUserRequestMocker;
 
 @SpringBootTest
-@Transactional
+@Transactional(transactionManager = "userManagementTransactionManager")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CreateRefreshTokenTests extends UserManagementTestBase {
 

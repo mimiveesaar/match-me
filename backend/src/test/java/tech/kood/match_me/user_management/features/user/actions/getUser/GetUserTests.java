@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Transactional
+@Transactional(transactionManager = "userManagementTransactionManager")
 public class GetUserTests extends UserManagementTestBase {
 
     @Autowired

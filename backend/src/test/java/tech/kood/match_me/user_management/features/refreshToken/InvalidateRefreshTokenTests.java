@@ -18,7 +18,7 @@ import tech.kood.match_me.user_management.features.user.actions.registerUser.Reg
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Transactional
+@Transactional(transactionManager = "userManagementTransactionManager")
 public class InvalidateRefreshTokenTests extends UserManagementTestBase {
 
     @Autowired

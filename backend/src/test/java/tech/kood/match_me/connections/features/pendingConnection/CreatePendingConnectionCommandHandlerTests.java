@@ -7,9 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
 import tech.kood.match_me.connections.common.ConnectionsTestBase;
-import tech.kood.match_me.connections.features.pendingConnection.actions.createRequest.api.ConnectionRequest;
-import tech.kood.match_me.connections.features.pendingConnection.actions.createRequest.api.ConnectionRequestCommandHandler;
-import tech.kood.match_me.connections.features.pendingConnection.actions.createRequest.api.ConnectionRequestResults;
+import tech.kood.match_me.connections.features.pendingConnection.actions.CreateConnectionRequest;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.PendingConnectionRepository;
 
 import java.util.UUID;
@@ -17,11 +15,11 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
+@Transactional(transactionManager = "connectionsTransactionManager")
 public class CreatePendingConnectionCommandHandlerTests extends ConnectionsTestBase {
 
     @Autowired
-    private ConnectionRequestCommandHandler connectionRequestHandler;
+    private CreateConnectionRequest.Handler connectionRequestHandler;
 
     @Autowired
     private PendingConnectionRepository repository;
@@ -37,11 +35,11 @@ public class CreatePendingConnectionCommandHandlerTests extends ConnectionsTestB
         var senderId = new UserIdDTO(UUID.randomUUID());
         var targetId = new UserIdDTO(UUID.randomUUID());
 
-        var request = new ConnectionRequest(targetId, senderId);
+        var request = new CreateConnectionRequest.Request(targetId, senderId);
         var result = connectionRequestHandler.handle(request);
 
-        assertInstanceOf(ConnectionRequestResults.Success.class, result);
-        var successResult = (ConnectionRequestResults.Success) result;
+        assertInstanceOf(CreateConnectionRequest.Result.Success.class, result);
+        var successResult = (CreateConnectionRequest.Result.Success) result;
         assertNotNull(successResult.connectionIdDTO());
         assertNotNull(successResult.connectionIdDTO().value());
 
@@ -57,11 +55,11 @@ public class CreatePendingConnectionCommandHandlerTests extends ConnectionsTestB
         var senderId = new UserIdDTO(UUID.randomUUID());
         var targetId = new UserIdDTO(UUID.randomUUID());
 
-        var request = new ConnectionRequest(targetId, senderId);
+        var request = new CreateConnectionRequest.Request(targetId, senderId);
         var result = connectionRequestHandler.handle(request);
 
-        assertInstanceOf(ConnectionRequestResults.Success.class, result);
-        var successResult = (ConnectionRequestResults.Success) result;
+        assertInstanceOf(CreateConnectionRequest.Result.Success.class, result);
+        var successResult = (CreateConnectionRequest.Result.Success) result;
         assertNotNull(successResult.connectionIdDTO());
     }
 
@@ -74,11 +72,11 @@ public class CreatePendingConnectionCommandHandlerTests extends ConnectionsTestB
         var senderId = new UserIdDTO(entity.getSenderId());
         var targetId = new UserIdDTO(entity.getTargetId());
 
-        var request = new ConnectionRequest(targetId, senderId);
+        var request = new CreateConnectionRequest.Request(targetId, senderId);
         var result = connectionRequestHandler.handle(request);
 
-        assertInstanceOf(ConnectionRequestResults.AlreadyExists.class, result);
-        var alreadyExistsResult = (ConnectionRequestResults.AlreadyExists) result;
+        assertInstanceOf(CreateConnectionRequest.Result.AlreadyExists.class, result);
+        var alreadyExistsResult = (CreateConnectionRequest.Result.AlreadyExists) result;
 
         // Verify no duplicate was created
         var connections = repository.findBetweenUsers(entity.getSenderId(), entity.getTargetId());
@@ -90,11 +88,11 @@ public class CreatePendingConnectionCommandHandlerTests extends ConnectionsTestB
     void testHandleRequest_InvalidRequest_NullSenderId() {
         var targetId = new UserIdDTO(UUID.randomUUID());
 
-        var request = new ConnectionRequest(targetId, null);
+        var request = new CreateConnectionRequest.Request(targetId, null);
         var result = connectionRequestHandler.handle(request);
 
-        assertInstanceOf(ConnectionRequestResults.InvalidRequest.class, result);
-        var invalidResult = (ConnectionRequestResults.InvalidRequest) result;
+        assertInstanceOf(CreateConnectionRequest.Result.InvalidRequest.class, result);
+        var invalidResult = (CreateConnectionRequest.Result.InvalidRequest) result;
         assertNotNull(invalidResult.error());
     }
 
@@ -102,11 +100,11 @@ public class CreatePendingConnectionCommandHandlerTests extends ConnectionsTestB
     void testHandleRequest_InvalidRequest_NullTargetId() {
         var senderId = new UserIdDTO(UUID.randomUUID());
 
-        var request = new ConnectionRequest(null, senderId);
+        var request = new CreateConnectionRequest.Request(null, senderId);
         var result = connectionRequestHandler.handle(request);
 
-        assertInstanceOf(ConnectionRequestResults.InvalidRequest.class, result);
-        var invalidResult = (ConnectionRequestResults.InvalidRequest) result;
+        assertInstanceOf(CreateConnectionRequest.Result.InvalidRequest.class, result);
+        var invalidResult = (CreateConnectionRequest.Result.InvalidRequest) result;
         assertNotNull(invalidResult.error());
     }
 
@@ -115,11 +113,11 @@ public class CreatePendingConnectionCommandHandlerTests extends ConnectionsTestB
         var senderId = new UserIdDTO(null); // Invalid UserIdDTO
         var targetId = new UserIdDTO(UUID.randomUUID());
 
-        var request = new ConnectionRequest(targetId, senderId);
+        var request = new CreateConnectionRequest.Request(targetId, senderId);
         var result = connectionRequestHandler.handle(request);
 
-        assertInstanceOf(ConnectionRequestResults.InvalidRequest.class, result);
-        var invalidResult = (ConnectionRequestResults.InvalidRequest) result;
+        assertInstanceOf(CreateConnectionRequest.Result.InvalidRequest.class, result);
+        var invalidResult = (CreateConnectionRequest.Result.InvalidRequest) result;
         assertNotNull(invalidResult.error());
     }
 
@@ -127,7 +125,7 @@ public class CreatePendingConnectionCommandHandlerTests extends ConnectionsTestB
     void testHandleRequest_SameSenderAndTarget() {
         var userId = new UserIdDTO(UUID.randomUUID());
 
-        var request = new ConnectionRequest(userId, userId);
+        var request = new CreateConnectionRequest.Request(userId, userId);
         var result = connectionRequestHandler.handle(request);
 
         // This should be handled by validation or business logic
@@ -141,16 +139,16 @@ public class CreatePendingConnectionCommandHandlerTests extends ConnectionsTestB
         var userA = new UserIdDTO(UUID.randomUUID());
         var userB = new UserIdDTO(UUID.randomUUID());
 
-        var request1 = new ConnectionRequest(userB, userA);
+        var request1 = new CreateConnectionRequest.Request(userB, userA);
         var result1 = connectionRequestHandler.handle(request1);
-        assertInstanceOf(ConnectionRequestResults.Success.class, result1);
+        assertInstanceOf(CreateConnectionRequest.Result.Success.class, result1);
 
         // Try to create a connection from B to A
-        var request2 = new ConnectionRequest(userA, userB);
+        var request2 = new CreateConnectionRequest.Request(userA, userB);
         var result2 = connectionRequestHandler.handle(request2);
 
         // This should return already exists as it's the same connection
-        assertInstanceOf(ConnectionRequestResults.AlreadyExists.class, result2);
+        assertInstanceOf(CreateConnectionRequest.Result.AlreadyExists.class, result2);
     }
 
     @Test
@@ -158,13 +156,13 @@ public class CreatePendingConnectionCommandHandlerTests extends ConnectionsTestB
         var senderId = new UserIdDTO(UUID.randomUUID());
         var targetId = new UserIdDTO(UUID.randomUUID());
 
-        var request = new ConnectionRequest(targetId, senderId);
+        var request = new CreateConnectionRequest.Request(targetId, senderId);
 
         // Count connections before
         var initialCount = repository.findAll().size();
 
         var result = connectionRequestHandler.handle(request);
-        assertInstanceOf(ConnectionRequestResults.Success.class, result);
+        assertInstanceOf(CreateConnectionRequest.Result.Success.class, result);
 
         // Verify connection was added
         var finalCount = repository.findAll().size();
@@ -177,14 +175,14 @@ public class CreatePendingConnectionCommandHandlerTests extends ConnectionsTestB
         var targetId1 = new UserIdDTO(UUID.randomUUID());
         var targetId2 = new UserIdDTO(UUID.randomUUID());
 
-        var request1 = new ConnectionRequest(targetId1, senderId);
-        var request2 = new ConnectionRequest(targetId2, senderId);
+        var request1 = new CreateConnectionRequest.Request(targetId1, senderId);
+        var request2 = new CreateConnectionRequest.Request(targetId2, senderId);
 
         var result1 = connectionRequestHandler.handle(request1);
         var result2 = connectionRequestHandler.handle(request2);
 
-        assertInstanceOf(ConnectionRequestResults.Success.class, result1);
-        assertInstanceOf(ConnectionRequestResults.Success.class, result2);
+        assertInstanceOf(CreateConnectionRequest.Result.Success.class, result1);
+        assertInstanceOf(CreateConnectionRequest.Result.Success.class, result2);
 
         var connectionsFromSender = repository.findBySender(senderId.value());
         assertEquals(2, connectionsFromSender.size());
@@ -196,14 +194,14 @@ public class CreatePendingConnectionCommandHandlerTests extends ConnectionsTestB
         var senderId2 = new UserIdDTO(UUID.randomUUID());
         var targetId = new UserIdDTO(UUID.randomUUID());
 
-        var request1 = new ConnectionRequest(targetId, senderId1);
-        var request2 = new ConnectionRequest(targetId, senderId2);
+        var request1 = new CreateConnectionRequest.Request(targetId, senderId1);
+        var request2 = new CreateConnectionRequest.Request(targetId, senderId2);
 
         var result1 = connectionRequestHandler.handle(request1);
         var result2 = connectionRequestHandler.handle(request2);
 
-        assertInstanceOf(ConnectionRequestResults.Success.class, result1);
-        assertInstanceOf(ConnectionRequestResults.Success.class, result2);
+        assertInstanceOf(CreateConnectionRequest.Result.Success.class, result1);
+        assertInstanceOf(CreateConnectionRequest.Result.Success.class, result2);
 
         var connectionsToTarget = repository.findByTarget(targetId.value());
         assertEquals(2, connectionsToTarget.size());

@@ -3,6 +3,7 @@ package tech.kood.match_me.connections.features.acceptedConnection.actions.inter
 import jakarta.validation.Validator;
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.connections.features.acceptedConnection.actions.GetAcceptedConnections;
@@ -13,8 +14,8 @@ import tech.kood.match_me.connections.features.acceptedConnection.internal.persi
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 @ApplicationLayer
+@Service
 public class GetAcceptedConnectionsQueryHandlerImpl implements GetAcceptedConnections.Handler {
 
     private final AcceptedConnectionRepository repository;

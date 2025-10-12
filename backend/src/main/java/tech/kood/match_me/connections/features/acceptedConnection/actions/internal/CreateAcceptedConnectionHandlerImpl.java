@@ -1,6 +1,7 @@
 package tech.kood.match_me.connections.features.acceptedConnection.actions.internal;
 
 import jakarta.validation.Validator;
+import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import tech.kood.match_me.connections.features.acceptedConnection.domain.interna
 import tech.kood.match_me.connections.features.acceptedConnection.internal.mapper.AcceptedConnectionMapper;
 import tech.kood.match_me.connections.features.acceptedConnection.internal.persistance.AcceptedConnectionRepository;
 
+@ApplicationLayer
 @Service
 public class CreateAcceptedConnectionHandlerImpl implements CreateAcceptedConnection.Handler {
 

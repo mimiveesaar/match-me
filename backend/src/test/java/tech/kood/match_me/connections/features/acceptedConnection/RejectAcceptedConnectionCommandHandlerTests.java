@@ -7,9 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.connections.common.ConnectionsTestBase;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.rejectConnection.api.RejectAcceptedConnectionCommandHandler;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.rejectConnection.api.RejectAcceptedConnectionRequest;
-import tech.kood.match_me.connections.features.acceptedConnection.actions.rejectConnection.api.RejectAcceptedConnectionResults;
+import tech.kood.match_me.connections.features.acceptedConnection.actions.RejectAcceptedConnection;
 import tech.kood.match_me.connections.features.acceptedConnection.internal.persistance.AcceptedConnectionRepository;
 import tech.kood.match_me.connections.features.acceptedConnection.internal.persistance.acceptedConnectionEntity.AcceptedConnectionEntity;
 
@@ -19,11 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-@Transactional
+@Transactional(transactionManager = "connectionsTransactionManager")
 public class RejectAcceptedConnectionCommandHandlerTests extends ConnectionsTestBase {
 
     @Autowired
-    private RejectAcceptedConnectionCommandHandler rejectAcceptedConnectionHandler;
+    private RejectAcceptedConnection.Handler rejectAcceptedConnectionHandler;
 
     @Autowired
     private AcceptedConnectionRepository repository;
@@ -40,11 +38,11 @@ public class RejectAcceptedConnectionCommandHandlerTests extends ConnectionsTest
         var connectionId = new ConnectionIdDTO(entity.getId());
         var rejectedBy = new UserIdDTO(entity.getAcceptedByUserId());
 
-        var request = new RejectAcceptedConnectionRequest(connectionId, rejectedBy);
+        var request = new RejectAcceptedConnection.Request(connectionId, rejectedBy);
         var result = rejectAcceptedConnectionHandler.handle(request);
 
-        assertInstanceOf(RejectAcceptedConnectionResults.Success.class, result);
-        var successResult = (RejectAcceptedConnectionResults.Success) result;
+        assertInstanceOf(RejectAcceptedConnection.Result.Success.class, result);
+        var successResult = (RejectAcceptedConnection.Result.Success) result;
 
         // Verify the accepted connection was deleted from the repository
         var deleted = repository.findById(connectionId.value());
@@ -61,11 +59,11 @@ public class RejectAcceptedConnectionCommandHandlerTests extends ConnectionsTest
         var rejectedBy = new UserIdDTO(entity.getAcceptedByUserId());
         var requestId = UUID.randomUUID();
 
-        var request = new RejectAcceptedConnectionRequest(connectionId, rejectedBy);
+        var request = new RejectAcceptedConnection.Request(connectionId, rejectedBy);
         var result = rejectAcceptedConnectionHandler.handle(request);
 
-        assertInstanceOf(RejectAcceptedConnectionResults.Success.class, result);
-        var successResult = (RejectAcceptedConnectionResults.Success) result;
+        assertInstanceOf(RejectAcceptedConnection.Result.Success.class, result);
+        var successResult = (RejectAcceptedConnection.Result.Success) result;
 
         // Verify the accepted connection was deleted from the repository
         var deleted = repository.findById(connectionId.value());
@@ -77,10 +75,10 @@ public class RejectAcceptedConnectionCommandHandlerTests extends ConnectionsTest
         var connectionId = new ConnectionIdDTO(UUID.randomUUID());
         var rejectedBy = new UserIdDTO(UUID.randomUUID());
 
-        var request = new RejectAcceptedConnectionRequest(connectionId, rejectedBy);
+        var request = new RejectAcceptedConnection.Request(connectionId, rejectedBy);
         var result = rejectAcceptedConnectionHandler.handle(request);
 
-        assertInstanceOf(RejectAcceptedConnectionResults.NotFound.class, result);
-        var notFoundResult = (RejectAcceptedConnectionResults.NotFound) result;
+        assertInstanceOf(RejectAcceptedConnection.Result.NotFound.class, result);
+        var notFoundResult = (RejectAcceptedConnection.Result.NotFound) result;
     }
 }

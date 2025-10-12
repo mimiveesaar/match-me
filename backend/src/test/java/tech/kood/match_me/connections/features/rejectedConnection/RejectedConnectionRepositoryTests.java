@@ -16,7 +16,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
+@Transactional(transactionManager = "connectionsTransactionManager")
 public class RejectedConnectionRepositoryTests extends ConnectionsTestBase {
     @Autowired
     private RejectedConnectionRepository repository;

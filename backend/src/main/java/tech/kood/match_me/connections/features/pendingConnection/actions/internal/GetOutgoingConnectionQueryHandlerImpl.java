@@ -1,9 +1,10 @@
 package tech.kood.match_me.connections.features.pendingConnection.actions.internal;
 
 import jakarta.validation.Validator;
+import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.stereotype.Service;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
-import tech.kood.match_me.connections.features.pendingConnection.actions.GetOutgoingRequests;
+import tech.kood.match_me.connections.features.pendingConnection.actions.GetOutgoingConnectionRequests;
 import tech.kood.match_me.connections.features.pendingConnection.domain.PendingConnectionDTO;
 import tech.kood.match_me.connections.features.pendingConnection.internal.mapper.PendingConnectionMapper;
 import tech.kood.match_me.connections.features.pendingConnection.internal.persistance.PendingConnectionRepository;
@@ -11,8 +12,9 @@ import tech.kood.match_me.connections.features.pendingConnection.internal.persis
 
 import java.util.ArrayList;
 
+@ApplicationLayer
 @Service
-public class GetOutgoingConnectionQueryHandlerImpl implements GetOutgoingRequests.Handler {
+public class GetOutgoingConnectionQueryHandlerImpl implements GetOutgoingConnectionRequests.Handler {
 
     private final Validator validator;
     private final PendingConnectionRepository pendingConnectionRepository;
@@ -25,11 +27,11 @@ public class GetOutgoingConnectionQueryHandlerImpl implements GetOutgoingRequest
     }
 
     @Override
-    public GetOutgoingRequests.Result handle(GetOutgoingRequests.Request request) {
+    public GetOutgoingConnectionRequests.Result handle(GetOutgoingConnectionRequests.Request request) {
         var validationResults = validator.validate(request);
 
         if (!validationResults.isEmpty()) {
-            return new GetOutgoingRequests.Result.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
+            return new GetOutgoingConnectionRequests.Result.InvalidRequest(InvalidInputErrorDTO.fromValidation(validationResults));
         }
 
         try {
@@ -40,9 +42,9 @@ public class GetOutgoingConnectionQueryHandlerImpl implements GetOutgoingRequest
                 outgoingRequestsMapped.add(dto);
             }
 
-            return new GetOutgoingRequests.Result.Success(outgoingRequestsMapped);
+            return new GetOutgoingConnectionRequests.Result.Success(outgoingRequestsMapped);
         } catch (Exception e) {
-            return new GetOutgoingRequests.Result.SystemError("An unexpected error occurred while processing the request.");
+            return new GetOutgoingConnectionRequests.Result.SystemError("An unexpected error occurred while processing the request.");
         }
     }
 }
