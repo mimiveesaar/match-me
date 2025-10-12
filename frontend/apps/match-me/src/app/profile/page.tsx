@@ -8,11 +8,11 @@ interface ProfileData {
   username?: string;
   name?: string;
   age?: number;
-  homeplanetId?: string;
-  bodyformId?: string;
-  lookingForId?: string;
+  homeplanetId?: number;
+  bodyformId?: number;
+  lookingForId?: number;
   bio?: string;
-  interestIds?: string[];
+  interestIds?: number[];
   profilePic?: string;
 }
 
@@ -59,7 +59,9 @@ export default function MyProfile() {
         bodyformId: updatedData.bodyformId || null,
         lookingForId: updatedData.lookingForId || null,
         bio: updatedData.bio || null,
-        interestIds: (updatedData.interestIds || []).filter(id => id != null),
+        interestIds: (updatedData.interestIds || [])
+          .filter(id => id != null)
+          .map(id => Number(id)),
         profilePic: updatedData.profilePic || null,
       };
 

@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import tech.kood.match_me.profile.dto.ProfileDTO;
 import tech.kood.match_me.profile.dto.ProfileViewDTO;
-import tech.kood.match_me.profile.events.ProfileChangedEvent;
+import tech.kood.match_me.profile.events.ProfileChangedDTOEvent;
 import tech.kood.match_me.profile.model.Interest;
 import tech.kood.match_me.profile.model.Profile;
 import tech.kood.match_me.profile.repository.*;
@@ -31,8 +31,10 @@ public class ProfileService {
     private final BodyformRepository bodyformRepo;
     private final LookingForRepository lookingForRepo;
     private final InterestRepository interestRepo;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public ApplicationEventPublisher eventPublisher;
+    @Value("${app.upload.dir:${user.home}/profile-images}")
+    private String uploadDir;
 
     public ProfileService(ProfileRepository profileRepo, HomeplanetRepository homeplanetRepo,
             BodyformRepository bodyformRepo, LookingForRepository lookingForRepo,
@@ -47,126 +49,70 @@ public class ProfileService {
 
     // -------------------- PROFILE CRUD --------------------
 
-    @Transactional("profileManagementTransactionManager")
+    @Transactional
     public ProfileViewDTO saveOrUpdateProfile(ProfileDTO dto) {
-        System.out.println("=== SERVICE: saveOrUpdateProfile called ===");
-        System.out.println("DTO received: " + dto);
-
+        System.out.println("=== saveOrUpdateProfile called ===");
         Profile profile = getMyProfile();
-        System.out.println("Current profile ID: " + profile.getId());
-        System.out.println("Current profile bodyform: "
-                + (profile.getBodyform() != null ? profile.getBodyform().getName() : "null"));
-        System.out.println("Current profile homeplanet: "
-                + (profile.getHomeplanet() != null ? profile.getHomeplanet().getName() : "null"));
-        System.out.println("Current profile lookingFor: "
-                + (profile.getLookingFor() != null ? profile.getLookingFor().getName() : "null"));
 
         if (dto.getUsername() != null) {
             profile.setUsername(dto.getUsername());
-            System.out.println("✓ Updated username to: " + dto.getUsername());
         } else if (dto.getName() != null) {
             profile.setUsername(dto.getName());
-            System.out.println("✓ Updated username from name field to: " + dto.getName());
         }
 
-        if (dto.getAge() != null) {
+        if (dto.getAge() != null)
             profile.setAge(dto.getAge());
-            System.out.println("✓ Updated age to: " + dto.getAge());
-        }
 
         if (dto.getHomeplanetId() != null) {
-            System.out.println("Attempting to update homeplanet with ID: " + dto.getHomeplanetId());
             var homeplanet = homeplanetRepo.findById(dto.getHomeplanetId()).orElseThrow(
                     () -> new RuntimeException("Homeplanet not found: " + dto.getHomeplanetId()));
             profile.setHomeplanet(homeplanet);
-            System.out.println("✓ Updated homeplanet to: " + homeplanet.getName() + " (ID: "
-                    + homeplanet.getId() + ")");
         }
 
         if (dto.getBodyformId() != null) {
-            System.out.println("Attempting to update bodyform with ID: " + dto.getBodyformId());
             var bodyform = bodyformRepo.findById(dto.getBodyformId()).orElseThrow(
                     () -> new RuntimeException("Bodyform not found: " + dto.getBodyformId()));
             profile.setBodyform(bodyform);
-            System.out.println("✓ Updated bodyform to: " + bodyform.getName() + " (ID: "
-                    + bodyform.getId() + ")");
         }
 
         if (dto.getLookingForId() != null) {
-            System.out.println("Attempting to update lookingFor with ID: " + dto.getLookingForId());
             var lookingFor = lookingForRepo.findById(dto.getLookingForId()).orElseThrow(
                     () -> new RuntimeException("LookingFor not found: " + dto.getLookingForId()));
             profile.setLookingFor(lookingFor);
-            System.out.println("✓ Updated lookingFor to: " + lookingFor.getName() + " (ID: "
-                    + lookingFor.getId() + ")");
         }
 
-        if (dto.getBio() != null) {
+        if (dto.getBio() != null)
             profile.setBio(dto.getBio());
-            System.out.println("✓ Updated bio (length: " + dto.getBio().length() + ")");
-        }
 
         if (dto.getInterestIds() != null) {
-            System.out.println(
-                    "Processing interests, received count: " + dto.getInterestIds().size());
-            profile.getInterests().clear();
-            if (!dto.getInterestIds().isEmpty()) {
-                var interests = dto.getInterestIds().stream().filter(id -> id != null).map(id -> {
-                    System.out.println("  Looking up interest with ID: " + id);
-                    return interestRepo.findById(id)
-                            .orElseThrow(() -> new RuntimeException("Interest not found: " + id));
-                }).collect(Collectors.toSet());
-                profile.setInterests(interests);
-                System.out.println("✓ Updated interests, count: " + interests.size());
-            } else {
-                System.out.println("✓ Cleared all interests (empty list received)");
-            }
+            var interests = dto.getInterestIds().stream().filter(id -> id != null)
+                    .map(id -> interestRepo.findById(id)
+                            .orElseThrow(() -> new RuntimeException("Interest not found: " + id)))
+                    .collect(Collectors.toSet());
+            profile.setInterests(interests);
         }
 
-        if (dto.getProfilePic() != null) {
+        if (dto.getProfilePic() != null)
             profile.setProfilePic(dto.getProfilePic());
-            System.out.println("✓ Updated profilePic to: " + dto.getProfilePic());
-        }
 
-        System.out.println("\n=== Saving profile to database ===");
         Profile saved = profileRepo.saveAndFlush(profile);
-
-        System.out.println("✓ Profile saved with ID: " + saved.getId());
-
-        // 🔥 Publish Spring event
-        eventPublisher.publishEvent(new ProfileChangedEvent(this, saved));
-
-        System.out.println("📨 Published ProfileChangedEvent for user: " + saved.getUsername());
-
-
-
-        System.out.println("✓ Profile saved with ID: " + saved.getId());
-        System.out.println("Saved bodyform: "
-                + (saved.getBodyform() != null ? saved.getBodyform().getName() : "null"));
-        System.out.println("Saved homeplanet: "
-                + (saved.getHomeplanet() != null ? saved.getHomeplanet().getName() : "null"));
-        System.out.println("Saved lookingFor: "
-                + (saved.getLookingFor() != null ? saved.getLookingFor().getName() : "null"));
-
-        ProfileViewDTO result = toViewDTO(saved);
-        System.out.println("\n=== Returning ProfileViewDTO ===");
-        System.out.println("DTO bodyformId: " + result.getBodyformId());
-        System.out.println("DTO homeplanetId: " + result.getHomeplanetId());
-        System.out.println("DTO lookingForId: " + result.getLookingForId());
-
+        
+        // Reload with all relations to avoid lazy loading issues
+        Profile reloaded = profileRepo.findByIdWithRelations(saved.getId());
+        ProfileViewDTO result = toViewDTO(reloaded);
+        
+        eventPublisher.publishEvent(new ProfileChangedDTOEvent(this, result));
         return result;
     }
 
-    @Transactional(value = "profileManagementTransactionManager", readOnly = true)
+    @Transactional(readOnly = true)
     public ProfileViewDTO getMyProfileDTO() {
         return toViewDTO(getMyProfile());
     }
 
-    @Transactional("profileManagementTransactionManager")
+    @Transactional
     public Profile getOrCreateProfile(UUID userId, String username) {
         return profileRepo.findByUserId(userId).orElseGet(() -> {
-            System.out.println("Creating new profile for userId: " + userId);
-
             var homeplanet = homeplanetRepo.findAll().stream().findFirst().orElse(null);
             var bodyform = bodyformRepo.findAll().stream().findFirst().orElse(null);
             var lookingFor = lookingForRepo.findAll().stream().findFirst().orElse(null);
@@ -179,7 +125,7 @@ public class ProfileService {
             newProfile.setHomeplanet(homeplanet);
             newProfile.setBodyform(bodyform);
             newProfile.setLookingFor(lookingFor);
-            newProfile.setBio("Auto-created user profile.");
+            newProfile.setBio("Auto-created profile");
             newProfile.setInterests(interests);
             newProfile.setProfilePic("default-profile.png");
 
@@ -187,24 +133,12 @@ public class ProfileService {
         });
     }
 
-    /**
-     * TEMP: Returns a dummy or first profile for now. Later — replace this with:
-     * findByUserIdWithRelations(userId) using your teammate's authentication system.
-     */
-    @Transactional("profileManagementTransactionManager")
+    @Transactional
     public Profile getMyProfile() {
-        // 🧩 TODO (later): Replace this with auth-based logic:
-        // UUID userId = authService.getCurrentUserId();
-        // return profileRepo.findByUserIdWithRelations(userId);
-
         List<Profile> profiles = profileRepo.findAll();
         if (!profiles.isEmpty()) {
-            Profile profile = profiles.get(0);
-            return profileRepo.findByIdWithRelations(profile.getId());
+            return profileRepo.findByIdWithRelations(profiles.get(0).getId());
         }
-
-        // Create dummy data for now
-        System.out.println("No profile found — creating dummy profile for testing.");
 
         var homeplanet = homeplanetRepo.findAll().stream().findFirst().orElse(null);
         var bodyform = bodyformRepo.findAll().stream().findFirst().orElse(null);
@@ -219,24 +153,18 @@ public class ProfileService {
 
     // -------------------- IMAGE HANDLING --------------------
 
-    @Value("${app.upload.dir:${user.home}/profile-images}")
-    private String uploadDir;
-
     public String saveProfileImage(MultipartFile file) throws IOException {
         Path uploadPath = Paths.get(uploadDir);
-        if (!Files.exists(uploadPath)) {
+        if (!Files.exists(uploadPath))
             Files.createDirectories(uploadPath);
-        }
 
         String filename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
         Path filePath = uploadPath.resolve(filename);
-
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
         return filename;
     }
 
-    @Transactional("profileManagementTransactionManager")
+    @Transactional
     public ProfileViewDTO updateProfileImage(String imagePath) {
         Profile profile = getMyProfile();
 
@@ -251,7 +179,10 @@ public class ProfileService {
 
         profile.setProfilePic(imagePath);
         Profile saved = profileRepo.saveAndFlush(profile);
-        return toViewDTO(saved);
+        
+        // Reload with all relations to avoid lazy loading issues
+        Profile reloaded = profileRepo.findByIdWithRelations(saved.getId());
+        return toViewDTO(reloaded);
     }
 
     public Resource getProfileImage() throws IOException {
@@ -264,24 +195,21 @@ public class ProfileService {
 
         Path imagePath = Paths.get(uploadDir).resolve(filename);
         Resource resource = new UrlResource(imagePath.toUri());
-
         return (resource.exists() && resource.isReadable()) ? resource : getDefaultProfileImage();
     }
 
     private Resource getDefaultProfileImage() throws IOException {
         ClassPathResource defaultImage = new ClassPathResource("static/images/default-profile.png");
-        if (defaultImage.exists()) {
+        if (defaultImage.exists())
             return defaultImage;
-        }
         throw new FileNotFoundException(
-                "Default profile image not found at: static/images/default-profile.png");
+                "Default profile image not found at static/images/default-profile.png");
     }
 
     private void deleteImageFile(String filename) throws IOException {
         Path imagePath = Paths.get(uploadDir).resolve(filename);
-        if (Files.exists(imagePath)) {
+        if (Files.exists(imagePath))
             Files.delete(imagePath);
-        }
     }
 
     // -------------------- DTO Conversion --------------------

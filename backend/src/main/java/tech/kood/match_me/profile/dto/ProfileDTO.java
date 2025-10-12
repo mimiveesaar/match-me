@@ -1,105 +1,57 @@
 package tech.kood.match_me.profile.dto;
 
-import java.net.Inet4Address;
 import java.util.List;
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ProfileDTO {
     private String username;
     private String name;
     private Integer age;
-    
+
     @JsonProperty("homeplanetId")
     private Integer homeplanetId;
-    
+
     @JsonProperty("bodyformId")
     private Integer bodyformId;
-    
+
     @JsonProperty("lookingForId")
     private Integer lookingForId;
-    
+
     private String bio;
-    
+
     @JsonProperty("interestIds")
     private List<Integer> interestIds;
-    
+
     @JsonProperty("profilePic")
     private String profilePic;
 
     // Getters and Setters
-    public String getUsername() {
-        return username;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public Integer getAge() { return age; }
+    public void setAge(Integer age) { this.age = age; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public Integer getHomeplanetId() { return homeplanetId; }
+    public void setHomeplanetId(Integer homeplanetId) { this.homeplanetId = homeplanetId; }
 
-    public Integer getAge() {
-        return age;
-    }
+    public Integer getBodyformId() { return bodyformId; }
+    public void setBodyformId(Integer bodyformId) { this.bodyformId = bodyformId; }
 
-    public void setAge(Integer age) {
-        this.age = age;
-    }
+    public Integer getLookingForId() { return lookingForId; }
+    public void setLookingForId(Integer lookingForId) { this.lookingForId = lookingForId; }
 
-    public Integer getHomeplanetId() {
-        return homeplanetId;
-    }
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
 
-    public void setHomeplanetId(Integer homeplanetId) {
-        this.homeplanetId = homeplanetId;
-    }
+    public List<Integer> getInterestIds() { return interestIds; }
+    public void setInterestIds(List<Integer> interestIds) { this.interestIds = interestIds; }
 
-    public Integer getBodyformId() {
-        return bodyformId;
-    }
-
-    public void setBodyformId(Integer bodyformId) {
-        this.bodyformId = bodyformId;
-    }
-
-    public Integer getLookingForId() {
-        return lookingForId;
-    }
-
-    public void setLookingForId(Integer lookingForId) {
-        this.lookingForId = lookingForId;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
-
-    public List<Integer> getInterestIds() {
-        return interestIds;
-    }
-
-    public void setInterestIds(List<Integer> interestIds) {
-        this.interestIds = interestIds;
-    }
-
-    public String getProfilePic() {
-        return profilePic;
-    }
-
-    public void setProfilePic(String profilePic) {
-        this.profilePic = profilePic;
-    }
+    public String getProfilePic() { return profilePic; }
+    public void setProfilePic(String profilePic) { this.profilePic = profilePic; }
 
     @Override
     public String toString() {

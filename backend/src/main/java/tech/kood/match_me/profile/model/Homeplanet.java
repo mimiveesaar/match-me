@@ -1,9 +1,6 @@
 package tech.kood.match_me.profile.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
-
-import java.util.UUID;
 
 @Entity
 @Table(name = "homeplanets")

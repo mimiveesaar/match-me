@@ -10,11 +10,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface ProfileRepository extends JpaRepository<Profile, Integer> {
+public interface ProfileRepository extends JpaRepository<Profile, UUID> {
+
     boolean existsByUsername(String username);
-    
+
     Optional<Profile> findByUserId(UUID userId);
-    
+
     @Query("SELECT p FROM Profile p " +
            "LEFT JOIN FETCH p.homeplanet " +
            "LEFT JOIN FETCH p.bodyform " +
@@ -22,7 +23,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Integer> {
            "LEFT JOIN FETCH p.interests " +
            "WHERE p.id = :id")
     Profile findByIdWithRelations(@Param("id") UUID id);
-    
+
     @Query("SELECT p FROM Profile p " +
            "LEFT JOIN FETCH p.homeplanet " +
            "LEFT JOIN FETCH p.bodyform " +

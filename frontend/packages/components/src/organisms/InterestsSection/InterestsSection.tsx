@@ -32,8 +32,8 @@ export const InterestsSection = ({
   selected,
   setSelected,
 }: {
-  selected: string[]; // These should be interest IDs as strings
-  setSelected: (items: string[]) => void;
+  selected: number[]; // These should be interest IDs as number
+  setSelected: (items: number[]) => void;
 }) => {
   const [interests, setInterests] = useState<Interest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -45,6 +45,7 @@ export const InterestsSection = ({
         const response = await fetch('http://localhost:8080/api/interests');
         if (response.ok) {
           const data = await response.json();
+          console.log("✓ Fetched interests from API:", data);
           setInterests(data);
         } else {
           console.error('Failed to fetch interests');
@@ -76,18 +77,26 @@ export const InterestsSection = ({
   }, []);
 
   const toggleInterest = (interestId: number) => {
-    const idString = interestId.toString();
-    if (selected.includes(idString)) {
-      setSelected(selected.filter((id) => id !== idString));
+    console.log("Toggle interest clicked:", interestId);
+    console.log("Current selected:", selected);
+    
+    if (selected.includes(interestId)) {
+      const newSelected = selected.filter((id) => id !== interestId);
+      console.log("Removing interest, new selected:", newSelected);
+      setSelected(newSelected);
     } else if (selected.length < 8) {
-      setSelected([...selected, idString]);
+      const newSelected = [...selected, interestId];
+      console.log("Adding interest, new selected:", newSelected);
+      setSelected(newSelected);
+    } else {
+      console.log("Cannot add more interests, limit reached (8)");
     }
   };
 
   // Get selected interests for display
   const getSelectedInterests = () => {
     return selected
-      .map(id => interests.find(interest => interest.id.toString() === id))
+      .map(id => interests.find(interest => interest.id === id))
       .filter(interest => interest !== undefined) as Interest[];
   };
 
@@ -100,6 +109,7 @@ export const InterestsSection = ({
   }
 
   const selectedInterests = getSelectedInterests();
+  console.log("Selected interests for display:", selectedInterests);
 
   return (
     <div className="rounded-custom-16 border border-black/70 h-full p-6 flex flex-col lg:flex-row gap-6 lg:w-full">
@@ -131,7 +141,7 @@ export const InterestsSection = ({
 
       <div className="lg:w-1/2 w-full flex flex-wrap gap-2 items-start content-start overflow-auto max-h-[25vh] mt-8">
         {interests.map((interest) => {
-          const isSelected = selected.includes(interest.id.toString());
+          const isSelected = selected.includes(interest.id);
           return (
             <button
               key={interest.id}

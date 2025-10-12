@@ -18,7 +18,7 @@ export const MyProfilePage = ({
     initialProfile?.bio || "Born among the glowing moons of Nebulon-5, I roam the stars in search of cosmic connection and shared stardust stories."
   );
 
-  const [selectedInterests, setSelectedInterests] = useState<string[]>(
+  const [selectedInterests, setSelectedInterests] = useState<number[]>(
     initialProfile?.interestIds || []
   );
 
@@ -60,18 +60,35 @@ export const MyProfilePage = ({
     console.log("Current bio:", bio);
     console.log("Current selectedInterests:", selectedInterests);
 
+    // Helper function to convert to number or null
+    const toNumberOrNull = (value: any) => {
+      if (!value || value === "") return null;
+      const num = Number(value);
+      return isNaN(num) ? null : num;
+    };
+
+    // Ensure all fields are properly captured and converted to correct types
     const fullProfile = {
-      name: profile.name,
-      age: profile.age ? Number(profile.age) : null,
-      homeplanetId: profile.homeplanetId || null,
-      bodyformId: profile.bodyformId || null,
-      lookingForId: profile.lookingForId || null,
-      bio: bio,
-      interestIds: selectedInterests.filter(id => id != null),
-      profilePic: profile.profilePic
+      name: profile.name || "",
+      age: toNumberOrNull(profile.age),
+      homeplanetId: toNumberOrNull(profile.homeplanetId),
+      bodyformId: toNumberOrNull(profile.bodyformId),
+      lookingForId: toNumberOrNull(profile.lookingForId),
+      bio: bio || "",
+      interestIds: selectedInterests.filter(id => id != null && id !== undefined),
+      profilePic: profile.profilePic || "https://example.com/default.jpg"
     };
 
     console.log("Prepared profile data to save:", JSON.stringify(fullProfile, null, 2));
+    console.log("All field values:", {
+      name: fullProfile.name,
+      age: fullProfile.age,
+      homeplanetId: fullProfile.homeplanetId,
+      bodyformId: fullProfile.bodyformId,
+      lookingForId: fullProfile.lookingForId,
+      bioLength: fullProfile.bio.length,
+      interestCount: fullProfile.interestIds.length
+    });
 
     setIsLoading(true);
 
@@ -80,14 +97,19 @@ export const MyProfilePage = ({
         console.log("Calling onSave handler...");
         await onSave(fullProfile);
         console.log("✓ onSave completed");
+        
+        // Force page refresh after successful save
+        window.location.reload();
       } else {
         console.warn("⚠ No onSave handler provided");
+        setIsLoading(false);
       }
     } catch (error) {
       console.error("❌ Error in handleSave:", error);
-    } finally {
+      alert('Error saving profile. Please try again.');
       setIsLoading(false);
     }
+    // No finally block needed since page will reload on success
   };
 
   // Log whenever profile changes
