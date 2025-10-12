@@ -394,8 +394,8 @@ public class MatchingDataSeeder implements CommandLineRunner {
                     "INSERT INTO homeplanets (id, name, latitude, longitude) VALUES (?, ?, ?, ?) ON CONFLICT (id) DO NOTHING",
                     planet.Code(),
                     planet.DisplayName(),
-                    planet.latitude(),
-                    planet.longitude()
+                    planet.Latitude(),
+                    planet.Longitude()
             );
         }
 
