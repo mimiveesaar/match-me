@@ -22,6 +22,10 @@ public class User implements AggregateRoot<User, UserId> {
 
     @Valid
     @NotNull
+    private final UserState userState;
+
+    @Valid
+    @NotNull
     private final HashedPassword hashedPassword;
 
     @NotNull
@@ -55,9 +59,10 @@ public class User implements AggregateRoot<User, UserId> {
         return updatedAt;
     }
 
-    User(UserId id, Email email, HashedPassword password, Instant createdAt, Instant updatedAt) {
+    User(UserId id, Email email, UserState userState, HashedPassword password, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.email = email;
+        this.userState = userState;
         this.hashedPassword = password;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -78,5 +83,9 @@ public class User implements AggregateRoot<User, UserId> {
     @Override
     public String toString() {
         return "User{" + "id=" + id + " email='" + email + '\'' + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';
+    }
+
+    public UserState getUserState() {
+        return userState;
     }
 }

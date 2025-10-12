@@ -1,6 +1,5 @@
 package tech.kood.match_me.user_management.features.user.domain.internal.user;
 
-
 import jakarta.validation.Validator;
 import org.jmolecules.ddd.annotation.Factory;
 import org.springframework.stereotype.Component;
@@ -36,8 +35,8 @@ public final class UserFactory {
         this.userIdFactory = userIdFactory;
     }
 
-    public User create(UserId userId, Email email, HashedPassword hashedPassword, Instant createdAt, Instant updatedAt) throws CheckedConstraintViolationException {
-        var user = new User(userId, email, hashedPassword, createdAt, updatedAt);
+    public User create(UserId userId, Email email, UserState state, HashedPassword hashedPassword, Instant createdAt, Instant updatedAt) throws CheckedConstraintViolationException {
+        var user = new User(userId, email, state, hashedPassword, createdAt, updatedAt);
         var validationResult = validator.validate(user);
         if (!validationResult.isEmpty()) {
             throw new CheckedConstraintViolationException(validationResult);
@@ -56,6 +55,6 @@ public final class UserFactory {
         var userId = userIdFactory.createNew();
         var hashedPassword = hashedPasswordFactory.fromPlainText(password);
 
-        return create(userId, email, hashedPassword, Instant.now().truncatedTo(ChronoUnit.SECONDS), Instant.now().truncatedTo(ChronoUnit.SECONDS));
+        return create(userId, email, UserState.PENDING, hashedPassword, Instant.now().truncatedTo(ChronoUnit.SECONDS), Instant.now().truncatedTo(ChronoUnit.SECONDS));
     }
 }

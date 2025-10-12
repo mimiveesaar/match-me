@@ -20,6 +20,9 @@ public final class UserEntity {
     @Email
     private final String email;
 
+    @NotNull
+    private final Integer userStatusCode;
+
     @NotBlank
     private final String passwordHash;
 
@@ -31,7 +34,6 @@ public final class UserEntity {
 
     @NotNull
     private final Instant updatedAt;
-
 
     public UUID getId() {
         return id;
@@ -57,15 +59,20 @@ public final class UserEntity {
         return updatedAt;
     }
 
+    public Integer getUserStatusCode() {
+        return userStatusCode;
+    }
+
     UserEntity(
             UUID id,
-            String email,
+            String email, Integer userStatusCode,
             String passwordHash,
             String passwordSalt,
             Instant createdAt,
             Instant updatedAt) {
         this.id = id;
         this.email = email;
+        this.userStatusCode = userStatusCode;
         this.passwordHash = passwordHash;
         this.passwordSalt = passwordSalt;
         this.createdAt = createdAt;
@@ -73,38 +80,38 @@ public final class UserEntity {
     }
 
     public UserEntity withId(UUID id) {
-        return new UserEntity(id, this.email, this.passwordHash, this.passwordSalt,
-                this.createdAt, this.updatedAt);
+        return new UserEntity(id, this.email, this.userStatusCode, this.passwordHash,
+                this.passwordSalt, this.createdAt, this.updatedAt);
     }
 
     public UserEntity withEmail(String email) {
-        return new UserEntity(this.id, email, this.passwordHash, this.passwordSalt,
-                this.createdAt, this.updatedAt);
+        return new UserEntity(this.id, email, this.userStatusCode, this.passwordHash,
+                this.passwordSalt, this.createdAt, this.updatedAt);
     }
 
     public UserEntity withUsername(String username) {
-        return new UserEntity(this.id, this.email, username, this.passwordHash,
-                this.createdAt, this.updatedAt);
+        return new UserEntity(this.id, this.email, this.userStatusCode, username,
+                this.passwordHash, this.createdAt, this.updatedAt);
     }
 
     public UserEntity withPasswordHash(String passwordHash) {
-        return new UserEntity(this.id, this.email, passwordHash, this.passwordSalt,
-                this.createdAt, this.updatedAt);
+        return new UserEntity(this.id, this.email, this.userStatusCode, passwordHash,
+                this.passwordSalt, this.createdAt, this.updatedAt);
     }
 
     public UserEntity withPasswordSalt(String passwordSalt) {
-        return new UserEntity(this.id, this.email, this.passwordHash, passwordSalt,
-                this.createdAt, this.updatedAt);
+        return new UserEntity(this.id, this.email, this.userStatusCode, this.passwordHash,
+                passwordSalt, this.createdAt, this.updatedAt);
     }
 
     public UserEntity withCreatedAt(Instant createdAt) {
-        return new UserEntity(this.id, this.email, this.passwordHash,
-                this.passwordSalt, createdAt, this.updatedAt);
+        return new UserEntity(this.id, this.email, this.userStatusCode,
+                this.passwordHash, this.passwordSalt, createdAt, this.updatedAt);
     }
 
     public UserEntity withUpdatedAt(Instant updatedAt) {
-        return new UserEntity(this.id, this.email, this.passwordHash,
-                this.passwordSalt, this.createdAt, updatedAt);
+        return new UserEntity(this.id, this.email, this.userStatusCode,
+                this.passwordHash, this.passwordSalt, this.createdAt, updatedAt);
     }
 
     @Override

@@ -9,7 +9,6 @@ import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import java.time.Instant;
 import java.util.UUID;
 
-
 @Component
 @Factory
 @InfrastructureLayer
@@ -21,8 +20,8 @@ public class UserEntityFactory {
         this.validator = validator;
     }
 
-    public UserEntity make(UUID id, String email, String passwordHash, String passwordSalt, Instant createdAt, Instant updatedAt) throws CheckedConstraintViolationException {
-        var entity = new UserEntity(id, email, passwordHash, passwordSalt, createdAt, updatedAt);
+    public UserEntity make(UUID id, String email, Integer userStatusCode, String passwordHash, String passwordSalt, Instant createdAt, Instant updatedAt) throws CheckedConstraintViolationException {
+        var entity = new UserEntity(id, email, userStatusCode, passwordHash, passwordSalt, createdAt, updatedAt);
         var validationResult = validator.validate(entity);
         if (!validationResult.isEmpty()) {
             throw new CheckedConstraintViolationException(validationResult);

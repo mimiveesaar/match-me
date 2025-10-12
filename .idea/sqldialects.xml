@@ -8,5 +8,6 @@
     <file url="file://$PROJECT_DIR$/backend/IaC/postgres/scripts/init-user-management.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/backend/src/main/java/tech/kood/match_me/matching/MatchingDataSeeder.java" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/backend/src/main/resources/connections/database/flyway/V1__init_connections_schema.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/backend/src/main/resources/user_management/database/flyway/V3__user_management_user_role_schema.sql" dialect="PostgreSQL" />
   </component>
 </project>

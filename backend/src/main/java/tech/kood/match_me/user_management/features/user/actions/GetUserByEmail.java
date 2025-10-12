@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.user_management.common.domain.api.EmailDTO;
-import tech.kood.match_me.user_management.features.user.domain.api.UserDTO;
+import tech.kood.match_me.user_management.features.user.domain.UserDTO;
 
 public class GetUserByEmail {
 

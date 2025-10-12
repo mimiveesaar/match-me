@@ -3,15 +3,17 @@ package tech.kood.match_me.user_management.features.user.internal.mapper;
 import org.jmolecules.architecture.layered.ApplicationLayer;
 import org.springframework.stereotype.Component;
 import tech.kood.match_me.user_management.common.domain.api.EmailDTO;
-import tech.kood.match_me.user_management.features.user.domain.api.HashedPasswordDTO;
-import tech.kood.match_me.user_management.features.user.domain.api.UserDTO;
+import tech.kood.match_me.user_management.features.user.domain.HashedPasswordDTO;
+import tech.kood.match_me.user_management.features.user.domain.UserDTO;
 import tech.kood.match_me.common.domain.api.UserIdDTO;
 import tech.kood.match_me.common.exceptions.CheckedConstraintViolationException;
 import tech.kood.match_me.user_management.common.domain.internal.email.EmailFactory;
+import tech.kood.match_me.user_management.features.user.domain.UserStateDTO;
 import tech.kood.match_me.user_management.features.user.domain.internal.hashedPassword.HashedPasswordFactory;
 import tech.kood.match_me.user_management.features.user.domain.internal.user.User;
 import tech.kood.match_me.user_management.features.user.domain.internal.user.UserFactory;
 import tech.kood.match_me.common.domain.internal.userId.UserIdFactory;
+import tech.kood.match_me.user_management.features.user.domain.internal.user.UserState;
 import tech.kood.match_me.user_management.features.user.internal.persistance.userEntity.UserEntity;
 import tech.kood.match_me.user_management.features.user.internal.persistance.userEntity.UserEntityFactory;
 
@@ -40,7 +42,7 @@ public final class UserMapper {
         var email = emailFactory.create(userEntity.getEmail());
         var hashedPassword = hashedPasswordFactory.create(userEntity.getPasswordHash(), userEntity.getPasswordSalt());
 
-        return userFactory.create(userId, email, hashedPassword, userEntity.getCreatedAt(), userEntity.getUpdatedAt());
+        return userFactory.create(userId, email, UserState.fromCode(userEntity.getUserStatusCode()), hashedPassword, userEntity.getCreatedAt(), userEntity.getUpdatedAt());
     }
 
     public User toUser(UserDTO userDTO) throws CheckedConstraintViolationException {
@@ -49,7 +51,7 @@ public final class UserMapper {
         var email = emailFactory.create(userDTO.email().value());
         var hashedPassword = hashedPasswordFactory.create(userDTO.hashedPassword().hash(), userDTO.hashedPassword().salt());
 
-        return userFactory.create(userId, email, hashedPassword, userDTO.createdAt(), userDTO.updatedAt());
+        return userFactory.create(userId, email, UserState.fromCode(userDTO.userState().code()), hashedPassword, userDTO.createdAt(), userDTO.updatedAt());
     }
 
     public UserEntity toEntity(User user) throws CheckedConstraintViolationException {
@@ -58,18 +60,20 @@ public final class UserMapper {
         var hashedPassword = user.getHashedPassword().getHash();
         var passwordSalt = user.getHashedPassword().getSalt();
 
-        return userEntityFactory.make(userId, email, hashedPassword, passwordSalt, user.getCreatedAt(), user.getUpdatedAt());
+        return userEntityFactory.make(userId, email, user.getUserState().getCode(), hashedPassword, passwordSalt, user.getCreatedAt(), user.getUpdatedAt());
     }
 
     public UserDTO toDTO(User user) {
         var userIdDTO = new UserIdDTO(user.getId().getValue());
         var hashedPasswordDTO = new HashedPasswordDTO(user.getHashedPassword().getHash(), user.getHashedPassword().getSalt());
         var emailDTO = new EmailDTO(user.getEmail().toString());
+        var userStateDTO = UserStateDTO.fromCode(user.getUserState().getCode());
 
         return new UserDTO(
                 userIdDTO,
                 emailDTO,
                 hashedPasswordDTO,
+                userStateDTO,
                 user.getCreatedAt(),
                 user.getUpdatedAt()
         );

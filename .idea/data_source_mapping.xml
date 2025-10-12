@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/backend/src/main/resources/user_management/database/flyway/V3__user_management_user_role_schema.sql" value="1e8264d6-e847-448c-91af-bae3826206b3" />
+  </component>
+</project>

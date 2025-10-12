@@ -71,10 +71,11 @@ public class UserRepository {
     public void saveUser(UserEntity user) {
         String sql =
                 """
-                INSERT INTO user_management.users (id, email, password_hash, password_salt, created_at, updated_at)
-                VALUES (:id, :email, :password_hash, :password_salt, :created_at, :updated_at)
+                INSERT INTO user_management.users (id, email, password_hash, password_salt, user_status_code, created_at, updated_at)
+                VALUES (:id, :email, :password_hash, :password_salt, :user_status_code, :created_at, :updated_at)
                 ON CONFLICT (id) DO UPDATE
                 SET email = :email,
+                    user_status_code = :user_status_code,
                     password_hash = :password_hash,
                     password_salt = :password_salt,
                     updated_at = :updated_at
@@ -85,6 +86,7 @@ public class UserRepository {
                         "email", user.getEmail(),
                         "password_hash", user.getPasswordHash(),
                         "password_salt", user.getPasswordSalt(),
+                        "user_status_code", user.getUserStatusCode(),
                         "created_at", Timestamp.from(user.getCreatedAt()),
                         "updated_at", Timestamp.from(user.getUpdatedAt())));
     }

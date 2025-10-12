@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.connections.common.api.ConnectionIdDTO;
 import tech.kood.match_me.connections.features.pendingConnection.actions.DeclineConnectionRequest;
-import tech.kood.match_me.user_management.features.user.domain.api.UserDTO;
+import tech.kood.match_me.user_management.features.user.domain.UserDTO;
 
 @RestController
 @RequestMapping("/api/v1/connections")

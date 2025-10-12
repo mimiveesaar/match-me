@@ -20,6 +20,7 @@ import tech.kood.match_me.user_management.features.accessToken.actions.CreateAcc
 import tech.kood.match_me.user_management.features.accessToken.internal.mapper.AccessTokenMapper;
 import tech.kood.match_me.user_management.features.refreshToken.actions.GetRefreshToken;
 import tech.kood.match_me.user_management.features.refreshToken.domain.api.RefreshTokenDTO;
+import tech.kood.match_me.user_management.features.user.actions.GetUserById;
 
 @Service
 @ApplicationLayer
@@ -28,6 +29,7 @@ public class CreateAccessTokenCommandHandlerImpl implements CreateAccessToken.Ha
     private static final Logger logger = LoggerFactory.getLogger(CreateAccessTokenCommandHandlerImpl.class);
     private final ApplicationEventPublisher events;
     private final GetRefreshToken.Handler getRefreshTokenHandler;
+    private final GetUserById.Handler getUserByIdQueryHandler;
     private final UserManagementConfig userManagementConfig;
     private final AccessTokenFactory accessTokenFactory;
     private final AccessTokenMapper accessTokenMapper;
@@ -36,7 +38,7 @@ public class CreateAccessTokenCommandHandlerImpl implements CreateAccessToken.Ha
     private final Validator validator;
 
     public CreateAccessTokenCommandHandlerImpl(ApplicationEventPublisher events,
-                                               GetRefreshToken.Handler getRefreshTokenHandler,
+                                               GetRefreshToken.Handler getRefreshTokenHandler, GetUserById.Handler getUserByIdQueryHandler,
                                                UserManagementConfig userManagementConfig,
                                                AccessTokenFactory accessTokenFactory,
                                                AccessTokenMapper accessTokenMapper,
@@ -45,6 +47,7 @@ public class CreateAccessTokenCommandHandlerImpl implements CreateAccessToken.Ha
                                                Validator validator) {
         this.events = events;
         this.getRefreshTokenHandler = getRefreshTokenHandler;
+        this.getUserByIdQueryHandler = getUserByIdQueryHandler;
         this.userManagementConfig = userManagementConfig;
         this.accessTokenFactory = accessTokenFactory;
         this.accessTokenMapper = accessTokenMapper;
@@ -96,11 +99,21 @@ public class CreateAccessTokenCommandHandlerImpl implements CreateAccessToken.Ha
                 var expiresAt = issuedAt.plusSeconds(userManagementConfig.getJwtExpiration());
                 var userId = userIdFactory.create(refreshToken.userId().value());
 
+                var getUserByIdRequest = new GetUserById.Request(refreshToken.userId());
+                var getUserByIdResult = this.getUserByIdQueryHandler.handle(getUserByIdRequest);
+
+                if (!(getUserByIdResult instanceof GetUserById.Result.Success)) {
+                    return new CreateAccessToken.Result.SystemError("Unexpected result from user query handler");
+                }
+
+                var user = ((GetUserById.Result.Success) getUserByIdResult).user();
+
                 String jwt = JWT.create()
                         .withIssuer(userManagementConfig.getJwtIssuer())
                         .withIssuedAt(issuedAt)
                         .withExpiresAt(expiresAt)
                         .withClaim("userId", userId.toString())
+                        .withClaim("userStatusCode", user.userState().code())
                         .sign(jwtAlgo);
 
                 var accessToken = accessTokenFactory.create(jwt, userId);

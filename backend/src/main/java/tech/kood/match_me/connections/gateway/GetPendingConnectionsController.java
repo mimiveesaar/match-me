@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tech.kood.match_me.common.api.InvalidInputErrorDTO;
 import tech.kood.match_me.connections.features.pendingConnection.actions.GetPendingConnections;
 import tech.kood.match_me.connections.features.pendingConnection.domain.PendingConnectionDTO;
-import tech.kood.match_me.user_management.features.user.domain.api.UserDTO;
+import tech.kood.match_me.user_management.features.user.domain.UserDTO;
 
 import java.util.List;
 

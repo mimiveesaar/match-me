@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.gateway.dto;
+package tech.kood.match_me.user_management.gateway;
 
 
 import io.swagger.v3.oas.annotations.media.Content;
