@@ -1,4 +1,3 @@
-
 package tech.kood.match_me.profile.events;
 
 import org.springframework.context.ApplicationEvent;
