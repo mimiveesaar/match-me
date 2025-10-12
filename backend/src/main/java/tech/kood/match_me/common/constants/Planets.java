@@ -1,7 +1,6 @@
 package tech.kood.match_me.common.constants;
 
 public enum Planets {
-
     Xeron_5(1, "Xeron 5", 45.2f, 130.5f),
     Draknor(2, "Draknor", -33.1f, 102.9f),
     Vega_Prime(3, "Vega Prime", 12.5f, -45f),
@@ -38,11 +37,11 @@ public enum Planets {
         return displayName;
     }
 
-    public float latitude() {
+    public float Latitude() {
         return latitude;
     }
 
-    public float longitude() {
+    public float Longitude() {
         return longitude;
     }
 }

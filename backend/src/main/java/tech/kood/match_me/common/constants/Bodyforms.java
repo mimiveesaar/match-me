@@ -1,7 +1,6 @@
 package tech.kood.match_me.common.constants;
 
 public enum Bodyforms {
-
     Gelatinous(1, "Gelatinous"),
     Tentacled(2, "Tentacled"),
     Humanoid(3, "Humanoid"),
