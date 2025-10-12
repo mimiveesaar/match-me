@@ -44,11 +44,20 @@ public enum Interests {
     Cryptography(41, "Cryptography"),
     Wormhole_Jumping(42, "Wormhole Jumping");
 
+
     private final int code;
     private final String displayName;
 
     Interests(int code, String displayName) {
         this.code = code;
         this.displayName = displayName;
+    }
+
+    public String DisplayName() {
+        return displayName;
+    }
+
+    public int Code() {
+        return code;
     }
 }

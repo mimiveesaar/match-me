@@ -16,11 +16,11 @@ public enum LookingFor {
         this.displayName = displayName;
     }
 
-    public int getCode() {
+    public int Code() {
         return code;
     }
 
-    public String getDisplayName() {
+    public String DisplayName() {
         return displayName;
     }
 }
