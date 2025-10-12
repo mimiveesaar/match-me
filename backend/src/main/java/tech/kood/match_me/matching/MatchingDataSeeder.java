@@ -6,6 +6,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import tech.kood.match_me.common.constants.Bodyforms;
+import tech.kood.match_me.common.constants.Interests;
+import tech.kood.match_me.common.constants.LookingFor;
 import tech.kood.match_me.common.constants.Planets;
 
 import java.util.Map;
@@ -401,20 +403,11 @@ public class MatchingDataSeeder implements CommandLineRunner {
     }
 
     private void seedLookingFor() {
-        // Each entry: {id, name}
-        Object[][] lookingFor = {
-            {1, "Friendship"},
-            {2, "Romance"},
-            {3, "Strategic Alliance"},
-            {4, "Co-parenting Hatchlings"},
-            {5, "Host Symbiosis"},
-            {6, "Chtulhu"}
-        };
-
-        for (Object[] item : lookingFor) {
+        for (LookingFor lf : LookingFor.values()) {
             jdbcTemplate.update(
                     "INSERT INTO looking_for (id, name) VALUES (?, ?) ON CONFLICT (id) DO NOTHING",
-                    item[0], item[1]
+                    lf.Code(),
+                    lf.DisplayName()
             );
         }
 
@@ -422,54 +415,11 @@ public class MatchingDataSeeder implements CommandLineRunner {
     }
 
     private void seedInterests() {
-        // Each entry: {id, interest}
-        Object[][] interests = {
-            {1, "Telepathic Chess"},
-            {2, "Black Hole Karaoke"},
-            {3, "Baking"},
-            {4, "Binary Poetry"},
-            {5, "Painting"},
-            {6, "Parallel Parking"},
-            {7, "Reading"},
-            {8, "Collecting Rocks"},
-            {9, "Butterfly watching"},
-            {10, "Plasma Sculpting"},
-            {11, "Terraforming"},
-            {12, "Zero-G Yoga"},
-            {13, "Fishing"},
-            {14, "Galactic Geocaching"},
-            {15, "Nebula Photography"},
-            {16, "Starship Racing"},
-            {17, "Archaeology"},
-            {18, "Cooking"},
-            {19, "Light-speed Surfing"},
-            {20, "Wormhole Navigation"},
-            {21, "Cryo-sleep"},
-            {22, "Martian Mining"},
-            {23, "Solar Wind Sailing"},
-            {24, "Meditation"},
-            {25, "Opera Singing"},
-            {26, "Ballet"},
-            {27, "Fashion Design"},
-            {28, "Black Market Trading"},
-            {29, "Cosmic Comics"},
-            {30, "Meteorite Hunting"},
-            {31, "Exoplanet Exploration"},
-            {32, "Star Map Reading"},
-            {33, "Galactic Diplomacy"},
-            {34, "Gardening"},
-            {35, "Interstellar DJing"},
-            {36, "Teleportation Tricks"},
-            {37, "Brewing"},
-            {38, "Droid Repair"},
-            {39, "Cryptography"},
-            {40, "Wormhole Jumping"}
-        };
-
-        for (Object[] interest : interests) {
+        for (Interests interest : Interests.values()) {
             jdbcTemplate.update(
                     "INSERT INTO interests (id, interest) VALUES (?, ?) ON CONFLICT (id) DO NOTHING",
-                    interest[0], interest[1]
+                    interest.Code(),
+                    interest.DisplayName()
             );
         }
 
