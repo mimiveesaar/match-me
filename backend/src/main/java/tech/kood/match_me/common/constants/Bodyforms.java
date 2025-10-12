@@ -16,7 +16,6 @@ public enum Bodyforms {
     private final int code;
     private final String displayName;
 
-    // Constructor
     Bodyforms(int code, String displayName) {
         this.code = code;
         this.displayName = displayName;
