@@ -5,6 +5,13 @@ server:
 spring:
   application:
     name: match-me
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      max-request-size: 5MB
+
   datasource:
     matching:
       jdbc-url: jdbc:postgresql://127.0.0.1:5432/matching
@@ -55,10 +62,16 @@ spring:
       username: connections
       password: connections
       driver-class-name: org.postgresql.Driver
+      
   flyway:
     enabled: false
   hawtio:
     authenticationEnabled: false
+
+# MOVE THIS OUT - Same level as 'spring:', NOT under 'datasource:'
+app:
+  upload:
+    dir: ${user.home}/profile-images
     
 user-management:
   jwt:
@@ -83,8 +96,6 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
-
-# Optional: WebSocket or other chat-specific configs
 chatspace:
   websocket:
     endpoint: /ws

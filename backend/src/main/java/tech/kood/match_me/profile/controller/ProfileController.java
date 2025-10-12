@@ -1,20 +1,22 @@
 package tech.kood.match_me.profile.controller;
 
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.UUID;
-import org.springframework.core.io.Resource;
+
 import tech.kood.match_me.profile.dto.ProfileDTO;
 import tech.kood.match_me.profile.dto.ProfileViewDTO;
 import tech.kood.match_me.profile.model.Profile;
 import tech.kood.match_me.profile.service.ProfileService;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/profiles")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3002", "http://localhost:3003"})
+@CrossOrigin(origins = {"http://localhost:3000"})
 public class ProfileController {
 
     private final ProfileService service;
@@ -35,12 +37,13 @@ public class ProfileController {
         } catch (RuntimeException e) {
             System.err.println("Error saving profile: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Error: " + e.getMessage());
         } catch (Exception e) {
             System.err.println("Unexpected error saving profile: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Internal server error: " + e.getMessage());
+                .body("Internal server error: " + e.getMessage());
         }
     }
 
@@ -57,17 +60,22 @@ public class ProfileController {
                 return ResponseEntity.badRequest().body("Please select a file to upload");
             }
 
-            if (!file.getContentType().startsWith("image/")) {
+            if (file.getContentType() == null || !file.getContentType().startsWith("image/")) {
                 return ResponseEntity.badRequest().body("Only image files are allowed");
             }
 
-            String imagePath = service.saveProfileImage(file);
-            ProfileViewDTO updatedProfile = service.updateProfileImage(imagePath);
+            // Validate file size (5MB max)
+            if (file.getSize() > 5 * 1024 * 1024) {
+                return ResponseEntity.badRequest().body("File size must be less than 5MB");
+            }
 
+            ProfileViewDTO updatedProfile = service.uploadProfileImage(file);
             return ResponseEntity.ok(updatedProfile);
+            
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to upload image: " + e.getMessage());
+                .body("Failed to upload image: " + e.getMessage());
         }
     }
 
@@ -75,22 +83,17 @@ public class ProfileController {
     public ResponseEntity<Resource> getProfileImage() {
         try {
             Resource imageResource = service.getProfileImage();
-            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG) // could be dynamically
-                                                                         // detected
-                    .body(imageResource);
+            return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(imageResource);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-
-
-    // endpoint that external modules can call:
-    // The other module can POST:
-    // POST /api/profiles/sync?userId=<uuid>&username=JohnDoe
-
     @PostMapping("/sync")
-    public ResponseEntity<ProfileViewDTO> syncUser(@RequestParam UUID userId,
+    public ResponseEntity<ProfileViewDTO> syncUser(
+            @RequestParam UUID userId,
             @RequestParam String username) {
         Profile profile = service.getOrCreateProfile(userId, username);
         return ResponseEntity.ok(service.toViewDTO(profile));

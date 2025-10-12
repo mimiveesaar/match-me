@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { LabeledInputField } from "../../molecules/LabeledInputField/LabeledInputField";
 import { LabeledSelectField } from "../../atoms/LabeledSelectField/LabeledSelectField";
+import { ProfileImageUpload } from "../ProfileImageUpload/ProfileImageUpload";
 
 interface Option {
   id: string;
@@ -52,12 +53,17 @@ export const ProfileCard = ({ profile, setProfile }: any) => {
   const handleInputChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     console.log(`ProfileCard: Updating ${field} to "${newValue}"`);
-    setProfile({ ...profile, [field]: newValue });
+    setProfile((prev: any) => ({ ...prev, [field]: newValue }));
   };
 
   const handleSelectChange = (field: string) => (value: string) => {
     console.log(`ProfileCard: Updating ${field} to "${value}"`);
-    setProfile({ ...profile, [field]: value });
+    console.log("Current profile before update:", profile);
+    setProfile((prev: any) => {
+      const updated = { ...prev, [field]: value };
+      console.log("Updated profile:", updated);
+      return updated;
+    });
   };
 
   if (loading) {
@@ -70,12 +76,12 @@ export const ProfileCard = ({ profile, setProfile }: any) => {
     );
   }
 
-  // Get values with fallbacks
+  // Get values with fallbacks - ensure IDs are strings for select fields
   const displayName = profile?.name || profile?.username || "";
   const displayAge = String(profile?.age || "");
-  const displayBodyform = profile?.bodyformId || "";
-  const displayLookingFor = profile?.lookingForId || "";
-  const displayPlanet = profile?.homeplanetId || "";
+  const displayBodyform = profile?.bodyformId ? String(profile.bodyformId) : "";
+  const displayLookingFor = profile?.lookingForId ? String(profile.lookingForId) : "";
+  const displayPlanet = profile?.homeplanetId ? String(profile.homeplanetId) : "";
 
   console.log("ProfileCard: Current display values:", {
     name: displayName,
@@ -87,10 +93,12 @@ export const ProfileCard = ({ profile, setProfile }: any) => {
 
   return (
     <div className="bg-amberglow rounded-custom-16 p-6 drop-shadow-custom w-full lg:w-80">
-      <img
-        src="https://i.imgur.com/0y8Ftya.png"
-        alt="alien"
-        className="rounded-custom-16 drop-shadow-custom-2 mb-4 w-full object-cover h-40"
+      <ProfileImageUpload
+        currentImage={profile?.profilePic}
+        onImageUpdate={(filename) => {
+          console.log("Image updated:", filename);
+          setProfile((prev: any) => ({ ...prev, profilePic: filename }));
+        }}
       />
 
       <LabeledInputField

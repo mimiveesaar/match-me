@@ -13,6 +13,7 @@ export * from './MatchCard/MatchCardBack';
 export * from './MatchCard/FlipCard';
 export * from './Menu/Menu';
 export * from './ProfileCard/ProfileCard';
+export * from './ProfileImageUpload/ProfileImageUpload';
 export * from './UserLogInForm/UserLogInForm';
 export * from './UserSignUpForm/UserSignUpForm';
 export * from './WelcomePage/WelcomePage';

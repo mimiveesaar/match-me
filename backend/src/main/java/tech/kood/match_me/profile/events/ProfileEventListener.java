@@ -4,7 +4,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProfileChangedListener {
+public class ProfileEventListener {
 
     @EventListener
     public void onProfileChanged(ProfileChangedDTOEvent event) {

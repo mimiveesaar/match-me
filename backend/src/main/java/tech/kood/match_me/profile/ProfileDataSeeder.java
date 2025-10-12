@@ -56,7 +56,7 @@ public class ProfileDataSeeder implements CommandLineRunner {
         for (Bodyforms bfEnum : Bodyforms.values()) {
             if (!bodyformRepository.existsByName(bfEnum.DisplayName())) {
                 Bodyform bf = new Bodyform();
-                bf.setId(bfEnum.Code()); // Integer ID from enum
+                bf.setId(bfEnum.Code());
                 bf.setName(bfEnum.DisplayName());
                 bodyformRepository.save(bf);
                 System.out.println("  ✅ Inserted: " + bfEnum.DisplayName());
@@ -70,7 +70,7 @@ public class ProfileDataSeeder implements CommandLineRunner {
         for (Planets pEnum : Planets.values()) {
             if (!homeplanetRepository.existsByName(pEnum.DisplayName())) {
                 Homeplanet planet = new Homeplanet();
-                planet.setId(pEnum.Code()); // Integer ID from enum
+                planet.setId(pEnum.Code());
                 planet.setName(pEnum.DisplayName());
                 homeplanetRepository.save(planet);
                 System.out.println("  ✅ Inserted: " + pEnum.DisplayName());
@@ -84,7 +84,7 @@ public class ProfileDataSeeder implements CommandLineRunner {
         for (LookingFor lfEnum : LookingFor.values()) {
             if (!lookingForRepository.existsByName(lfEnum.DisplayName())) {
                 tech.kood.match_me.profile.model.LookingFor lf = new tech.kood.match_me.profile.model.LookingFor();
-                lf.setId(lfEnum.Code()); // Integer ID from enum
+                lf.setId(lfEnum.Code());
                 lf.setName(lfEnum.DisplayName());
                 lookingForRepository.save(lf);
                 System.out.println("  ✅ Inserted: " + lfEnum.DisplayName());
@@ -98,7 +98,7 @@ public class ProfileDataSeeder implements CommandLineRunner {
         for (Interests iEnum : Interests.values()) {
             if (!interestRepository.existsByName(iEnum.DisplayName())) {
                 Interest interest = new Interest();
-                interest.setId(iEnum.Code()); // Integer ID from enum
+                interest.setId(iEnum.Code());
                 interest.setName(iEnum.DisplayName());
                 interestRepository.save(interest);
             }
@@ -127,14 +127,15 @@ public class ProfileDataSeeder implements CommandLineRunner {
                 profile.setUsername(username);
                 profile.setAge(20 + i);
                 profile.setBio("This is a test bio for " + username);
-                profile.setProfilePic("https://example.com/" + username + ".jpg");
+                // Changed: Use filename instead of URL - points to default image
+                profile.setProfilePic("default-profile.png");
                 profile.setHomeplanet(homeplanet);
                 profile.setBodyform(bodyform);
                 profile.setLookingFor(lookingFor);
                 profile.setInterests(interestRepository.findAll().stream().limit(3).collect(Collectors.toSet()));
 
                 profileRepository.save(profile);
-                System.out.println("  ✅ Inserted profile: " + username);
+                System.out.println("  ✅ Inserted profile: " + username + " with default-profile.png");
             }
         }
         System.out.println();
