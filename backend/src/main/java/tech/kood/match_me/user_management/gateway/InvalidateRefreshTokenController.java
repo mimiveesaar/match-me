@@ -1,4 +1,4 @@
-package tech.kood.match_me.user_management.gateway.user;
+package tech.kood.match_me.user_management.gateway;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;

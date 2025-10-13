@@ -13,15 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tech.kood.match_me.user_management.features.accessToken.actions.CreateAccessToken;
 
-
 @RestController
 @RequestMapping("/api/v1/user-management")
 @Tag(name = "User Management", description = "API for managing user information")
-public class UserManagementGateway {
+public class AccessTokenController {
 
     private final CreateAccessToken.Handler createAccessTokenCommandHandler;
 
-    public UserManagementGateway(CreateAccessToken.Handler createAccessTokenCommandHandler)  {
+    public AccessTokenController(CreateAccessToken.Handler createAccessTokenCommandHandler) {
         this.createAccessTokenCommandHandler = createAccessTokenCommandHandler;
     }
 
@@ -42,7 +41,6 @@ public class UserManagementGateway {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(
                                     implementation = CreateAccessToken.Result.SystemError.class)))})
-
     public ResponseEntity<CreateAccessToken.Result> getAccessToken(@RequestBody CreateAccessToken.Request request) {
 
         var result = createAccessTokenCommandHandler.handle(request);
