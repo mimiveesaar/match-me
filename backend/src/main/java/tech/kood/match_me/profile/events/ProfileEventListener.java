@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 public class ProfileEventListener {
 
     @EventListener
-    public void onProfileChanged(ProfileChangedDTOEvent event) {
+    public void onProfileChanged(ProfileChangedEvent event) {
         System.out.println("📢 Profile changed for user: " + event.getProfile().getUsername());
     }
 }
