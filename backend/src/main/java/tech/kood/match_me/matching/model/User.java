@@ -21,15 +21,16 @@ public class User {
     @Column(name = "age")
     private int age;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "homeplanet_id", referencedColumnName = "id")
     private Homeplanet homeplanet;
 
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bodyform_id", referencedColumnName = "id")
     private Bodyform bodyform;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "looking_for_id", referencedColumnName = "id")
     private LookingFor lookingFor;
 
@@ -39,7 +40,7 @@ public class User {
     @Column(name = "profilepic_src")  
     private String profilepicSrc;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_interests",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -51,7 +52,8 @@ public class User {
     public User() {
     }
 
-    public User(String username, int age, Homeplanet homeplanet, Bodyform bodyform, String bio, LookingFor lookingFor, Set<Interest> interests,  String profilepicSrc) {
+    public User(UUID id, String username, int age, Homeplanet homeplanet, Bodyform bodyform, String bio, LookingFor lookingFor, Set<Interest> interests,  String profilepicSrc) {
+        this.id = id;
         this.username = username;
         this.age = age;
         this.homeplanet = homeplanet;
