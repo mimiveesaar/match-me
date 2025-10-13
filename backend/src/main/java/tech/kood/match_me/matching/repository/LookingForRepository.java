@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import tech.kood.match_me.matching.model.LookingForEntity;
 
-@Repository
+@Repository("MatchingLookingForRepository")
 public interface LookingForRepository extends JpaRepository<LookingForEntity, Integer> {
 }

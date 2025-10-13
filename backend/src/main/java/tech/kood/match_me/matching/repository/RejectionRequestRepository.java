@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import tech.kood.match_me.matching.model.RejectionRequestEntity;
 
 
-@Repository
+@Repository("MatchingRejectionRequestRepository")
 public interface RejectionRequestRepository extends JpaRepository<RejectionRequestEntity, UUID> {
     List<RejectionRequestEntity> findAllByRequesterId(UUID requesterId);
 }
