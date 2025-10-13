@@ -32,7 +32,7 @@ export const InterestsSection = ({
   selected,
   setSelected,
 }: {
-  selected: number[]; // These should be interest IDs as number
+  selected: number[];
   setSelected: (items: number[]) => void;
 }) => {
   const [interests, setInterests] = useState<Interest[]>([]);
@@ -42,63 +42,47 @@ export const InterestsSection = ({
   useEffect(() => {
     const fetchInterests = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/interests');
+        const response = await fetch("http://localhost:8080/api/interests");
         if (response.ok) {
           const data = await response.json();
           console.log("✓ Fetched interests from API:", data);
           setInterests(data);
         } else {
-          console.error('Failed to fetch interests');
-          // Fallback to hardcoded interests if API fails
-          const fallbackInterests = [
-            "Parallel parkour", "Cooking", "Stargazing", "Yoga", "Meditation",
-            "Quantum Origami", "Starforging", "Telepathy Chess", "Black Hole Karaoke",
-            "Baking", "Binary Poetry", "Painting", "Parallel Parking", "Alien Soap Opera",
-            "Toes", "Collecting Rocks"
-          ].map((name, index) => ({ id: index + 1, name }));
-          setInterests(fallbackInterests);
+          console.error("Failed to fetch interests");
+          useFallbackInterests();
         }
       } catch (error) {
-        console.error('Error fetching interests:', error);
-        // Use fallback interests on error
-        const fallbackInterests = [
-          "Parallel parkour", "Cooking", "Stargazing", "Yoga", "Meditation",
-          "Quantum Origami", "Starforging", "Telepathy Chess", "Black Hole Karaoke",
-          "Baking", "Binary Poetry", "Painting", "Parallel Parking", "Alien Soap Opera",
-          "Toes", "Collecting Rocks"
-        ].map((name, index) => ({ id: index + 1, name }));
-        setInterests(fallbackInterests);
+        console.error("Error fetching interests:", error);
+        useFallbackInterests();
       } finally {
         setIsLoading(false);
       }
+    };
+
+    const useFallbackInterests = () => {
+      const fallbackInterests = [
+        "Parallel parkour", "Cooking", "Stargazing", "Yoga", "Meditation",
+        "Quantum Origami", "Starforging", "Telepathy Chess", "Black Hole Karaoke",
+        "Baking", "Binary Poetry", "Painting", "Parallel Parking", "Alien Soap Opera",
+        "Toes", "Collecting Rocks"
+      ].map((name, index) => ({ id: index + 1, name }));
+      setInterests(fallbackInterests);
     };
 
     fetchInterests();
   }, []);
 
   const toggleInterest = (interestId: number) => {
-    console.log("Toggle interest clicked:", interestId);
-    console.log("Current selected:", selected);
-    
     if (selected.includes(interestId)) {
-      const newSelected = selected.filter((id) => id !== interestId);
-      console.log("Removing interest, new selected:", newSelected);
-      setSelected(newSelected);
+      setSelected(selected.filter((id) => id !== interestId));
     } else if (selected.length < 8) {
-      const newSelected = [...selected, interestId];
-      console.log("Adding interest, new selected:", newSelected);
-      setSelected(newSelected);
-    } else {
-      console.log("Cannot add more interests, limit reached (8)");
+      setSelected([...selected, interestId]);
     }
   };
 
-  // Get selected interests for display
-  const getSelectedInterests = () => {
-    return selected
-      .map(id => interests.find(interest => interest.id === id))
-      .filter(interest => interest !== undefined) as Interest[];
-  };
+  const selectedInterests = selected
+    .map((id) => interests.find((interest) => interest.id === id))
+    .filter((i): i is Interest => i !== undefined);
 
   if (isLoading) {
     return (
@@ -108,23 +92,22 @@ export const InterestsSection = ({
     );
   }
 
-  const selectedInterests = getSelectedInterests();
-  console.log("Selected interests for display:", selectedInterests);
-
   return (
     <div className="rounded-custom-16 border border-black/70 h-full p-6 flex flex-col lg:flex-row gap-6 lg:w-full">
+      
+      {/* Left side: Selected interests */}
+      <div className="lg:w-1/2 w-full text-l flex flex-col">
+        <span className="text-base italic mb-2">/my interests</span>
 
-        <div className="lg:w-1/2 w-full text-l flex flex-col">
-            <span className="text-base italic mb-2">/my interests</span>
+        <div className="w-full border border-gray-300 rounded-custom-8 p-3 mb-2 box-border">
+          <div className="flex items-center justify-between mb-2">
+            <p className="font-semibold text-gray-700">Pick up to 8</p>
+            <CharacterCounter current={selected.length} max={8} />
+          </div>
 
-            <div className="w-full border border-gray-300 rounded-custom-8 p-2 mb-2 box-border">
+          {/* Big enough to comfortably show 8 interests */}
+          <ul className="space-y-2 min-h-[10rem] max-h-none overflow-visible pr-2">
 
-                <div className="flex items-center justify-between mb-2 overflow-auto">
-                  <p className="font-semibold text-gray-700 mb-2">Pick up to 8</p>
-                  <CharacterCounter current={selected.length} max={8} />
-                </div>
-
-          <ul className="space-y-2 min-h-35 max-h-35 overflow-y-auto pr-2">
             {selectedInterests.map((interest) => (
               <li key={interest.id} className="text-sm flex items-center gap-2">
                 <span
@@ -134,25 +117,32 @@ export const InterestsSection = ({
                 {interest.name}
               </li>
             ))}
-
           </ul>
         </div>
       </div>
 
-      <div className="lg:w-1/2 w-full flex flex-wrap gap-2 items-start content-start overflow-auto max-h-[25vh] mt-8">
-        {interests.map((interest) => {
-          const isSelected = selected.includes(interest.id);
-          return (
-            <button
-              key={interest.id}
-              onClick={() => toggleInterest(interest.id)}
-              className={`px-3 py-1 rounded shadow-sm text-sm transition-all duration-150
-                ${isSelected ? "bg-olive text-white" : " hover:bg-gray-100"}`}
-            >
-              {interest.name}
-            </button>
-          );
-        })}
+      {/* Right side: All interests */}
+      <div className="lg:w-1/2 w-full relative">
+
+        {/* Scroll fade indicators */}
+        <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-white to-transparent pointer-events-none z-10" />
+        <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent pointer-events-none z-10" />
+
+        <div className="flex flex-wrap gap-2 items-start content-start overflow-y-auto max-h-[40vh] p-1 scroll-smooth">
+          {interests.map((interest) => {
+            const isSelected = selected.includes(interest.id);
+            return (
+              <button
+                key={interest.id}
+                onClick={() => toggleInterest(interest.id)}
+                className={`px-3 py-1 rounded shadow-sm text-sm transition-all duration-150
+                  ${isSelected ? "bg-olive text-white" : "hover:bg-gray-100"}`}
+              >
+                {interest.name}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

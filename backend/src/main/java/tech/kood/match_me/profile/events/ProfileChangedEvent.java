@@ -1,13 +1,11 @@
 package tech.kood.match_me.profile.events;
 
-import org.springframework.context.ApplicationEvent;
 import tech.kood.match_me.profile.dto.ProfileViewDTO;
 
-public class ProfileChangedDTOEvent extends ApplicationEvent {
+public class ProfileChangedEvent{
     private final ProfileViewDTO profile;
 
-    public ProfileChangedDTOEvent(Object source, ProfileViewDTO profile) {
-        super(source);
+    public ProfileChangedEvent(ProfileViewDTO profile) {
         this.profile = profile;
     }
 

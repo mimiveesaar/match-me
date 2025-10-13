@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import tech.kood.match_me.profile.dto.ProfileDTO;
 import tech.kood.match_me.profile.dto.ProfileViewDTO;
-import tech.kood.match_me.profile.events.ProfileChangedDTOEvent;
+import tech.kood.match_me.profile.events.ProfileChangedEvent;
 import tech.kood.match_me.profile.model.Interest;
 import tech.kood.match_me.profile.model.Profile;
 import tech.kood.match_me.profile.repository.*;
@@ -59,7 +59,7 @@ public class ProfileService {
         Profile reloaded = profileRepo.findByIdWithRelations(saved.getId());
         ProfileViewDTO result = toViewDTO(reloaded);
         
-        eventPublisher.publishEvent(new ProfileChangedDTOEvent(this, result));
+        eventPublisher.publishEvent(new ProfileChangedEvent(result));
         return result;
     }
 
