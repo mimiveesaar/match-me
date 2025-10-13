@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import tech.kood.match_me.matching.dto.MatchFilterDto;
 import tech.kood.match_me.matching.dto.MatchResultsDto;
-import tech.kood.match_me.matching.model.User;
+import tech.kood.match_me.matching.model.UserEntity;
 import tech.kood.match_me.matching.repository.MatchUserRepository;
 import tech.kood.match_me.matching.service.MatchService;
 
@@ -33,7 +33,7 @@ public class RecommendationController {
                                          @RequestBody MatchFilterDto filter) {
 
         // Fetch the logged-in user using your existing repository
-        User currentUser = matchUserRepository.findById(userId)
+        UserEntity currentUser = matchUserRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // Return only the IDs

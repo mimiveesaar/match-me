@@ -11,10 +11,10 @@ import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(
-        name = "user_rejections",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"requester_id", "requested_id"})
+    name = "connection_requests",
+    uniqueConstraints=@UniqueConstraint(columnNames={"requester_id", "requested_id"})
 )
-public class RejectionRequest {
+public class ConnectionRequestEntity {
 
     @Id
     @GeneratedValue
@@ -26,9 +26,9 @@ public class RejectionRequest {
     @Column(name = "requested_id", nullable = false)
     private UUID requestedId;
 
-    protected RejectionRequest() {}
+    protected ConnectionRequestEntity() {}
 
-    public RejectionRequest(UUID requesterId, UUID requestedId) {
+    public ConnectionRequestEntity(UUID requesterId, UUID requestedId) {
         this.requesterId = requesterId;
         this.requestedId = requestedId;
     }
@@ -40,4 +40,5 @@ public class RejectionRequest {
     public void setId(UUID id) { this.id = id; }
     public void setRequesterId(UUID requesterId) { this.requesterId = requesterId; }
     public void setRequestedId(UUID requestedId) { this.requestedId = requestedId; }
+    
 }

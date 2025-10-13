@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class UserEntity {
 
     @Id
     private UUID id;
@@ -23,16 +23,16 @@ public class User {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "homeplanet_id", referencedColumnName = "id")
-    private Homeplanet homeplanet;
+    private HomeplanetEntity homeplanet;
 
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bodyform_id", referencedColumnName = "id")
-    private Bodyform bodyform;
+    private BodyformEntity bodyform;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "looking_for_id", referencedColumnName = "id")
-    private LookingFor lookingFor;
+    private LookingForEntity lookingFor;
 
     @Column(name = "bio")
     private String bio;
@@ -47,12 +47,12 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "interest_id")
     )
     @JsonManagedReference
-    private Set<Interest> interests = new HashSet<>();
+    private Set<InterestEntity> interests = new HashSet<>();
 
-    public User() {
+    public UserEntity() {
     }
 
-    public User(UUID id, String username, int age, Homeplanet homeplanet, Bodyform bodyform, String bio, LookingFor lookingFor, Set<Interest> interests,  String profilepicSrc) {
+    public UserEntity(UUID id, String username, int age, HomeplanetEntity homeplanet, BodyformEntity bodyform, String bio, LookingForEntity lookingFor, Set<InterestEntity> interests, String profilepicSrc) {
         this.id = id;
         this.username = username;
         this.age = age;
@@ -76,11 +76,11 @@ public class User {
         return age;
     }
 
-    public Homeplanet getHomeplanet() {
+    public HomeplanetEntity getHomeplanet() {
         return homeplanet;
     }
 
-    public Bodyform getBodyform() {
+    public BodyformEntity getBodyform() {
         return bodyform;
     }
 
@@ -88,11 +88,11 @@ public class User {
         return bio;
     }
 
-    public LookingFor getLookingFor() {
+    public LookingForEntity getLookingFor() {
         return lookingFor;
     }
 
-    public Set<Interest> getInterests() {
+    public Set<InterestEntity> getInterests() {
         return interests;
     }
 

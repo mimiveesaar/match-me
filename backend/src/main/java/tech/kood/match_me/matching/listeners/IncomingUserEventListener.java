@@ -1,20 +1,25 @@
 package tech.kood.match_me.matching.listeners;
 
 import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 import tech.kood.match_me.matching.model.*;
 import tech.kood.match_me.matching.repository.MatchUserRepository;
+import tech.kood.match_me.matching.repository.PlanetsRepository;
 import tech.kood.match_me.profile.events.ProfileChangedEvent;
-import tech.kood.match_me.profile.model.Profile;
 
-import java.util.HashSet;
+
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+@Component
 public class IncomingUserEventListener {
 
     private final MatchUserRepository matchUserRepository;
+    private final PlanetsRepository planetsRepository;
 
-    public IncomingUserEventListener(MatchUserRepository matchUserRepository) {
+    public IncomingUserEventListener(MatchUserRepository matchUserRepository, PlanetsRepository planetsRepository) {
         this.matchUserRepository = matchUserRepository;
+        this.planetsRepository = planetsRepository;
     }
 
     @EventListener
@@ -22,15 +27,12 @@ public class IncomingUserEventListener {
 
         var profile = event.getProfile();
 
-        var bodyformEntity = new Bodyform(profile.getBodyform().getId());
-        var homePlanetEntity = new Homeplanet(1, "Earth", 12.1, 13.1 );
-        var lookingForEntity = new LookingFor(1, "...");
-        var interestsEntity = new Interest( "kkk");
-        var interestsSetEntity = new HashSet<Interest>();
-        var userEntity = new User(UUID.randomUUID(),"Mimi", 27, homePlanetEntity, bodyformEntity, "mmm", lookingForEntity, interestsSetEntity, "");
+        var bodyformEntity = new BodyformEntity(profile.getBodyformId());
+        var homePlanetEntity = new HomeplanetEntity(profile.getHomeplanetId());
+        var lookingForEntity = new LookingForEntity(profile.getLookingForId());
+        var interests = profile.getInterestIds().stream().map(id -> new InterestEntity(id)).collect(Collectors.toSet());
+        var userEntity = new UserEntity(UUID.randomUUID(),"Mimi", 27, homePlanetEntity, bodyformEntity, "mmm", lookingForEntity, interests, profile.getProfilePic());
 
-        matchUserRepository.save(user);
+        matchUserRepository.save(userEntity);
     }
-
-
 }

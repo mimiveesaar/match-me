@@ -2,8 +2,8 @@ package tech.kood.match_me.matching.dto;
 
 import java.util.List;
 
-import tech.kood.match_me.matching.model.Interest;
-import tech.kood.match_me.matching.model.User;
+import tech.kood.match_me.matching.model.InterestEntity;
+import tech.kood.match_me.matching.model.UserEntity;
 
 // DTO for outgoing match results
 public class MatchResultsDto {
@@ -20,7 +20,7 @@ public class MatchResultsDto {
     private final double score;
     private final boolean supermatch;
 
-    public MatchResultsDto(User user, double score, boolean supermatch) {
+    public MatchResultsDto(UserEntity user, double score, boolean supermatch) {
         this.id = user.getId().toString();
         this.username = user.getUsername();
         this.age = user.getAge();
@@ -30,7 +30,7 @@ public class MatchResultsDto {
         this.bio = user.getBio();
         this.interests = user.getInterests() != null
         ? user.getInterests().stream()
-              .map(Interest::getName)
+              .map(InterestEntity::getName)
               .toList()
         : List.of();
 

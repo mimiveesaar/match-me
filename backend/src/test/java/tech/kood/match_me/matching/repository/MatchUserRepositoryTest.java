@@ -22,12 +22,12 @@ public class MatchUserRepositoryTest extends MatchingTestBase {
     @Test
     void testSaveAndFindById() {
 
-        var bodyformEntity = new Bodyform(1, "gelatinous");
-        var homePlanetEntity = new Homeplanet(1, "Earth", 12.1, 13.1 );
-        var lookingForEntity = new LookingFor(1, "...");
-        var interestsEntity = new Interest( "kkk");
-        var interestsSetEntity = new HashSet<Interest>();
-        var userEntity = new User(UUID.randomUUID(),"Mimi", 27, homePlanetEntity, bodyformEntity, "mmm", lookingForEntity, interestsSetEntity, "");
+        var bodyformEntity = new BodyformEntity(1, "gelatinous");
+        var homePlanetEntity = new HomeplanetEntity(1, "Earth", 12.1f, 13.1f );
+        var lookingForEntity = new LookingForEntity(1, "...");
+        var interestsEntity = new InterestEntity( "kkk");
+        var interestsSetEntity = new HashSet<InterestEntity>();
+        var userEntity = new UserEntity(UUID.randomUUID(),"Mimi", 27, homePlanetEntity, bodyformEntity, "mmm", lookingForEntity, interestsSetEntity, "");
 
         matchUserRepository.save(userEntity);
 

@@ -7,28 +7,37 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "interests")
-public class Interest {
+public class InterestEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 
     @Column(name = "interest")
     private String name;
 
     @ManyToMany(mappedBy = "interests")
     @JsonBackReference
-    private Set<User> users;
+    private Set<UserEntity> users;
 
-    public Interest() {
+    public InterestEntity() {
     }
 
-    public Interest(String name) {
+    public InterestEntity(Integer id, String name) {
+        this.id = id;
         this.name = name;
     }
 
-    public Long getId() {
+    public InterestEntity(Integer id) {
+        this.id = id;
+    }
+
+    public InterestEntity(String name) {
+        this.name = name;
+    }
+
+    public Integer getId() {
         return id;
     }
 
@@ -36,7 +45,7 @@ public class Interest {
         return name;
     }
 
-    public Set<User> getUsers() {
+    public Set<UserEntity> getUsers() {
         return users;
     }
 }

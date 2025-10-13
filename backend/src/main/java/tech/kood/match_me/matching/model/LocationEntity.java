@@ -1,20 +1,18 @@
 package tech.kood.match_me.matching.model;
 
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Entity;
-
 
 
 @Embeddable
-public class Location {
+public class LocationEntity {
 
     private double lat;
     private double lng;
 
-    public Location() {
+    public LocationEntity() {
     }
 
-    public Location(double lat, double lng) {
+    public LocationEntity(double lat, double lng) {
         this.lat = lat;
         this.lng = lng;
     }

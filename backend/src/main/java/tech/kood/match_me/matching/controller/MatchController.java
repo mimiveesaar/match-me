@@ -16,7 +16,7 @@ import tech.kood.match_me.matching.dto.CurrentUserDto;
 import tech.kood.match_me.matching.dto.MatchFilterDto;
 import tech.kood.match_me.matching.dto.MatchResponseDto;
 import tech.kood.match_me.matching.dto.MatchResultsDto;
-import tech.kood.match_me.matching.model.User;
+import tech.kood.match_me.matching.model.UserEntity;
 import tech.kood.match_me.matching.repository.MatchUserRepository;
 import tech.kood.match_me.matching.service.MatchService;
 
@@ -45,7 +45,7 @@ public class MatchController {
         try {
             MatchFilterDto filter = objectMapper.readValue(rawBody, MatchFilterDto.class);
 
-            User currentUser = userRepository.findById(userId)
+            UserEntity currentUser = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
             List<MatchResultsDto> matches = matchService.getMatches(filter, currentUser);

@@ -5,20 +5,24 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "looking_for")
-public class LookingFor {
+@Table(name = "bodyforms")
+public class BodyformEntity {
 
     @Id
     private Integer id;
 
     private String name;
 
-    public LookingFor() {
+    public BodyformEntity() {
     }
 
-    public LookingFor(Integer id, String name) {
+    public BodyformEntity(Integer id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public BodyformEntity(Integer id) {
+        this.id = id;
     }
 
     public Integer getId() {
@@ -27,5 +31,5 @@ public class LookingFor {
 
     public String getName() {
         return name;
-    }  
+    }
 }

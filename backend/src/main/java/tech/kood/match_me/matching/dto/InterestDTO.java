@@ -1,14 +1,14 @@
 package tech.kood.match_me.matching.dto;
 
 public class InterestDTO {
-    private final Long id;
+    private final Integer id;
     private final String name;
 
-    public InterestDTO(Long id, String name) {
+    public InterestDTO(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Long getId() { return id; }
+    public Integer getId() { return id; }
     public String getName() { return name; }
 }

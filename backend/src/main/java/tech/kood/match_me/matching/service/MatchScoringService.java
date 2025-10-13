@@ -2,19 +2,19 @@ package tech.kood.match_me.matching.service;
 
 import org.springframework.stereotype.Service;
 
-import tech.kood.match_me.matching.model.Homeplanet;
-import tech.kood.match_me.matching.model.User;
+import tech.kood.match_me.matching.model.HomeplanetEntity;
+import tech.kood.match_me.matching.model.UserEntity;
 
 @Service
 public class MatchScoringService {
 
-    private double calculateDistance(Homeplanet a, Homeplanet b) {
+    private double calculateDistance(HomeplanetEntity a, HomeplanetEntity b) {
         double latDiff = a.getLatitude() - b.getLatitude();
         double lonDiff = a.getLongitude() - b.getLongitude();
         return Math.sqrt(latDiff * latDiff + lonDiff * lonDiff);
     }
 
-    public int calculateScore(User user, User candidate) {
+    public int calculateScore(UserEntity user, UserEntity candidate) {
         int score = 0;
 
         if (user.getHomeplanet().equals(candidate.getHomeplanet())) {

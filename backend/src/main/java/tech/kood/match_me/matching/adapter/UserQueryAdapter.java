@@ -28,7 +28,7 @@ public class UserQueryAdapter implements UserQueryPort {
                 user.getBio(),
                 user.getProfilepicSrc(),
                 user.getHomeplanet() != null ?
-                        new HomeplanetDTO(user.getHomeplanet().getId(), user.getHomeplanet().getName()) : null,
+                        new HomeplanetDTO(user.getHomeplanet().getId(), user.getHomeplanet().getName(), user.getHomeplanet().getLatitude(), user.getHomeplanet().getLongitude()) : null,
                 user.getBodyform() != null ?
                         new BodyformDTO(user.getBodyform().getId(), user.getBodyform().getName()) : null,
                 user.getLookingFor() != null ?

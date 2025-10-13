@@ -6,13 +6,13 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import tech.kood.match_me.matching.model.User;
+import tech.kood.match_me.matching.model.UserEntity;
 
 @Repository
-public interface MatchUserRepository extends JpaRepository<User, UUID>, MatchUserRepositoryCustom {
-    
-    List<User> findByHomeplanetId(Integer homeplanetId);
-    List<User> findByLookingForId(Integer lookingForId);
-    List<User> findByBodyformId(Integer bodyformId);
-    List<User> findByHomeplanetIdAndLookingForIdAndBodyformId(Integer homeplanetId, Integer lookingForId, Integer bodyformId);
+public interface MatchUserRepository extends JpaRepository<UserEntity, UUID>, MatchUserRepositoryCustom {
+
+    List<UserEntity> findByHomeplanetId(Integer homeplanetId);
+    List<UserEntity> findByLookingForId(Integer lookingForId);
+    List<UserEntity> findByBodyformId(Integer bodyformId);
+    List<UserEntity> findByHomeplanetIdAndLookingForIdAndBodyformId(Integer homeplanetId, Integer lookingForId, Integer bodyformId);
 }

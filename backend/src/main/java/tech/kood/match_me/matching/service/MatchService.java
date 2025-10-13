@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 
 import tech.kood.match_me.matching.dto.MatchFilterDto;
 import tech.kood.match_me.matching.dto.MatchResultsDto;
-import tech.kood.match_me.matching.model.ConnectionRequest;
-import tech.kood.match_me.matching.model.RejectionRequest;
-import tech.kood.match_me.matching.model.User;
+import tech.kood.match_me.matching.model.ConnectionRequestEntity;
+import tech.kood.match_me.matching.model.RejectionRequestEntity;
+import tech.kood.match_me.matching.model.UserEntity;
 import tech.kood.match_me.matching.repository.ConnectionRequestRepository;
 import tech.kood.match_me.matching.repository.MatchUserRepository;
 import tech.kood.match_me.matching.repository.RejectionRequestRepository;
@@ -34,24 +34,24 @@ public class MatchService {
         this.connectionRequestRepository = connectionRequestRepository;
     }
 
-    public List<MatchResultsDto> getMatches(MatchFilterDto filter, User currentUser) {
+    public List<MatchResultsDto> getMatches(MatchFilterDto filter, UserEntity currentUser) {
         // Step 1: Fetch candidates from repository
-        List<User> candidates = userRepository.findByFilter(filter);
+        List<UserEntity> candidates = userRepository.findByFilter(filter);
 
         // Step 2: Fetch all users rejected by the current user
         Set<UUID> rejectedIds = rejectionRequestRepository.findAllByRequesterId(currentUser.getId())
                                                     .stream()
-                                                    .map(RejectionRequest::getRequestedId)
+                                                    .map(RejectionRequestEntity::getRequestedId)
                                                     .collect(Collectors.toSet());
 
         // Step 2.5: Fetch all users who have already been sent a connection request by the current user
         Set<UUID> connectionRequestedIds = connectionRequestRepository.findAllByRequesterId(currentUser.getId())
                                                                      .stream()
-                                                                     .map(ConnectionRequest::getRequestedId)
+                                                                     .map(ConnectionRequestEntity::getRequestedId)
                                                                      .collect(Collectors.toSet());
 
         // Step 3: Filter out rejected users & users that have already been sent a connection request and the current user themselves
-        List<User> filteredCandidates = candidates.stream()
+        List<UserEntity> filteredCandidates = candidates.stream()
                                                   .filter(candidate -> !rejectedIds.contains(candidate.getId()))
                                                   .filter(candidate -> !connectionRequestedIds.contains(candidate.getId()))
                                                   .filter(candidate -> !candidate.getId().equals(currentUser.getId()))

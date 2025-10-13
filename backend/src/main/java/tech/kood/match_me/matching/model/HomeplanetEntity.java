@@ -6,25 +6,29 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "homeplanets")
-public class Homeplanet {
+public class HomeplanetEntity {
 
     @Id
     private Integer id;
 
     private String name;
 
-    private Double latitude;
+    private Float latitude;
 
-    private Double longitude;
+    private Float longitude;
 
-    public Homeplanet() {
+    public HomeplanetEntity() {
     }
 
-    public Homeplanet(Integer id, String name, Double latitude, Double longitude) {
+    public HomeplanetEntity(Integer id, String name, Float latitude, Float longitude) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+    
+    public HomeplanetEntity(Integer id) {
+        this.id = id;
     }
 
     public Integer getId() {
@@ -35,11 +39,11 @@ public class Homeplanet {
         return name;
     }
 
-    public Double getLatitude() {
+    public Float getLatitude() {
         return latitude;
     }
 
-    public Double getLongitude() {
+    public Float getLongitude() {
         return longitude;
     }
 }

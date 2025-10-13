@@ -5,12 +5,11 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import tech.kood.match_me.matching.model.ConnectionRequest;
+import tech.kood.match_me.matching.model.ConnectionRequestEntity;
 
 @Repository
-public interface ConnectionRequestRepository extends JpaRepository<ConnectionRequest, UUID>{
+public interface ConnectionRequestRepository extends JpaRepository<ConnectionRequestEntity, UUID>{
 
-    List<ConnectionRequest> findAllByRequesterId(UUID requesterId);
+    List<ConnectionRequestEntity> findAllByRequesterId(UUID requesterId);
     
 }

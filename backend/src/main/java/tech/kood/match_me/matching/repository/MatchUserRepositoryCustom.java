@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import tech.kood.match_me.matching.dto.MatchFilterDto;
-import tech.kood.match_me.matching.model.User;
+import tech.kood.match_me.matching.model.UserEntity;
 
 @Repository
 public interface MatchUserRepositoryCustom {
-    List<User> findByFilter(MatchFilterDto filter);
+    List<UserEntity> findByFilter(MatchFilterDto filter);
 }

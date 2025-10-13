@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
@@ -18,11 +17,11 @@ import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import tech.kood.match_me.matching.dto.MatchFilterDto;
-import tech.kood.match_me.matching.model.Bodyform;
-import tech.kood.match_me.matching.model.Homeplanet;
-import tech.kood.match_me.matching.model.Interest;
-import tech.kood.match_me.matching.model.LookingFor;
-import tech.kood.match_me.matching.model.User;
+import tech.kood.match_me.matching.model.BodyformEntity;
+import tech.kood.match_me.matching.model.HomeplanetEntity;
+import tech.kood.match_me.matching.model.InterestEntity;
+import tech.kood.match_me.matching.model.LookingForEntity;
+import tech.kood.match_me.matching.model.UserEntity;
 
 @Repository
 public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
@@ -32,22 +31,22 @@ public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public List<User> findByFilter(MatchFilterDto filter) {
+    public List<UserEntity> findByFilter(MatchFilterDto filter) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<User> query = cb.createQuery(User.class);
-        Root<User> root = query.from(User.class);
+        CriteriaQuery<UserEntity> query = cb.createQuery(UserEntity.class);
+        Root<UserEntity> root = query.from(UserEntity.class);
 
         List<Predicate> predicates = new ArrayList<>();
 
-        Join<User, Homeplanet> homeplanetJoin = root.join("homeplanet", JoinType.LEFT);
+        Join<UserEntity, HomeplanetEntity> homeplanetJoin = root.join("homeplanet", JoinType.LEFT);
 
         if (filter.getLookingFor() != null) {
-            Join<User, LookingFor> lookingForJoin = root.join("lookingFor", JoinType.LEFT);
+            Join<UserEntity, LookingForEntity> lookingForJoin = root.join("lookingFor", JoinType.LEFT);
             predicates.add(cb.equal(lookingForJoin.get("name"), filter.getLookingFor()));
         }
 
         if (filter.getBodyform() != null) {
-            Join<User, Bodyform> bodyformJoin = root.join("bodyform", JoinType.LEFT);
+            Join<UserEntity, BodyformEntity> bodyformJoin = root.join("bodyform", JoinType.LEFT);
             predicates.add(cb.equal(cb.lower(bodyformJoin.get("name")), filter.getBodyform().toLowerCase()));
         }
 
@@ -60,7 +59,7 @@ public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
         }
 
         if (filter.getInterests() != null && !filter.getInterests().isEmpty()) {
-            Join<User, Interest> interestJoin = root.join("interests", JoinType.LEFT);
+            Join<UserEntity, InterestEntity> interestJoin = root.join("interests", JoinType.LEFT);
             predicates.add(interestJoin.get("name").in(filter.getInterests()));
             query.distinct(true);
         }
@@ -68,11 +67,11 @@ public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
         // --- Distance filter ---
         if (filter.getHomeplanet() != null && filter.getMaxDistanceLy() != null) {
             // lookup coordinates of the selected planet
-            CriteriaQuery<Homeplanet> hpQuery = cb.createQuery(Homeplanet.class);
-            Root<Homeplanet> hpRoot = hpQuery.from(Homeplanet.class);
+            CriteriaQuery<HomeplanetEntity> hpQuery = cb.createQuery(HomeplanetEntity.class);
+            Root<HomeplanetEntity> hpRoot = hpQuery.from(HomeplanetEntity.class);
             hpQuery.select(hpRoot).where(cb.equal(hpRoot.get("name"), filter.getHomeplanet()));
 
-            Homeplanet selectedPlanet;
+            HomeplanetEntity selectedPlanet;
                 try {
                     selectedPlanet = entityManager.createQuery(hpQuery).getSingleResult();
                 } catch (NoResultException e) {
@@ -104,7 +103,7 @@ public class MatchUserRepositoryImpl implements MatchUserRepositoryCustom {
         }
 
         query.where(cb.and(predicates.toArray(Predicate[]::new)));
-        List<User> results = entityManager.createQuery(query).getResultList();
+        List<UserEntity> results = entityManager.createQuery(query).getResultList();
         System.out.println("Matched users: " + results.size()); // log number of users returned
         return results;
     }

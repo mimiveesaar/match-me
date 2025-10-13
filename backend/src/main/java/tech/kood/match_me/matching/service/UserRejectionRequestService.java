@@ -3,7 +3,7 @@ package tech.kood.match_me.matching.service;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import tech.kood.match_me.matching.events.UserRejectionRequestEvent;
-import tech.kood.match_me.matching.model.RejectionRequest;
+import tech.kood.match_me.matching.model.RejectionRequestEntity;
 import tech.kood.match_me.matching.repository.RejectionRequestRepository;
 
 import java.util.UUID;
@@ -21,7 +21,7 @@ public class UserRejectionRequestService {
     }
 
     public void sendRejectionRequest(UUID requesterId, UUID requestedId) {
-        RejectionRequest rejectionRequest = new RejectionRequest(requesterId, requestedId);
+        RejectionRequestEntity rejectionRequest = new RejectionRequestEntity(requesterId, requestedId);
         rejectionRequestRepository.save(rejectionRequest);
 
         // Publish event
