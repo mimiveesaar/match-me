@@ -4,9 +4,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import tech.kood.match_me.matching.dto.UserDTO;
 import tech.kood.match_me.profile.dto.ProfileDTO;
 import tech.kood.match_me.profile.dto.ProfileViewDTO;
 import tech.kood.match_me.profile.model.Profile;
@@ -25,37 +26,77 @@ public class ProfileController {
         this.service = service;
     }
 
+    /** 🟢 Save or update the logged-in user's profile */
     @PostMapping("/me")
     public ResponseEntity<?> saveMyProfile(@RequestBody ProfileDTO dto) {
         System.out.println("=== POST /api/profiles/me called ===");
         System.out.println("Received DTO: " + dto);
 
         try {
-            ProfileViewDTO savedProfileDTO = service.saveOrUpdateProfile(dto);
-            System.out.println("Profile saved successfully");
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (!(principal instanceof UserDTO user)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Unauthorized: user not authenticated");
+            }
+
+            UUID userId = user.getId();
+            ProfileViewDTO savedProfileDTO = service.saveOrUpdateProfile(userId, dto);
+            System.out.println("Profile saved successfully for userId=" + userId);
+
             return ResponseEntity.ok(savedProfileDTO);
+
         } catch (RuntimeException e) {
             System.err.println("Error saving profile: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Error: " + e.getMessage());
+                    .body("Error: " + e.getMessage());
         } catch (Exception e) {
             System.err.println("Unexpected error saving profile: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Internal server error: " + e.getMessage());
+                    .body("Internal server error: " + e.getMessage());
         }
     }
 
+    /** 🟢 Get the logged-in user's profile */
     @GetMapping("/me")
-    public ResponseEntity<ProfileViewDTO> getMyProfile() {
-        ProfileViewDTO profileDTO = service.getMyProfileDTO();
-        return ResponseEntity.ok(profileDTO);
+    public ResponseEntity<?> getMyProfile() {
+        try {
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (!(principal instanceof UserDTO user)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Unauthorized: user not authenticated");
+            }
+
+            UUID userId = user.getId();
+            ProfileViewDTO profileDTO = service.getProfileByUserId(userId);
+
+            if (profileDTO == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Profile not found for user: " + userId);
+            }
+
+            return ResponseEntity.ok(profileDTO);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error retrieving profile: " + e.getMessage());
+        }
     }
 
+    /** 🟢 Upload a profile image for the current user */
     @PostMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadProfileImage(@RequestParam("file") MultipartFile file) {
         try {
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (!(principal instanceof UserDTO user)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Unauthorized: user not authenticated");
+            }
+
+            UUID userId = user.getId();
+
             if (file.isEmpty()) {
                 return ResponseEntity.badRequest().body("Please select a file to upload");
             }
@@ -64,33 +105,46 @@ public class ProfileController {
                 return ResponseEntity.badRequest().body("Only image files are allowed");
             }
 
-            // Validate file size (5MB max)
             if (file.getSize() > 5 * 1024 * 1024) {
                 return ResponseEntity.badRequest().body("File size must be less than 5MB");
             }
 
-            ProfileViewDTO updatedProfile = service.uploadProfileImage(file);
+            ProfileViewDTO updatedProfile = service.uploadProfileImage(userId, file);
             return ResponseEntity.ok(updatedProfile);
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Failed to upload image: " + e.getMessage());
+                    .body("Failed to upload image: " + e.getMessage());
         }
     }
 
+    /** 🟢 Get the logged-in user's profile image */
     @GetMapping("/me/image")
     public ResponseEntity<Resource> getProfileImage() {
         try {
-            Resource imageResource = service.getProfileImage();
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (!(principal instanceof UserDTO user)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+            UUID userId = user.getId();
+            Resource imageResource = service.getProfileImage(userId);
+
+            if (imageResource == null) {
+                return ResponseEntity.notFound().build();
+            }
+
             return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(imageResource);
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(imageResource);
+
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
 
+    /** 🟡 Admin or system sync — no auth required */
     @PostMapping("/sync")
     public ResponseEntity<ProfileViewDTO> syncUser(
             @RequestParam UUID userId,

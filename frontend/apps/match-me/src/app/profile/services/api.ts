@@ -1,11 +1,11 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 export interface ProfileData {
-  homeplanetId?: string;  // Changed to string (UUID)
-  bodyformId?: string;     // Changed to string (UUID)
-  lookingForId?: string;   // Changed to string (UUID)
+  homeplanetId?: string; 
+  bodyformId?: string;  
+  lookingForId?: string; 
   bio?: string;
-  interestIds?: string[];  // Changed to string[] (UUIDs)
+  interestIds?: string[];
   profilePic?: string;
   username?: string;
   name?: string;

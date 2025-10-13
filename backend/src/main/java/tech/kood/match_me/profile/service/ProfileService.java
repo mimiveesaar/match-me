@@ -49,16 +49,18 @@ public class ProfileService {
     // -------------------- PROFILE CRUD --------------------
 
     @Transactional
-    public ProfileViewDTO saveOrUpdateProfile(ProfileDTO dto) {
-        System.out.println("=== saveOrUpdateProfile called ===");
-        Profile profile = getMyProfile();
+    public ProfileViewDTO saveOrUpdateProfile(UUID userId, ProfileDTO dto) {
+        System.out.println("=== saveOrUpdateProfile called for userId=" + userId + " ===");
+
+        Profile profile = profileRepo.findByUserIdWithRelations(userId)
+                .orElseGet(() -> createProfileForUser(userId, dto.getUsername()));
 
         updateProfileFromDTO(profile, dto);
 
         Profile saved = profileRepo.saveAndFlush(profile);
         Profile reloaded = profileRepo.findByIdWithRelations(saved.getId());
         ProfileViewDTO result = toViewDTO(reloaded);
-        
+
         eventPublisher.publishEvent(new ProfileChangedEvent(result));
         return result;
     }
@@ -76,19 +78,19 @@ public class ProfileService {
 
         if (dto.getHomeplanetId() != null) {
             var homeplanet = homeplanetRepo.findById(dto.getHomeplanetId())
-                .orElseThrow(() -> new RuntimeException("Homeplanet not found: " + dto.getHomeplanetId()));
+                    .orElseThrow(() -> new RuntimeException("Homeplanet not found: " + dto.getHomeplanetId()));
             profile.setHomeplanet(homeplanet);
         }
 
         if (dto.getBodyformId() != null) {
             var bodyform = bodyformRepo.findById(dto.getBodyformId())
-                .orElseThrow(() -> new RuntimeException("Bodyform not found: " + dto.getBodyformId()));
+                    .orElseThrow(() -> new RuntimeException("Bodyform not found: " + dto.getBodyformId()));
             profile.setBodyform(bodyform);
         }
 
         if (dto.getLookingForId() != null) {
             var lookingFor = lookingForRepo.findById(dto.getLookingForId())
-                .orElseThrow(() -> new RuntimeException("LookingFor not found: " + dto.getLookingForId()));
+                    .orElseThrow(() -> new RuntimeException("LookingFor not found: " + dto.getLookingForId()));
             profile.setLookingFor(lookingFor);
         }
 
@@ -98,10 +100,10 @@ public class ProfileService {
 
         if (dto.getInterestIds() != null) {
             var interests = dto.getInterestIds().stream()
-                .filter(id -> id != null)
-                .map(id -> interestRepo.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Interest not found: " + id)))
-                .collect(Collectors.toSet());
+                    .filter(id -> id != null)
+                    .map(id -> interestRepo.findById(id)
+                            .orElseThrow(() -> new RuntimeException("Interest not found: " + id)))
+                    .collect(Collectors.toSet());
             profile.setInterests(interests);
         }
 
@@ -110,36 +112,19 @@ public class ProfileService {
         }
     }
 
-    @Transactional(readOnly = true)
-    public ProfileViewDTO getMyProfileDTO() {
-        return toViewDTO(getMyProfile());
-    }
+    // -------------------- FETCH BY USER --------------------
 
-    @Transactional
-    public Profile getMyProfile() {
-        List<Profile> profiles = profileRepo.findAll();
-        if (!profiles.isEmpty()) {
-            return profileRepo.findByIdWithRelations(profiles.get(0).getId());
-        }
-        return createDummyProfile();
+    @Transactional(readOnly = true)
+    public ProfileViewDTO getProfileByUserId(UUID userId) {
+        return profileRepo.findByUserIdWithRelations(userId)
+                .map(this::toViewDTO)
+                .orElse(null);
     }
 
     @Transactional
     public Profile getOrCreateProfile(UUID userId, String username) {
         return profileRepo.findByUserId(userId)
-            .orElseGet(() -> createProfileForUser(userId, username));
-    }
-
-    private Profile createDummyProfile() {
-        var homeplanet = homeplanetRepo.findAll().stream().findFirst().orElse(null);
-        var bodyform = bodyformRepo.findAll().stream().findFirst().orElse(null);
-        var lookingFor = lookingForRepo.findAll().stream().findFirst().orElse(null);
-        var interests = interestRepo.findAll().stream().limit(2).collect(Collectors.toSet());
-
-        Profile dummy = new Profile("TestUser", 25, homeplanet, bodyform, lookingFor,
-                "This is a dummy profile for testing.", interests, "default-profile.png");
-
-        return profileRepo.saveAndFlush(dummy);
+                .orElseGet(() -> createProfileForUser(userId, username));
     }
 
     private Profile createProfileForUser(UUID userId, String username) {
@@ -165,8 +150,9 @@ public class ProfileService {
     // -------------------- IMAGE HANDLING --------------------
 
     @Transactional
-    public ProfileViewDTO uploadProfileImage(MultipartFile file) throws IOException {
-        Profile profile = getMyProfile();
+    public ProfileViewDTO uploadProfileImage(UUID userId, MultipartFile file) throws IOException {
+        Profile profile = profileRepo.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Profile not found for user: " + userId));
 
         // Delete old image if exists
         String oldImage = profile.getProfilePic();
@@ -181,15 +167,18 @@ public class ProfileService {
         // Save new image
         String filename = fileStorageService.saveFile(file);
         profile.setProfilePic(filename);
-        
+
         Profile saved = profileRepo.saveAndFlush(profile);
         Profile reloaded = profileRepo.findByIdWithRelations(saved.getId());
-        
+
         return toViewDTO(reloaded);
     }
 
-    public Resource getProfileImage() throws IOException {
-        Profile profile = getMyProfile();
+    @Transactional(readOnly = true)
+    public Resource getProfileImage(UUID userId) throws IOException {
+        Profile profile = profileRepo.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Profile not found for user: " + userId));
+
         return fileStorageService.loadFile(profile.getProfilePic());
     }
 
@@ -231,7 +220,6 @@ public class ProfileService {
                 .collect(Collectors.toList()));
 
         dto.setProfilePic(profile.getProfilePic());
-
         return dto;
     }
 }
