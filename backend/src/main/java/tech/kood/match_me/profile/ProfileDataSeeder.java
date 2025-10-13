@@ -10,6 +10,7 @@ import tech.kood.match_me.common.constants.Planets;
 import tech.kood.match_me.profile.model.*;
 import tech.kood.match_me.profile.repository.*;
 
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -118,16 +119,24 @@ public class ProfileDataSeeder implements CommandLineRunner {
             return;
         }
 
+        // ✅ Use the same UUIDs as in SeedUserGenerator
+        String[] fixedUserIds = {
+                "11111111-1111-1111-1111-111111111111",
+                "22222222-2222-2222-2222-222222222222",
+                "33333333-3333-3333-3333-333333333333",
+                "44444444-4444-4444-4444-444444444444",
+                "55555555-5555-5555-5555-555555555555"
+        };
+
         for (int i = 1; i <= 5; i++) {
             String username = "testuser" + i;
 
             if (!profileRepository.existsByUsername(username)) {
                 Profile profile = new Profile();
-                profile.setUserId(java.util.UUID.randomUUID());
+                profile.setUserId(UUID.fromString(fixedUserIds[i - 1]));
                 profile.setUsername(username);
                 profile.setAge(20 + i);
                 profile.setBio("This is a test bio for " + username);
-                // Changed: Use filename instead of URL - points to default image
                 profile.setProfilePic("default-profile.png");
                 profile.setHomeplanet(homeplanet);
                 profile.setBodyform(bodyform);
@@ -135,7 +144,8 @@ public class ProfileDataSeeder implements CommandLineRunner {
                 profile.setInterests(interestRepository.findAll().stream().limit(3).collect(Collectors.toSet()));
 
                 profileRepository.save(profile);
-                System.out.println("  ✅ Inserted profile: " + username + " with default-profile.png");
+                System.out.println("  ✅ Inserted profile: " + username +
+                        " (userId=" + fixedUserIds[i - 1] + ")");
             }
         }
         System.out.println();

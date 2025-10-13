@@ -18,29 +18,43 @@ interface ProfileData {
 
 export default function MyProfile() {
   useEffect(() => {
-    document.title = 'My Profile | alien.meet'
-  }, [])
+    document.title = "My Profile | alien.meet";
+  }, []);
 
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // ✅ Token for testing
+    localStorage.setItem(
+      "jwtToken",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMTExMTExMS0xMTExLTExMTEtMTExMS0xMTExMTExMTExMTEiLCJ1c2VyU3RhdHVzQ29kZSI6MX0.k85S-V4H-iSwGDG3jVgSaRAUwULFgaRgghS4OEwaZvw"
+    );
+
     fetchProfile();
   }, []);
+
 
   const fetchProfile = async () => {
     try {
       console.log("=== FETCHING PROFILE ===");
-      const response = await fetch('http://localhost:8080/api/profiles/me');
+
+      const token = localStorage.getItem("jwtToken"); // ✅ Grab token
+      const response = await fetch("http://localhost:8080/api/profiles/me", {
+        headers: {
+          Authorization: `Bearer ${token}`, // ✅ Send it to backend
+        },
+      });
+
       if (response.ok) {
         const data = await response.json();
         console.log("✓ Fetched profile from backend:", data);
         setProfile(data);
       } else {
-        console.error('❌ Failed to fetch profile, status:', response.status);
+        console.error("❌ Failed to fetch profile, status:", response.status);
       }
     } catch (error) {
-      console.error('❌ Error fetching profile:', error);
+      console.error("❌ Error fetching profile:", error);
     } finally {
       setIsLoading(false);
     }
