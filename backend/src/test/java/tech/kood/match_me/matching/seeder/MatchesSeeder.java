@@ -1,6 +1,7 @@
 package tech.kood.match_me.matching.seeder;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import tech.kood.match_me.common.constants.Bodyforms;
 import tech.kood.match_me.common.constants.Interests;
@@ -19,15 +20,19 @@ import tech.kood.match_me.matching.repository.PlanetsRepository;
 public class MatchesSeeder {
 
     @Autowired
+    @Qualifier("MatchingBodyformRepository")
     private BodyformRepository bodyformRepository;
 
     @Autowired
+    @Qualifier("MatchingInterestsRepository")
     private InterestsRepository interestRepository;
 
     @Autowired
+    @Qualifier("MatchingLookingForRepository")
     private LookingForRepository lookingForRepository;
 
     @Autowired
+    @Qualifier("MatchingPlanetsRepository")
     private PlanetsRepository planetsRepository;
 
     public void seedMatches() {
@@ -47,7 +52,6 @@ public class MatchesSeeder {
                 System.out.println("  ✅ Inserted: " + bfEnum.DisplayName());
             }
         }
-        System.out.println();
     }
 
     private void seedHomeplanets() {
@@ -60,7 +64,6 @@ public class MatchesSeeder {
                 System.out.println("  ✅ Inserted: " + pEnum.DisplayName());
             }
         }
-        System.out.println();
     }
 
     private void seedLookingFor() {
@@ -73,7 +76,6 @@ public class MatchesSeeder {
                 System.out.println("  ✅ Inserted: " + lfEnum.DisplayName());
             }
         }
-        System.out.println();
     }
 
     private void seedInterests() {
@@ -85,6 +87,5 @@ public class MatchesSeeder {
                 interestRepository.save(interest);
             }
         }
-        System.out.println();
     }
 }

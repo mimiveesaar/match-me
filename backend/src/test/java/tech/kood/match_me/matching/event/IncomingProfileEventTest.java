@@ -19,7 +19,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-@Transactional
+@Transactional(transactionManager = "matchingTransactionManager")
 public class IncomingProfileEventTest extends MatchingTestBase {
 
     @Autowired
@@ -57,6 +57,5 @@ public class IncomingProfileEventTest extends MatchingTestBase {
 
         var queryResult = matchUserRepository.findById(profileDTO.getId());
         assertTrue(queryResult.isPresent());
-
     }
 }

@@ -6,7 +6,4 @@ import tech.kood.match_me.common.TestBase;
 
 @Transactional(transactionManager = "matchingTransactionManager")
 public abstract class MatchingTestBase extends TestBase {
-
-
-
 }

@@ -36,7 +36,7 @@ public class ProfileDataSeeder implements CommandLineRunner {
         System.out.println("\n=== SEEDING PROFILE DATA ===");
 
         try {
-            seedBodyforms();
+         /*   seedBodyforms();
             seedHomeplanets();
             seedLookingFor();
             seedInterests();
@@ -44,7 +44,7 @@ public class ProfileDataSeeder implements CommandLineRunner {
 
             verifyData();
 
-            System.out.println("=== PROFILE DATA SEEDING COMPLETE ===\n");
+*/            System.out.println("=== PROFILE DATA SEEDING COMPLETE ===\n");
         } catch (Exception e) {
             System.err.println("\n❌ SEEDING FAILED WITH ERROR:");
             e.printStackTrace();

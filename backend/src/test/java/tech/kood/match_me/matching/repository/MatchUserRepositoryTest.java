@@ -2,6 +2,7 @@ package tech.kood.match_me.matching.repository;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import tech.kood.match_me.matching.common.MatchingTestBase;
@@ -13,7 +14,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-@Transactional
+@Transactional(transactionManager = "matchingTransactionManager")
 public class MatchUserRepositoryTest extends MatchingTestBase {
 
     @Autowired
