@@ -111,13 +111,16 @@ public class UserManagementConfig {
         return new NamedParameterJdbcTemplate(dataSource);
     }
 
+
     @Qualifier("userManagementFlyway")
+    @Bean(initMethod = "migrate")
     public Flyway userManagementFlyway(
             @Qualifier("userManagementDataSource") DataSource dataSource) {
-        var flyway = Flyway.configure().dataSource(dataSource)
+
+        return Flyway.configure().dataSource(dataSource)
+                .executeInTransaction(true).baselineOnMigrate(true)
                 .locations("classpath:/user_management/database/flyway")
                 .load();
-        return flyway;
     }
 
     @Bean

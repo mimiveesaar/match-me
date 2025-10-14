@@ -6,7 +6,6 @@ import tech.kood.match_me.matching.model.*;
 import tech.kood.match_me.matching.repository.*;
 import tech.kood.match_me.profile.events.ProfileChangedEvent;
 
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component

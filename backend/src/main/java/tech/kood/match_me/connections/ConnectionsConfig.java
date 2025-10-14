@@ -36,14 +36,14 @@ public class ConnectionsConfig {
         return new JdbcTemplate(dataSource);
     }
 
-     @Qualifier("connectionsFlyway")
-     @Bean(initMethod = "migrate")
-     public Flyway connectionsFlyway(@Qualifier("connectionsDataSource") DataSource dataSource) {
-     var flyway = Flyway.configure().dataSource(dataSource)
-     .executeInTransaction(true)
-     .locations("classpath:/connections/database/flyway").load();
-     return flyway;
-     }
+    @Qualifier("connectionsFlyway")
+    @Bean(initMethod = "migrate")
+    public Flyway connectionsFlyway(@Qualifier("connectionsDataSource") DataSource dataSource) {
+        var flyway = Flyway.configure().dataSource(dataSource)
+                .executeInTransaction(true).baselineOnMigrate(true)
+                .locations("classpath:/connections/database/flyway").load();
+        return flyway;
+    }
 
 
     @Bean
