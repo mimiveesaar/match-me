@@ -11,7 +11,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      -  postgres_data:/var/lib/postgresql/data
       - ./postgres/scripts/init-user-management.sql:/docker-entrypoint-initdb.d/init-user-management.sql
       - ./postgres/scripts/init-chat.sql:/docker-entrypoint-initdb.d/init-chat.sql
       - ./postgres/scripts/init-connections.sql:/docker-entrypoint-initdb.d/init-connections.sql
@@ -21,3 +21,7 @@ services:
 #  default:
 #    external:
 #      name: matchme-shared-net
+
+
+volumes:
+  postgres_data:
