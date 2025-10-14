@@ -118,7 +118,7 @@ public class UserManagementConfig {
             @Qualifier("userManagementDataSource") DataSource dataSource) {
 
         return Flyway.configure().dataSource(dataSource)
-                .executeInTransaction(true).baselineOnMigrate(true)
+                .executeInTransaction(true).baselineOnMigrate(false)
                 .locations("classpath:/user_management/database/flyway")
                 .load();
     }

@@ -40,7 +40,7 @@ public class ConnectionsConfig {
     @Bean(initMethod = "migrate")
     public Flyway connectionsFlyway(@Qualifier("connectionsDataSource") DataSource dataSource) {
         var flyway = Flyway.configure().dataSource(dataSource)
-                .executeInTransaction(true).baselineOnMigrate(true)
+                .executeInTransaction(true).baselineOnMigrate(false)
                 .locations("classpath:/connections/database/flyway").load();
         return flyway;
     }
