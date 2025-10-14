@@ -7,11 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import tech.kood.match_me.matching.dto.UserDTO;
 import tech.kood.match_me.profile.dto.ProfileDTO;
 import tech.kood.match_me.profile.dto.ProfileViewDTO;
 import tech.kood.match_me.profile.model.Profile;
 import tech.kood.match_me.profile.service.ProfileService;
+import tech.kood.match_me.user_management.features.user.domain.UserDTO;
 
 import java.util.UUID;
 
@@ -39,7 +39,7 @@ public class ProfileController {
                         .body("Unauthorized: user not authenticated");
             }
 
-            UUID userId = user.getId();
+            UUID userId = user.id().value();
             ProfileViewDTO savedProfileDTO = service.saveOrUpdateProfile(userId, dto);
             System.out.println("Profile saved successfully for userId=" + userId);
 
@@ -63,12 +63,13 @@ public class ProfileController {
     public ResponseEntity<?> getMyProfile() {
         try {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
             if (!(principal instanceof UserDTO user)) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body("Unauthorized: user not authenticated");
             }
 
-            UUID userId = user.getId();
+            UUID userId = user.id().value();
             ProfileViewDTO profileDTO = service.getProfileByUserId(userId);
 
             if (profileDTO == null) {
@@ -95,7 +96,7 @@ public class ProfileController {
                         .body("Unauthorized: user not authenticated");
             }
 
-            UUID userId = user.getId();
+            UUID userId = user.id().value();
 
             if (file.isEmpty()) {
                 return ResponseEntity.badRequest().body("Please select a file to upload");
@@ -128,7 +129,7 @@ public class ProfileController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
 
-            UUID userId = user.getId();
+            UUID userId = user.id().value();
             Resource imageResource = service.getProfileImage(userId);
 
             if (imageResource == null) {

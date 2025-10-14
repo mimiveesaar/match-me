@@ -76,7 +76,7 @@ app:
 user-management:
   jwt:
     secret: q+6sNpZcOymRrX2U6o4aU2jCLvQhVkODoUwiyQ6QL/I=
-    expiration: 3600
+    expiration: 360000000
     issuer: match-me
   refresh-token:
     expiration: 604800

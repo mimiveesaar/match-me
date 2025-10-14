@@ -28,7 +28,7 @@ export default function MyProfile() {
     // ✅ Token for testing
     localStorage.setItem(
       "jwtToken",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMTExMTExMS0xMTExLTExMTEtMTExMS0xMTExMTExMTExMTEiLCJ1c2VyU3RhdHVzQ29kZSI6MX0.k85S-V4H-iSwGDG3jVgSaRAUwULFgaRgghS4OEwaZvw"
+      "eyJhbGciOiJIUzI1NiIsImFhYSI6dHJ1ZX0.eyJpc3MiOiJtYXRjaC1tZSIsInVzZXJJZCI6IjExMTExMTExLTExMTEtMTExMS0xMTExLTExMTExMTExMTExMSIsIlVzZXJTdGF0dXNDb2RlIjoxLCJpYXQiOjE3NjA0Mjk1MDYsImV4cCI6Mjc2MDQzMDEwNn0.nmqTIiR1xiWCam1WhtcfXCRKCpuKdIxjyt1-5CY9G-Y"
     );
 
     fetchProfile();
