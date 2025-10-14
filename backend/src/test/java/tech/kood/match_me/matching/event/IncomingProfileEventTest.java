@@ -56,6 +56,7 @@ public class IncomingProfileEventTest extends MatchingTestBase {
         eventPublisher.publishEvent(newProfileEvent);
 
         var queryResult = matchUserRepository.findById(profileDTO.getId());
+        var results = matchUserRepository.findAll();
         assertTrue(queryResult.isPresent());
     }
 }
