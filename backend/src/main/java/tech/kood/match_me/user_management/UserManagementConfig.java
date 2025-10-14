@@ -117,10 +117,13 @@ public class UserManagementConfig {
     public Flyway userManagementFlyway(
             @Qualifier("userManagementDataSource") DataSource dataSource) {
 
-        return Flyway.configure().dataSource(dataSource)
-                .executeInTransaction(true).baselineOnMigrate(false)
+        var flyway = Flyway.configure().dataSource(dataSource)
                 .locations("classpath:/user_management/database/flyway")
+                .cleanDisabled(false)
                 .load();
+        flyway.clean();
+
+        return flyway;
     }
 
     @Bean
