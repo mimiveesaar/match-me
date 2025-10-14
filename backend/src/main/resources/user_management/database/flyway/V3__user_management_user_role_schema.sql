@@ -1,2 +1,2 @@
 ALTER TABLE user_management.users
-    ADD COLUMN user_state_code INTEGER;
+    ADD COLUMN user_status_code INTEGER;

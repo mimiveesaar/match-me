@@ -33,7 +33,7 @@ public class SeedUserGenerator {
                 UserIdDTO.of("33333333-3333-3333-3333-333333333333"),
                 EmailDTO.of("user3@example.com"),
                 new HashedPasswordDTO("hash3", "salt3"),
-                new UserStateDTO(2),
+                new UserStateDTO(0),
                 java.time.Instant.now(),
                 java.time.Instant.now()
             ),
@@ -41,7 +41,7 @@ public class SeedUserGenerator {
                 UserIdDTO.of("44444444-4444-4444-4444-444444444444"),
                 EmailDTO.of("user4@example.com"),
                 new HashedPasswordDTO("hash4", "salt4"),
-                new UserStateDTO(2),
+                new UserStateDTO(0),
                 java.time.Instant.now(),
                 java.time.Instant.now()
             ),
@@ -49,7 +49,7 @@ public class SeedUserGenerator {
                 UserIdDTO.of("55555555-5555-5555-5555-555555555555"),
                 EmailDTO.of("user5@example.com"),
                 new HashedPasswordDTO("hash5", "salt5"),
-                new UserStateDTO(3),
+                new UserStateDTO(0),
                 java.time.Instant.now(),
                 java.time.Instant.now()
             )
