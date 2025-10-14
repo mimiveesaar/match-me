@@ -36,7 +36,7 @@ public class ProfileDataSeeder implements CommandLineRunner {
         System.out.println("\n=== SEEDING PROFILE DATA ===");
 
         try {
-         /*   seedBodyforms();
+            seedBodyforms();
             seedHomeplanets();
             seedLookingFor();
             seedInterests();
@@ -44,7 +44,7 @@ public class ProfileDataSeeder implements CommandLineRunner {
 
             verifyData();
 
-*/            System.out.println("=== PROFILE DATA SEEDING COMPLETE ===\n");
+            System.out.println("=== PROFILE DATA SEEDING COMPLETE ===\n");
         } catch (Exception e) {
             System.err.println("\n❌ SEEDING FAILED WITH ERROR:");
             e.printStackTrace();
@@ -84,7 +84,8 @@ public class ProfileDataSeeder implements CommandLineRunner {
         System.out.println("💕 Seeding looking_for...");
         for (LookingFor lfEnum : LookingFor.values()) {
             if (!lookingForRepository.existsByName(lfEnum.DisplayName())) {
-                tech.kood.match_me.profile.model.LookingFor lf = new tech.kood.match_me.profile.model.LookingFor();
+                tech.kood.match_me.profile.model.LookingFor lf =
+                        new tech.kood.match_me.profile.model.LookingFor();
                 lf.setId(lfEnum.Code());
                 lf.setName(lfEnum.DisplayName());
                 lookingForRepository.save(lf);
@@ -112,7 +113,8 @@ public class ProfileDataSeeder implements CommandLineRunner {
 
         Homeplanet homeplanet = homeplanetRepository.findAll().stream().findFirst().orElse(null);
         Bodyform bodyform = bodyformRepository.findAll().stream().findFirst().orElse(null);
-        tech.kood.match_me.profile.model.LookingFor lookingFor = lookingForRepository.findAll().stream().findFirst().orElse(null);
+        tech.kood.match_me.profile.model.LookingFor lookingFor =
+                lookingForRepository.findAll().stream().findFirst().orElse(null);
 
         if (homeplanet == null || bodyform == null || lookingFor == null) {
             System.err.println("❌ Cannot seed profiles: missing reference data");
@@ -120,13 +122,9 @@ public class ProfileDataSeeder implements CommandLineRunner {
         }
 
         // ✅ Use the same UUIDs as in SeedUserGenerator
-        String[] fixedUserIds = {
-                "11111111-1111-1111-1111-111111111111",
-                "22222222-2222-2222-2222-222222222222",
-                "33333333-3333-3333-3333-333333333333",
-                "44444444-4444-4444-4444-444444444444",
-                "55555555-5555-5555-5555-555555555555"
-        };
+        String[] fixedUserIds = {"11111111-1111-1111-1111-111111111111",
+                "22222222-2222-2222-2222-222222222222", "33333333-3333-3333-3333-333333333333",
+                "44444444-4444-4444-4444-444444444444", "55555555-5555-5555-5555-555555555555"};
 
         for (int i = 1; i <= 5; i++) {
             String username = "testuser" + i;
@@ -141,11 +139,12 @@ public class ProfileDataSeeder implements CommandLineRunner {
                 profile.setHomeplanet(homeplanet);
                 profile.setBodyform(bodyform);
                 profile.setLookingFor(lookingFor);
-                profile.setInterests(interestRepository.findAll().stream().limit(3).collect(Collectors.toSet()));
+                profile.setInterests(
+                        interestRepository.findAll().stream().limit(3).collect(Collectors.toSet()));
 
                 profileRepository.save(profile);
-                System.out.println("  ✅ Inserted profile: " + username +
-                        " (userId=" + fixedUserIds[i - 1] + ")");
+                System.out.println("  ✅ Inserted profile: " + username + " (userId="
+                        + fixedUserIds[i - 1] + ")");
             }
         }
         System.out.println();
