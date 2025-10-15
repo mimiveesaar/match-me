@@ -64,6 +64,33 @@ export default function ConnectionsPage() {
         fetchPendingConnections();
     }, [authToken]);
 
+    async function declineConnection(connectionId: string) {
+
+        try {
+            const response = await fetch("/api/v1/connections/decline-request", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${authToken}`,
+                },
+                body: JSON.stringify({
+                    connection_id: { id: connectionId },
+                }),
+            });
+
+            if (response.ok) {
+                console.log("Connection declined successfully");
+                // Remove the declined ping from UI
+                setIncomingPings((prev) => prev.filter((ping) => ping.id !== connectionId));
+
+            } else {
+                console.error("Unexpected error declining connection:", response.status);
+            }
+        } catch (error) {
+            console.error("Error declining connection:", error);
+        }
+    }
+
     return (
         <div>
             <Connections
