@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class ProfileDTO {
+public class ProfileDTO_New {
     private UUID id;
     private String username;
     private Integer age;

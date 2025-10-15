@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import tech.kood.match_me.profile.dto.ProfileDTO;
+import tech.kood.match_me.profile.dto.ProfileDTO_New;
 import tech.kood.match_me.profile.events.ProfileChangedEvent;
 import tech.kood.match_me.profile.model.Interest;
 import tech.kood.match_me.profile.model.Profile;
@@ -48,7 +48,7 @@ public class ProfileService {
     // -------------------- PROFILE CRUD --------------------
 
     @Transactional
-    public ProfileDTO saveOrUpdateProfile(UUID userId, ProfileDTO dto) {
+    public ProfileDTO_New saveOrUpdateProfile(UUID userId, ProfileDTO_New dto) {
         System.out.println("=== saveOrUpdateProfile called for userId=" + userId + " ===");
 
         Profile profile = profileRepo.findByUserIdWithRelations(userId)
@@ -58,13 +58,13 @@ public class ProfileService {
 
         Profile saved = profileRepo.saveAndFlush(profile);
         Profile reloaded = profileRepo.findByIdWithRelations(saved.getId());
-        ProfileDTO result = toViewDTO(reloaded);
+        ProfileDTO_New result = toViewDTO(reloaded);
 
         eventPublisher.publishEvent(new ProfileChangedEvent(result));
         return result;
     }
 
-    private void updateProfileFromDTO(Profile profile, ProfileDTO dto) {
+    private void updateProfileFromDTO(Profile profile, ProfileDTO_New dto) {
         if (dto.getUsername() != null) {
             profile.setUsername(dto.getUsername());
         }
@@ -112,7 +112,7 @@ public class ProfileService {
     // -------------------- FETCH BY USER --------------------
 
     @Transactional(readOnly = true)
-    public ProfileDTO getProfileByUserId(UUID userId) {
+    public ProfileDTO_New getProfileByUserId(UUID userId) {
         return profileRepo.findByUserIdWithRelations(userId)
                 .map(this::toViewDTO)
                 .orElse(null);
@@ -147,7 +147,7 @@ public class ProfileService {
     // -------------------- IMAGE HANDLING --------------------
 
     @Transactional
-    public ProfileDTO uploadProfileImage(UUID userId, MultipartFile file) throws IOException {
+    public ProfileDTO_New uploadProfileImage(UUID userId, MultipartFile file) throws IOException {
         Profile profile = profileRepo.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Profile not found for user: " + userId));
 
@@ -171,8 +171,8 @@ public class ProfileService {
 
     // -------------------- DTO Conversion --------------------
 
-    public ProfileDTO toViewDTO(Profile profile) {
-        ProfileDTO dto = new ProfileDTO();
+    public ProfileDTO_New toViewDTO(Profile profile) {
+        ProfileDTO_New dto = new ProfileDTO_New();
         dto.setId(profile.getId());
         dto.setUsername(profile.getUsername());
         dto.setAge(profile.getAge());
