@@ -6,7 +6,6 @@ import { MyProfilePage } from "components/organisms";
 interface ProfileData {
   id?: string;
   username?: string;
-  name?: string;
   age?: number;
   homeplanetId?: number;
   bodyformId?: number;
@@ -65,9 +64,10 @@ export default function MyProfile() {
     console.log("1. Raw data received from form:", updatedData);
 
     try {
+
+      
       // Clean the data before sending
       const dataToSend = {
-        name: updatedData.name || updatedData.username || null,
         age: updatedData.age ? Number(updatedData.age) : null,
         homeplanetId: updatedData.homeplanetId || null,
         bodyformId: updatedData.bodyformId || null,
@@ -83,12 +83,15 @@ export default function MyProfile() {
 
       console.log("🚀 Final data being sent to backend:", JSON.stringify(dataToSend, null, 2));
 
+      const token = localStorage.getItem("jwtToken"); // ✅ Grab token
 
       const response = await fetch('http://localhost:8080/api/profiles/me', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // ✅ Send it to backend
         },
+
         body: JSON.stringify(dataToSend),
       });
 

@@ -68,8 +68,6 @@ public class ProfileService {
     private void updateProfileFromDTO(Profile profile, ProfileDTO dto) {
         if (dto.getUsername() != null) {
             profile.setUsername(dto.getUsername());
-        } else if (dto.getName() != null) {
-            profile.setUsername(dto.getName());
         }
 
         if (dto.getAge() != null) {
