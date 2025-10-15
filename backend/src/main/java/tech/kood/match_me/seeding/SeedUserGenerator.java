@@ -27,7 +27,7 @@ public class SeedUserGenerator {
         }
     }
 
-    public UserDTO[] generate() {
+    public static UserDTO[] generate() {
         UserDTO[] users = new UserDTO[USER_COUNT];
         for (int i = 0; i < USER_COUNT; i++) {
             FakeUserData data = new FakeUserData(i);
