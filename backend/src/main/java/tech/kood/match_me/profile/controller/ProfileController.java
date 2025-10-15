@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import tech.kood.match_me.profile.dto.ProfileDTO_New;
+import tech.kood.match_me.profile.dto.ProfileDTO;
 import tech.kood.match_me.profile.model.Profile;
 import tech.kood.match_me.profile.service.ProfileService;
 import tech.kood.match_me.user_management.features.user.domain.UserDTO;
@@ -27,7 +27,7 @@ public class ProfileController {
 
     /** 🟢 Save or update the logged-in user's profile */
     @PostMapping("/me")
-    public ResponseEntity<?> saveMyProfile(@RequestBody ProfileDTO_New dto) {
+    public ResponseEntity<?> saveMyProfile(@RequestBody ProfileDTO dto) {
         System.out.println("=== POST /api/profiles/me called ===");
         System.out.println("Received DTO: " + dto);
 
@@ -39,7 +39,7 @@ public class ProfileController {
             }
 
             UUID userId = user.id().value();
-            ProfileDTO_New savedProfileDTO = service.saveOrUpdateProfile(userId, dto);
+            ProfileDTO savedProfileDTO = service.saveOrUpdateProfile(userId, dto);
             System.out.println("Profile saved successfully for userId=" + userId);
 
             return ResponseEntity.ok(savedProfileDTO);
@@ -69,7 +69,7 @@ public class ProfileController {
             }
 
             UUID userId = user.id().value();
-            ProfileDTO_New profileDTO = service.getProfileByUserId(userId);
+            ProfileDTO profileDTO = service.getProfileByUserId(userId);
 
             if (profileDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -109,7 +109,7 @@ public class ProfileController {
                 return ResponseEntity.badRequest().body("File size must be less than 5MB");
             }
 
-            ProfileDTO_New updatedProfile = service.uploadProfileImage(userId, file);
+            ProfileDTO updatedProfile = service.uploadProfileImage(userId, file);
             return ResponseEntity.ok(updatedProfile);
 
         } catch (Exception e) {
@@ -146,7 +146,7 @@ public class ProfileController {
 
     /** 🟡 Admin or system sync — no auth required */
     @PostMapping("/sync")
-    public ResponseEntity<ProfileDTO_New> syncUser(
+    public ResponseEntity<ProfileDTO> syncUser(
             @RequestParam UUID userId,
             @RequestParam String username) {
         Profile profile = service.getOrCreateProfile(userId, username);

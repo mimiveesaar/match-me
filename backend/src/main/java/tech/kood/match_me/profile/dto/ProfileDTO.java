@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class ProfileDTO_New {
+public class ProfileDTO {
     private UUID id;
     private String username;
     private Integer age;
@@ -58,7 +58,6 @@ public class ProfileDTO_New {
 
     public String getProfilePic() { return profilePic; }
     public void setProfilePic(String profilePic) { this.profilePic = profilePic; }
-<<<<<<< HEAD
 
     @Override
     public String toString() {
@@ -72,7 +71,5 @@ public class ProfileDTO_New {
                 ", interestIds=" + interestIds +
                 ", profilePic='" + profilePic + '\'' +
                 '}';
+        }
     }
-=======
->>>>>>> 4664acb (ProfileViewDTO to ProfileTDO)
-}

@@ -9,7 +9,7 @@ import tech.kood.match_me.matching.common.MatchingTestBase;
 import tech.kood.match_me.matching.model.*;
 import tech.kood.match_me.matching.repository.MatchUserRepository;
 import tech.kood.match_me.matching.seeder.MatchesSeeder;
-import tech.kood.match_me.profile.dto.ProfileDTO_New;
+import tech.kood.match_me.profile.dto.ProfileDTO;
 import tech.kood.match_me.profile.events.ProfileChangedEvent;
 
 import java.util.*;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional(transactionManager = "matchingTransactionManager")
 public class IncomingProfileEventTest extends MatchingTestBase {
 
-    private ProfileDTO_New createProfileDTO (UUID id,
+    private ProfileDTO createProfileDTO (UUID id,
                                              String username,
                                              Integer age,
                                              String homeplanet,
@@ -36,7 +36,7 @@ public class IncomingProfileEventTest extends MatchingTestBase {
                                              String profilePicSrc
                                              ) {
 
-        ProfileDTO_New dto = new ProfileDTO_New();
+        ProfileDTO dto = new ProfileDTO();
         dto.setId(id);
         dto.setUsername(username);
         dto.setAge(age);

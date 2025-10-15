@@ -1,7 +1,7 @@
 package tech.kood.match_me.seeding;
 
 import org.springframework.stereotype.Component;
-import tech.kood.match_me.profile.dto.ProfileViewDTO;
+import tech.kood.match_me.profile.dto.ProfileDTO;
 import tech.kood.match_me.user_management.features.user.domain.UserDTO;
 
 import java.util.*;
@@ -143,15 +143,15 @@ public class SeedProfileGenerator {
     }
 
 
-    public List<ProfileViewDTO> generateProfiles() {
+    public List<ProfileDTO> generateProfiles() {
         Map<String, List<Integer>> userInterestMap = generateUserInterests();
-        List<ProfileViewDTO> profiles = new ArrayList<>();
+        List<ProfileDTO> profiles = new ArrayList<>();
 
         for (int i = 0; i < PROFILE_COUNT; i++) {
             String userId = seedUsers[i].id().value().toString();
             Object[] profileData = profileDataArray[i];
 
-            ProfileViewDTO profile = new ProfileViewDTO();
+            ProfileDTO profile = new ProfileDTO();
             profile.setId(UUID.fromString(userId));
             profile.setUsername((String) profileData[0]);
             profile.setAge((Integer) profileData[1]);
