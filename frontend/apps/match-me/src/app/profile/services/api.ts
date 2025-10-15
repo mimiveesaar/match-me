@@ -8,7 +8,6 @@ export interface ProfileData {
   interestIds?: string[];
   profilePic?: string;
   username?: string;
-  name?: string;
   age?: number;
 }
 

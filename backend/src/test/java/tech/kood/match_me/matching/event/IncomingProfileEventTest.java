@@ -23,7 +23,6 @@ public class IncomingProfileEventTest extends MatchingTestBase {
 
     private ProfileViewDTO createProfileDTO (UUID id,
                                              String username,
-                                             String Name,
                                              Integer age,
                                              String homeplanet,
                                              Integer homeplanetId,
@@ -40,7 +39,6 @@ public class IncomingProfileEventTest extends MatchingTestBase {
         ProfileViewDTO dto = new ProfileViewDTO();
         dto.setId(id);
         dto.setUsername(username);
-        dto.setName(Name);
         dto.setAge(age);
         dto.setHomeplanet(homeplanet);
         dto.setHomeplanetId(homeplanetId);
@@ -72,7 +70,6 @@ public class IncomingProfileEventTest extends MatchingTestBase {
         var profile1 = createProfileDTO(
                 UUID.randomUUID(),
                 "testuser",
-                "Test User",
                 30,
                 "Earth",
                 1,
@@ -99,54 +96,56 @@ public class IncomingProfileEventTest extends MatchingTestBase {
 
     @Test
     void testListenAndModifyUser() {
-        var profileDTO = new ProfileViewDTO();
-        profileDTO.setId(UUID.randomUUID());
-        profileDTO.setUsername("testuser");
-        profileDTO.setName("Test User");
-        profileDTO.setAge(30);
-        profileDTO.setHomeplanet("Earth");
-        profileDTO.setHomeplanetId(1);
-        profileDTO.setBodyform("Humanoid");
-        profileDTO.setBodyformId(2);
-        profileDTO.setLookingFor("Friendship");
-        profileDTO.setLookingForId(3);
-        profileDTO.setBio("This is a test bio.");
-        profileDTO.setInterests(new HashSet<>(Arrays.asList("Reading", "Gaming")));
-        profileDTO.setInterestIds(Arrays.asList(10, 20));
-        profileDTO.setProfilePic("/images/testuser.png");
 
-        var profileDTO2 = new ProfileViewDTO();
-        profileDTO.setId(UUID.randomUUID());
-        profileDTO.setUsername("testuser");
-        profileDTO.setName("Test User");
-        profileDTO.setAge(30);
-        profileDTO.setHomeplanet("Earth");
-        profileDTO.setHomeplanetId(2);
-        profileDTO.setBodyform("Humanoid");
-        profileDTO.setBodyformId(3);
-        profileDTO.setLookingFor("Friendship");
-        profileDTO.setLookingForId(4);
-        profileDTO.setBio("This is a test bio.");
-        profileDTO.setInterests(new HashSet<>(Arrays.asList("Reading", "Gaming")));
-        profileDTO.setInterestIds(Arrays.asList(10, 20));
-        profileDTO.setProfilePic("/images/testuser.png");
+        var initialProfile = createProfileDTO(
+                UUID.randomUUID(),
+                "testuser",
+                30,
+                "Earth",
+                1,
+                "Humanoid",
+                2,
+                "Friendship",
+                3,
+                "This is a test bio",
+                Set.of("Reading", "Gaming"),
+                List.of(10, 20),
+                "/images/testuser.png"
+        );
 
+        var updatedProfile = createProfileDTO(
+                UUID.randomUUID(),
+                "testuser",
+                30,
+                "Mars",
+                2,
+                "Humanoid",
+                3,
+                "Friendship",
+                3,
+                "This is a test bio",
+                Set.of("Reading", "Gaming"),
+                List.of(10, 20),
+                "/images/testuser.png"
+        );
+
+        matchUserRepository.deleteAll();
         matchesSeeder.seedMatches();
 
-        var newProfileEvent = new ProfileChangedEvent(profileDTO);
+        var newProfileEvent = new ProfileChangedEvent(initialProfile);
         eventPublisher.publishEvent(newProfileEvent);
-        var queryResult = matchUserRepository.findById(profileDTO.getId());
-
+        var queryResult = matchUserRepository.findById(initialProfile.getId());
         var result = matchUserRepository.findAll();
         assertTrue(queryResult.isPresent());
 
 
-        var ProfileChangedEvent = new ProfileChangedEvent(profileDTO2);
+        var ProfileChangedEvent = new ProfileChangedEvent(updatedProfile);
         eventPublisher.publishEvent(ProfileChangedEvent);
-        var queryResult2 = matchUserRepository.findById(profileDTO2.getId());
-
+        var queryResult2 = matchUserRepository.findById(updatedProfile.getId());
         var result2 = matchUserRepository.findAll();
         assertEquals("testuser", queryResult2.get().getUsername());
+
+        assertNotEquals(queryResult.get().getHomeplanet(), queryResult2.get().getHomeplanet());
 
     }
 }

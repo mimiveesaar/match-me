@@ -10,7 +10,7 @@ import {
   OutgoingPings,
   OutgoingPingsProps,
 } from "@organisms/Connections/OutgoingPings/OutgoingPings";
-import { Menu } from "@organisms/Menu/Menu";
+
 
 export interface ConnectionsProps {
   incomingPings: IncomingPingsProps;
