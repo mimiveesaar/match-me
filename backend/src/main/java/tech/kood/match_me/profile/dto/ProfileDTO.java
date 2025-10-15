@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ProfileDTO {
     private String username;
-    private String name;
     private Integer age;
 
     @JsonProperty("homeplanetId")
@@ -28,7 +27,6 @@ public class ProfileDTO {
     // Getters and Setters
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
-
 
     public Integer getAge() { return age; }
     public void setAge(Integer age) { this.age = age; }
@@ -55,7 +53,6 @@ public class ProfileDTO {
     public String toString() {
         return "ProfileDTO{" +
                 "username='" + username + '\'' +
-                ", name='" + name + '\'' +
                 ", age=" + age +
                 ", homeplanetId=" + homeplanetId +
                 ", bodyformId=" + bodyformId +

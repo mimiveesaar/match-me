@@ -25,7 +25,6 @@ public class UserEntity {
     @JoinColumn(name = "homeplanet_id", referencedColumnName = "id")
     private HomeplanetEntity homeplanet;
 
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bodyform_id", referencedColumnName = "id")
     private BodyformEntity bodyform;
