@@ -1,15 +1,15 @@
 package tech.kood.match_me.profile.events;
 
-import tech.kood.match_me.profile.dto.ProfileViewDTO;
+import tech.kood.match_me.profile.dto.ProfileDTO;
 
 public class ProfileChangedEvent{
-    private final ProfileViewDTO profile;
+    private final ProfileDTO profile;
 
-    public ProfileChangedEvent(ProfileViewDTO profile) {
+    public ProfileChangedEvent(ProfileDTO profile) {
         this.profile = profile;
     }
 
-    public ProfileViewDTO getProfile() {
+    public ProfileDTO getProfile() {
         return profile;
     }
 }

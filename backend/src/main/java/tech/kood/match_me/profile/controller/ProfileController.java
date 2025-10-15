@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tech.kood.match_me.profile.dto.ProfileDTO;
-import tech.kood.match_me.profile.dto.ProfileViewDTO;
 import tech.kood.match_me.profile.model.Profile;
 import tech.kood.match_me.profile.service.ProfileService;
 import tech.kood.match_me.user_management.features.user.domain.UserDTO;
@@ -40,7 +39,7 @@ public class ProfileController {
             }
 
             UUID userId = user.id().value();
-            ProfileViewDTO savedProfileDTO = service.saveOrUpdateProfile(userId, dto);
+            ProfileDTO savedProfileDTO = service.saveOrUpdateProfile(userId, dto);
             System.out.println("Profile saved successfully for userId=" + userId);
 
             return ResponseEntity.ok(savedProfileDTO);
@@ -70,7 +69,7 @@ public class ProfileController {
             }
 
             UUID userId = user.id().value();
-            ProfileViewDTO profileDTO = service.getProfileByUserId(userId);
+            ProfileDTO profileDTO = service.getProfileByUserId(userId);
 
             if (profileDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -110,7 +109,7 @@ public class ProfileController {
                 return ResponseEntity.badRequest().body("File size must be less than 5MB");
             }
 
-            ProfileViewDTO updatedProfile = service.uploadProfileImage(userId, file);
+            ProfileDTO updatedProfile = service.uploadProfileImage(userId, file);
             return ResponseEntity.ok(updatedProfile);
 
         } catch (Exception e) {
@@ -147,7 +146,7 @@ public class ProfileController {
 
     /** 🟡 Admin or system sync — no auth required */
     @PostMapping("/sync")
-    public ResponseEntity<ProfileViewDTO> syncUser(
+    public ResponseEntity<ProfileDTO> syncUser(
             @RequestParam UUID userId,
             @RequestParam String username) {
         Profile profile = service.getOrCreateProfile(userId, username);

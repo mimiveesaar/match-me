@@ -18,7 +18,7 @@ export interface Profile extends ProfileData {
 }
 
 export interface ReferenceDataOption {
-  id: string;  // Changed to string (UUID)
+  id: string; 
   name: string;
 }
 
@@ -29,6 +29,7 @@ class ApiService {
     const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('authToken')}`,
         ...options?.headers,
       },
       ...options,

@@ -5,11 +5,13 @@ import React, { useState, useRef } from "react";
 interface ProfileImageUploadProps {
   currentImage?: string;
   onImageUpdate: (imageFilename: string) => void;
+  onImageUpload: (file: File) => Promise<string>;
 }
 
 export const ProfileImageUpload = ({
   currentImage,
   onImageUpdate,
+  onImageUpload: onImageUpload
 }: ProfileImageUploadProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -67,44 +69,7 @@ export const ProfileImageUpload = ({
     reader.readAsDataURL(file);
 
     // Upload file
-    await uploadFile(file);
-  };
-
-  const uploadFile = async (file: File) => {
-    setIsUploading(true);
-    setError(null);
-
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const response = await fetch(
-        `${API_BASE_URL}/profiles/me/image`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || "Failed to upload image");
-      }
-
-      const data = await response.json();
-      console.log("Upload response:", data);
-
-      // Update parent component with new image filename
-      onImageUpdate(data.profilePic);
-      
-      setError(null);
-    } catch (err) {
-      console.error("Upload error:", err);
-      setError(err instanceof Error ? err.message : "Failed to upload image");
-      setPreviewUrl(null);
-    } finally {
-      setIsUploading(false);
-    }
+    await onImageUpload(file);
   };
 
   const handleDeleteImage = async () => {

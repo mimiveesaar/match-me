@@ -14,7 +14,24 @@ interface SelectOption {
   label: string;
 }
 
-export const ProfileCard = ({ profile, setProfile }: any) => {
+interface Profile{
+  username?: string;
+  age?: number | string;
+  bodyformId?: string;
+  lookingForId?: string;
+  homeplanetId?: string;
+  profilePic?: string;
+}
+
+type SetProfileFn = (profile: Profile) => void;
+
+interface ProfileCardProps {
+  profile: Profile;
+  setProfile: SetProfileFn;
+  onImageUpload: (file: File) => Promise<string>;
+}
+
+export const ProfileCard = ({ profile, setProfile, onImageUpload }: ProfileCardProps) => {
   const [bodyformOptions, setBodyformOptions] = useState<SelectOption[]>([]);
   const [lookingforOptions, setLookingforOptions] = useState<SelectOption[]>([]);
   const [planetOptions, setPlanetOptions] = useState<SelectOption[]>([]);
@@ -53,17 +70,11 @@ export const ProfileCard = ({ profile, setProfile }: any) => {
   const handleInputChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     console.log(`ProfileCard: Updating ${field} to "${newValue}"`);
-    setProfile((prev: any) => ({ ...prev, [field]: newValue }));
+    setProfile({ ...profile, [field]: newValue });
   };
 
   const handleSelectChange = (field: string) => (value: string) => {
-    console.log(`ProfileCard: Updating ${field} to "${value}"`);
-    console.log("Current profile before update:", profile);
-    setProfile((prev: any) => {
-      const updated = { ...prev, [field]: value };
-      console.log("Updated profile:", updated);
-      return updated;
-    });
+    setProfile({ ...profile, [field]: value });
   };
 
   if (loading) {
@@ -77,7 +88,7 @@ export const ProfileCard = ({ profile, setProfile }: any) => {
   }
 
   // Get values with fallbacks - ensure IDs are strings for select fields
-  const displayName = profile?.name || profile?.username || "";
+  const displayName = profile?.username || "";
   const displayAge = String(profile?.age || "");
   const displayBodyform = profile?.bodyformId ? String(profile.bodyformId) : "";
   const displayLookingFor = profile?.lookingForId ? String(profile.lookingForId) : "";
@@ -96,16 +107,16 @@ export const ProfileCard = ({ profile, setProfile }: any) => {
       <ProfileImageUpload
         currentImage={profile?.profilePic}
         onImageUpdate={(filename) => {
-          console.log("Image updated:", filename);
-          setProfile((prev: any) => ({ ...prev, profilePic: filename }));
+          setProfile({ ...profile, profilePic: filename });
         }}
+        onImageUpload={onImageUpload}
       />
 
       <LabeledInputField
         label="name"
         value={displayName}
         onChange={handleInputChange("name")}
-        placeholder="Enter your name"
+        placeholder="Enter your username"
       />
       
       <LabeledInputField

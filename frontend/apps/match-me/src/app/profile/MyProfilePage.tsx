@@ -1,15 +1,23 @@
 "use client";
 
+import { InterestsSection, MultiLineInputField, ProfileCard } from "components";
 import React, { useState, useEffect } from "react";
-import { ProfileCard } from "../ProfileCard/ProfileCard";
-import { InterestsSection } from "../InterestsSection/InterestsSection";
-import { MultiLineInputField } from "../../atoms/MultiLineInputField/MultiLineInputField";
+
 
 interface MyProfilePageProps {
   initialProfile?: any;
   onSave?: (profileData: any) => void | Promise<void>;
 }
 
+interface Profile{
+  username?: string;
+  age?: number | string;
+  bodyformId?: string;
+  lookingForId?: string;
+  homeplanetId?: string;
+  profilePic?: string;
+
+}
 export const MyProfilePage = ({
   initialProfile,
   onSave
@@ -22,13 +30,13 @@ export const MyProfilePage = ({
     initialProfile?.interestIds || []
   );
 
-  const [profile, setProfile] = useState({
-    name: initialProfile?.name || initialProfile?.username || "Xylar of Nebulon-5",
-    age: initialProfile?.age || "458",
-    bodyformId: initialProfile?.bodyformId || "",
-    lookingForId: initialProfile?.lookingForId || "",
-    homeplanetId: initialProfile?.homeplanetId || "",
-    profilePic: initialProfile?.profilePic || "https://example.com/default.jpg"
+  const [profile, setProfile] = useState<Profile>({
+    username: initialProfile?.username,
+    age: initialProfile?.age,
+    bodyformId: initialProfile?.bodyformId,
+    lookingForId: initialProfile?.lookingForId,
+    homeplanetId: initialProfile?.homeplanetId,
+    profilePic: initialProfile?.profilePic,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +47,7 @@ export const MyProfilePage = ({
       console.log("MyProfilePage: Received initialProfile:", initialProfile);
       
       const newProfile = {
-        name: initialProfile.name || initialProfile.username || "",
+        username:initialProfile.username || "",
         age: String(initialProfile.age || ""),
         bodyformId: initialProfile.bodyformId || "",
         lookingForId: initialProfile.lookingForId || "",
@@ -69,7 +77,7 @@ export const MyProfilePage = ({
 
     // Ensure all fields are properly captured and converted to correct types
     const fullProfile = {
-      name: profile.name || "",
+      username: profile.username || "",
       age: toNumberOrNull(profile.age),
       homeplanetId: toNumberOrNull(profile.homeplanetId),
       bodyformId: toNumberOrNull(profile.bodyformId),
@@ -81,7 +89,7 @@ export const MyProfilePage = ({
 
     console.log("Prepared profile data to save:", JSON.stringify(fullProfile, null, 2));
     console.log("All field values:", {
-      name: fullProfile.name,
+      username: fullProfile.username,
       age: fullProfile.age,
       homeplanetId: fullProfile.homeplanetId,
       bodyformId: fullProfile.bodyformId,
@@ -135,7 +143,10 @@ export const MyProfilePage = ({
     <div className="flex flex-col lg:flex-row gap-5">
 
         <div className="flex flex-col gap-4 px-6">
-        <ProfileCard profile={profile} setProfile={setProfile} />
+        <ProfileCard onImageUpload={(file) => { 
+          console.log("onImageUpload called with file:", file);
+          return Promise.resolve("") }} 
+        profile={profile} setProfile={setProfile} />
         
       </div>
 

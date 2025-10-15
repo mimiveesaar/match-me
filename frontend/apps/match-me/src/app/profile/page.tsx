@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MyProfilePage } from "components/organisms";
+import { MyProfilePage } from "./MyProfilePage";
 
 interface ProfileData {
   id?: string;
@@ -14,6 +14,8 @@ interface ProfileData {
   interestIds?: number[];
   profilePic?: string;
 }
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/';
 
 export default function MyProfile() {
   useEffect(() => {
@@ -65,7 +67,7 @@ export default function MyProfile() {
 
     try {
 
-      
+
       // Clean the data before sending
       const dataToSend = {
         age: updatedData.age ? Number(updatedData.age) : null,
@@ -117,6 +119,31 @@ export default function MyProfile() {
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
+  const uploadFile = async (file: File) => {
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const token = localStorage.getItem("jwtToken"); // ✅ Grab token
+
+      const response = await fetch(
+        `${API_BASE_URL}/profiles/me/image`,
+
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+
+        }
+      );
+    } catch (error) {
+      console.error("❌ Error uploading image:", error);
+      throw error;
+    }
+  };
 
   return (
 

@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import tech.kood.match_me.profile.dto.ProfileDTO;
-import tech.kood.match_me.profile.dto.ProfileViewDTO;
 import tech.kood.match_me.profile.events.ProfileChangedEvent;
 import tech.kood.match_me.profile.model.Interest;
 import tech.kood.match_me.profile.model.Profile;
@@ -49,7 +48,7 @@ public class ProfileService {
     // -------------------- PROFILE CRUD --------------------
 
     @Transactional
-    public ProfileViewDTO saveOrUpdateProfile(UUID userId, ProfileDTO dto) {
+    public ProfileDTO saveOrUpdateProfile(UUID userId, ProfileDTO dto) {
         System.out.println("=== saveOrUpdateProfile called for userId=" + userId + " ===");
 
         Profile profile = profileRepo.findByUserIdWithRelations(userId)
@@ -59,7 +58,7 @@ public class ProfileService {
 
         Profile saved = profileRepo.saveAndFlush(profile);
         Profile reloaded = profileRepo.findByIdWithRelations(saved.getId());
-        ProfileViewDTO result = toViewDTO(reloaded);
+        ProfileDTO result = toViewDTO(reloaded);
 
         eventPublisher.publishEvent(new ProfileChangedEvent(result));
         return result;
@@ -113,7 +112,7 @@ public class ProfileService {
     // -------------------- FETCH BY USER --------------------
 
     @Transactional(readOnly = true)
-    public ProfileViewDTO getProfileByUserId(UUID userId) {
+    public ProfileDTO getProfileByUserId(UUID userId) {
         return profileRepo.findByUserIdWithRelations(userId)
                 .map(this::toViewDTO)
                 .orElse(null);
@@ -148,19 +147,9 @@ public class ProfileService {
     // -------------------- IMAGE HANDLING --------------------
 
     @Transactional
-    public ProfileViewDTO uploadProfileImage(UUID userId, MultipartFile file) throws IOException {
+    public ProfileDTO uploadProfileImage(UUID userId, MultipartFile file) throws IOException {
         Profile profile = profileRepo.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Profile not found for user: " + userId));
-
-        // Delete old image if exists
-        String oldImage = profile.getProfilePic();
-        if (oldImage != null && !oldImage.isEmpty() && !oldImage.startsWith("http")) {
-            try {
-                fileStorageService.deleteFile(oldImage);
-            } catch (IOException e) {
-                System.out.println("Warning: Could not delete old image: " + e.getMessage());
-            }
-        }
 
         // Save new image
         String filename = fileStorageService.saveFile(file);
@@ -182,11 +171,10 @@ public class ProfileService {
 
     // -------------------- DTO Conversion --------------------
 
-    public ProfileViewDTO toViewDTO(Profile profile) {
-        ProfileViewDTO dto = new ProfileViewDTO();
+    public ProfileDTO toViewDTO(Profile profile) {
+        ProfileDTO dto = new ProfileDTO();
         dto.setId(profile.getId());
         dto.setUsername(profile.getUsername());
-        dto.setName(profile.getUsername());
         dto.setAge(profile.getAge());
 
         if (profile.getHomeplanet() != null) {

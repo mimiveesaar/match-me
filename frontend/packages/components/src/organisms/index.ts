@@ -1,6 +1,5 @@
 export * from './AccountFormSignUp2/AccountFormSignUp2';
 export * from './AccountFormSignUp3/AccountFormSignUp3';
-export * from './MyProfilePage/MyProfilePage';
 export * from './ChatspaceOrganisms/MessageInput/MessageInput';
 export * from './ChatspaceOrganisms/ChatWindow/ChatWindow';
 export * from './ChatspaceOrganisms/ConnectionsMenu/ConnectionsMenu';
