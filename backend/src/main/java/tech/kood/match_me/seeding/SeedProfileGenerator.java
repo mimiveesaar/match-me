@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SeedProfileGenerator {
 
+SeedProfileGenerator.
+
         private void seedUsers() {
         Object[][] users = {
             {"3fa85f64-5717-4562-b3fc-2c963f66afa1", "starhopper42", 27, "/images/profiles/starhopper.png", 1, 1, 1, "Explorer of galaxies and maker of maps."},
