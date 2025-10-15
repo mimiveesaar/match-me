@@ -35,7 +35,7 @@ public class IncomingUserEventListener {
         var homePlanetEntity = planetsRepository.getReferenceById(profile.getHomeplanetId());
         var lookingForEntity = lookingForRepository.getReferenceById(profile.getLookingForId());
         var interestEntities = profile.getInterestIds().stream().map(interestsRepository::getReferenceById).collect(Collectors.toSet());
-        var userEntity = new UserEntity(profile.getId(), "Mimi", 27, homePlanetEntity, bodyformEntity, "mmm", lookingForEntity, interestEntities, profile.getProfilePic());
+        var userEntity = new UserEntity(profile.getId(), profile.getUsername(), profile.getAge(), homePlanetEntity, bodyformEntity, profile.getBio(), lookingForEntity, interestEntities, profile.getProfilePic());
 
         matchUserRepository.save(userEntity);
     }
