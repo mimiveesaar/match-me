@@ -26,4 +26,9 @@ public record UserIdDTO(@NotNull UUID value) {
     public String toString() {
         return value.toString();
     }
+
+    public UUID value() {
+        return value;
+    }
+
 }

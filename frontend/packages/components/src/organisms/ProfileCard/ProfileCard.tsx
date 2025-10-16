@@ -14,7 +14,7 @@ interface SelectOption {
   label: string;
 }
 
-interface Profile{
+interface Profile {
   username?: string;
   age?: number | string;
   bodyformId?: string;
@@ -43,7 +43,7 @@ export const ProfileCard = ({ profile, setProfile, onImageUpload }: ProfileCardP
     const fetchOptions = async () => {
       try {
         setLoading(true);
-        
+
         const [bodyformsRes, lookingForRes, planetsRes] = await Promise.all([
           fetch(`${API_BASE_URL}/bodyforms`),
           fetch(`${API_BASE_URL}/looking-for`),
@@ -118,7 +118,7 @@ export const ProfileCard = ({ profile, setProfile, onImageUpload }: ProfileCardP
         onChange={handleInputChange("name")}
         placeholder="Enter your username"
       />
-      
+
       <LabeledInputField
         label="age"
         value={displayAge}

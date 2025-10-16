@@ -16,10 +16,10 @@ public class Profile {
     @Column(name = "id", nullable = false, unique = true)
     private UUID id; // 👈 from user management modul
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private int age;
 
     @ManyToOne(fetch = FetchType.LAZY)

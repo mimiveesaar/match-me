@@ -48,7 +48,7 @@ public class ProfileService {
 
         Profile profile = profileRepo.findByIdWithRelations(id);
         if (profile == null) {
-            profile = createProfileForUser(id, dto.getUsername());
+            profile = createProfileForUser(id);
         }
 
         updateProfileFromDTO(profile, dto);
@@ -107,21 +107,16 @@ public class ProfileService {
 
     // -------------------- FETCH BY USER --------------------
 
-    // @Transactional(readOnly = true)
-    // public ProfileDTO getProfileById(UUID id) {
-    // return profileRepo.findByIdWithRelations(id).map(this::toProfileDTO).orElse(null);
-    // }
-
 
     @Transactional
-    public Profile getOrCreateProfile(UUID userId, String username) {
+    public Profile getOrCreateProfile(UUID userId) {
         Profile existingProfile = profileRepo.findById(userId).orElse(null);
 
         if (existingProfile != null) {
             return existingProfile;
         }
 
-        return createProfileForUser(userId, username);
+        return createProfileForUser(userId);
     }
 
     @Transactional(readOnly = true)
@@ -130,22 +125,23 @@ public class ProfileService {
         return profile != null ? toProfileDTO(profile) : null;
     }
 
-    private Profile createProfileForUser(UUID id, String username) {
-        var homeplanet = homeplanetRepo.findAll().stream().findFirst().orElse(null);
-        var bodyform = bodyformRepo.findAll().stream().findFirst().orElse(null);
-        var lookingFor = lookingForRepo.findAll().stream().findFirst().orElse(null);
-        var interests = interestRepo.findAll().stream().limit(2).collect(Collectors.toSet());
+    public Profile createProfileForUser(UUID id) {
+        // var username = "";
+        // var homeplanet = homeplanetRepo.findAll().stream().findFirst().orElse(null);
+        // var bodyform = bodyformRepo.findAll().stream().findFirst().orElse(null);
+        // var lookingFor = lookingForRepo.findAll().stream().findFirst().orElse(null);
+        // var interests = interestRepo.findAll().stream().limit(2).collect(Collectors.toSet());
 
         Profile newProfile = new Profile();
         newProfile.setId(id);
-        newProfile.setUsername(username);
-        newProfile.setAge(20);
-        newProfile.setHomeplanet(homeplanet);
-        newProfile.setBodyform(bodyform);
-        newProfile.setLookingFor(lookingFor);
-        newProfile.setBio("Auto-created profile");
-        newProfile.setInterests(interests);
-        newProfile.setProfilePic("default-profile.png");
+        // newProfile.setUsername(username);
+        // newProfile.setAge(20);
+        // newProfile.setHomeplanet(homeplanet);
+        // newProfile.setBodyform(bodyform);
+        // newProfile.setLookingFor(lookingFor);
+        // newProfile.setBio("Auto-created profile");
+        // newProfile.setInterests(interests);
+        // newProfile.setProfilePic("default-profile.png");
 
         return profileRepo.saveAndFlush(newProfile);
     }

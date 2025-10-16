@@ -149,7 +149,7 @@ public class ProfileController {
     @PostMapping("/sync")
     public ResponseEntity<ProfileDTO> syncUser(@RequestParam UUID id,
             @RequestParam String username) {
-        Profile profile = service.getOrCreateProfile(id, username);
+        Profile profile = service.getOrCreateProfile(id);
         return ResponseEntity.ok(service.toProfileDTO(profile));
     }
 }
