@@ -15,7 +15,7 @@ interface SelectOption {
 }
 
 interface Profile {
-  username?: string;
+  name?: string;
   age?: number | string;
   bodyformId?: string;
   lookingForId?: string;
@@ -88,7 +88,7 @@ export const ProfileCard = ({ profile, setProfile, onImageUpload }: ProfileCardP
   }
 
   // Get values with fallbacks - ensure IDs are strings for select fields
-  const displayName = profile?.username || "";
+  const displayName = profile?.name || "";
   const displayAge = String(profile?.age || "");
   const displayBodyform = profile?.bodyformId ? String(profile.bodyformId) : "";
   const displayLookingFor = profile?.lookingForId ? String(profile.lookingForId) : "";
@@ -113,14 +113,14 @@ export const ProfileCard = ({ profile, setProfile, onImageUpload }: ProfileCardP
       />
 
       <LabeledInputField
-        label="name"
+        label="name*"
         value={displayName}
         onChange={handleInputChange("name")}
-        placeholder="Enter your username"
+        placeholder="Enter your name"
       />
 
       <LabeledInputField
-        label="age"
+        label="age*"
         value={displayAge}
         onChange={handleInputChange("age")}
         placeholder="Enter your age"
@@ -128,7 +128,7 @@ export const ProfileCard = ({ profile, setProfile, onImageUpload }: ProfileCardP
 
       <LabeledSelectField
         id="bodyform"
-        label="/bodyform"
+        label="bodyform*"
         value={displayBodyform}
         onChange={(e) => handleSelectChange("bodyformId")(e.target.value)}
         options={bodyformOptions}
@@ -137,7 +137,7 @@ export const ProfileCard = ({ profile, setProfile, onImageUpload }: ProfileCardP
 
       <LabeledSelectField
         id="lookingfor"
-        label="/lookingfor"
+        label="lookingfor*"
         value={displayLookingFor}
         onChange={(e) => handleSelectChange("lookingForId")(e.target.value)}
         options={lookingforOptions}
@@ -146,7 +146,7 @@ export const ProfileCard = ({ profile, setProfile, onImageUpload }: ProfileCardP
 
       <LabeledSelectField
         id="planet"
-        label="/planet"
+        label="planet*"
         value={displayPlanet}
         onChange={(e) => handleSelectChange("homeplanetId")(e.target.value)}
         options={planetOptions}

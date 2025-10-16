@@ -5,7 +5,7 @@ import { MyProfilePage } from "./MyProfilePage";
 
 interface ProfileData {
   id?: string;
-  username?: string;
+  name?: string;
   age?: number;
   homeplanetId?: number;
   bodyformId?: number;
@@ -24,6 +24,7 @@ export default function MyProfile() {
 
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
 
   useEffect(() => {
     // ✅ Token for testing
@@ -61,13 +62,43 @@ export default function MyProfile() {
     }
   };
 
+
+
   const handleSaveProfile = async (updatedData: ProfileData) => {
     console.log("\n=== SAVING PROFILE ===");
     console.log("1. Raw data received from form:", updatedData);
 
+    let hasErrors = false;
+
+    setErrors({
+      nameError: "",
+      ageError: "",
+      bodyformError: "",
+      lookingForError: "",
+      homeplanetError: "",
+      interestsError: ""
+    });
+
+    if (!name) {
+      setErrors((prev) => ({ ...prev, nameError: "Name is required!" }));
+      hasErrors = true;
+    }
+    if (!password) {
+      setErrors((prev) => ({ ...prev, passwordError: "Password is required!" }));
+      hasErrors = true;
+    }
+
+    if (password !== confirmPassword) {
+      setErrors((prev) => ({ ...prev, passwordError: "Passwords do not match!", confirmPasswordError: "Passwords do not match!" }));
+      hasErrors = true;
+
+    }
+
+    if (hasErrors) {
+      return;
+    }
+
     try {
-
-
       // Clean the data before sending
       const dataToSend = {
         age: updatedData.age ? Number(updatedData.age) : null,
@@ -84,6 +115,9 @@ export default function MyProfile() {
       console.log("2. Cleaned data to send:", JSON.stringify(dataToSend, null, 2));
 
       console.log("🚀 Final data being sent to backend:", JSON.stringify(dataToSend, null, 2));
+
+
+
 
       const token = localStorage.getItem("jwtToken"); // ✅ Grab token
 

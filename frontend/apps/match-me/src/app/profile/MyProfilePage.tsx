@@ -9,7 +9,7 @@ interface MyProfilePageProps {
   onSave?: (profileData: any) => void | Promise<void>;
 }
 
-interface Profile{
+interface Profile {
   username?: string;
   age?: number | string;
   bodyformId?: string;
@@ -23,7 +23,7 @@ export const MyProfilePage = ({
   onSave
 }: MyProfilePageProps) => {
   const [bio, setBio] = useState(
-    initialProfile?.bio || "Born among the glowing moons of Nebulon-5, I roam the stars in search of cosmic connection and shared stardust stories."
+    initialProfile?.bio
   );
 
   const [selectedInterests, setSelectedInterests] = useState<number[]>(
@@ -45,9 +45,9 @@ export const MyProfilePage = ({
   useEffect(() => {
     if (initialProfile) {
       console.log("MyProfilePage: Received initialProfile:", initialProfile);
-      
+
       const newProfile = {
-        username:initialProfile.username || "",
+        username: initialProfile.username || "",
         age: String(initialProfile.age || ""),
         bodyformId: initialProfile.bodyformId || "",
         lookingForId: initialProfile.lookingForId || "",
@@ -105,7 +105,7 @@ export const MyProfilePage = ({
         console.log("Calling onSave handler...");
         await onSave(fullProfile);
         console.log("✓ onSave completed");
-        
+
         // Force page refresh after successful save
         window.location.reload();
       } else {
@@ -142,16 +142,17 @@ export const MyProfilePage = ({
   return (
     <div className="flex flex-col lg:flex-row gap-5">
 
-        <div className="flex flex-col gap-4 px-6">
-        <ProfileCard onImageUpload={(file) => { 
+      <div className="flex flex-col gap-4 px-6">
+        <ProfileCard onImageUpload={(file) => {
           console.log("onImageUpload called with file:", file);
-          return Promise.resolve("") }} 
-        profile={profile} setProfile={setProfile} />
-        
+          return Promise.resolve("")
+        }}
+          profile={profile} setProfile={setProfile} />
+
       </div>
 
-        <div className="flex flex-col gap-4 w-full lg:w-[500px] px-6">
-          <div className="bg-olive rounded-custom-16 p-6 drop-shadow-custom lg:min-h-[18rem] flex flex-col justify-start">
+      <div className="flex flex-col gap-4 w-full lg:w-[500px] px-6">
+        <div className="bg-olive rounded-custom-16 p-6 drop-shadow-custom lg:min-h-[18rem] flex flex-col justify-start">
           <span className="mb-2 text-base italic text-ivory">/bio</span>
           <MultiLineInputField
             placeholder="Bio (optional)"
@@ -176,9 +177,8 @@ export const MyProfilePage = ({
               handleSave();
             }}
             disabled={isLoading}
-            className={`flex items-center gap-2 bg-olive hover:bg-amberglow text-white font-semibold py-2 px-4 rounded-xl shadow-md transition-all duration-200 ${
-              isLoading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+            className={`flex items-center gap-2 bg-olive hover:bg-amberglow text-white font-semibold py-2 px-4 rounded-xl shadow-md transition-all duration-200 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
           >
             {isLoading ? 'Saving...' : 'Save Changes'}
           </button>
