@@ -32,7 +32,8 @@ public class ProfileController {
         System.out.println("Received DTO: " + dto);
 
         try {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Object principal =
+                    SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (!(principal instanceof UserDTO user)) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body("Unauthorized: user not authenticated");
@@ -47,8 +48,7 @@ public class ProfileController {
         } catch (RuntimeException e) {
             System.err.println("Error saving profile: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
         } catch (Exception e) {
             System.err.println("Unexpected error saving profile: " + e.getMessage());
             e.printStackTrace();
@@ -61,7 +61,8 @@ public class ProfileController {
     @GetMapping("/me")
     public ResponseEntity<?> getMyProfile() {
         try {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Object principal =
+                    SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             if (!(principal instanceof UserDTO user)) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -69,7 +70,7 @@ public class ProfileController {
             }
 
             UUID userId = user.id().value();
-            ProfileDTO profileDTO = service.getProfileByUserId(userId);
+            ProfileDTO profileDTO = service.getProfileById(userId);
 
             if (profileDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -89,7 +90,8 @@ public class ProfileController {
     @PostMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadProfileImage(@RequestParam("file") MultipartFile file) {
         try {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Object principal =
+                    SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (!(principal instanceof UserDTO user)) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body("Unauthorized: user not authenticated");
@@ -123,7 +125,8 @@ public class ProfileController {
     @GetMapping("/me/image")
     public ResponseEntity<Resource> getProfileImage() {
         try {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Object principal =
+                    SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (!(principal instanceof UserDTO user)) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
@@ -135,9 +138,7 @@ public class ProfileController {
                 return ResponseEntity.notFound().build();
             }
 
-            return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_JPEG)
-                    .body(imageResource);
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageResource);
 
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
@@ -146,10 +147,9 @@ public class ProfileController {
 
     /** 🟡 Admin or system sync — no auth required */
     @PostMapping("/sync")
-    public ResponseEntity<ProfileDTO> syncUser(
-            @RequestParam UUID userId,
+    public ResponseEntity<ProfileDTO> syncUser(@RequestParam UUID id,
             @RequestParam String username) {
-        Profile profile = service.getOrCreateProfile(userId, username);
-        return ResponseEntity.ok(service.toViewDTO(profile));
+        Profile profile = service.getOrCreateProfile(id, username);
+        return ResponseEntity.ok(service.toProfileDTO(profile));
     }
 }

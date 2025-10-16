@@ -9,7 +9,8 @@ import tech.kood.match_me.common.constants.LookingFor;
 import tech.kood.match_me.common.constants.Planets;
 import tech.kood.match_me.profile.model.*;
 import tech.kood.match_me.profile.repository.*;
-
+import tech.kood.match_me.seeding.SeedProfileGenerator;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,10 @@ public class ProfileDataSeeder implements CommandLineRunner {
 
     @Autowired
     private ProfileRepository profileRepository;
+
+    @Autowired
+    private SeedProfileGenerator seedProfileGenerator;
+
 
     @Override
     public void run(String... args) throws Exception {
@@ -108,45 +113,40 @@ public class ProfileDataSeeder implements CommandLineRunner {
         System.out.println();
     }
 
+
+
     private void seedTestProfiles() {
+
         System.out.println("👤 Seeding test profiles...");
 
-        Homeplanet homeplanet = homeplanetRepository.findAll().stream().findFirst().orElse(null);
-        Bodyform bodyform = bodyformRepository.findAll().stream().findFirst().orElse(null);
-        tech.kood.match_me.profile.model.LookingFor lookingFor =
-                lookingForRepository.findAll().stream().findFirst().orElse(null);
+        seedProfileGenerator.generateProfiles().forEach(profileDTO -> {
+            if (!profileRepository.existsByUsername(profileDTO.getUsername())) {
 
-        if (homeplanet == null || bodyform == null || lookingFor == null) {
-            System.err.println("❌ Cannot seed profiles: missing reference data");
-            return;
-        }
-
-        // ✅ Use the same UUIDs as in SeedUserGenerator
-        String[] fixedUserIds = {"11111111-1111-1111-1111-111111111111",
-                "22222222-2222-2222-2222-222222222222", "33333333-3333-3333-3333-333333333333",
-                "44444444-4444-4444-4444-444444444444", "55555555-5555-5555-5555-555555555555"};
-
-        for (int i = 1; i <= 5; i++) {
-            String username = "testuser" + i;
-
-            if (!profileRepository.existsByUsername(username)) {
                 Profile profile = new Profile();
-                profile.setUserId(UUID.fromString(fixedUserIds[i - 1]));
-                profile.setUsername(username);
-                profile.setAge(20 + i);
-                profile.setBio("This is a test bio for " + username);
-                profile.setProfilePic("default-profile.png");
-                profile.setHomeplanet(homeplanet);
-                profile.setBodyform(bodyform);
-                profile.setLookingFor(lookingFor);
-                profile.setInterests(
-                        interestRepository.findAll().stream().limit(3).collect(Collectors.toSet()));
+                profile.setId(profileDTO.getId());
+                profile.setUsername(profileDTO.getUsername());
+                profile.setAge(profileDTO.getAge());
+                profile.setBio(profileDTO.getBio());
+                profile.setProfilePic(profileDTO.getProfilePic());
+
+                // Fetch relationships using IDs from DTO
+                profile.setHomeplanet(
+                        homeplanetRepository.findById(profileDTO.getHomeplanetId()).orElse(null));
+                profile.setBodyform(
+                        bodyformRepository.findById(profileDTO.getBodyformId()).orElse(null));
+                profile.setLookingFor(
+                        lookingForRepository.findById(profileDTO.getLookingForId()).orElse(null));
+
+                // Convert interest IDs to entities
+                profile.setInterests(profileDTO.getInterestIds().stream()
+                        .map(interestRepository::findById).filter(Optional::isPresent)
+                        .map(Optional::get).collect(Collectors.toSet()));
 
                 profileRepository.save(profile);
-                System.out.println("  ✅ Inserted profile: " + username + " (userId="
-                        + fixedUserIds[i - 1] + ")");
+                System.out.println("  ✅ Inserted profile: " + profile.getUsername());
             }
-        }
+        });
+
         System.out.println();
     }
 

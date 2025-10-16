@@ -27,13 +27,9 @@ public class ProfileService {
     private final ApplicationEventPublisher eventPublisher;
     private final FileStorageService fileStorageService;
 
-    public ProfileService(
-            ProfileRepository profileRepo,
-            HomeplanetRepository homeplanetRepo,
-            BodyformRepository bodyformRepo,
-            LookingForRepository lookingForRepo,
-            InterestRepository interestRepo,
-            ApplicationEventPublisher eventPublisher,
+    public ProfileService(ProfileRepository profileRepo, HomeplanetRepository homeplanetRepo,
+            BodyformRepository bodyformRepo, LookingForRepository lookingForRepo,
+            InterestRepository interestRepo, ApplicationEventPublisher eventPublisher,
             FileStorageService fileStorageService) {
         this.profileRepo = profileRepo;
         this.homeplanetRepo = homeplanetRepo;
@@ -47,17 +43,19 @@ public class ProfileService {
     // -------------------- PROFILE CRUD --------------------
 
     @Transactional
-    public ProfileDTO saveOrUpdateProfile(UUID userId, ProfileDTO dto) {
-        System.out.println("=== saveOrUpdateProfile called for userId=" + userId + " ===");
+    public ProfileDTO saveOrUpdateProfile(UUID id, ProfileDTO dto) {
+        System.out.println("=== saveOrUpdateProfile called for userId=" + id + " ===");
 
-        Profile profile = profileRepo.findByUserIdWithRelations(userId)
-                .orElseGet(() -> createProfileForUser(userId, dto.getUsername()));
+        Profile profile = profileRepo.findByIdWithRelations(id);
+        if (profile == null) {
+            profile = createProfileForUser(id, dto.getUsername());
+        }
 
         updateProfileFromDTO(profile, dto);
 
         Profile saved = profileRepo.saveAndFlush(profile);
         Profile reloaded = profileRepo.findByIdWithRelations(saved.getId());
-        ProfileDTO result = toViewDTO(reloaded);
+        ProfileDTO result = toProfileDTO(reloaded);
 
         eventPublisher.publishEvent(new ProfileChangedEvent(result));
         return result;
@@ -73,20 +71,20 @@ public class ProfileService {
         }
 
         if (dto.getHomeplanetId() != null) {
-            var homeplanet = homeplanetRepo.findById(dto.getHomeplanetId())
-                    .orElseThrow(() -> new RuntimeException("Homeplanet not found: " + dto.getHomeplanetId()));
+            var homeplanet = homeplanetRepo.findById(dto.getHomeplanetId()).orElseThrow(
+                    () -> new RuntimeException("Homeplanet not found: " + dto.getHomeplanetId()));
             profile.setHomeplanet(homeplanet);
         }
 
         if (dto.getBodyformId() != null) {
-            var bodyform = bodyformRepo.findById(dto.getBodyformId())
-                    .orElseThrow(() -> new RuntimeException("Bodyform not found: " + dto.getBodyformId()));
+            var bodyform = bodyformRepo.findById(dto.getBodyformId()).orElseThrow(
+                    () -> new RuntimeException("Bodyform not found: " + dto.getBodyformId()));
             profile.setBodyform(bodyform);
         }
 
         if (dto.getLookingForId() != null) {
-            var lookingFor = lookingForRepo.findById(dto.getLookingForId())
-                    .orElseThrow(() -> new RuntimeException("LookingFor not found: " + dto.getLookingForId()));
+            var lookingFor = lookingForRepo.findById(dto.getLookingForId()).orElseThrow(
+                    () -> new RuntimeException("LookingFor not found: " + dto.getLookingForId()));
             profile.setLookingFor(lookingFor);
         }
 
@@ -95,8 +93,7 @@ public class ProfileService {
         }
 
         if (dto.getInterestIds() != null) {
-            var interests = dto.getInterestIds().stream()
-                    .filter(id -> id != null)
+            var interests = dto.getInterestIds().stream().filter(id -> id != null)
                     .map(id -> interestRepo.findById(id)
                             .orElseThrow(() -> new RuntimeException("Interest not found: " + id)))
                     .collect(Collectors.toSet());
@@ -110,27 +107,37 @@ public class ProfileService {
 
     // -------------------- FETCH BY USER --------------------
 
-    @Transactional(readOnly = true)
-    public ProfileDTO getProfileByUserId(UUID userId) {
-        return profileRepo.findByUserIdWithRelations(userId)
-                .map(this::toViewDTO)
-                .orElse(null);
-    }
+    // @Transactional(readOnly = true)
+    // public ProfileDTO getProfileById(UUID id) {
+    // return profileRepo.findByIdWithRelations(id).map(this::toProfileDTO).orElse(null);
+    // }
+
 
     @Transactional
     public Profile getOrCreateProfile(UUID userId, String username) {
-        return profileRepo.findByUserId(userId)
-                .orElseGet(() -> createProfileForUser(userId, username));
+        Profile existingProfile = profileRepo.findById(userId).orElse(null);
+
+        if (existingProfile != null) {
+            return existingProfile;
+        }
+
+        return createProfileForUser(userId, username);
     }
 
-    private Profile createProfileForUser(UUID userId, String username) {
+    @Transactional(readOnly = true)
+    public ProfileDTO getProfileById(UUID id) {
+        Profile profile = profileRepo.findByIdWithRelations(id);
+        return profile != null ? toProfileDTO(profile) : null;
+    }
+
+    private Profile createProfileForUser(UUID id, String username) {
         var homeplanet = homeplanetRepo.findAll().stream().findFirst().orElse(null);
         var bodyform = bodyformRepo.findAll().stream().findFirst().orElse(null);
         var lookingFor = lookingForRepo.findAll().stream().findFirst().orElse(null);
         var interests = interestRepo.findAll().stream().limit(2).collect(Collectors.toSet());
 
         Profile newProfile = new Profile();
-        newProfile.setUserId(userId);
+        newProfile.setId(id);
         newProfile.setUsername(username);
         newProfile.setAge(20);
         newProfile.setHomeplanet(homeplanet);
@@ -146,9 +153,9 @@ public class ProfileService {
     // -------------------- IMAGE HANDLING --------------------
 
     @Transactional
-    public ProfileDTO uploadProfileImage(UUID userId, MultipartFile file) throws IOException {
-        Profile profile = profileRepo.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Profile not found for user: " + userId));
+    public ProfileDTO uploadProfileImage(UUID id, MultipartFile file) throws IOException {
+        Profile profile = profileRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Profile not found for user: " + id));
 
         // Save new image
         String filename = fileStorageService.saveFile(file);
@@ -157,20 +164,20 @@ public class ProfileService {
         Profile saved = profileRepo.saveAndFlush(profile);
         Profile reloaded = profileRepo.findByIdWithRelations(saved.getId());
 
-        return toViewDTO(reloaded);
+        return toProfileDTO(reloaded);
     }
 
     @Transactional(readOnly = true)
-    public Resource getProfileImage(UUID userId) throws IOException {
-        Profile profile = profileRepo.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Profile not found for user: " + userId));
+    public Resource getProfileImage(UUID id) throws IOException {
+        Profile profile = profileRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Profile not found for user: " + id));
 
         return fileStorageService.loadFile(profile.getProfilePic());
     }
 
     // -------------------- DTO Conversion --------------------
 
-    public ProfileDTO toViewDTO(Profile profile) {
+    public ProfileDTO toProfileDTO(Profile profile) {
         ProfileDTO dto = new ProfileDTO();
         dto.setId(profile.getId());
         dto.setUsername(profile.getUsername());
@@ -197,12 +204,10 @@ public class ProfileService {
                 .sorted((i1, i2) -> i1.getName().compareTo(i2.getName()))
                 .collect(Collectors.toList());
 
-        dto.setInterests(sortedInterests.stream()
-                .map(Interest::getName)
-                .collect(Collectors.toSet()));
-        dto.setInterestIds(sortedInterests.stream()
-                .map(Interest::getId)
-                .collect(Collectors.toList()));
+        dto.setInterests(
+                sortedInterests.stream().map(Interest::getName).collect(Collectors.toSet()));
+        dto.setInterestIds(
+                sortedInterests.stream().map(Interest::getId).collect(Collectors.toList()));
 
         dto.setProfilePic(profile.getProfilePic());
         return dto;

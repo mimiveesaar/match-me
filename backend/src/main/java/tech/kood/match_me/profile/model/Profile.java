@@ -11,14 +11,10 @@ import org.hibernate.annotations.UuidGenerator;
 @Table(name = "profiles")
 public class Profile {
 
-    @Id
-    @GeneratedValue
-    @UuidGenerator // Hibernate 6+ UUID generator
-    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "uuid")
-    private UUID id;
 
-    @Column(name = "user_id", nullable = false, unique = true)
-    private UUID userId; // 👈 from user management modul 
+    @Id
+    @Column(name = "id", nullable = false, unique = true)
+    private UUID id; // 👈 from user management modul
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -42,11 +38,8 @@ public class Profile {
     private String bio;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "profile_interests",
-        joinColumns = @JoinColumn(name = "profile_id"),
-        inverseJoinColumns = @JoinColumn(name = "interest_id")
-    )
+    @JoinTable(name = "profile_interests", joinColumns = @JoinColumn(name = "profile_id"),
+            inverseJoinColumns = @JoinColumn(name = "interest_id"))
     private Set<Interest> interests = new HashSet<>();
 
     @Column(name = "profile_pic")
@@ -56,7 +49,7 @@ public class Profile {
     public Profile() {}
 
     public Profile(String username, int age, Homeplanet homeplanet, Bodyform bodyform,
-                   LookingFor lookingFor, String bio, Set<Interest> interests, String profilePic) {
+            LookingFor lookingFor, String bio, Set<Interest> interests, String profilePic) {
         this.username = username;
         this.age = age;
         this.homeplanet = homeplanet;
@@ -74,14 +67,6 @@ public class Profile {
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
     }
 
     public String getUsername() {
