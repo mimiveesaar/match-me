@@ -14,7 +14,6 @@ import tech.kood.match_me.profile.repository.ProfileRepository;
 import tech.kood.match_me.user_management.features.user.actions.RegisterUser;
 
 
-
 @SpringBootTest
 @Transactional(transactionManager = "profileManagementTransactionManager")
 public class IncomingUserIdDTOTest extends ProfileTestBase {
@@ -41,7 +40,6 @@ public class IncomingUserIdDTOTest extends ProfileTestBase {
         var results = profileRepository.findAll();
         assertTrue(queryResult.isPresent());
     }
-
 };
 
 

@@ -117,7 +117,7 @@ export const MyProfilePage = ({
       alert('Error saving profile. Please try again.');
       setIsLoading(false);
     }
-    // No finally block needed since page will reload on success
+
   };
 
   // Log whenever profile changes
