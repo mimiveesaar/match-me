@@ -11,13 +11,18 @@ interface SelectOption {
 interface MyProfilePageProps {
     initialProfile?: any;
     onSave?: (profileData: any) => void | Promise<void>;
-
-    // 👇 These props come from page.tsx
     bodyformOptions: SelectOption[];
     lookingforOptions: SelectOption[];
     planetOptions: SelectOption[];
     loading: boolean;
-    error?: string;
+    errors?: {
+        nameError?: string;
+        ageError?: string;
+        bodyformError?: string;
+        lookingForError?: string;
+        planetError?: string;
+        interestsError?: string;
+    }
 }
 
 interface Profile {
@@ -36,6 +41,7 @@ export const MyProfilePage = ({
                                   lookingforOptions,
                                   planetOptions,
                                   loading,
+    errors,
                               }: MyProfilePageProps) => {
     const [bio, setBio] = useState(initialProfile?.bio);
     const [selectedInterests, setSelectedInterests] = useState<number[]>(
@@ -122,6 +128,7 @@ export const MyProfilePage = ({
                     lookingforOptions={lookingforOptions}
                     planetOptions={planetOptions}
                     loading={loading}
+                    errors={errors}
                 />
             </div>
 
@@ -133,6 +140,7 @@ export const MyProfilePage = ({
                         value={bio}
                         onChange={(e) => setBio(e.target.value)}
                         id="bio"
+
                     />
                 </div>
 

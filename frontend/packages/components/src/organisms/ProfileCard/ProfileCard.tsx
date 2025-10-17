@@ -1,13 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { LabeledInputField } from "../../molecules/LabeledInputField/LabeledInputField";
-import { LabeledSelectField } from "../../atoms/LabeledSelectField/LabeledSelectField";
+import React from "react";
+import { LabeledInputField } from "../../molecules";
+import { LabeledSelectField } from "../../atoms";
 import { ProfileImageUpload } from "../ProfileImageUpload/ProfileImageUpload";
-
-interface Option {
-  id: string;
-  name: string;
-}
 
 interface SelectOption {
   value: string;
@@ -33,7 +28,14 @@ interface ProfileCardProps {
   lookingforOptions: SelectOption[];
   planetOptions: SelectOption[];
   loading: boolean;
-  error?: string;
+  errors?: {
+    nameError?: string;
+    ageError?: string;
+    bodyformError?: string;
+    lookingForError?: string;
+    planetError?: string;
+    interestsError?: string;
+  };
 }
 
 export const ProfileCard = ({
@@ -44,7 +46,7 @@ export const ProfileCard = ({
   lookingforOptions,
   planetOptions,
   loading,
-  error,
+  errors,
 }: ProfileCardProps) => {
   const API_BASE_URL = "http://localhost:8080/api";
 
@@ -103,6 +105,7 @@ export const ProfileCard = ({
         value={displayName}
         onChange={handleInputChange("name")}
         placeholder="Enter your name"
+        error={errors?.nameError}
       />
 
       <LabeledInputField
@@ -110,6 +113,7 @@ export const ProfileCard = ({
         value={displayAge}
         onChange={handleInputChange("age")}
         placeholder="Enter your age"
+        error={errors?.ageError}
       />
 
       <LabeledSelectField
@@ -119,6 +123,7 @@ export const ProfileCard = ({
         onChange={(e) => handleSelectChange("bodyformId")(e.target.value)}
         options={bodyformOptions}
         setValue={handleSelectChange("bodyformId")}
+        error={errors?.bodyformError}
       />
 
       <LabeledSelectField
@@ -128,6 +133,7 @@ export const ProfileCard = ({
         onChange={(e) => handleSelectChange("lookingForId")(e.target.value)}
         options={lookingforOptions}
         setValue={handleSelectChange("lookingForId")}
+        error={errors?.lookingForError}
       />
 
       <LabeledSelectField
@@ -137,6 +143,7 @@ export const ProfileCard = ({
         onChange={(e) => handleSelectChange("homeplanetId")(e.target.value)}
         options={planetOptions}
         setValue={handleSelectChange("homeplanetId")}
+        error={errors?.planetError}
       />
     </div>
   );

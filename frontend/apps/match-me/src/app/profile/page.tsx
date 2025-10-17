@@ -13,6 +13,7 @@ interface ProfileData {
   bio?: string;
   interestIds?: number[];
   profilePic?: string;
+  error?: string;
 }
 
 interface SelectOption {
@@ -20,15 +21,24 @@ interface SelectOption {
     label: string;
 }
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/';
 
 export default function MyProfile() {
 
     const [bodyformOptions, setBodyformOptions] = useState<SelectOption[]>([]);
     const [lookingforOptions, setLookingforOptions] = useState<SelectOption[]>([]);
     const [planetOptions, setPlanetOptions] = useState<SelectOption[]>([]);
+    const [interestOptions, setInterestOptions] = useState<SelectOption[]>([]);
     const [optionsLoading, setOptionsLoading] = useState(true);
+    const [errors, setErrors] = useState({
+        nameError: "",
+        ageError: "",
+        bodyformError: "",
+        lookingForError: "",
+        planetError: "",
+        interestsError: ""
+    });
 
     useEffect(() => {
         const fetchOptions = async () => {
@@ -109,33 +119,48 @@ export default function MyProfile() {
 
     let hasErrors = false;
 
-    // setErrors({
-    //   nameError: "",
-    //   ageError: "",
-    //   bodyformError: "",
-    //   lookingForError: "",
-    //   homeplanetError: "",
-    //   interestsError: ""
-    // });
-    //
-    // if (!name) {
-    //   setErrors((prev) => ({ ...prev, nameError: "Name is required!" }));
-    //   hasErrors = true;
-    // }
-    // if (!password) {
-    //   setErrors((prev) => ({ ...prev, passwordError: "Password is required!" }));
-    //   hasErrors = true;
-    // }
-    //
-    // if (password !== confirmPassword) {
-    //   setErrors((prev) => ({ ...prev, passwordError: "Passwords do not match!", confirmPasswordError: "Passwords do not match!" }));
-    //   hasErrors = true;
-    //
-    // }
+    setErrors({
+      nameError: "",
+      ageError: "",
+      bodyformError: "",
+      lookingForError: "",
+      planetError: "",
+      interestsError: ""
+    });
 
-    // if (hasErrors) {
-    //   return;
-    // }
+      if (!updatedData.name) {
+          setErrors(prev => ({ ...prev, nameError: "Name is required." }));
+          hasErrors = true;
+      }
+
+      if (!updatedData.age) {
+          setErrors(prev => ({ ...prev, ageError: "Age is required." }));
+          hasErrors = true;
+      }
+
+      if (!updatedData.bodyformId) {
+          setErrors(prev => ({ ...prev, bodyformError: "Please select a body form." }));
+          hasErrors = true;
+      }
+
+      if (!updatedData.lookingForId) {
+          setErrors(prev => ({ ...prev, lookingForError: "Please select who you’re looking for." }));
+          hasErrors = true;
+      }
+
+      if (!updatedData.homeplanetId) {
+          setErrors(prev => ({ ...prev, planetError: "Please select a home planet." }));
+          hasErrors = true;
+      }
+
+      if (!updatedData.interestIds || updatedData.interestIds.length === 0) {
+          setErrors(prev => ({ ...prev, interestsError: "Please select at least one interest." }));
+          hasErrors = true;
+      }
+
+      if (hasErrors) {
+          return;
+      }
 
     try {
       // Clean the data before sending
@@ -229,6 +254,7 @@ export default function MyProfile() {
           lookingforOptions={lookingforOptions}
           planetOptions={planetOptions}
           loading={optionsLoading}
+          errors={errors}
         />
       </div>
     </div>
