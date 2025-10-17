@@ -21,7 +21,6 @@ interface MyProfilePageProps {
         bodyformError?: string;
         lookingForError?: string;
         planetError?: string;
-        interestsError?: string;
     }
 }
 
@@ -147,6 +146,7 @@ export const MyProfilePage = ({
                 <InterestsSection
                     selected={selectedInterests}
                     setSelected={setSelectedInterests}
+                    error={selectedInterests.length === 0 ? "Please select at least one interest" : undefined}
                 />
 
                 <div className="flex items-center justify-center mt-4 mb-4">

@@ -29,7 +29,6 @@ export default function MyProfile() {
     const [bodyformOptions, setBodyformOptions] = useState<SelectOption[]>([]);
     const [lookingforOptions, setLookingforOptions] = useState<SelectOption[]>([]);
     const [planetOptions, setPlanetOptions] = useState<SelectOption[]>([]);
-    const [interestOptions, setInterestOptions] = useState<SelectOption[]>([]);
     const [optionsLoading, setOptionsLoading] = useState(true);
     const [errors, setErrors] = useState({
         nameError: "",
@@ -37,7 +36,6 @@ export default function MyProfile() {
         bodyformError: "",
         lookingForError: "",
         planetError: "",
-        interestsError: ""
     });
 
     useEffect(() => {
@@ -125,7 +123,6 @@ export default function MyProfile() {
       bodyformError: "",
       lookingForError: "",
       planetError: "",
-      interestsError: ""
     });
 
       if (!updatedData.name) {
@@ -150,11 +147,6 @@ export default function MyProfile() {
 
       if (!updatedData.homeplanetId) {
           setErrors(prev => ({ ...prev, planetError: "Please select a home planet." }));
-          hasErrors = true;
-      }
-
-      if (!updatedData.interestIds || updatedData.interestIds.length === 0) {
-          setErrors(prev => ({ ...prev, interestsError: "Please select at least one interest." }));
           hasErrors = true;
       }
 
