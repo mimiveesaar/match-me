@@ -15,9 +15,49 @@ interface ProfileData {
   profilePic?: string;
 }
 
+interface SelectOption {
+    value: string;
+    label: string;
+}
+
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/';
 
 export default function MyProfile() {
+
+    const [bodyformOptions, setBodyformOptions] = useState<SelectOption[]>([]);
+    const [lookingforOptions, setLookingforOptions] = useState<SelectOption[]>([]);
+    const [planetOptions, setPlanetOptions] = useState<SelectOption[]>([]);
+    const [optionsLoading, setOptionsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchOptions = async () => {
+            try {
+                setOptionsLoading(true);
+
+                const [bodyformsRes, lookingForRes, planetsRes] = await Promise.all([
+                    fetch(`${API_BASE_URL}/api/bodyforms`),
+                    fetch(`${API_BASE_URL}/api/looking-for`),
+                    fetch(`${API_BASE_URL}/api/homeplanets`),
+                ]);
+
+                const bodyforms = await bodyformsRes.json();
+                const lookingFor = await lookingForRes.json();
+                const planets = await planetsRes.json();
+
+                setBodyformOptions(bodyforms.map((b: any) => ({ value: b.id, label: b.name })));
+                setLookingforOptions(lookingFor.map((l: any) => ({ value: l.id, label: l.name })));
+                setPlanetOptions(planets.map((p: any) => ({ value: p.id, label: p.name })));
+            } catch (err) {
+                console.error("❌ Error fetching options:", err);
+            } finally {
+                setOptionsLoading(false);
+            }
+        };
+
+        fetchOptions();
+    }, []);
+
   useEffect(() => {
     document.title = "My Profile | alien.meet";
   }, []);
@@ -63,40 +103,39 @@ export default function MyProfile() {
   };
 
 
-
   const handleSaveProfile = async (updatedData: ProfileData) => {
     console.log("\n=== SAVING PROFILE ===");
     console.log("1. Raw data received from form:", updatedData);
 
     let hasErrors = false;
 
-    setErrors({
-      nameError: "",
-      ageError: "",
-      bodyformError: "",
-      lookingForError: "",
-      homeplanetError: "",
-      interestsError: ""
-    });
+    // setErrors({
+    //   nameError: "",
+    //   ageError: "",
+    //   bodyformError: "",
+    //   lookingForError: "",
+    //   homeplanetError: "",
+    //   interestsError: ""
+    // });
+    //
+    // if (!name) {
+    //   setErrors((prev) => ({ ...prev, nameError: "Name is required!" }));
+    //   hasErrors = true;
+    // }
+    // if (!password) {
+    //   setErrors((prev) => ({ ...prev, passwordError: "Password is required!" }));
+    //   hasErrors = true;
+    // }
+    //
+    // if (password !== confirmPassword) {
+    //   setErrors((prev) => ({ ...prev, passwordError: "Passwords do not match!", confirmPasswordError: "Passwords do not match!" }));
+    //   hasErrors = true;
+    //
+    // }
 
-    if (!name) {
-      setErrors((prev) => ({ ...prev, nameError: "Name is required!" }));
-      hasErrors = true;
-    }
-    if (!password) {
-      setErrors((prev) => ({ ...prev, passwordError: "Password is required!" }));
-      hasErrors = true;
-    }
-
-    if (password !== confirmPassword) {
-      setErrors((prev) => ({ ...prev, passwordError: "Passwords do not match!", confirmPasswordError: "Passwords do not match!" }));
-      hasErrors = true;
-
-    }
-
-    if (hasErrors) {
-      return;
-    }
+    // if (hasErrors) {
+    //   return;
+    // }
 
     try {
       // Clean the data before sending
@@ -186,6 +225,10 @@ export default function MyProfile() {
         <MyProfilePage
           initialProfile={profile}
           onSave={handleSaveProfile}
+          bodyformOptions={bodyformOptions}
+          lookingforOptions={lookingforOptions}
+          planetOptions={planetOptions}
+          loading={optionsLoading}
         />
       </div>
     </div>

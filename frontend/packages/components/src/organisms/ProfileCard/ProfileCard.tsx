@@ -29,49 +29,31 @@ interface ProfileCardProps {
   profile: Profile;
   setProfile: SetProfileFn;
   onImageUpload: (file: File) => Promise<string>;
+  bodyformOptions: SelectOption[];
+  lookingforOptions: SelectOption[];
+  planetOptions: SelectOption[];
+  loading: boolean;
+  error?: string;
 }
 
-export const ProfileCard = ({ profile, setProfile, onImageUpload }: ProfileCardProps) => {
-  const [bodyformOptions, setBodyformOptions] = useState<SelectOption[]>([]);
-  const [lookingforOptions, setLookingforOptions] = useState<SelectOption[]>([]);
-  const [planetOptions, setPlanetOptions] = useState<SelectOption[]>([]);
-  const [loading, setLoading] = useState(true);
-
+export const ProfileCard = ({
+  profile,
+  setProfile,
+  onImageUpload,
+  bodyformOptions,
+  lookingforOptions,
+  planetOptions,
+  loading,
+  error,
+}: ProfileCardProps) => {
   const API_BASE_URL = "http://localhost:8080/api";
 
-  useEffect(() => {
-    const fetchOptions = async () => {
-      try {
-        setLoading(true);
-
-        const [bodyformsRes, lookingForRes, planetsRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/bodyforms`),
-          fetch(`${API_BASE_URL}/looking-for`),
-          fetch(`${API_BASE_URL}/homeplanets`),
-        ]);
-
-        const bodyforms: Option[] = await bodyformsRes.json();
-        const lookingFor: Option[] = await lookingForRes.json();
-        const planets: Option[] = await planetsRes.json();
-
-        setBodyformOptions(bodyforms.map(item => ({ value: item.id, label: item.name })));
-        setLookingforOptions(lookingFor.map(item => ({ value: item.id, label: item.name })));
-        setPlanetOptions(planets.map(item => ({ value: item.id, label: item.name })));
-      } catch (err) {
-        console.error("Error fetching options:", err);
-      } finally {
-        setLoading(false);
-      }
+  const handleInputChange =
+    (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = e.target.value;
+      console.log(`ProfileCard: Updating ${field} to "${newValue}"`);
+      setProfile({ ...profile, [field]: newValue });
     };
-
-    fetchOptions();
-  }, []);
-
-  const handleInputChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    console.log(`ProfileCard: Updating ${field} to "${newValue}"`);
-    setProfile({ ...profile, [field]: newValue });
-  };
 
   const handleSelectChange = (field: string) => (value: string) => {
     setProfile({ ...profile, [field]: value });
@@ -79,8 +61,8 @@ export const ProfileCard = ({ profile, setProfile, onImageUpload }: ProfileCardP
 
   if (loading) {
     return (
-      <div className="bg-amberglow rounded-custom-16 p-6 drop-shadow-custom w-full lg:w-80">
-        <div className="flex items-center justify-center h-64">
+      <div className="bg-amberglow rounded-custom-16 drop-shadow-custom w-full p-6 lg:w-80">
+        <div className="flex h-64 items-center justify-center">
           <p className="text-center text-lg">Loading options...</p>
         </div>
       </div>
@@ -91,8 +73,12 @@ export const ProfileCard = ({ profile, setProfile, onImageUpload }: ProfileCardP
   const displayName = profile?.name || "";
   const displayAge = String(profile?.age || "");
   const displayBodyform = profile?.bodyformId ? String(profile.bodyformId) : "";
-  const displayLookingFor = profile?.lookingForId ? String(profile.lookingForId) : "";
-  const displayPlanet = profile?.homeplanetId ? String(profile.homeplanetId) : "";
+  const displayLookingFor = profile?.lookingForId
+    ? String(profile.lookingForId)
+    : "";
+  const displayPlanet = profile?.homeplanetId
+    ? String(profile.homeplanetId)
+    : "";
 
   console.log("ProfileCard: Current display values:", {
     name: displayName,
@@ -103,7 +89,7 @@ export const ProfileCard = ({ profile, setProfile, onImageUpload }: ProfileCardP
   });
 
   return (
-    <div className="bg-amberglow rounded-custom-16 p-6 drop-shadow-custom w-full lg:w-80">
+    <div className="bg-amberglow rounded-custom-16 drop-shadow-custom w-full p-6 lg:w-80">
       <ProfileImageUpload
         currentImage={profile?.profilePic}
         onImageUpdate={(filename) => {
