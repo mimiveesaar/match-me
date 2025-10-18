@@ -17,8 +17,8 @@ interface ProfileData {
 }
 
 interface SelectOption {
-    value: string;
-    label: string;
+  value: string;
+  label: string;
 }
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
@@ -26,45 +26,46 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 export default function MyProfile() {
 
-    const [bodyformOptions, setBodyformOptions] = useState<SelectOption[]>([]);
-    const [lookingforOptions, setLookingforOptions] = useState<SelectOption[]>([]);
-    const [planetOptions, setPlanetOptions] = useState<SelectOption[]>([]);
-    const [optionsLoading, setOptionsLoading] = useState(true);
-    const [errors, setErrors] = useState({
-        nameError: "",
-        ageError: "",
-        bodyformError: "",
-        lookingForError: "",
-        planetError: "",
-    });
+  const [name, setName] = useState("");
+  const [bodyformOptions, setBodyformOptions] = useState<SelectOption[]>([]);
+  const [lookingforOptions, setLookingforOptions] = useState<SelectOption[]>([]);
+  const [planetOptions, setPlanetOptions] = useState<SelectOption[]>([]);
+  const [optionsLoading, setOptionsLoading] = useState(true);
+  const [errors, setErrors] = useState({
+    nameError: "",
+    ageError: "",
+    bodyformError: "",
+    lookingForError: "",
+    planetError: "",
+  });
 
-    useEffect(() => {
-        const fetchOptions = async () => {
-            try {
-                setOptionsLoading(true);
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        setOptionsLoading(true);
 
-                const [bodyformsRes, lookingForRes, planetsRes] = await Promise.all([
-                    fetch(`${API_BASE_URL}/api/bodyforms`),
-                    fetch(`${API_BASE_URL}/api/looking-for`),
-                    fetch(`${API_BASE_URL}/api/homeplanets`),
-                ]);
+        const [bodyformsRes, lookingForRes, planetsRes] = await Promise.all([
+          fetch(`${API_BASE_URL}/api/bodyforms`),
+          fetch(`${API_BASE_URL}/api/looking-for`),
+          fetch(`${API_BASE_URL}/api/homeplanets`),
+        ]);
 
-                const bodyforms = await bodyformsRes.json();
-                const lookingFor = await lookingForRes.json();
-                const planets = await planetsRes.json();
+        const bodyforms = await bodyformsRes.json();
+        const lookingFor = await lookingForRes.json();
+        const planets = await planetsRes.json();
 
-                setBodyformOptions(bodyforms.map((b: any) => ({ value: b.id, label: b.name })));
-                setLookingforOptions(lookingFor.map((l: any) => ({ value: l.id, label: l.name })));
-                setPlanetOptions(planets.map((p: any) => ({ value: p.id, label: p.name })));
-            } catch (err) {
-                console.error("❌ Error fetching options:", err);
-            } finally {
-                setOptionsLoading(false);
-            }
-        };
+        setBodyformOptions(bodyforms.map((b: any) => ({ value: b.id, label: b.name })));
+        setLookingforOptions(lookingFor.map((l: any) => ({ value: l.id, label: l.name })));
+        setPlanetOptions(planets.map((p: any) => ({ value: p.id, label: p.name })));
+      } catch (err) {
+        console.error("❌ Error fetching options:", err);
+      } finally {
+        setOptionsLoading(false);
+      }
+    };
 
-        fetchOptions();
-    }, []);
+    fetchOptions();
+  }, []);
 
   useEffect(() => {
     document.title = "My Profile | alien.meet";
@@ -86,6 +87,7 @@ export default function MyProfile() {
 
 
   const fetchProfile = async () => {
+
     try {
       console.log("=== FETCHING PROFILE ===");
 
@@ -100,6 +102,16 @@ export default function MyProfile() {
         const data = await response.json();
         console.log("✓ Fetched profile from backend:", data);
         setProfile(data);
+
+        const { isValid, newErrors } = validateProfileData(data);
+
+        setErrors(newErrors);
+
+        if (!isValid) {
+          console.warn("❌ Validation failed. Fix errors before saving.");
+          return;
+        }
+
       } else {
         console.error("❌ Failed to fetch profile, status:", response.status);
       }
@@ -110,53 +122,62 @@ export default function MyProfile() {
     }
   };
 
-
-  const handleSaveProfile = async (updatedData: ProfileData) => {
-    console.log("\n=== SAVING PROFILE ===");
-    console.log("1. Raw data received from form:", updatedData);
-
-    let hasErrors = false;
-
-    setErrors({
+  const validateProfileData = (data: ProfileData) => {
+    const newErrors = {
       nameError: "",
       ageError: "",
       bodyformError: "",
       lookingForError: "",
       planetError: "",
-    });
+    };
 
-      if (!updatedData.name) {
-          setErrors(prev => ({ ...prev, nameError: "Name is required." }));
-          hasErrors = true;
-      }
+    let isValid = true;
 
-      if (!updatedData.age) {
-          setErrors(prev => ({ ...prev, ageError: "Age is required." }));
-          hasErrors = true;
-      }
+    if (!data.name) {
+      newErrors.nameError = "Name is required.";
+      isValid = false;
+    }
 
-      if (!updatedData.bodyformId) {
-          setErrors(prev => ({ ...prev, bodyformError: "Please select a body form." }));
-          hasErrors = true;
-      }
+    if (!data.age) {
+      newErrors.ageError = "Age is required.";
+      isValid = false;
+    }
 
-      if (!updatedData.lookingForId) {
-          setErrors(prev => ({ ...prev, lookingForError: "Please select who you’re looking for." }));
-          hasErrors = true;
-      }
+    if (!data.bodyformId) {
+      newErrors.bodyformError = "Please select a body form.";
+      isValid = false;
+    }
 
-      if (!updatedData.homeplanetId) {
-          setErrors(prev => ({ ...prev, planetError: "Please select a home planet." }));
-          hasErrors = true;
-      }
+    if (!data.lookingForId) {
+      newErrors.lookingForError = "Please select who you’re looking for.";
+      isValid = false;
+    }
 
-      if (hasErrors) {
-          return;
-      }
+    if (!data.homeplanetId) {
+      newErrors.planetError = "Please select a home planet.";
+      isValid = false;
+    }
+
+    return { isValid, newErrors };
+  };
+
+
+  const handleSaveProfile = async (updatedData: ProfileData) => {
+    console.log("\n=== SAVING PROFILE ===");
+    console.log("1. Raw data received from form:", updatedData);
+
+    const { isValid, newErrors } = validateProfileData(updatedData);
+    setErrors(newErrors);
+
+    if (!isValid) {
+      console.warn("❌ Validation failed. Fix errors before saving.");
+      return;
+    }
 
     try {
       // Clean the data before sending
       const dataToSend = {
+        name: updatedData.name || null,
         age: updatedData.age ? Number(updatedData.age) : null,
         homeplanetId: updatedData.homeplanetId || null,
         bodyformId: updatedData.bodyformId || null,

@@ -120,11 +120,11 @@ public class ProfileDataSeeder implements CommandLineRunner {
         System.out.println("👤 Seeding test profiles...");
 
         seedProfileGenerator.generateProfiles().forEach(profileDTO -> {
-            if (!profileRepository.existsByUsername(profileDTO.getUsername())) {
+            if (!profileRepository.existsByName(profileDTO.getName())) {
 
                 Profile profile = new Profile();
                 profile.setId(profileDTO.getId());
-                profile.setUsername(profileDTO.getUsername());
+                profile.setName(profileDTO.getName());
                 profile.setAge(profileDTO.getAge());
                 profile.setBio(profileDTO.getBio());
                 profile.setProfilePic(profileDTO.getProfilePic());
@@ -143,7 +143,7 @@ public class ProfileDataSeeder implements CommandLineRunner {
                         .map(Optional::get).collect(Collectors.toSet()));
 
                 profileRepository.save(profile);
-                System.out.println("  ✅ Inserted profile: " + profile.getUsername());
+                System.out.println("  ✅ Inserted profile: " + profile.getName());
             }
         });
 

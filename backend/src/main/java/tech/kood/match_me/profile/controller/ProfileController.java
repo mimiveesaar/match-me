@@ -39,9 +39,9 @@ public class ProfileController {
                         .body("Unauthorized: user not authenticated");
             }
 
-            UUID userId = user.id().value();
-            ProfileDTO savedProfileDTO = service.saveOrUpdateProfile(userId, dto);
-            System.out.println("Profile saved successfully for userId=" + userId);
+            UUID id = user.id().value();
+            ProfileDTO savedProfileDTO = service.saveOrUpdateProfile(id, dto);
+            System.out.println("Profile saved successfully for userId=" + id);
 
             return ResponseEntity.ok(savedProfileDTO);
 
@@ -131,8 +131,8 @@ public class ProfileController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
 
-            UUID userId = user.id().value();
-            Resource imageResource = service.getProfileImage(userId);
+            UUID id = user.id().value();
+            Resource imageResource = service.getProfileImage(id);
 
             if (imageResource == null) {
                 return ResponseEntity.notFound().build();
@@ -147,8 +147,9 @@ public class ProfileController {
 
     /** 🟡 Admin or system sync — no auth required */
     @PostMapping("/sync")
+
     public ResponseEntity<ProfileDTO> syncUser(@RequestParam UUID id,
-            @RequestParam String username) {
+            @RequestParam String name) {
         Profile profile = service.getOrCreateProfile(id);
         return ResponseEntity.ok(service.toProfileDTO(profile));
     }

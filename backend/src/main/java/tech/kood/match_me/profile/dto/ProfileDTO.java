@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class ProfileDTO {
     private UUID id;
-    private String username;
+    private String name;
     private Integer age;
     private String homeplanet;
     private Integer homeplanetId;
@@ -20,56 +20,115 @@ public class ProfileDTO {
     private String profilePic;
 
     // Getters and Setters
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    public UUID getId() {
+        return id;
+    }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-    public Integer getAge() { return age; }
-    public void setAge(Integer age) { this.age = age; }
+    public String getName() {
+        return name;
+    }
 
-    public String getHomeplanet() { return homeplanet; }
-    public void setHomeplanet(String homeplanet) { this.homeplanet = homeplanet; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public Integer getHomeplanetId() { return homeplanetId; }
-    public void setHomeplanetId(Integer homeplanetId) { this.homeplanetId = homeplanetId; }
+    public Integer getAge() {
+        return age;
+    }
 
-    public String getBodyform() { return bodyform; }
-    public void setBodyform(String bodyform) { this.bodyform = bodyform; }
+    public void setAge(Integer age) {
+        this.age = age;
+    }
 
-    public Integer getBodyformId() { return bodyformId; }
-    public void setBodyformId(Integer bodyformId) { this.bodyformId = bodyformId; }
+    public String getHomeplanet() {
+        return homeplanet;
+    }
 
-    public String getLookingFor() { return lookingFor; }
-    public void setLookingFor(String lookingFor) { this.lookingFor = lookingFor; }
+    public void setHomeplanet(String homeplanet) {
+        this.homeplanet = homeplanet;
+    }
 
-    public Integer getLookingForId() { return lookingForId; }
-    public void setLookingForId(Integer lookingForId) { this.lookingForId = lookingForId; }
+    public Integer getHomeplanetId() {
+        return homeplanetId;
+    }
 
-    public String getBio() { return bio; }
-    public void setBio(String bio) { this.bio = bio; }
+    public void setHomeplanetId(Integer homeplanetId) {
+        this.homeplanetId = homeplanetId;
+    }
 
-    public Set<String> getInterests() { return interests; }
-    public void setInterests(Set<String> interests) { this.interests = interests; }
+    public String getBodyform() {
+        return bodyform;
+    }
 
-    public List<Integer> getInterestIds() { return interestIds; }
-    public void setInterestIds(List<Integer> interestIds) { this.interestIds = interestIds; }
+    public void setBodyform(String bodyform) {
+        this.bodyform = bodyform;
+    }
 
-    public String getProfilePic() { return profilePic; }
-    public void setProfilePic(String profilePic) { this.profilePic = profilePic; }
+    public Integer getBodyformId() {
+        return bodyformId;
+    }
+
+    public void setBodyformId(Integer bodyformId) {
+        this.bodyformId = bodyformId;
+    }
+
+    public String getLookingFor() {
+        return lookingFor;
+    }
+
+    public void setLookingFor(String lookingFor) {
+        this.lookingFor = lookingFor;
+    }
+
+    public Integer getLookingForId() {
+        return lookingForId;
+    }
+
+    public void setLookingForId(Integer lookingForId) {
+        this.lookingForId = lookingForId;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public Set<String> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(Set<String> interests) {
+        this.interests = interests;
+    }
+
+    public List<Integer> getInterestIds() {
+        return interestIds;
+    }
+
+    public void setInterestIds(List<Integer> interestIds) {
+        this.interestIds = interestIds;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
 
     @Override
     public String toString() {
-        return "ProfileDTO{" +
-                "username='" + username + '\'' +
-                ", age=" + age +
-                ", homeplanetId=" + homeplanetId +
-                ", bodyformId=" + bodyformId +
-                ", lookingForId=" + lookingForId +
-                ", bio='" + bio + '\'' +
-                ", interestIds=" + interestIds +
-                ", profilePic='" + profilePic + '\'' +
-                '}';
-        }
+        return "ProfileDTO{" + "name='" + name + '\'' + ", age=" + age + ", homeplanetId="
+                + homeplanetId + ", bodyformId=" + bodyformId + ", lookingForId=" + lookingForId
+                + ", bio='" + bio + '\'' + ", interestIds=" + interestIds + ", profilePic='"
+                + profilePic + '\'' + '}';
     }
+}

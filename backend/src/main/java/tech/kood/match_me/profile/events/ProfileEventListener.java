@@ -8,6 +8,6 @@ public class ProfileEventListener {
 
     @EventListener
     public void onProfileChanged(ProfileChangedEvent event) {
-        System.out.println("📢 Profile changed for user: " + event.getProfile().getUsername());
+        System.out.println("📢 Profile changed for user: " + event.getProfile().getName());
     }
 }

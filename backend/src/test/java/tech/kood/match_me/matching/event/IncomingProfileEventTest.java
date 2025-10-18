@@ -21,24 +21,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional(transactionManager = "matchingTransactionManager")
 public class IncomingProfileEventTest extends MatchingTestBase {
 
-    private ProfileDTO createProfileDTO (UUID id,
-                                             String username,
-                                             Integer age,
-                                             String homeplanet,
-                                             Integer homeplanetId,
-                                             String bodyform,
-                                             Integer bodyformId,
-                                             String lookingFor,
-                                             Integer lookingForId,
-                                             String bio,
-                                             Set<String> interests,
-                                             List<Integer> interestIds,
-                                             String profilePicSrc
-                                             ) {
+    private ProfileDTO createProfileDTO(UUID id, String username, Integer age, String homeplanet,
+            Integer homeplanetId, String bodyform, Integer bodyformId, String lookingFor,
+            Integer lookingForId, String bio, Set<String> interests, List<Integer> interestIds,
+            String profilePicSrc) {
 
         ProfileDTO dto = new ProfileDTO();
         dto.setId(id);
-        dto.setUsername(username);
+        dto.setName(username);
         dto.setAge(age);
         dto.setHomeplanet(homeplanet);
         dto.setHomeplanetId(homeplanetId);
@@ -67,21 +57,9 @@ public class IncomingProfileEventTest extends MatchingTestBase {
     @Test
     void testListenAndSaveNewUser() {
 
-        var profile1 = createProfileDTO(
-                UUID.randomUUID(),
-                "testuser",
-                30,
-                "Earth",
-                1,
-                "Humanoid",
-                2,
-                "Friendship",
-                3,
-                "This is a test bio",
-                Set.of("Reading", "Gaming"),
-                List.of(10, 20),
-                "/images/testuser.png"
-        );
+        var profile1 = createProfileDTO(UUID.randomUUID(), "testuser", 30, "Earth", 1, "Humanoid",
+                2, "Friendship", 3, "This is a test bio", Set.of("Reading", "Gaming"),
+                List.of(10, 20), "/images/testuser.png");
 
         matchesSeeder.seedMatches();
 
@@ -97,37 +75,13 @@ public class IncomingProfileEventTest extends MatchingTestBase {
     @Test
     void testListenAndModifyUser() {
 
-        var initialProfile = createProfileDTO(
-                UUID.randomUUID(),
-                "testuser",
-                30,
-                "Earth",
-                1,
-                "Humanoid",
-                2,
-                "Friendship",
-                3,
-                "This is a test bio",
-                Set.of("Reading", "Gaming"),
-                List.of(10, 20),
-                "/images/testuser.png"
-        );
+        var initialProfile = createProfileDTO(UUID.randomUUID(), "testuser", 30, "Earth", 1,
+                "Humanoid", 2, "Friendship", 3, "This is a test bio", Set.of("Reading", "Gaming"),
+                List.of(10, 20), "/images/testuser.png");
 
-        var updatedProfile = createProfileDTO(
-                UUID.randomUUID(),
-                "testuser",
-                30,
-                "Mars",
-                2,
-                "Humanoid",
-                3,
-                "Friendship",
-                3,
-                "This is a test bio",
-                Set.of("Reading", "Gaming"),
-                List.of(10, 20),
-                "/images/testuser.png"
-        );
+        var updatedProfile = createProfileDTO(UUID.randomUUID(), "testuser", 30, "Mars", 2,
+                "Humanoid", 3, "Friendship", 3, "This is a test bio", Set.of("Reading", "Gaming"),
+                List.of(10, 20), "/images/testuser.png");
 
         matchUserRepository.deleteAll();
         matchesSeeder.seedMatches();

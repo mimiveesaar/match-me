@@ -17,7 +17,7 @@ public class Profile {
     private UUID id; // 👈 from user management modul
 
     @Column(nullable = true, unique = false)
-    private String username;
+    private String name;
 
     @Column(nullable = true)
     private int age;
@@ -48,9 +48,9 @@ public class Profile {
     // --- Constructors ---
     public Profile() {}
 
-    public Profile(String username, int age, Homeplanet homeplanet, Bodyform bodyform,
+    public Profile(String name, int age, Homeplanet homeplanet, Bodyform bodyform,
             LookingFor lookingFor, String bio, Set<Interest> interests, String profilePic) {
-        this.username = username;
+        this.name = name;
         this.age = age;
         this.homeplanet = homeplanet;
         this.bodyform = bodyform;
@@ -69,12 +69,12 @@ public class Profile {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getAge() {

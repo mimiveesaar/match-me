@@ -12,7 +12,7 @@ import java.util.UUID;
 @Repository
 public interface ProfileRepository extends JpaRepository<Profile, UUID> {
 
-       boolean existsByUsername(String username);
+       boolean existsByName(String name);
 
        @Query("SELECT p FROM Profile p " + "LEFT JOIN FETCH p.homeplanet "
                      + "LEFT JOIN FETCH p.bodyform " + "LEFT JOIN FETCH p.lookingFor "

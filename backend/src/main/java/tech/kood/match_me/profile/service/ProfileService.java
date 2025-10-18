@@ -44,7 +44,7 @@ public class ProfileService {
 
     @Transactional
     public ProfileDTO saveOrUpdateProfile(UUID id, ProfileDTO dto) {
-        System.out.println("=== saveOrUpdateProfile called for userId=" + id + " ===");
+        System.out.println("=== saveOrUpdateProfile called for id=" + id + " ===");
 
         Profile profile = profileRepo.findByIdWithRelations(id);
         if (profile == null) {
@@ -62,8 +62,8 @@ public class ProfileService {
     }
 
     private void updateProfileFromDTO(Profile profile, ProfileDTO dto) {
-        if (dto.getUsername() != null) {
-            profile.setUsername(dto.getUsername());
+        if (dto.getName() != null) {
+            profile.setName(dto.getName());
         }
 
         if (dto.getAge() != null) {
@@ -126,22 +126,10 @@ public class ProfileService {
     }
 
     public Profile createProfileForUser(UUID id) {
-        // var username = "";
-        // var homeplanet = homeplanetRepo.findAll().stream().findFirst().orElse(null);
-        // var bodyform = bodyformRepo.findAll().stream().findFirst().orElse(null);
-        // var lookingFor = lookingForRepo.findAll().stream().findFirst().orElse(null);
-        // var interests = interestRepo.findAll().stream().limit(2).collect(Collectors.toSet());
 
         Profile newProfile = new Profile();
         newProfile.setId(id);
-        // newProfile.setUsername(username);
-        // newProfile.setAge(20);
-        // newProfile.setHomeplanet(homeplanet);
-        // newProfile.setBodyform(bodyform);
-        // newProfile.setLookingFor(lookingFor);
-        // newProfile.setBio("Auto-created profile");
-        // newProfile.setInterests(interests);
-        // newProfile.setProfilePic("default-profile.png");
+
 
         return profileRepo.saveAndFlush(newProfile);
     }
@@ -176,7 +164,7 @@ public class ProfileService {
     public ProfileDTO toProfileDTO(Profile profile) {
         ProfileDTO dto = new ProfileDTO();
         dto.setId(profile.getId());
-        dto.setUsername(profile.getUsername());
+        dto.setName(profile.getName());
         dto.setAge(profile.getAge());
 
         if (profile.getHomeplanet() != null) {

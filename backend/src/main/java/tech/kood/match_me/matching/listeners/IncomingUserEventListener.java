@@ -18,7 +18,9 @@ public class IncomingUserEventListener {
 
     private final BodyformRepository bodyformRepository;
 
-    public IncomingUserEventListener(MatchUserRepository matchUserRepository, PlanetsRepository planetsRepository, InterestsRepository interestsRepository, LookingForRepository lookingForRepository, BodyformRepository bodyformRepository) {
+    public IncomingUserEventListener(MatchUserRepository matchUserRepository,
+            PlanetsRepository planetsRepository, InterestsRepository interestsRepository,
+            LookingForRepository lookingForRepository, BodyformRepository bodyformRepository) {
         this.matchUserRepository = matchUserRepository;
         this.planetsRepository = planetsRepository;
         this.interestsRepository = interestsRepository;
@@ -34,8 +36,11 @@ public class IncomingUserEventListener {
         var bodyformEntity = bodyformRepository.getReferenceById(profile.getBodyformId());
         var homePlanetEntity = planetsRepository.getReferenceById(profile.getHomeplanetId());
         var lookingForEntity = lookingForRepository.getReferenceById(profile.getLookingForId());
-        var interestEntities = profile.getInterestIds().stream().map(interestsRepository::getReferenceById).collect(Collectors.toSet());
-        var userEntity = new UserEntity(profile.getId(), profile.getUsername(), profile.getAge(), homePlanetEntity, bodyformEntity, profile.getBio(), lookingForEntity, interestEntities, profile.getProfilePic());
+        var interestEntities = profile.getInterestIds().stream()
+                .map(interestsRepository::getReferenceById).collect(Collectors.toSet());
+        var userEntity = new UserEntity(profile.getId(), profile.getName(), profile.getAge(),
+                homePlanetEntity, bodyformEntity, profile.getBio(), lookingForEntity,
+                interestEntities, profile.getProfilePic());
 
         matchUserRepository.save(userEntity);
     }
