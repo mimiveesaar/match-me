@@ -88,6 +88,7 @@ export const ProfileCard = ({
     bodyformId: displayBodyform,
     lookingForId: displayLookingFor,
     homeplanetId: displayPlanet,
+    profilePic: profile?.profilePic,
   });
 
   return (

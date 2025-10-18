@@ -229,26 +229,27 @@ export default function MyProfile() {
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
-  const uploadFile = async (file: File) => {
 
+  const uploadFile = async (file: File) => {
     try {
       const formData = new FormData();
       formData.append("file", file);
 
-      const token = localStorage.getItem("jwtToken"); // ✅ Grab token
+      const token = localStorage.getItem("jwtToken");
 
-      const response = await fetch(
-        `${API_BASE_URL}/api/profiles/me/image`,
+      const response = await fetch(`${API_BASE_URL}/api/profiles/me/image`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
 
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
+      if (!response.ok) throw new Error("Upload failed");
 
-        }
-      );
+      // Assuming backend returns the filename, e.g., { filename: "userId.jpg" }
+      const data = await response.json();
+      return data.filename; // ✅ Must return filename so ProfileImageUpload can update profilePic
     } catch (error) {
       console.error("❌ Error uploading image:", error);
       throw error;
@@ -267,6 +268,7 @@ export default function MyProfile() {
           planetOptions={planetOptions}
           loading={optionsLoading}
           errors={errors}
+          onImageUpload={uploadFile}
         />
       </div>
     </div>

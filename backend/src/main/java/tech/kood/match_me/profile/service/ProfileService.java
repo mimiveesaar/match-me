@@ -137,12 +137,12 @@ public class ProfileService {
     // -------------------- IMAGE HANDLING --------------------
 
     @Transactional
-    public ProfileDTO uploadProfileImage(UUID id, MultipartFile file) throws IOException {
-        Profile profile = profileRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Profile not found for user: " + id));
+    public ProfileDTO uploadProfileImage(UUID userId, MultipartFile file) throws IOException {
+        Profile profile = profileRepo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Profile not found for user: " + userId));
 
-        // Save new image
-        String filename = fileStorageService.saveFile(file);
+        // Save new image with userId as filename
+        String filename = fileStorageService.saveProfileImage(userId, file);
         profile.setProfilePic(filename);
 
         Profile saved = profileRepo.saveAndFlush(profile);

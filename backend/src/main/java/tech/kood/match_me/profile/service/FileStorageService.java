@@ -21,16 +21,19 @@ public class FileStorageService {
     @Value("${app.upload.dir:${user.home}/profile-images}")
     private String uploadDir;
 
-    public String saveFile(MultipartFile file) throws IOException {
+    public String saveProfileImage(UUID userId, MultipartFile file) throws IOException {
         Path uploadPath = Paths.get(uploadDir);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
-        String filename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        // Use userId as filename
+        String filename = userId.toString() + ".jpg";
         Path filePath = uploadPath.resolve(filename);
+
+        // Save or overwrite
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        
+
         return filename;
     }
 

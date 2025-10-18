@@ -22,6 +22,7 @@ interface MyProfilePageProps {
         lookingForError?: string;
         planetError?: string;
     }
+    onImageUpload: (file: File) => Promise<string>;
 }
 
 interface Profile {
@@ -41,6 +42,7 @@ export const MyProfilePage = ({
     planetOptions,
     loading,
     errors,
+    onImageUpload
 }: MyProfilePageProps) => {
     const [bio, setBio] = useState(initialProfile?.bio);
     const [selectedInterests, setSelectedInterests] = useState<number[]>(
@@ -68,7 +70,7 @@ export const MyProfilePage = ({
                 bodyformId: initialProfile.bodyformId || "",
                 lookingForId: initialProfile.lookingForId || "",
                 homeplanetId: initialProfile.homeplanetId || "",
-                profilePic: initialProfile.profilePic || "https://example.com/default.jpg",
+                profilePic: initialProfile.profilePic,
             };
 
             console.log("MyProfilePage: Setting profile to:", newProfile);
@@ -100,7 +102,7 @@ export const MyProfilePage = ({
             interestIds: selectedInterests.filter(
                 (id) => id != null && id !== undefined
             ),
-            profilePic: profile.profilePic || "https://example.com/default.jpg",
+            profilePic: profile.profilePic,
         };
 
         setIsLoading(true);
@@ -120,7 +122,7 @@ export const MyProfilePage = ({
         <div className="flex flex-col lg:flex-row gap-5">
             <div className="flex flex-col gap-4 px-6">
                 <ProfileCard
-                    onImageUpload={(file: File) => Promise.resolve("")}
+                    onImageUpload={onImageUpload}
                     profile={profile}
                     setProfile={setProfile}
                     bodyformOptions={bodyformOptions}
