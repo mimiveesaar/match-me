@@ -26,7 +26,6 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 export default function MyProfile() {
 
-  const [name, setName] = useState("");
   const [bodyformOptions, setBodyformOptions] = useState<SelectOption[]>([]);
   const [lookingforOptions, setLookingforOptions] = useState<SelectOption[]>([]);
   const [planetOptions, setPlanetOptions] = useState<SelectOption[]>([]);
@@ -239,7 +238,7 @@ export default function MyProfile() {
       const token = localStorage.getItem("jwtToken"); // ✅ Grab token
 
       const response = await fetch(
-        `${API_BASE_URL}/profiles/me/image`,
+        `${API_BASE_URL}/api/profiles/me/image`,
 
         {
           method: "POST",

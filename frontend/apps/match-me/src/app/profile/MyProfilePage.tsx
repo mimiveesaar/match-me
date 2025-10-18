@@ -34,14 +34,14 @@ interface Profile {
 }
 
 export const MyProfilePage = ({
-                                  initialProfile,
-                                  onSave,
-                                  bodyformOptions,
-                                  lookingforOptions,
-                                  planetOptions,
-                                  loading,
+    initialProfile,
+    onSave,
+    bodyformOptions,
+    lookingforOptions,
+    planetOptions,
+    loading,
     errors,
-                              }: MyProfilePageProps) => {
+}: MyProfilePageProps) => {
     const [bio, setBio] = useState(initialProfile?.bio);
     const [selectedInterests, setSelectedInterests] = useState<number[]>(
         initialProfile?.interestIds || []
@@ -153,9 +153,8 @@ export const MyProfilePage = ({
                     <button
                         onClick={handleSave}
                         disabled={isLoading}
-                        className={`flex items-center gap-2 bg-olive hover:bg-amberglow text-white font-semibold py-2 px-4 rounded-xl shadow-md transition-all duration-200 ${
-                            isLoading ? "opacity-50 cursor-not-allowed" : ""
-                        }`}
+                        className={`flex items-center gap-2 bg-olive hover:bg-amberglow text-white font-semibold py-2 px-4 rounded-xl shadow-md transition-all duration-200 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                            }`}
                     >
                         {isLoading ? "Saving..." : "Save Changes"}
                     </button>
